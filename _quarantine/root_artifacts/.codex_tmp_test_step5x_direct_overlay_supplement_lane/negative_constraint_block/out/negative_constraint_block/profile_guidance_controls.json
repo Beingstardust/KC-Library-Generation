@@ -1,0 +1,118 @@
+{
+  "KC_NEUTRAL_001": {
+    "accepted_source_cue_count": 1,
+    "concept_head": "Two-Way Option Partition",
+    "concept_head_terms_any": [
+      "two",
+      "way",
+      "option",
+      "partition"
+    ],
+    "control_role": "step5x_retrieval_control_metadata_not_evidence",
+    "deterministic_profile_strength": 0.0,
+    "edge_trigger_reasons": [],
+    "evidence_shape_hints": [
+      {
+        "confidence": "medium",
+        "profile_output_role": "retrieval_control_metadata_not_evidence",
+        "provenance": [],
+        "shape": "procedure_description",
+        "shape_family": "process",
+        "source": "accepted_source_cue"
+      }
+    ],
+    "expanded_aliases": [],
+    "expected_evidence_needs": [
+      {
+        "need": "phase_process",
+        "priority": "primary",
+        "source": "shape_hint"
+      },
+      {
+        "need": "definition_concept",
+        "priority": "secondary",
+        "source": "inferred"
+      },
+      {
+        "need": "algorithm_procedure",
+        "priority": "tertiary",
+        "source": "inferred"
+      }
+    ],
+    "kc_id": "KC_NEUTRAL_001",
+    "label_descriptor_terms_any": [],
+    "lexical_queries": [],
+    "llm_invocation_decision": "skip",
+    "llm_skipped_reason": "",
+    "negative_constraints": [
+      {
+        "profile_output_role": "retrieval_control_metadata_not_evidence",
+        "reason": "wrong_sense",
+        "related_snippet_ids": [],
+        "source": "rejected_candidate",
+        "term": "one-way partition"
+      }
+    ],
+    "negative_sibling_terms": [
+      "one-way partition"
+    ],
+    "normalized_surface_variants": [
+      "Two-Way Option Partition",
+      "Two Way Option Partition"
+    ],
+    "profile_fingerprint": "",
+    "profile_input_status": "exploratory_only",
+    "profile_mode": "deterministic_only",
+    "profile_only_queries": [],
+    "profile_policy_version": "",
+    "profile_status": "usable",
+    "qualifiers": [],
+    "query_atoms": [
+      "two-way option partition"
+    ],
+    "region_locator_payloads": [],
+    "retrieval_failure_hypothesis": "",
+    "retrieval_routes": [
+      {
+        "activation": "active",
+        "broad_context_only": false,
+        "can_create_candidates": true,
+        "can_create_positive_support": true,
+        "local_window_scope": "same_sentence_or_patch",
+        "negative_terms_any": [],
+        "primary_terms_any": [
+          "two-way option partition"
+        ],
+        "profile_output_role": "retrieval_control_metadata_not_evidence",
+        "provenance": [
+          {
+            "field_path": "sentence_text",
+            "snippet_id": "S_PROFILE"
+          }
+        ],
+        "route_id": "derived_accepted_cue_route_001",
+        "route_strength": "strong",
+        "route_trust": "derived_source_observed_guidance",
+        "route_type": "anchored_phrase",
+        "source_provenance_ids": [
+          "S_PROFILE"
+        ],
+        "step5x_verification_required": true,
+        "support_authority": "candidate_hint_step5x_must_verify",
+        "support_requirement": "boost_only",
+        "support_terms_all": [],
+        "support_terms_any": [],
+        "verification_status": "source_observed_same_window"
+      }
+    ],
+    "risk_hints": [],
+    "route_specific_optional_terms": [],
+    "route_specific_query_variants": [],
+    "route_specific_required_terms": [],
+    "safe_to_use_for_step5x": true,
+    "semantic_queries": [],
+    "source_window_ids": [],
+    "validated_guidance_bucket_counts": {},
+    "warnings": []
+  }
+}

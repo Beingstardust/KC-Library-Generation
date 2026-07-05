@@ -1,0 +1,28 @@
+{
+  "stage": "step67c_validate_onepass_drafts",
+  "run_id": "2026-04-28_160347",
+  "created_utc": "2026-04-28T16:03:47.967237+00:00",
+  "packets_path": "data/processed/step67_sidecar_lane_packets_v4/2026-04-28_155759/lane_packets.jsonl",
+  "drafts_path": "data/processed/step67_sidecar_lane_drafts/2026-04-28_160209/onepass_drafts.jsonl",
+  "out_dir": "data/processed/step67_sidecar_validated/2026-04-28_160347",
+  "packet_count": 10,
+  "draft_row_count": 10,
+  "valid_row_count": 4,
+  "error_row_count": 6,
+  "warning_row_count": 0,
+  "status_counter": {
+    "definition::grounded": 5,
+    "scope::abstained": 7,
+    "scope::grounded": 3,
+    "definition::abstained": 5
+  },
+  "issue_counter": {
+    "ERROR::definition: invalid supporting evidence ids ['E2']": 3,
+    "ERROR::scope: invalid supporting evidence ids ['E2', 'E3']": 1,
+    "ERROR::scope: invalid supporting evidence ids ['E4']": 1,
+    "ERROR::definition: invalid supporting evidence ids ['E3']": 1,
+    "ERROR::scope: invalid supporting evidence ids ['E2', 'E4']": 1,
+    "ERROR::definition: invalid supporting evidence ids ['E3', 'E4']": 1
+  },
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

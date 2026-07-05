@@ -1,0 +1,37 @@
+project:
+  timezone: "Europe/Amsterdam"
+
+input:
+  step2_sets_dir: "data/processed/blockstore/_sets"
+  step2_active_set_file: "data/processed/blockstore/_sets/ACTIVE_STEP2_SET.txt"
+
+output:
+  processed_doctree_dir: "data/processed/doctree"
+  doctree_sets_dir: "data/processed/doctree/_sets"
+  runs_dir: "data/runs"
+
+builder:
+  prefer_layers: ["mineru", "docling", "pymupdf"]
+
+  title_detection:
+    top_y_frac: 0.25
+    min_len: 3
+    max_len: 200
+    max_title_chars: 120
+    min_alnum_ratio: 0.30
+
+  page_preview:
+    max_blocks: 12
+    max_chars_per_block: 400
+
+  leaf_nodes:
+    enabled: true
+    include_types: ["table", "figure", "equation"]
+
+validation:
+  require_all_pages: true
+  min_title_coverage: 0.60
+  allow_pages_without_titles: true
+
+logging:
+  verbose: true

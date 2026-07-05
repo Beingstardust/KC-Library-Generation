@@ -1,0 +1,477 @@
+{
+  "generated_at_utc": "2026-04-18T11:44:52Z",
+  "baseline_run_id": "2026-04-16_194203",
+  "candidate_run_ids": [
+    "2026-04-17_194932",
+    "2026-04-17_225854"
+  ],
+  "target_kc_ids": [
+    "KC_CLU_EVAL_001",
+    "KC_CLU_EVAL_002",
+    "KC_DE_PREP_004",
+    "KC_EVAL_BASIC_005",
+    "KC_CLU_DBS_002",
+    "KC_EVAL_SAMP_001"
+  ],
+  "persistent_regression_count": 6,
+  "records": [
+    {
+      "kc_id": "KC_CLU_EVAL_001",
+      "baseline_status": "direct_grounded",
+      "regressed_in_all_candidates": true,
+      "candidate_records": [
+        {
+          "candidate_run_id": "2026-04-17_194932",
+          "candidate_status": "seed_floor_fallback",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "no_binding_after_preservation_verify_rejection",
+          "collapse_stage_basis": "direct_step67_payload_evidence",
+          "binding_repair_state": "no_binding_possible",
+          "binding_repair_reason": "definition_not_grounded",
+          "binding_repair_attempt_reason": "",
+          "final_selection_reason": "definition_full_candidate_abstained",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 2,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "The evidence E1 states 'internal indices because they use only information present in the data set.' This is a direct match to the definition draft, but the evidence does not explicitly state 'without reference to ground truth.' The definition draft includes 'without reference to ground truth,' which is a key characteristic of internal indices. The evidence does not explicitly mention 'ground truth,' so the definition draft contains unsupported material. The evidence only states 'use only information present in the data set,' which is a bit different from 'without reference to ground truth.' Therefore, the definition draft is not fully supported by the evidence and should be rewritten conservatively to match the evidence. However, the evidence does not provide enough detail to support the exact phrasing of 'without reference to ground truth,' so the definition should be rewritten to match the evidence's wording. The evidence says 'internal indices because they use only information present in the data set.' So the definition should be rewritten to 'Evaluation measures that assess cluster quality using only information present in the data set.' This is a conservative rewrite that matches the evidence exactly. However, the evidence does not explicitly say 'internal indices,' but the context of the KC is about internal indices. The evidence label E1 is 'internal indices because they use only information present in the data set.' So the evidence is directly about internal indices. The definition draft is about internal indices, so the evidence supports it, but the draft includes 'without reference to ground truth,' which is not explicitly stated in the evidence. The evidence says 'use only information present in the data set,' which implies no reference to ground truth, but it's not explicit. However, the definition draft is a standard definition of internal indices, and the evidence is a direct quote supporting it. The evidence does not say 'without reference to ground truth,' but it's implied. However, the instruction says: 'If a drafted field contains unsupported material, rewrite it conservatively using only supported content or abstain.' The phrase 'without reference to ground truth' is not explicitly supported by the evidence, so it's unsupported material. Therefore, the definition should be rewritten to remove that phrase. The evidence says 'use only information present in the data set,' so the definition should be 'Evaluation measures that assess cluster quality using only information present in the data set.' This is a conservative rewrite. However, the evidence label E1 is 'internal indices because they use only information present in the data set.' So the evidence is about internal indices, and the definition is about internal indices, so the evidence supports the definition. The phrase 'without reference to ground truth' is a standard part of the definition, but since it's not in the evidence, we have to remove it. So the definition should be rewritten to match the evidence. Let's check the evidence again: 'internal indices because they use only information present in the data set.' So the evidence is saying that internal indices use only information present in the data set. Therefore, the definition should be 'Evaluation measures that assess cluster quality using only information present in the data set.' This is a conservative rewrite. The evidence does not mention 'ground truth,' so we can't include that phrase. So the definition draft should be rewritten to remove 'without reference to ground truth.' The new definition would be 'Evaluation measures that assess cluster quality using only information present in the data set.' Now, for the scope: The scope draft is 'They are used to determine the inherent structure of the data without external validation.' The evidence E2 says 'Unsupervised. Measures the goodness of a clustering structure without respect to external information. An example of this is the SSE. Unsupervised measures of cluster validity are often further divided into two classes: measures of cluster cohesion (compactness, tightness), which determine how closely related the ob...' The evidence E2 explicitly states 'without respect to external information,' which matches 'without external validation' in the scope draft. The evidence also says 'Unsupervised,' which is consistent with the scope draft. The scope draft says 'determine the inherent structure of the data,' which is a bit different from 'measures the goodness of a clustering structure,' but it's a reasonable interpretation. The evidence says 'Measures the goodness of a clustering structure without respect to external information,' so the scope draft is a valid interpretation. The evidence E2 supports the scope draft. Now, let's check if the scope draft contains any unsupported material. The scope draft says 'They are used to determine the inherent structure of the data without external validation.' The evidence says 'Measures the goodness of a clustering structure without respect to external information.' 'Inherent structure' is a bit different from 'goodness of a clustering structure,' but it's a reasonable paraphrase. The evidence does not explicitly say 'inherent structure,' but it's a common way to describe what internal indices do. The evidence does say 'without respect to external information,' which matches 'without external validation.' So the scope draft is supported by the evidence. Now, let's check the sibling contrast. The sibling contrast includes KC_CLU_EVAL_002 (SSE), which is mentioned in the evidence E2 as an example. The evidence E2 says 'An example of this is the SSE.' So SSE is an internal index, which is consistent with the definition. The sibling contrast also includes external indices like Entropy, Purity, etc., which are not internal indices, so the sibling contrast is correctly distinguishing internal from external indices. Now, for the definition: The evidence E1 says 'internal indices because they use only information present in the data set.' So the definition should be rewritten to match this. The original definition draft included 'without reference to ground truth,' which is not in the evidence, so it's unsupported. The conservative rewrite is to remove that phrase. So the definition should be 'Evaluation measures that assess cluster quality using only information present in the data set.' Now, for the scope: The evidence E2 supports the scope draft. The scope draft is 'They are used to determine the inherent structure of the data without external validation.' The evidence E2 says 'Measures the goodness of a clustering structure without respect to external information.' 'Goodness of a clustering structure' is a bit different from 'determine the inherent structure,' but it's a reasonable interpretation. The evidence does not explicitly say 'inherent structure,' but it's a common way to describe it. The evidence does say 'without respect to external information,' which matches 'without external validation.' So the scope draft is supported. Now, let's check if the scope draft matches a nearby sibling concept more strongly. The sibling contrast includes KC_CLU_EVAL_002 (SSE), which is an internal index, so it's not a sibling that would conflict with the scope. The scope is about internal indices, and SSE is an example of an internal index, so it's consistent. Now, let's check the JSON structure. We need to return a JSON with status, text, supporting_evidence_labels, and abstention_reason. For the definition, the status should be 'supported' if it's supported, or 'abstained' if we had to rewrite. Since we're rewriting the definition, the status should be 'supported' with the new text. Wait, the instruction says: 'If a drafted field contains unsupported material, rewrite it conservatively using only supported content or abstain.' So we're rewriting the definition to remove the unsupported part, so the new definition is supported. So the status for definition should be 'supported', with the new text. For scope, the draft is supported, so status is 'supported'. Now, let's confirm the evidence labels. For definition, the evidence label is E1, which is 'internal indices because they use only information present in the data set.' So supporting_evidence_labels should be [",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "Drafted definition contains unsupported material: 'Internal indices assess cluster quality using only the data and the clustering itself, without reference to external labels or ground truth.' The evidence E3 states 'internal indices because they use only information present in the data set.' The drafted definition incorrectly adds 'clustering itself' which is not supported by the evidence. The evidence only mentions 'data set', not 'clustering itself'. The evidence does not support the phrase 'clustering itself'.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims 'using only the data and the clustering itself' but evidence only states 'using only information present in the data set'. The phrase 'clustering itself' is not supported by evidence, and the evidence does not explicitly mention 'clustering itself' as a separate component from the data set.",
+            "control_fallback_candidate_present": false,
+            "control_fallback_source_phase": "",
+            "control_fallback_support_ids": [],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_abstained",
+            "collapse_stage": "no_binding_after_preservation_verify_rejection"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        },
+        {
+          "candidate_run_id": "2026-04-17_225854",
+          "candidate_status": "seed_floor_fallback",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "no_binding_after_preservation_verify_rejection",
+          "collapse_stage_basis": "direct_step67_payload_evidence",
+          "binding_repair_state": "no_binding_possible",
+          "binding_repair_reason": "definition_not_grounded",
+          "binding_repair_attempt_reason": "",
+          "final_selection_reason": "definition_full_candidate_abstained",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 2,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "The evidence E1 states 'internal indices because they use only information present in the data set.' This is a direct match to the definition draft, but the evidence does not explicitly state 'without reference to ground truth.' The definition draft includes 'without reference to ground truth,' which is a key characteristic of internal indices. The evidence does not explicitly mention 'ground truth,' so the definition draft contains unsupported material. The evidence only states 'use only information present in the data set,' which is a bit different from 'without reference to ground truth.' Therefore, the definition draft is not fully supported by the evidence and should be rewritten conservatively to match the evidence. However, the evidence does not provide enough detail to support the exact phrasing of 'without reference to ground truth,' so the definition should be rewritten to match the evidence's wording. The evidence says 'internal indices because they use only information present in the data set.' So the definition should be rewritten to 'Evaluation measures that assess cluster quality using only information present in the data set.' This is a conservative rewrite that matches the evidence exactly. However, the evidence does not explicitly say 'internal indices,' but the context of the KC is about internal indices. The evidence label E1 is 'internal indices because they use only information present in the data set.' So the evidence is directly about internal indices. The definition draft is about internal indices, so the evidence supports it, but the draft includes 'without reference to ground truth,' which is not explicitly stated in the evidence. The evidence says 'use only information present in the data set,' which implies no reference to ground truth, but it's not explicit. However, the definition draft is a standard definition of internal indices, and the evidence is a direct quote supporting it. The evidence does not say 'without reference to ground truth,' but it's implied. However, the instruction says: 'If a drafted field contains unsupported material, rewrite it conservatively using only supported content or abstain.' The phrase 'without reference to ground truth' is not explicitly supported by the evidence, so it's unsupported material. Therefore, the definition should be rewritten to remove that phrase. The evidence says 'use only information present in the data set,' so the definition should be 'Evaluation measures that assess cluster quality using only information present in the data set.' This is a conservative rewrite. However, the evidence label E1 is 'internal indices because they use only information present in the data set.' So the evidence is about internal indices, and the definition is about internal indices, so the evidence supports the definition. The phrase 'without reference to ground truth' is a standard part of the definition, but since it's not in the evidence, we have to remove it. So the definition should be rewritten to match the evidence. Let's check the evidence again: 'internal indices because they use only information present in the data set.' So the evidence is saying that internal indices use only information present in the data set. Therefore, the definition should be 'Evaluation measures that assess cluster quality using only information present in the data set.' This is a conservative rewrite. The evidence does not mention 'ground truth,' so we can't include that phrase. So the definition draft should be rewritten to remove 'without reference to ground truth.' The new definition would be 'Evaluation measures that assess cluster quality using only information present in the data set.' Now, for the scope: The scope draft is 'They are used to determine the inherent structure of the data without external validation.' The evidence E2 says 'Unsupervised. Measures the goodness of a clustering structure without respect to external information. An example of this is the SSE. Unsupervised measures of cluster validity are often further divided into two classes: measures of cluster cohesion (compactness, tightness), which determine how closely related the ob...' The evidence E2 explicitly states 'without respect to external information,' which matches 'without external validation' in the scope draft. The evidence also says 'Unsupervised,' which is consistent with the scope draft. The scope draft says 'determine the inherent structure of the data,' which is a bit different from 'measures the goodness of a clustering structure,' but it's a reasonable interpretation. The evidence says 'Measures the goodness of a clustering structure without respect to external information,' so the scope draft is a valid interpretation. The evidence E2 supports the scope draft. Now, let's check if the scope draft contains any unsupported material. The scope draft says 'They are used to determine the inherent structure of the data without external validation.' The evidence says 'Measures the goodness of a clustering structure without respect to external information.' 'Inherent structure' is a bit different from 'goodness of a clustering structure,' but it's a reasonable paraphrase. The evidence does not explicitly say 'inherent structure,' but it's a common way to describe what internal indices do. The evidence does say 'without respect to external information,' which matches 'without external validation.' So the scope draft is supported by the evidence. Now, let's check the sibling contrast. The sibling contrast includes KC_CLU_EVAL_002 (SSE), which is mentioned in the evidence E2 as an example. The evidence E2 says 'An example of this is the SSE.' So SSE is an internal index, which is consistent with the definition. The sibling contrast also includes external indices like Entropy, Purity, etc., which are not internal indices, so the sibling contrast is correctly distinguishing internal from external indices. Now, for the definition: The evidence E1 says 'internal indices because they use only information present in the data set.' So the definition should be rewritten to match this. The original definition draft included 'without reference to ground truth,' which is not in the evidence, so it's unsupported. The conservative rewrite is to remove that phrase. So the definition should be 'Evaluation measures that assess cluster quality using only information present in the data set.' Now, for the scope: The evidence E2 supports the scope draft. The scope draft is 'They are used to determine the inherent structure of the data without external validation.' The evidence E2 says 'Measures the goodness of a clustering structure without respect to external information.' 'Goodness of a clustering structure' is a bit different from 'determine the inherent structure,' but it's a reasonable interpretation. The evidence does not explicitly say 'inherent structure,' but it's a common way to describe it. The evidence does say 'without respect to external information,' which matches 'without external validation.' So the scope draft is supported. Now, let's check if the scope draft matches a nearby sibling concept more strongly. The sibling contrast includes KC_CLU_EVAL_002 (SSE), which is an internal index, so it's not a sibling that would conflict with the scope. The scope is about internal indices, and SSE is an example of an internal index, so it's consistent. Now, let's check the JSON structure. We need to return a JSON with status, text, supporting_evidence_labels, and abstention_reason. For the definition, the status should be 'supported' if it's supported, or 'abstained' if we had to rewrite. Since we're rewriting the definition, the status should be 'supported' with the new text. Wait, the instruction says: 'If a drafted field contains unsupported material, rewrite it conservatively using only supported content or abstain.' So we're rewriting the definition to remove the unsupported part, so the new definition is supported. So the status for definition should be 'supported', with the new text. For scope, the draft is supported, so status is 'supported'. Now, let's confirm the evidence labels. For definition, the evidence label is E1, which is 'internal indices because they use only information present in the data set.' So supporting_evidence_labels should be [",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "Drafted definition contains unsupported material: 'Internal indices assess cluster quality using only the data and the clustering itself, without reference to external labels or ground truth.' The evidence E3 states 'internal indices because they use only information present in the data set.' The drafted definition incorrectly adds 'clustering itself' which is not supported by the evidence. The evidence only mentions 'data set', not 'clustering itself'. The evidence does not support the phrase 'clustering itself'.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims 'using only the data and the clustering itself' but evidence only states 'using only information present in the data set'. The phrase 'clustering itself' is not supported by evidence, and the evidence does not explicitly mention 'clustering itself' as a separate component from the data set.",
+            "control_fallback_candidate_present": false,
+            "control_fallback_source_phase": "",
+            "control_fallback_support_ids": [],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_abstained",
+            "collapse_stage": "no_binding_after_preservation_verify_rejection"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        }
+      ]
+    },
+    {
+      "kc_id": "KC_CLU_EVAL_002",
+      "baseline_status": "direct_grounded",
+      "regressed_in_all_candidates": true,
+      "candidate_records": [
+        {
+          "candidate_run_id": "2026-04-17_194932",
+          "candidate_status": "seed_floor_fallback",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "no_binding_after_preservation_verify_rejection",
+          "collapse_stage_basis": "direct_step67_payload_evidence",
+          "binding_repair_state": "no_binding_possible",
+          "binding_repair_reason": "definition_not_grounded",
+          "binding_repair_attempt_reason": "",
+          "final_selection_reason": "definition_full_candidate_abstained",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "Drafted definition contains unsupported material: 'normalized by cluster size' does not match cited evidence. Evidence shows SSE as sum of squared distances without normalization, and the formula in evidence (7.14) shows SSE as sum of squared distances (not normalized). The seed definition specifies 'cluSSE(X) = (1/|X|)*sum pointSSE' but the drafted definition incorrectly states 'normalized by cluster size' for SSE, which should be the sum of cluSSE across clusters, not normalized.",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "Drafted definition incorrectly states SSE is normalized by cluster size and number of clusters. Evidence E3 shows SSE is sum of squared distances (not normalized), and E1 describes SSE as a measure without normalization. The draft's normalization claim is unsupported and contradicts evidence.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims SSE is 'sum of squared distances from each point to its cluster centroid, normalized by cluster size and number of clusters', but evidence E3 shows SSE = ∑_{x∈C_i} dist(c_i,x)^2 = (1/2m_i) ∑_{x∈C_i} ∑_{y∈C_i} dist(x,y)^2. The draft incorrectly states normalization by cluster size (1/|X|) and number of clusters (1/K), while evidence shows SSE is the raw sum of squared distances (not normalized), and the equation shows it's equal to a form involving pairwise distances. The draft's normalization claims are unsupported by evidence, which presents SSE as the raw sum (not normalized).",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "preservation_draft_response",
+            "control_fallback_support_ids": [
+              "KC_CLU_EVAL_002:overlay:1c75fbcb6a44d448"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_abstained",
+            "collapse_stage": "no_binding_after_preservation_verify_rejection"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        },
+        {
+          "candidate_run_id": "2026-04-17_225854",
+          "candidate_status": "seed_floor_fallback",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "no_binding_after_preservation_verify_rejection",
+          "collapse_stage_basis": "direct_step67_payload_evidence",
+          "binding_repair_state": "no_binding_possible",
+          "binding_repair_reason": "definition_not_grounded",
+          "binding_repair_attempt_reason": "",
+          "final_selection_reason": "definition_full_candidate_abstained",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "Drafted definition contains unsupported material: 'normalized by cluster size' does not match cited evidence. Evidence shows SSE as sum of squared distances without normalization, and the formula in evidence (7.14) shows SSE as sum of squared distances (not normalized). The seed definition specifies 'cluSSE(X) = (1/|X|)*sum pointSSE' but the drafted definition incorrectly states 'normalized by cluster size' for SSE, which should be the sum of cluSSE across clusters, not normalized.",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "Drafted definition incorrectly states SSE is normalized by cluster size and number of clusters. Evidence E3 shows SSE is sum of squared distances (not normalized), and E1 describes SSE as a measure without normalization. The draft's normalization claim is unsupported and contradicts evidence.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims SSE is 'sum of squared distances from each point to its cluster centroid, normalized by cluster size and number of clusters', but evidence E3 shows SSE = ∑_{x∈C_i} dist(c_i,x)^2 = (1/2m_i) ∑_{x∈C_i} ∑_{y∈C_i} dist(x,y)^2. The draft incorrectly states normalization by cluster size (1/|X|) and number of clusters (1/K), while evidence shows SSE is the raw sum of squared distances (not normalized), and the equation shows it's equal to a form involving pairwise distances. The draft's normalization claims are unsupported by evidence, which presents SSE as the raw sum (not normalized).",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "preservation_draft_response",
+            "control_fallback_support_ids": [
+              "KC_CLU_EVAL_002:overlay:1c75fbcb6a44d448"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_abstained",
+            "collapse_stage": "no_binding_after_preservation_verify_rejection"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        }
+      ]
+    },
+    {
+      "kc_id": "KC_DE_PREP_004",
+      "baseline_status": "direct_grounded",
+      "regressed_in_all_candidates": true,
+      "candidate_records": [
+        {
+          "candidate_run_id": "2026-04-17_194932",
+          "candidate_status": "seed_floor_fallback",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "no_binding_after_preservation_verify_rejection",
+          "collapse_stage_basis": "direct_step67_payload_evidence",
+          "binding_repair_state": "no_binding_possible",
+          "binding_repair_reason": "definition_not_grounded",
+          "binding_repair_attempt_reason": "",
+          "final_selection_reason": "definition_full_candidate_abstained",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "The definition draft contains unsupported material: 'Values that violate range, format, or cross-field consistency constraints and therefore need to be detected and corrected.' The cited evidence only provides an example of inconsistent values (zip code not matching city) but does not mention 'range, format, or cross-field consistency constraints' or the need to 'detect and correct' them. The evidence is limited to a specific example without generalizing to the constraints mentioned in the draft.",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "The definition draft contains unsupported material. The seed definition mentions 'range, format, or cross-field consistency constraints', but the cited evidence (E1, E2) only discusses specific examples of inconsistent values (zip code and city mismatch) and does not mention 'range' or 'format' constraints. The evidence does not support the full scope of the definition draft, which includes 'range' and 'format' constraints that are not explicitly covered in the cited evidence. The evidence only provides an example of cross-field inconsistency (zip code and city), not range or format violations. Therefore, the definition draft cannot be supported by the cited evidence as written.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims values 'violate range, format, or cross-field consistency constraints' but evidence only mentions 'inconsistent values' without specifying constraint types (range/format/cross-field). Evidence states inconsistent values 'must be resolved' but draft says 'need to be detected and corrected' - 'resolved' ≠ 'detected and corrected' (resolution implies correction, but draft adds 'detected' which isn't in evidence). Draft's 'therefore' implies causation not supported by evidence.",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "preservation_draft_response",
+            "control_fallback_support_ids": [
+              "KC_DE_PREP_004:overlay:241a3e2956fcc8e8"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_abstained",
+            "collapse_stage": "no_binding_after_preservation_verify_rejection"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        },
+        {
+          "candidate_run_id": "2026-04-17_225854",
+          "candidate_status": "seed_floor_fallback",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "no_binding_after_preservation_verify_rejection",
+          "collapse_stage_basis": "direct_step67_payload_evidence",
+          "binding_repair_state": "no_binding_possible",
+          "binding_repair_reason": "definition_not_grounded",
+          "binding_repair_attempt_reason": "",
+          "final_selection_reason": "definition_full_candidate_abstained",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "The definition draft contains unsupported material: 'Values that violate range, format, or cross-field consistency constraints and therefore need to be detected and corrected.' The cited evidence only provides an example of inconsistent values (zip code not matching city) but does not mention 'range, format, or cross-field consistency constraints' or the need to 'detect and correct' them. The evidence is limited to a specific example without generalizing to the constraints mentioned in the draft.",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "The definition draft contains unsupported material. The seed definition mentions 'range, format, or cross-field consistency constraints', but the cited evidence (E1, E2) only discusses specific examples of inconsistent values (zip code and city mismatch) and does not mention 'range' or 'format' constraints. The evidence does not support the full scope of the definition draft, which includes 'range' and 'format' constraints that are not explicitly covered in the cited evidence. The evidence only provides an example of cross-field inconsistency (zip code and city), not range or format violations. Therefore, the definition draft cannot be supported by the cited evidence as written.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims values 'violate range, format, or cross-field consistency constraints' but evidence only mentions 'inconsistent values' without specifying constraint types (range/format/cross-field). Evidence states inconsistent values 'must be resolved' but draft says 'need to be detected and corrected' - 'resolved' ≠ 'detected and corrected' (resolution implies correction, but draft adds 'detected' which isn't in evidence). Draft's 'therefore' implies causation not supported by evidence.",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "preservation_draft_response",
+            "control_fallback_support_ids": [
+              "KC_DE_PREP_004:overlay:241a3e2956fcc8e8"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_abstained",
+            "collapse_stage": "no_binding_after_preservation_verify_rejection"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        }
+      ]
+    },
+    {
+      "kc_id": "KC_EVAL_BASIC_005",
+      "baseline_status": "direct_grounded",
+      "regressed_in_all_candidates": true,
+      "candidate_records": [
+        {
+          "candidate_run_id": "2026-04-17_194932",
+          "candidate_status": "seed_floor_fallback",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "no_binding_after_preservation_verify_rejection",
+          "collapse_stage_basis": "direct_step67_payload_evidence",
+          "binding_repair_state": "no_binding_possible",
+          "binding_repair_reason": "definition_not_grounded",
+          "binding_repair_attempt_reason": "",
+          "final_selection_reason": "definition_full_candidate_abstained",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "Drafted definition contains unsupported material: 'correctly predicted as negative' should be 'correctly identified as negative' to match evidence wording. Evidence states 'fraction of negative test instances correctly' without specifying 'predicted'.",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "definition_draft_text contains unsupported material: 'Specificity measures the fraction of truly negative instances correctly identified as negative by a classifier.' The cited evidence uses 'negative test instances' instead of 'truly negative instances', and 'correctly identified as negative' is not verbatim. The evidence states 'fraction of negative test instances correctly' but does not specify 'identified as negative' or 'truly negative'. The draft adds 'by a classifier' which is not in the evidence. The evidence is about the definition, not the classifier's action. The draft is not conservatively rewritten to match the evidence.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims 'fraction correctly predicted as negative' but evidence states 'negative examples are misclassified' (contradiction).",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "preservation_draft_response",
+            "control_fallback_support_ids": [
+              "KC_EVAL_BASIC_005:overlay:89d9ba3b2d08169e"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_abstained",
+            "collapse_stage": "no_binding_after_preservation_verify_rejection"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        },
+        {
+          "candidate_run_id": "2026-04-17_225854",
+          "candidate_status": "seed_floor_fallback",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "no_binding_after_preservation_verify_rejection",
+          "collapse_stage_basis": "direct_step67_payload_evidence",
+          "binding_repair_state": "no_binding_possible",
+          "binding_repair_reason": "definition_not_grounded",
+          "binding_repair_attempt_reason": "",
+          "final_selection_reason": "definition_full_candidate_abstained",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "Drafted definition contains unsupported material: 'correctly predicted as negative' should be 'correctly identified as negative' to match evidence wording. Evidence states 'fraction of negative test instances correctly' without specifying 'predicted'.",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "definition_draft_text contains unsupported material: 'Specificity measures the fraction of truly negative instances correctly identified as negative by a classifier.' The cited evidence uses 'negative test instances' instead of 'truly negative instances', and 'correctly identified as negative' is not verbatim. The evidence states 'fraction of negative test instances correctly' but does not specify 'identified as negative' or 'truly negative'. The draft adds 'by a classifier' which is not in the evidence. The evidence is about the definition, not the classifier's action. The draft is not conservatively rewritten to match the evidence.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims 'fraction correctly predicted as negative' but evidence states 'negative examples are misclassified' (contradiction).",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "preservation_draft_response",
+            "control_fallback_support_ids": [
+              "KC_EVAL_BASIC_005:overlay:89d9ba3b2d08169e"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_abstained",
+            "collapse_stage": "no_binding_after_preservation_verify_rejection"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        }
+      ]
+    },
+    {
+      "kc_id": "KC_CLU_DBS_002",
+      "baseline_status": "direct_grounded",
+      "regressed_in_all_candidates": true,
+      "candidate_records": [
+        {
+          "candidate_run_id": "2026-04-17_194932",
+          "candidate_status": "normalized_grounded",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "binding_repair_applied_then_normalization_only",
+          "collapse_stage_basis": "direct_binding_and_selection_diagnostics",
+          "binding_repair_state": "repair_attempted_and_applied",
+          "binding_repair_reason": "promoted_stronger_same_kc_definition_anchor",
+          "binding_repair_attempt_reason": "promoted_stronger_same_kc_definition_anchor",
+          "final_selection_reason": "definition_full_candidate_source_faithful_local_support_unit_normalization",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "The draft definition contains the phrase 'non-core point', which is not directly supported by the cited evidence. The evidence states 'not a core point' but does not use the term 'non-core point'. The term 'non-core point' is a rephrasing that may not be directly supported by the evidence.",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "Drafted definition contains unsupported material: 'non-core point' is redundant as 'not a core point' is already covered by the definition of border point. The evidence does not support the phrase 'non-core point' as a separate descriptor.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition contains unsupported claim: 'not a core point' (evidence states 'not a core point' but the evidence actually says 'not a core point' as part of the definition, but the evidence does not explicitly state that border points are not core points. The evidence states: 'A border point is not a core point, but falls within the neighborhood of a core point.' However, the seed definition for Border Point says 'A non-core point y that lies within radius eps of a core point x.' The evidence E1 matches the seed definition exactly, but the draft definition says 'not a core point' which is redundant because 'non-core point' already implies it's not a core point. However, the evidence does not explicitly state that border points are not core points; it's implied by the definition. But the seed definition uses 'non-core point' which is a direct term. The draft definition uses 'not a core point' which is a paraphrase of 'non-core point'. The evidence E1 states: 'A border point is not a core point, but falls within the neighborhood of a core point.' This matches the seed definition. However, the seed definition says 'non-core point' while the draft says 'not a core point'. The evidence E1 uses 'not a core point', so the draft is supported by E1. But the seed definition uses 'non-core point', which is a single term. The draft definition is a paraphrase of the seed definition. The evidence E1 is a direct quote from the seed definition. The draft definition is supported by E1. However, the seed definition says 'non-core point' while the draft says 'not a core point'. The evidence E1 uses 'not a core point', so the draft is supported. But the seed definition is the source, and the evidence E1 is a direct quote from the seed definition. The draft definition is a paraphrase of the seed definition. The evidence E1 matches the draft definition. So the draft is supported. However, the seed definition says 'non-core point' but the evidence E1 says 'not a core point'. The evidence E1 is a direct quote from the seed definition, so it's acceptable. The draft definition is supported by E1. The draft definition is: 'A border point is not a core point but falls within the neighborhood of a core point.' The evidence E1 is: 'A border point is not a core point, but falls within the neighborhood of a core point.' The only difference is the comma before 'but', which is a minor punctuation difference. So the draft is supported. The status should be 'supported', not 'abstained'. The seed definition uses 'non-core point' but the evidence E1 uses 'not a core point', which is a valid paraphrase. The draft definition is supported by E1. So the status should be 'supported', text should be the draft definition, supporting_evidence_labels should be ['E1']. But the instruction says:",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "definition_redraft_response",
+            "control_fallback_support_ids": [
+              "KC_CLU_DBS_002:overlay:89b40752c5ebb8b6"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_source_faithful_local_support_unit_normalization",
+            "collapse_stage": "grounded_before_control_fallback"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        },
+        {
+          "candidate_run_id": "2026-04-17_225854",
+          "candidate_status": "normalized_grounded",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "binding_repair_rejected_then_normalization_only",
+          "collapse_stage_basis": "direct_binding_and_selection_diagnostics",
+          "binding_repair_state": "repair_attempted_but_rejected",
+          "binding_repair_reason": "non_monotonic_single_row_replacement_rejected",
+          "binding_repair_attempt_reason": "promoted_stronger_same_kc_definition_anchor",
+          "final_selection_reason": "definition_full_candidate_source_faithful_local_support_unit_normalization",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "The draft definition contains the phrase 'non-core point', which is not directly supported by the cited evidence. The evidence states 'not a core point' but does not use the term 'non-core point'. The term 'non-core point' is a rephrasing that may not be directly supported by the evidence.",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "Drafted definition contains unsupported material: 'non-core point' is redundant as 'not a core point' is already covered by the definition of border point. The evidence does not support the phrase 'non-core point' as a separate descriptor.",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition contains unsupported claim: 'not a core point' (evidence states 'not a core point' but the evidence actually says 'not a core point' as part of the definition, but the evidence does not explicitly state that border points are not core points. The evidence states: 'A border point is not a core point, but falls within the neighborhood of a core point.' However, the seed definition for Border Point says 'A non-core point y that lies within radius eps of a core point x.' The evidence E1 matches the seed definition exactly, but the draft definition says 'not a core point' which is redundant because 'non-core point' already implies it's not a core point. However, the evidence does not explicitly state that border points are not core points; it's implied by the definition. But the seed definition uses 'non-core point' which is a direct term. The draft definition uses 'not a core point' which is a paraphrase of 'non-core point'. The evidence E1 states: 'A border point is not a core point, but falls within the neighborhood of a core point.' This matches the seed definition. However, the seed definition says 'non-core point' while the draft says 'not a core point'. The evidence E1 uses 'not a core point', so the draft is supported by E1. But the seed definition uses 'non-core point', which is a single term. The draft definition is a paraphrase of the seed definition. The evidence E1 is a direct quote from the seed definition. The draft definition is supported by E1. However, the seed definition says 'non-core point' while the draft says 'not a core point'. The evidence E1 uses 'not a core point', so the draft is supported. But the seed definition is the source, and the evidence E1 is a direct quote from the seed definition. The draft definition is a paraphrase of the seed definition. The evidence E1 matches the draft definition. So the draft is supported. However, the seed definition says 'non-core point' but the evidence E1 says 'not a core point'. The evidence E1 is a direct quote from the seed definition, so it's acceptable. The draft definition is supported by E1. The draft definition is: 'A border point is not a core point but falls within the neighborhood of a core point.' The evidence E1 is: 'A border point is not a core point, but falls within the neighborhood of a core point.' The only difference is the comma before 'but', which is a minor punctuation difference. So the draft is supported. The status should be 'supported', not 'abstained'. The seed definition uses 'non-core point' but the evidence E1 uses 'not a core point', which is a valid paraphrase. The draft definition is supported by E1. So the status should be 'supported', text should be the draft definition, supporting_evidence_labels should be ['E1']. But the instruction says:",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "definition_redraft_response",
+            "control_fallback_support_ids": [
+              "KC_CLU_DBS_002:overlay:89b40752c5ebb8b6"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_source_faithful_local_support_unit_normalization",
+            "collapse_stage": "grounded_before_control_fallback"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        }
+      ]
+    },
+    {
+      "kc_id": "KC_EVAL_SAMP_001",
+      "baseline_status": "direct_grounded",
+      "regressed_in_all_candidates": true,
+      "candidate_records": [
+        {
+          "candidate_run_id": "2026-04-17_194932",
+          "candidate_status": "normalized_grounded",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "binding_repair_rejected_then_normalization_only",
+          "collapse_stage_basis": "direct_binding_and_selection_diagnostics",
+          "binding_repair_state": "repair_attempted_but_rejected",
+          "binding_repair_reason": "legacy_action_reason_without_applied_flag",
+          "binding_repair_attempt_reason": "replaced_weak_definition_anchor",
+          "final_selection_reason": "definition_full_candidate_source_faithful_local_quote_normalization",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "The draft claims 'random partition' but evidence states 'randomly partitioned' which is consistent. However, the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' but the seed definition specifies 'single split' which is more precise. The draft adds 'random' which is supported by evidence but the seed definition doesn't include 'random' - however, the evidence does say 'randomly partitioned'. The issue is that the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is actually consistent with evidence. However, the seed definition says 'single split' which is a more precise term than 'single random partition' but the evidence supports the randomness. The problem is that the draft says 'random partition' but the evidence says 'randomly partitioned' - this is a minor wording difference but the meaning is the same. However, the seed definition says 'single split' which is the standard term, and the draft adds 'random' which is supported by evidence. But the seed definition doesn't include 'random' - however, the evidence does. The issue is that the seed definition is 'single split' but the draft says 'single random partition' - the evidence supports the randomness, so the draft is actually correct. But the seed definition is more precise with 'single split' and the draft adds 'random' which is supported. However, the evidence says 'randomly partitioned' so the draft is correct. But the seed definition says 'single split' which is the standard term, and the draft is adding 'random' which is supported. I think the draft is acceptable. However, the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. But the seed definition doesn't say 'random' - however, the evidence does. The problem is that the seed definition is 'single split' but the evidence says 'randomly partitioned' so the draft should include 'random' to be consistent with evidence. The seed definition is a bit vague but the evidence specifies 'randomly'. So the draft is correct. However, the seed definition says 'single split' which is the standard term, and the draft is adding 'random' which is supported by evidence. So the draft is acceptable. But the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. I think the draft is acceptable. However, the seed definition says 'single split' and the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. But the seed definition is 'single split' which is a bit more precise. However, the evidence specifies 'randomly', so the draft should include 'random'. So the draft is correct. But the seed definition doesn't include 'random' - however, the evidence does. So the draft is correct. I think the draft is acceptable. But let's check the evidence: 'randomly partitioned' - so the draft saying 'random partition' is consistent. The draft says 'random partition' but evidence says 'randomly partitioned' - this is a minor wording difference but the meaning is the same. So the draft is acceptable. However, the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. I think the draft is acceptable. But the seed definition says 'single split' which is the standard term, and the draft is adding 'random' which is supported. So the draft is acceptable. However, the seed definition says 'single split' and the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. I think I'm overcomplicating. The evidence supports 'randomly partitioned' so the draft is correct. So the definition should be accepted. But the seed definition says 'single split' which is the standard term, and the draft is adding 'random' which is supported. So the draft is acceptable. However, the seed definition is 'single split' and the draft is 'single random partition' - the evidence supports 'randomly', so the draft is correct. So the definition should be accepted. But the seed definition says 'single split' while the draft says 'single random partition' - the evidence says 'randomly partitioned' so the draft is correct. I think the draft is acceptable. But let's look at the scope. The scope draft says 'It provides a straightforward estimate of model performance using a single test set, though limited by test set size.' The evidence only says 'The most basic technique for partitioning a labeled data set is the holdout method, where the labeled set D is randomly partitioned into two disjoint sets, called the training set D.train and the test set D.test.' The evidence does not say anything about 'straightforward estimate', 'model performance', or 'limited by test set size'. The seed definition says 'Simple but limited by the size of the test set.' So the scope draft is trying to say that, but the evidence doesn't support it. The evidence only describes the partitioning, not the limitations. So the scope draft is not supported by the evidence. The evidence only supports the partitioning part, not the limitations. So the scope draft should be rejected. The scope draft says 'It provides a straightforward estimate of model performance using a single test set, though limited by test set size.' The evidence does not mention 'straightforward estimate', 'model performance', or 'limited by test set size'. The seed definition mentions 'Simple but limited by the size of the test set.' but the evidence does not. So the scope draft is not supported by the evidence. Therefore, the scope should be rejected. For the definition, the draft says 'A single random partition of a labeled dataset into training and test sets for model evaluation.' The evidence says 'The most basic technique for partitioning a labeled data set is the holdout method, where the labeled set D is randomly partitioned into two disjoint sets, called the training set D.train and the test set D.test.' The evidence supports 'randomly partitioned' and 'labeled data set', so the draft is correct. The draft says 'for model evaluation' - the evidence doesn't say that, but the seed definition says 'for model evaluation' (implied by the context of holdout method). The seed definition says 'A single split of the dataset D into Dtrain and Dtest. Simple but limited by the size of the test set.' So the 'for model evaluation' is implied. The evidence doesn't explicitly say 'for model evaluation' but it's the standard context. So the draft is acceptable. However, the evidence says 'partitioning a labeled data set' and the draft says 'labeled dataset' - that's consistent. The evidence says 'randomly partitioned' and the draft says 'random partition' - that's consistent. The evidence says 'two disjoint sets, called the training set D.train and the test set D.test' and the draft says 'into training and test sets' - that's consistent. So the definition draft is supported by evidence. For the scope, the draft says 'It provides a straightforward estimate of model performance using a single test set, though limited by test set size.' The evidence does not support 'straightforward estimate', 'model performance', or 'limited by test set size'. The evidence only describes the partitioning. The seed definition says 'Simple but limited by the size of the test set.' but the evidence doesn't say that. So the scope draft is not supported by the evidence. Therefore, the scope should be rejected. So for definition, status should be 'supported', text should be the draft text, supporting_evidence_labels should be ['E1']. For scope, status should be 'abstained', abstention_reason should be 'evidence does not support claims about model performance estimation or limitations'. But the scope draft is trying to say what the seed definition says, but the evidence doesn't support it. The evidence only supports the partitioning part. So the scope draft is not supported by the evidence. So scope should be abstained. Now, let's check the sibling contrast. The sibling contrast has KC_EVAL_SAMP_002 as Random Subsampling, which is different. The scope draft is about the holdout method, not about the siblings. So that's not an issue. So to summarize: definition: supported by evidence, so status 'supported', text as draft, supporting_evidence_labels ['E1'] scope: not supported by evidence, so status 'abstained', abstention_reason 'evidence does not support claims about model performance estimation or limitations' But the scope draft says 'It provides a straightforward estimate of model performance using a single test set, though limited by test set size.' The evidence does not mention 'estimate of model performance' or 'limited by test set size'. The evidence only describes the partitioning. So the scope draft is not supported. Therefore, the scope should be abstained. Now, for the definition, the draft says 'A single random partition of a labeled dataset into training and test sets for model evaluation.' The evidence says 'The most basic technique for partitioning a labeled data set is the holdout method, where the labeled set D is randomly partitioned into two disjoint sets, called the training set D.train and the test set D.test.' The evidence supports 'labeled data set', 'randomly partitioned', 'training set', 'test set'. The draft says 'labeled dataset' (consistent with 'labeled data set'), 'random partition' (consistent with 'randomly partitioned'), 'training and test sets' (consistent with 'training set D.train and the test set D.test'). The draft adds 'for model evaluation' - the evidence doesn't say that, but it's implied by the context of the holdout method. The seed definition says 'A single split of the dataset D into Dtrain and Dtest.' which is for model evaluation. So the 'for model evaluation' is standard and implied, so it's acceptable. So the definition draft is supported. So the JSON should be: definition: status 'supported', text 'A single random partition of a labeled dataset into training and test sets for model evaluation.', supporting_evidence_labels ['E1'] scope: status 'abstained', abstention_reason 'evidence does not support claims about model performance estimation or limitations' But the scope draft is trying to say what the seed definition says, but the evidence doesn't support it. So the scope should be abstained. Now, let's check if the scope draft is supported by any other evidence. The scope_evidence is only ['E1'], and E1 is the same as the definition evidence. So no other evidence. So scope is not supported. Therefore, the JSON should be: {",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "The draft claims 'random partition' but the evidence states 'randomly partitioned' which is consistent. However, the seed definition already states 'A single split of the dataset D into Dtrain and Dtest.' The draft adds 'random' which is supported by evidence, but the seed definition doesn't include 'random' so this is a minor addition. However, the evidence does say 'randomly partitioned' so it's supported. But the seed definition is the target, and the draft is supposed to be a verification against evidence, not a rephrasing of seed definition. The seed definition is 'A single split of the dataset D into Dtrain and Dtest. Simple but limited by the size of the test set.' The draft adds 'random' and 'labeled' which are supported by evidence. However, the seed definition doesn't include 'random' or 'labeled', but the evidence does. The evidence says 'randomly partitioned' and 'labeled data set'. So the draft is correct. But the seed definition is the target, and the draft is supposed to be a verification against evidence, not a rephrasing of seed definition. The seed definition is the canonical definition, so the draft should match it as closely as possible. The seed definition says 'single split' and the draft says 'single random partition'. The evidence says 'randomly partitioned', so 'random' is supported. The seed definition doesn't say 'random', but the evidence does, so the draft is correct. However, the seed definition is the target, so the draft should be verified against evidence, not against seed definition. The task is to verify the drafted field against cited evidence. The evidence supports 'randomly partitioned', so the draft's 'random' is supported. The seed definition is just the starting point, but the verification is against evidence. So the draft is supported. But the seed definition says 'single split' and the draft says 'single random partition'. 'Split' and 'partition' are synonymous in this context. So the draft is correct. However, the seed definition doesn't include 'labeled', but the evidence says 'labeled data set', so the draft's 'labeled' is supported. So the draft is correct. But the seed definition is 'A single split of the dataset D into Dtrain and Dtest.' The draft says 'A single random partition of a labeled dataset into training and test sets for model evaluation.' The evidence says 'randomly partitioned' and 'labeled data set', so the draft is correct. So why would it be 'abstain'? The evidence only has E1, and it's cited for both definition and scope. The scope draft says 'It provides a straightforward estimate of model performance on unseen data but is sensitive to the specific split chosen.' The evidence doesn't say anything about 'straightforward estimate' or 'sensitive to the specific split chosen'. The evidence only says 'The most basic technique for partitioning a labeled data set is the holdout method, where the labeled set D is randomly partitioned into two disjoint sets, called the training set D.train and the test set D.test.' So the scope draft is not supported by the evidence. The evidence doesn't mention anything about performance estimation or sensitivity to split. So the scope draft is unsupported. For definition, the draft is supported by evidence. For scope, the draft is not supported by evidence. So for scope, it should be 'abstained' because the draft contains unsupported material. The scope draft says 'It provides a straightforward estimate of model performance on unseen data but is sensitive to the specific split chosen.' The evidence doesn't say that. So scope should be 'abstained'. But the task says:",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims 'Dtrain and Dtest' but evidence uses 'D.train and D.test' - inconsistent naming convention. Draft also omits 'randomly' which is explicitly stated in evidence.",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "preservation_draft_response",
+            "control_fallback_support_ids": [
+              "KC_EVAL_SAMP_001:overlay:dac9b6ff7a94d563"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_source_faithful_local_quote_normalization",
+            "collapse_stage": "grounded_before_control_fallback"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        },
+        {
+          "candidate_run_id": "2026-04-17_225854",
+          "candidate_status": "normalized_grounded",
+          "regressed_vs_baseline": true,
+          "collapse_stage": "binding_repair_rejected_then_normalization_only",
+          "collapse_stage_basis": "direct_binding_and_selection_diagnostics",
+          "binding_repair_state": "repair_attempted_but_rejected",
+          "binding_repair_reason": "no_strictly_better_anchor_available",
+          "binding_repair_attempt_reason": "replaced_weak_definition_anchor",
+          "final_selection_reason": "definition_full_candidate_source_faithful_local_quote_normalization",
+          "grounding_diagnostics": {
+            "candidate_pool_size": 5,
+            "preservation_candidate_pool_size": 5,
+            "support_pack_size": 3,
+            "preservation_draft_status": "grounded",
+            "preservation_verify_status": "abstained",
+            "preservation_verify_reason": "The draft claims 'random partition' but evidence states 'randomly partitioned' which is consistent. However, the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' but the seed definition specifies 'single split' which is more precise. The draft adds 'random' which is supported by evidence but the seed definition doesn't include 'random' - however, the evidence does say 'randomly partitioned'. The issue is that the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is actually consistent with evidence. However, the seed definition says 'single split' which is a more precise term than 'single random partition' but the evidence supports the randomness. The problem is that the draft says 'random partition' but the evidence says 'randomly partitioned' - this is a minor wording difference but the meaning is the same. However, the seed definition says 'single split' which is the standard term, and the draft adds 'random' which is supported by evidence. But the seed definition doesn't include 'random' - however, the evidence does. The issue is that the seed definition is 'single split' but the draft says 'single random partition' - the evidence supports the randomness, so the draft is actually correct. But the seed definition is more precise with 'single split' and the draft adds 'random' which is supported. However, the evidence says 'randomly partitioned' so the draft is correct. But the seed definition says 'single split' which is the standard term, and the draft is adding 'random' which is supported. I think the draft is acceptable. However, the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. But the seed definition doesn't say 'random' - however, the evidence does. The problem is that the seed definition is 'single split' but the evidence says 'randomly partitioned' so the draft should include 'random' to be consistent with evidence. The seed definition is a bit vague but the evidence specifies 'randomly'. So the draft is correct. However, the seed definition says 'single split' which is the standard term, and the draft is adding 'random' which is supported by evidence. So the draft is acceptable. But the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. I think the draft is acceptable. However, the seed definition says 'single split' and the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. But the seed definition is 'single split' which is a bit more precise. However, the evidence specifies 'randomly', so the draft should include 'random'. So the draft is correct. But the seed definition doesn't include 'random' - however, the evidence does. So the draft is correct. I think the draft is acceptable. But let's check the evidence: 'randomly partitioned' - so the draft saying 'random partition' is consistent. The draft says 'random partition' but evidence says 'randomly partitioned' - this is a minor wording difference but the meaning is the same. So the draft is acceptable. However, the seed definition says 'single split' while the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. I think the draft is acceptable. But the seed definition says 'single split' which is the standard term, and the draft is adding 'random' which is supported. So the draft is acceptable. However, the seed definition says 'single split' and the draft says 'single random partition' - the evidence supports 'randomly partitioned' so the draft is correct. I think I'm overcomplicating. The evidence supports 'randomly partitioned' so the draft is correct. So the definition should be accepted. But the seed definition says 'single split' which is the standard term, and the draft is adding 'random' which is supported. So the draft is acceptable. However, the seed definition is 'single split' and the draft is 'single random partition' - the evidence supports 'randomly', so the draft is correct. So the definition should be accepted. But the seed definition says 'single split' while the draft says 'single random partition' - the evidence says 'randomly partitioned' so the draft is correct. I think the draft is acceptable. But let's look at the scope. The scope draft says 'It provides a straightforward estimate of model performance using a single test set, though limited by test set size.' The evidence only says 'The most basic technique for partitioning a labeled data set is the holdout method, where the labeled set D is randomly partitioned into two disjoint sets, called the training set D.train and the test set D.test.' The evidence does not say anything about 'straightforward estimate', 'model performance', or 'limited by test set size'. The seed definition says 'Simple but limited by the size of the test set.' So the scope draft is trying to say that, but the evidence doesn't support it. The evidence only describes the partitioning, not the limitations. So the scope draft is not supported by the evidence. The evidence only supports the partitioning part, not the limitations. So the scope draft should be rejected. The scope draft says 'It provides a straightforward estimate of model performance using a single test set, though limited by test set size.' The evidence does not mention 'straightforward estimate', 'model performance', or 'limited by test set size'. The seed definition mentions 'Simple but limited by the size of the test set.' but the evidence does not. So the scope draft is not supported by the evidence. Therefore, the scope should be rejected. For the definition, the draft says 'A single random partition of a labeled dataset into training and test sets for model evaluation.' The evidence says 'The most basic technique for partitioning a labeled data set is the holdout method, where the labeled set D is randomly partitioned into two disjoint sets, called the training set D.train and the test set D.test.' The evidence supports 'randomly partitioned' and 'labeled data set', so the draft is correct. The draft says 'for model evaluation' - the evidence doesn't say that, but the seed definition says 'for model evaluation' (implied by the context of holdout method). The seed definition says 'A single split of the dataset D into Dtrain and Dtest. Simple but limited by the size of the test set.' So the 'for model evaluation' is implied. The evidence doesn't explicitly say 'for model evaluation' but it's the standard context. So the draft is acceptable. However, the evidence says 'partitioning a labeled data set' and the draft says 'labeled dataset' - that's consistent. The evidence says 'randomly partitioned' and the draft says 'random partition' - that's consistent. The evidence says 'two disjoint sets, called the training set D.train and the test set D.test' and the draft says 'into training and test sets' - that's consistent. So the definition draft is supported by evidence. For the scope, the draft says 'It provides a straightforward estimate of model performance using a single test set, though limited by test set size.' The evidence does not support 'straightforward estimate', 'model performance', or 'limited by test set size'. The evidence only describes the partitioning. The seed definition says 'Simple but limited by the size of the test set.' but the evidence doesn't say that. So the scope draft is not supported by the evidence. Therefore, the scope should be rejected. So for definition, status should be 'supported', text should be the draft text, supporting_evidence_labels should be ['E1']. For scope, status should be 'abstained', abstention_reason should be 'evidence does not support claims about model performance estimation or limitations'. But the scope draft is trying to say what the seed definition says, but the evidence doesn't support it. The evidence only supports the partitioning part. So the scope draft is not supported by the evidence. So scope should be abstained. Now, let's check the sibling contrast. The sibling contrast has KC_EVAL_SAMP_002 as Random Subsampling, which is different. The scope draft is about the holdout method, not about the siblings. So that's not an issue. So to summarize: definition: supported by evidence, so status 'supported', text as draft, supporting_evidence_labels ['E1'] scope: not supported by evidence, so status 'abstained', abstention_reason 'evidence does not support claims about model performance estimation or limitations' But the scope draft says 'It provides a straightforward estimate of model performance using a single test set, though limited by test set size.' The evidence does not mention 'estimate of model performance' or 'limited by test set size'. The evidence only describes the partitioning. So the scope draft is not supported. Therefore, the scope should be abstained. Now, for the definition, the draft says 'A single random partition of a labeled dataset into training and test sets for model evaluation.' The evidence says 'The most basic technique for partitioning a labeled data set is the holdout method, where the labeled set D is randomly partitioned into two disjoint sets, called the training set D.train and the test set D.test.' The evidence supports 'labeled data set', 'randomly partitioned', 'training set', 'test set'. The draft says 'labeled dataset' (consistent with 'labeled data set'), 'random partition' (consistent with 'randomly partitioned'), 'training and test sets' (consistent with 'training set D.train and the test set D.test'). The draft adds 'for model evaluation' - the evidence doesn't say that, but it's implied by the context of the holdout method. The seed definition says 'A single split of the dataset D into Dtrain and Dtest.' which is for model evaluation. So the 'for model evaluation' is standard and implied, so it's acceptable. So the definition draft is supported. So the JSON should be: definition: status 'supported', text 'A single random partition of a labeled dataset into training and test sets for model evaluation.', supporting_evidence_labels ['E1'] scope: status 'abstained', abstention_reason 'evidence does not support claims about model performance estimation or limitations' But the scope draft is trying to say what the seed definition says, but the evidence doesn't support it. So the scope should be abstained. Now, let's check if the scope draft is supported by any other evidence. The scope_evidence is only ['E1'], and E1 is the same as the definition evidence. So no other evidence. So scope is not supported. Therefore, the JSON should be: {",
+            "rescue_used": true,
+            "rescue_draft_status": "grounded",
+            "rescue_verify_status": "abstained",
+            "rescue_verify_reason": "The draft claims 'random partition' but the evidence states 'randomly partitioned' which is consistent. However, the seed definition already states 'A single split of the dataset D into Dtrain and Dtest.' The draft adds 'random' which is supported by evidence, but the seed definition doesn't include 'random' so this is a minor addition. However, the evidence does say 'randomly partitioned' so it's supported. But the seed definition is the target, and the draft is supposed to be a verification against evidence, not a rephrasing of seed definition. The seed definition is 'A single split of the dataset D into Dtrain and Dtest. Simple but limited by the size of the test set.' The draft adds 'random' and 'labeled' which are supported by evidence. However, the seed definition doesn't include 'random' or 'labeled', but the evidence does. The evidence says 'randomly partitioned' and 'labeled data set'. So the draft is correct. But the seed definition is the target, and the draft is supposed to be a verification against evidence, not a rephrasing of seed definition. The seed definition is the canonical definition, so the draft should match it as closely as possible. The seed definition says 'single split' and the draft says 'single random partition'. The evidence says 'randomly partitioned', so 'random' is supported. The seed definition doesn't say 'random', but the evidence does, so the draft is correct. However, the seed definition is the target, so the draft should be verified against evidence, not against seed definition. The task is to verify the drafted field against cited evidence. The evidence supports 'randomly partitioned', so the draft's 'random' is supported. The seed definition is just the starting point, but the verification is against evidence. So the draft is supported. But the seed definition says 'single split' and the draft says 'single random partition'. 'Split' and 'partition' are synonymous in this context. So the draft is correct. However, the seed definition doesn't include 'labeled', but the evidence says 'labeled data set', so the draft's 'labeled' is supported. So the draft is correct. But the seed definition is 'A single split of the dataset D into Dtrain and Dtest.' The draft says 'A single random partition of a labeled dataset into training and test sets for model evaluation.' The evidence says 'randomly partitioned' and 'labeled data set', so the draft is correct. So why would it be 'abstain'? The evidence only has E1, and it's cited for both definition and scope. The scope draft says 'It provides a straightforward estimate of model performance on unseen data but is sensitive to the specific split chosen.' The evidence doesn't say anything about 'straightforward estimate' or 'sensitive to the specific split chosen'. The evidence only says 'The most basic technique for partitioning a labeled data set is the holdout method, where the labeled set D is randomly partitioned into two disjoint sets, called the training set D.train and the test set D.test.' So the scope draft is not supported by the evidence. The evidence doesn't mention anything about performance estimation or sensitivity to split. So the scope draft is unsupported. For definition, the draft is supported by evidence. For scope, the draft is not supported by evidence. So for scope, it should be 'abstained' because the draft contains unsupported material. The scope draft says 'It provides a straightforward estimate of model performance on unseen data but is sensitive to the specific split chosen.' The evidence doesn't say that. So scope should be 'abstained'. But the task says:",
+            "definition_redraft_status": "grounded",
+            "definition_redraft_verify_status": "abstained",
+            "definition_redraft_verify_reason": "Draft definition claims 'Dtrain and Dtest' but evidence uses 'D.train and D.test' - inconsistent naming convention. Draft also omits 'randomly' which is explicitly stated in evidence.",
+            "control_fallback_candidate_present": true,
+            "control_fallback_source_phase": "preservation_draft_response",
+            "control_fallback_support_ids": [
+              "KC_EVAL_SAMP_001:overlay:dac9b6ff7a94d563"
+            ],
+            "control_fallback_applied": false,
+            "final_selection_reason": "definition_full_candidate_source_faithful_local_quote_normalization",
+            "collapse_stage": "grounded_before_control_fallback"
+          },
+          "grounding_diagnostics_basis": "inferred_from_saved_step67_payloads"
+        }
+      ]
+    }
+  ]
+}

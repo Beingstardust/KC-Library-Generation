@@ -1,0 +1,389 @@
+{
+  "generated_at_utc": "2026-04-17T22:49:32Z",
+  "baseline_run_id": "2026-04-16_194203",
+  "candidate_run_id": "2026-04-17_194932",
+  "baseline_status_counts": {
+    "normalized_grounded": 20,
+    "seed_floor_fallback": 113,
+    "direct_grounded": 11
+  },
+  "candidate_status_counts": {
+    "normalized_grounded": 19,
+    "seed_floor_fallback": 115,
+    "direct_grounded": 10
+  },
+  "baseline_llm_calls": 580,
+  "candidate_llm_calls": 862,
+  "transition_counts": {
+    "direct_grounded->direct_grounded": 5,
+    "direct_grounded->normalized_grounded": 2,
+    "direct_grounded->seed_floor_fallback": 4,
+    "normalized_grounded->direct_grounded": 4,
+    "normalized_grounded->normalized_grounded": 16,
+    "seed_floor_fallback->direct_grounded": 1,
+    "seed_floor_fallback->normalized_grounded": 1,
+    "seed_floor_fallback->seed_floor_fallback": 111
+  },
+  "binding_touch_summary": {
+    "touched_and_harmed": 1,
+    "touched_and_improved": 3,
+    "touched_and_unchanged": 15,
+    "untouched_but_regressed": 5,
+    "untouched_and_stable": 117,
+    "untouched_but_improved": 3
+  },
+  "regressions": [
+    {
+      "kc_id": "KC_CLU_DBS_002",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "normalized_grounded",
+      "baseline_trust_state": "grounded_with_gaps",
+      "candidate_trust_state": "grounded_with_gaps",
+      "delta": -1,
+      "binding_touch_classification": "touched_and_harmed",
+      "binding_repair_diagnostics": {
+        "repair_state": "repair_attempted_and_applied",
+        "repair_applied": true,
+        "repair_reason": "promoted_stronger_same_kc_definition_anchor",
+        "repair_attempt_reason": "promoted_stronger_same_kc_definition_anchor",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [
+          "KC_CLU_DBS_002:overlay:97058c7eb759a6a4"
+        ],
+        "chosen_support_ids": [
+          "KC_CLU_DBS_002:overlay:89b40752c5ebb8b6"
+        ],
+        "current_binding_mode": "single_row",
+        "final_binding_mode": "single_row",
+        "stronger_same_kc_candidate_existed": true,
+        "raw_repair_reason": "promoted_stronger_same_kc_definition_anchor"
+      }
+    },
+    {
+      "kc_id": "KC_CLU_EVAL_001",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "seed_floor_fallback",
+      "baseline_trust_state": "grounded",
+      "candidate_trust_state": "fallback_seed_floor",
+      "delta": -2,
+      "binding_touch_classification": "untouched_but_regressed",
+      "binding_repair_diagnostics": {
+        "repair_state": "no_binding_possible",
+        "repair_applied": false,
+        "repair_reason": "definition_not_grounded",
+        "repair_attempt_reason": "",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [],
+        "chosen_support_ids": [],
+        "current_binding_mode": "none",
+        "final_binding_mode": "none",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "definition_not_grounded"
+      }
+    },
+    {
+      "kc_id": "KC_CLU_EVAL_002",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "seed_floor_fallback",
+      "baseline_trust_state": "grounded",
+      "candidate_trust_state": "fallback_seed_floor",
+      "delta": -2,
+      "binding_touch_classification": "untouched_but_regressed",
+      "binding_repair_diagnostics": {
+        "repair_state": "no_binding_possible",
+        "repair_applied": false,
+        "repair_reason": "definition_not_grounded",
+        "repair_attempt_reason": "",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [],
+        "chosen_support_ids": [],
+        "current_binding_mode": "none",
+        "final_binding_mode": "none",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "definition_not_grounded"
+      }
+    },
+    {
+      "kc_id": "KC_DE_PREP_004",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "seed_floor_fallback",
+      "baseline_trust_state": "grounded",
+      "candidate_trust_state": "fallback_seed_floor",
+      "delta": -2,
+      "binding_touch_classification": "untouched_but_regressed",
+      "binding_repair_diagnostics": {
+        "repair_state": "no_binding_possible",
+        "repair_applied": false,
+        "repair_reason": "definition_not_grounded",
+        "repair_attempt_reason": "",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [],
+        "chosen_support_ids": [],
+        "current_binding_mode": "none",
+        "final_binding_mode": "none",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "definition_not_grounded"
+      }
+    },
+    {
+      "kc_id": "KC_EVAL_BASIC_005",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "seed_floor_fallback",
+      "baseline_trust_state": "grounded",
+      "candidate_trust_state": "fallback_seed_floor",
+      "delta": -2,
+      "binding_touch_classification": "untouched_but_regressed",
+      "binding_repair_diagnostics": {
+        "repair_state": "no_binding_possible",
+        "repair_applied": false,
+        "repair_reason": "definition_not_grounded",
+        "repair_attempt_reason": "",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [],
+        "chosen_support_ids": [],
+        "current_binding_mode": "none",
+        "final_binding_mode": "none",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "definition_not_grounded"
+      }
+    },
+    {
+      "kc_id": "KC_EVAL_SAMP_001",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "normalized_grounded",
+      "baseline_trust_state": "grounded",
+      "candidate_trust_state": "grounded_with_gaps",
+      "delta": -1,
+      "binding_touch_classification": "untouched_but_regressed",
+      "binding_repair_diagnostics": {
+        "repair_state": "repair_attempted_but_rejected",
+        "repair_applied": false,
+        "repair_reason": "legacy_action_reason_without_applied_flag",
+        "repair_attempt_reason": "replaced_weak_definition_anchor",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [
+          "KC_EVAL_SAMP_001:overlay:dac9b6ff7a94d563"
+        ],
+        "chosen_support_ids": [
+          "KC_EVAL_SAMP_001:overlay:dac9b6ff7a94d563"
+        ],
+        "current_binding_mode": "single_row",
+        "final_binding_mode": "single_row",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "replaced_weak_definition_anchor"
+      }
+    }
+  ],
+  "improvements": [
+    {
+      "kc_id": "KC_CLF_NB_001",
+      "baseline_status": "seed_floor_fallback",
+      "candidate_status": "normalized_grounded",
+      "baseline_trust_state": "fallback_seed_floor",
+      "candidate_trust_state": "grounded_with_gaps",
+      "delta": 1,
+      "binding_touch_classification": "touched_and_improved",
+      "binding_repair_diagnostics": {
+        "repair_state": "repair_attempted_and_applied",
+        "repair_applied": true,
+        "repair_reason": "blocked_out_of_pool_definition_binding",
+        "repair_attempt_reason": "blocked_out_of_pool_definition_binding",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [
+          "KC_CLF_NB_001:overlay:5bf905c8e37f639a",
+          "KC_CLF_NB_001:overlay:9b03b6ae380d281e",
+          "KC_CLF_NB_001:overlay:261df1a171179fc4",
+          "KC_CLF_NB_001:overlay:564af1b9392a9bd1",
+          "KC_CLF_NB_001:overlay:8fded1eaf7b918de",
+          "KC_CLF_NB_001:overlay:c7c8e4fb41d0fef8",
+          "KC_CLF_NB_001:overlay:cf1dae0daf777865",
+          "KC_CLF_NB_001:overlay:e0e8721eb3735f57",
+          "KC_CLF_NB_001:overlay:efaeeab7da82a1d5"
+        ],
+        "chosen_support_ids": [
+          "KC_CLF_NB_001:overlay:5bf905c8e37f639a"
+        ],
+        "current_binding_mode": "multi_row",
+        "final_binding_mode": "single_row",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "blocked_out_of_pool_definition_binding"
+      }
+    },
+    {
+      "kc_id": "KC_DE_PREP_002",
+      "baseline_status": "seed_floor_fallback",
+      "candidate_status": "direct_grounded",
+      "baseline_trust_state": "fallback_seed_floor",
+      "candidate_trust_state": "grounded_with_gaps",
+      "delta": 2,
+      "binding_touch_classification": "touched_and_improved",
+      "binding_repair_diagnostics": {
+        "repair_state": "repair_attempted_and_applied",
+        "repair_applied": true,
+        "repair_reason": "promoted_bounded_multi_row_definition_binding",
+        "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [
+          "KC_DE_PREP_002:overlay:e9a5307ee043045b",
+          "KC_DE_PREP_002:overlay:e5a5186c53b026f4",
+          "KC_DE_PREP_002:overlay:eca813a96ca77336"
+        ],
+        "chosen_support_ids": [
+          "KC_DE_PREP_002:overlay:e9a5307ee043045b",
+          "KC_DE_PREP_002:overlay:e5a5186c53b026f4"
+        ],
+        "current_binding_mode": "multi_row",
+        "final_binding_mode": "multi_row",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+      }
+    },
+    {
+      "kc_id": "KC_EVAL_BASIC_003",
+      "baseline_status": "normalized_grounded",
+      "candidate_status": "direct_grounded",
+      "baseline_trust_state": "grounded_with_gaps",
+      "candidate_trust_state": "grounded_with_gaps",
+      "delta": 1,
+      "binding_touch_classification": "touched_and_improved",
+      "binding_repair_diagnostics": {
+        "repair_state": "repair_attempted_and_applied",
+        "repair_applied": true,
+        "repair_reason": "promoted_bounded_multi_row_definition_binding",
+        "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [
+          "KC_EVAL_BASIC_003:overlay:eeb4419a42fdaea7",
+          "KC_EVAL_BASIC_003:overlay:84309ff05aaf98fe",
+          "KC_EVAL_BASIC_003:overlay:24c3c31897a7c185",
+          "KC_EVAL_BASIC_003:overlay:c021890a04cf2bad"
+        ],
+        "chosen_support_ids": [
+          "KC_EVAL_BASIC_003:overlay:6097bd1c83d3b38f",
+          "KC_EVAL_BASIC_003:overlay:84309ff05aaf98fe"
+        ],
+        "current_binding_mode": "multi_row",
+        "final_binding_mode": "multi_row",
+        "stronger_same_kc_candidate_existed": true,
+        "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+      }
+    },
+    {
+      "kc_id": "KC_EVAL_BASIC_006",
+      "baseline_status": "normalized_grounded",
+      "candidate_status": "direct_grounded",
+      "baseline_trust_state": "grounded_with_gaps",
+      "candidate_trust_state": "grounded",
+      "delta": 1,
+      "binding_touch_classification": "untouched_but_improved",
+      "binding_repair_diagnostics": {
+        "repair_state": "no_repair_needed",
+        "repair_applied": false,
+        "repair_reason": "retained_existing_binding",
+        "repair_attempt_reason": "",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [
+          "KC_EVAL_BASIC_006:overlay:c0edf5a5505ad459"
+        ],
+        "chosen_support_ids": [
+          "KC_EVAL_BASIC_006:overlay:c0edf5a5505ad459"
+        ],
+        "current_binding_mode": "single_row",
+        "final_binding_mode": "single_row",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "retained_existing_binding"
+      }
+    },
+    {
+      "kc_id": "KC_FSEL_GOOD_003",
+      "baseline_status": "normalized_grounded",
+      "candidate_status": "direct_grounded",
+      "baseline_trust_state": "grounded_with_gaps",
+      "candidate_trust_state": "grounded_with_gaps",
+      "delta": 1,
+      "binding_touch_classification": "untouched_but_improved",
+      "binding_repair_diagnostics": {
+        "repair_state": "no_repair_needed",
+        "repair_applied": false,
+        "repair_reason": "retained_existing_binding",
+        "repair_attempt_reason": "",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [
+          "KC_FSEL_GOOD_003:overlay:e4e5e2cb071e25f5"
+        ],
+        "chosen_support_ids": [
+          "KC_FSEL_GOOD_003:overlay:e4e5e2cb071e25f5"
+        ],
+        "current_binding_mode": "single_row",
+        "final_binding_mode": "single_row",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "retained_existing_binding"
+      }
+    },
+    {
+      "kc_id": "KC_FSEL_STAT_001",
+      "baseline_status": "normalized_grounded",
+      "candidate_status": "direct_grounded",
+      "baseline_trust_state": "grounded_with_gaps",
+      "candidate_trust_state": "grounded",
+      "delta": 1,
+      "binding_touch_classification": "untouched_but_improved",
+      "binding_repair_diagnostics": {
+        "repair_state": "repair_attempted_but_rejected",
+        "repair_applied": false,
+        "repair_reason": "legacy_action_reason_without_applied_flag",
+        "repair_attempt_reason": "replaced_weak_definition_anchor",
+        "basis": "legacy_binding_diagnostics_inference",
+        "current_support_ids": [
+          "KC_FSEL_STAT_001:overlay:76c49fb575e4dc66"
+        ],
+        "chosen_support_ids": [
+          "KC_FSEL_STAT_001:overlay:76c49fb575e4dc66"
+        ],
+        "current_binding_mode": "single_row",
+        "final_binding_mode": "single_row",
+        "stronger_same_kc_candidate_existed": false,
+        "raw_repair_reason": "replaced_weak_definition_anchor"
+      }
+    }
+  ],
+  "no_regression_gate": {
+    "pass": false,
+    "baseline_run_id": "2026-04-16_194203",
+    "candidate_run_id": "2026-04-17_194932",
+    "direct_to_fallback_kcs": [
+      "KC_CLU_EVAL_001",
+      "KC_CLU_EVAL_002",
+      "KC_DE_PREP_004",
+      "KC_EVAL_BASIC_005"
+    ],
+    "baseline_seed_floor_fallback": 113,
+    "candidate_seed_floor_fallback": 115,
+    "baseline_grounded_total": 31,
+    "candidate_grounded_total": 29,
+    "grounded_gain": -2,
+    "baseline_llm_calls": 580,
+    "candidate_llm_calls": 862,
+    "llm_call_delta": 282,
+    "material_llm_call_increase_threshold": 58,
+    "reasons": [
+      "previously direct-grounded KCs fell to seed-floor fallback: KC_CLU_EVAL_001, KC_CLU_EVAL_002, KC_DE_PREP_004, KC_EVAL_BASIC_005",
+      "seed-floor fallback increased from 113 to 115",
+      "llm_calls rose materially without enough grounded gain (delta=282, grounded_gain=-2)"
+    ]
+  },
+  "artifacts": {
+    "baseline": {
+      "set_path": "data/processed/kc_drafts/_sets/2026-04-16_194203_step6_7_kc_drafts_set.json",
+      "bundle_path": "data/processed/kc_drafts/2026-04-16_194203/kc_draft_bundles.jsonl",
+      "summary_path": "data/runs/2026-04-16_194203_step6_7/summary.json",
+      "input_manifest_path": "data/runs/2026-04-16_194203_step6_7/input_manifest.json"
+    },
+    "candidate": {
+      "set_path": "data/processed/kc_drafts/_sets/2026-04-17_194932_step6_7_kc_drafts_set.json",
+      "bundle_path": "data/processed/kc_drafts/2026-04-17_194932/kc_draft_bundles.jsonl",
+      "summary_path": "data/runs/2026-04-17_194932_step6_7/summary.json",
+      "input_manifest_path": "data/runs/2026-04-17_194932_step6_7/input_manifest.json"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema_profile_version": "kc_library.extension_schema.v1",
+  "locked_core_version": "kc_library.locked_core.v1",
+  "profile_name": "template_extension_profile",
+  "description": "Edit this profile before a run if the source materials justify bounded optional fields.",
+  "extension_fields": [
+    {
+      "field_id": "teaching_context",
+      "type": "markdown",
+      "status": "optional",
+      "description": "Optional teaching-context note grounded in the source materials.",
+      "default": ""
+    },
+    {
+      "field_id": "common_operator_note",
+      "type": "string",
+      "status": "optional",
+      "description": "Optional bounded operator note captured at review time.",
+      "default": ""
+    }
+  ],
+  "notes": [
+    "Do not remove or rename locked core fields.",
+    "Do not add kc_specific_criteria here.",
+    "Freeze the chosen extension profile into the run manifest before draft generation."
+  ]
+}

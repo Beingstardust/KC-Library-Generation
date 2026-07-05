@@ -1,0 +1,21 @@
+{
+  "stage": "step67c_validate_onepass_drafts",
+  "run_id": "2026-04-28_152125",
+  "created_utc": "2026-04-28T15:21:25.966583+00:00",
+  "packets_path": "data/processed/step67_sidecar_packets/2026-04-28_130527/evidence_packets.jsonl",
+  "drafts_path": "data/processed/step67_sidecar_rescued_drafts/2026-04-28_152034/onepass_drafts.jsonl",
+  "out_dir": "data/processed/step67_sidecar_validated/2026-04-28_152125",
+  "packet_count": 10,
+  "draft_row_count": 10,
+  "valid_row_count": 10,
+  "error_row_count": 0,
+  "warning_row_count": 0,
+  "status_counter": {
+    "definition::grounded": 2,
+    "scope::abstained": 5,
+    "definition::abstained": 8,
+    "scope::grounded": 5
+  },
+  "issue_counter": {},
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

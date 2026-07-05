@@ -1,0 +1,6 @@
+inputs:
+  step6_11_set_manifest: data/processed/kc_library_reviewed_restarted/_sets/2026-03-23_132444_step6_11_kc_library_reviewed_restarted_set.json
+outputs:
+  processed_root: data/processed/kc_library_runtime_restarted
+  sets_root: data/processed/kc_library_runtime_restarted/_sets
+  runs_root: data/runs

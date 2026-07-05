@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "final": true,
+  "completed_kc_ids": [
+    "KC_ROUTE_SERIALIZE"
+  ],
+  "remaining_kc_ids": [],
+  "profile_jsonl": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/out_route_serialization/route_serialization/kc_retrieval_profiles.jsonl",
+  "checkpoint_json": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/out_route_serialization/route_serialization/kc_retrieval_profile_checkpoint.json"
+}

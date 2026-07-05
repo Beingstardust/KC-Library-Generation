@@ -1,0 +1,3779 @@
+{
+  "baseline_run_id": "2026-04-16_194203",
+  "candidate_run_ids": [
+    "2026-04-17_194932"
+  ],
+  "comparisons": [
+    {
+      "baseline_run_id": "2026-04-16_194203",
+      "candidate_run_id": "2026-04-17_194932",
+      "baseline_status_counts": {
+        "normalized_grounded": 20,
+        "seed_floor_fallback": 113,
+        "direct_grounded": 11
+      },
+      "candidate_status_counts": {
+        "normalized_grounded": 19,
+        "seed_floor_fallback": 115,
+        "direct_grounded": 10
+      },
+      "baseline_llm_calls": 580,
+      "candidate_llm_calls": 862,
+      "transition_counts": {
+        "direct_grounded->direct_grounded": 5,
+        "direct_grounded->normalized_grounded": 2,
+        "direct_grounded->seed_floor_fallback": 4,
+        "normalized_grounded->direct_grounded": 4,
+        "normalized_grounded->normalized_grounded": 16,
+        "seed_floor_fallback->direct_grounded": 1,
+        "seed_floor_fallback->normalized_grounded": 1,
+        "seed_floor_fallback->seed_floor_fallback": 111
+      },
+      "binding_touch_summary": {
+        "touched_and_harmed": 1,
+        "touched_and_improved": 3,
+        "touched_and_unchanged": 15,
+        "untouched_but_regressed": 5,
+        "untouched_and_stable": 117,
+        "untouched_but_improved": 3
+      },
+      "regression_count": 6,
+      "improvement_count": 6,
+      "unchanged_count": 132,
+      "regressions": [
+        {
+          "kc_id": "KC_CLU_DBS_002",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": -1,
+          "binding_touch_classification": "touched_and_harmed",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_stronger_same_kc_definition_anchor",
+            "repair_attempt_reason": "promoted_stronger_same_kc_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_DBS_002:overlay:97058c7eb759a6a4"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_DBS_002:overlay:89b40752c5ebb8b6"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": true,
+            "raw_repair_reason": "promoted_stronger_same_kc_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_001",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": -2,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_002",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": -2,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_DE_PREP_004",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": -2,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_005",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": -2,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_SAMP_001",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": -1,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_but_rejected",
+            "repair_applied": false,
+            "repair_reason": "legacy_action_reason_without_applied_flag",
+            "repair_attempt_reason": "replaced_weak_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_EVAL_SAMP_001:overlay:dac9b6ff7a94d563"
+            ],
+            "chosen_support_ids": [
+              "KC_EVAL_SAMP_001:overlay:dac9b6ff7a94d563"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "replaced_weak_definition_anchor"
+          }
+        }
+      ],
+      "improvements": [
+        {
+          "kc_id": "KC_CLF_NB_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 1,
+          "binding_touch_classification": "touched_and_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "blocked_out_of_pool_definition_binding",
+            "repair_attempt_reason": "blocked_out_of_pool_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLF_NB_001:overlay:5bf905c8e37f639a",
+              "KC_CLF_NB_001:overlay:9b03b6ae380d281e",
+              "KC_CLF_NB_001:overlay:261df1a171179fc4",
+              "KC_CLF_NB_001:overlay:564af1b9392a9bd1",
+              "KC_CLF_NB_001:overlay:8fded1eaf7b918de",
+              "KC_CLF_NB_001:overlay:c7c8e4fb41d0fef8",
+              "KC_CLF_NB_001:overlay:cf1dae0daf777865",
+              "KC_CLF_NB_001:overlay:e0e8721eb3735f57",
+              "KC_CLF_NB_001:overlay:efaeeab7da82a1d5"
+            ],
+            "chosen_support_ids": [
+              "KC_CLF_NB_001:overlay:5bf905c8e37f639a"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "blocked_out_of_pool_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_DE_PREP_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 2,
+          "binding_touch_classification": "touched_and_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_DE_PREP_002:overlay:e9a5307ee043045b",
+              "KC_DE_PREP_002:overlay:e5a5186c53b026f4",
+              "KC_DE_PREP_002:overlay:eca813a96ca77336"
+            ],
+            "chosen_support_ids": [
+              "KC_DE_PREP_002:overlay:e9a5307ee043045b",
+              "KC_DE_PREP_002:overlay:e5a5186c53b026f4"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_003",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 1,
+          "binding_touch_classification": "touched_and_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_EVAL_BASIC_003:overlay:eeb4419a42fdaea7",
+              "KC_EVAL_BASIC_003:overlay:84309ff05aaf98fe",
+              "KC_EVAL_BASIC_003:overlay:24c3c31897a7c185",
+              "KC_EVAL_BASIC_003:overlay:c021890a04cf2bad"
+            ],
+            "chosen_support_ids": [
+              "KC_EVAL_BASIC_003:overlay:6097bd1c83d3b38f",
+              "KC_EVAL_BASIC_003:overlay:84309ff05aaf98fe"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": true,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_006",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded",
+          "delta": 1,
+          "binding_touch_classification": "untouched_but_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_repair_needed",
+            "repair_applied": false,
+            "repair_reason": "retained_existing_binding",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_EVAL_BASIC_006:overlay:c0edf5a5505ad459"
+            ],
+            "chosen_support_ids": [
+              "KC_EVAL_BASIC_006:overlay:c0edf5a5505ad459"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "retained_existing_binding"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GOOD_003",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 1,
+          "binding_touch_classification": "untouched_but_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_repair_needed",
+            "repair_applied": false,
+            "repair_reason": "retained_existing_binding",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_FSEL_GOOD_003:overlay:e4e5e2cb071e25f5"
+            ],
+            "chosen_support_ids": [
+              "KC_FSEL_GOOD_003:overlay:e4e5e2cb071e25f5"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "retained_existing_binding"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_STAT_001",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded",
+          "delta": 1,
+          "binding_touch_classification": "untouched_but_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_but_rejected",
+            "repair_applied": false,
+            "repair_reason": "legacy_action_reason_without_applied_flag",
+            "repair_attempt_reason": "replaced_weak_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_FSEL_STAT_001:overlay:76c49fb575e4dc66"
+            ],
+            "chosen_support_ids": [
+              "KC_FSEL_STAT_001:overlay:76c49fb575e4dc66"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "replaced_weak_definition_anchor"
+          }
+        }
+      ],
+      "per_kc": [
+        {
+          "kc_id": "KC_CLF_DT_001",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_stronger_same_kc_definition_anchor",
+            "repair_attempt_reason": "promoted_stronger_same_kc_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLF_DT_001:overlay:2b0e90a965988dfe"
+            ],
+            "chosen_support_ids": [
+              "KC_CLF_DT_001:overlay:7ce4809045d61dd4"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": true,
+            "raw_repair_reason": "promoted_stronger_same_kc_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_004",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_repair_needed",
+            "repair_applied": false,
+            "repair_reason": "retained_existing_binding",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLF_DT_004:overlay:33227da83bf9442d"
+            ],
+            "chosen_support_ids": [
+              "KC_CLF_DT_004:overlay:33227da83bf9442d"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "retained_existing_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_007",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_008",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "blocked_out_of_pool_definition_binding",
+            "repair_attempt_reason": "blocked_out_of_pool_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLF_DT_008:overlay:c7cb51d40b27e5d1"
+            ],
+            "chosen_support_ids": [
+              "KC_CLF_DT_008:overlay:221536df78a7544d"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "blocked_out_of_pool_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_009",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_010",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_011",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLF_DT_011:overlay:595dcafeb4d72439",
+              "KC_CLF_DT_011:overlay:8c45fac091f67f0e",
+              "KC_CLF_DT_011:overlay:e7f02cf090a0a73e",
+              "KC_CLF_DT_011:overlay:1c7a843f49d51d62",
+              "KC_CLF_DT_011:overlay:edd38d97bba437b1",
+              "KC_CLF_DT_011:overlay:f5ea802af16ad5a3"
+            ],
+            "chosen_support_ids": [
+              "KC_CLF_DT_011:overlay:595dcafeb4d72439",
+              "KC_CLF_DT_011:overlay:e7f02cf090a0a73e"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_DT_012",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 1,
+          "binding_touch_classification": "touched_and_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "blocked_out_of_pool_definition_binding",
+            "repair_attempt_reason": "blocked_out_of_pool_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLF_NB_001:overlay:5bf905c8e37f639a",
+              "KC_CLF_NB_001:overlay:9b03b6ae380d281e",
+              "KC_CLF_NB_001:overlay:261df1a171179fc4",
+              "KC_CLF_NB_001:overlay:564af1b9392a9bd1",
+              "KC_CLF_NB_001:overlay:8fded1eaf7b918de",
+              "KC_CLF_NB_001:overlay:c7c8e4fb41d0fef8",
+              "KC_CLF_NB_001:overlay:cf1dae0daf777865",
+              "KC_CLF_NB_001:overlay:e0e8721eb3735f57",
+              "KC_CLF_NB_001:overlay:efaeeab7da82a1d5"
+            ],
+            "chosen_support_ids": [
+              "KC_CLF_NB_001:overlay:5bf905c8e37f639a"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "blocked_out_of_pool_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_007",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_008",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_009",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_010",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLF_NB_010:overlay:b1368dd32f24dfcb",
+              "KC_CLF_NB_010:overlay:4d5972fc39ea4d6d",
+              "KC_CLF_NB_010:overlay:6d7ebfac312e6935",
+              "KC_CLF_NB_010:overlay:8cbaa6002ac56e0d",
+              "KC_CLF_NB_010:overlay:036a1566e88d854d",
+              "KC_CLF_NB_010:overlay:12ac51e48def2333",
+              "KC_CLF_NB_010:overlay:26d319da042cecf6",
+              "KC_CLF_NB_010:overlay:469601e061bd541b",
+              "KC_CLF_NB_010:overlay:46fad656614f44ae",
+              "KC_CLF_NB_010:overlay:4a108d453c379d84",
+              "KC_CLF_NB_010:overlay:8570987f8729c651",
+              "KC_CLF_NB_010:overlay:8bc335882b0ae4db",
+              "KC_CLF_NB_010:overlay:b9b8f7b22de50146",
+              "KC_CLF_NB_010:overlay:d1f40ac8b7c8ffbd"
+            ],
+            "chosen_support_ids": [
+              "KC_CLF_NB_010:overlay:b1368dd32f24dfcb",
+              "KC_CLF_NB_010:overlay:3b1a8f989ec81e49"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_NB_011",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_UND_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_UND_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_UND_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_UND_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLF_UND_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_CORE_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_CORE_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_CORE_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_DBS_001",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_stronger_same_kc_definition_anchor",
+            "repair_attempt_reason": "promoted_stronger_same_kc_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_DBS_001:overlay:46df964d16c175c8"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_DBS_001:overlay:e2df1debed700144"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": true,
+            "raw_repair_reason": "promoted_stronger_same_kc_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_DBS_002",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": -1,
+          "binding_touch_classification": "touched_and_harmed",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_stronger_same_kc_definition_anchor",
+            "repair_attempt_reason": "promoted_stronger_same_kc_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_DBS_002:overlay:97058c7eb759a6a4"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_DBS_002:overlay:89b40752c5ebb8b6"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": true,
+            "raw_repair_reason": "promoted_stronger_same_kc_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_DBS_003",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_repair_needed",
+            "repair_applied": false,
+            "repair_reason": "retained_existing_binding",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_DBS_003:overlay:67d695044ee08740"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_DBS_003:overlay:67d695044ee08740"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "retained_existing_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_DBS_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_DBS_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_DBS_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_DBS_007",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_DBS_008",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_DBS_009",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_001",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": -2,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_002",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": -2,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_003",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "blocked_out_of_pool_definition_binding",
+            "repair_attempt_reason": "blocked_out_of_pool_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_EVAL_003:overlay:3cb328544421b7f1"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_EVAL_003:overlay:48fb5f38fc4851e1"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "blocked_out_of_pool_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_004",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_EVAL_004:overlay:5fa123a2ec010062",
+              "KC_CLU_EVAL_004:overlay:0479593e19fe0828",
+              "KC_CLU_EVAL_004:overlay:2f5950d25393f2f7",
+              "KC_CLU_EVAL_004:overlay:52a819a7bb95fce6",
+              "KC_CLU_EVAL_004:overlay:597445f9fd187a4e",
+              "KC_CLU_EVAL_004:overlay:70c2142be31770ed",
+              "KC_CLU_EVAL_004:overlay:7117b95d16784857",
+              "KC_CLU_EVAL_004:overlay:720f8a30171b5f1f",
+              "KC_CLU_EVAL_004:overlay:9351f41d6c7e9399",
+              "KC_CLU_EVAL_004:overlay:a735e359cfa0853a",
+              "KC_CLU_EVAL_004:overlay:be4cac9d37baf436",
+              "KC_CLU_EVAL_004:overlay:be99b161d49dd8ca",
+              "KC_CLU_EVAL_004:overlay:d489fd70c50afab0",
+              "KC_CLU_EVAL_004:overlay:fc2eab85b291d049",
+              "KC_CLU_EVAL_004:overlay:a73fa70f5bda7b5c",
+              "KC_CLU_EVAL_004:overlay:d68a8b6235978ab1",
+              "KC_CLU_EVAL_004:overlay:fc37574ef5a94ece"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_EVAL_004:overlay:0479593e19fe0828",
+              "KC_CLU_EVAL_004:overlay:5fa123a2ec010062"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_005",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_EVAL_005:overlay:9beb3f43805a0030",
+              "KC_CLU_EVAL_005:overlay:0d72b2360a708371",
+              "KC_CLU_EVAL_005:overlay:0eed3615000c34fc",
+              "KC_CLU_EVAL_005:overlay:359a48d73aa8679b",
+              "KC_CLU_EVAL_005:overlay:52f03df92ad66d78",
+              "KC_CLU_EVAL_005:overlay:62b966f749c6963b",
+              "KC_CLU_EVAL_005:overlay:705851c9ea1e2574",
+              "KC_CLU_EVAL_005:overlay:84ae32bb8be03113",
+              "KC_CLU_EVAL_005:overlay:90764c6abbb27d53",
+              "KC_CLU_EVAL_005:overlay:ac43a0f86134fd64",
+              "KC_CLU_EVAL_005:overlay:b900b13f0bdd3140",
+              "KC_CLU_EVAL_005:overlay:bd0a95521b0ba0d3",
+              "KC_CLU_EVAL_005:overlay:fb4cdbd6e16c0380",
+              "KC_CLU_EVAL_005:overlay:0cfbec7e18e3f8b6",
+              "KC_CLU_EVAL_005:overlay:2d8611fe911737b9",
+              "KC_CLU_EVAL_005:overlay:5e7b54c111de4c82",
+              "KC_CLU_EVAL_005:overlay:fc049904f33389a6"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_EVAL_005:overlay:9beb3f43805a0030",
+              "KC_CLU_EVAL_005:overlay:52f03df92ad66d78"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_007",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_008",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_009",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_010",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_011",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_012",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_EVAL_013",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_HIER_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_HIER_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_HIER_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_HIER_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_HIER_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_HIER_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_HIER_007",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_HIER_007:overlay:d9fb4716a522af06",
+              "KC_CLU_HIER_007:overlay:7c1d3261b97aeeff",
+              "KC_CLU_HIER_007:overlay:8c6c438c90d44ff3",
+              "KC_CLU_HIER_007:overlay:4524ec9cfebefe1e",
+              "KC_CLU_HIER_007:overlay:8f887b2159637c69"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_HIER_007:overlay:d9fb4716a522af06",
+              "KC_CLU_HIER_007:overlay:3d9817bce85dd8da"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_HIER_008",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_KM_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_KM_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_KM_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_KM_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_KM_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_KM_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_SIM_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_SIM_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_SIM_003",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_stronger_same_kc_definition_anchor",
+            "repair_attempt_reason": "promoted_stronger_same_kc_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_SIM_003:overlay:7a8dbeb642a689df"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_SIM_003:overlay:23aad5bdeb457b42"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": true,
+            "raw_repair_reason": "promoted_stronger_same_kc_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_SIM_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_SIM_005",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_stronger_same_kc_definition_anchor",
+            "repair_attempt_reason": "promoted_stronger_same_kc_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_SIM_005:overlay:594939af78b23b46"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_SIM_005:overlay:53bb9c299a199f4e"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": true,
+            "raw_repair_reason": "promoted_stronger_same_kc_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_SIM_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_SIM_007",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_SIM_007:overlay:be492a0ad7d2f71b",
+              "KC_CLU_SIM_007:overlay:1715a7526e208632",
+              "KC_CLU_SIM_007:overlay:5d10856fb79117e9",
+              "KC_CLU_SIM_007:overlay:a73fbf14abad8434",
+              "KC_CLU_SIM_007:overlay:e7635e03230c1c19",
+              "KC_CLU_SIM_007:overlay:fd78cac9932bb891",
+              "KC_CLU_SIM_007:overlay:0519951356d09ed4",
+              "KC_CLU_SIM_007:overlay:21376c4fe49ebd07",
+              "KC_CLU_SIM_007:overlay:6cfa28b0f6378b91",
+              "KC_CLU_SIM_007:overlay:719b00e730bd9f30",
+              "KC_CLU_SIM_007:overlay:acf8104af7ef3ae5",
+              "KC_CLU_SIM_007:overlay:c68fc75c876d4c0f",
+              "KC_CLU_SIM_007:overlay:ce78bca4bc9e1efc",
+              "KC_CLU_SIM_007:overlay:dc4307b4eefbc95e"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_SIM_007:overlay:be492a0ad7d2f71b",
+              "KC_CLU_SIM_007:overlay:a73fbf14abad8434"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_CLU_SIM_008",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_CLU_SIM_008:overlay:3107035bf49d5872",
+              "KC_CLU_SIM_008:overlay:272f696100a540c9",
+              "KC_CLU_SIM_008:overlay:39e636a1b37a3fad",
+              "KC_CLU_SIM_008:overlay:476a70465dc05ac9",
+              "KC_CLU_SIM_008:overlay:5e6af9a78e443ec1",
+              "KC_CLU_SIM_008:overlay:6904b601e38fcbb3",
+              "KC_CLU_SIM_008:overlay:6f99d25d5bc0e7bc",
+              "KC_CLU_SIM_008:overlay:7aa02603378026bc",
+              "KC_CLU_SIM_008:overlay:a6128aa9c1e6232f",
+              "KC_CLU_SIM_008:overlay:b44f2273cd2195a3",
+              "KC_CLU_SIM_008:overlay:d554417e97c362e3",
+              "KC_CLU_SIM_008:overlay:fe4eb8ca0b055a38",
+              "KC_CLU_SIM_008:overlay:fe80cf57b815b484",
+              "KC_CLU_SIM_008:overlay:056e11ce2109c8ac",
+              "KC_CLU_SIM_008:overlay:e6dd37d5e0f16ee1"
+            ],
+            "chosen_support_ids": [
+              "KC_CLU_SIM_008:overlay:3107035bf49d5872",
+              "KC_CLU_SIM_008:overlay:b44f2273cd2195a3"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_DE_MISS_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_DE_MISS_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_DE_MISS_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_DE_MISS_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_DE_MISS_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_DE_PREP_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_DE_PREP_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 2,
+          "binding_touch_classification": "touched_and_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_DE_PREP_002:overlay:e9a5307ee043045b",
+              "KC_DE_PREP_002:overlay:e5a5186c53b026f4",
+              "KC_DE_PREP_002:overlay:eca813a96ca77336"
+            ],
+            "chosen_support_ids": [
+              "KC_DE_PREP_002:overlay:e9a5307ee043045b",
+              "KC_DE_PREP_002:overlay:e5a5186c53b026f4"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_DE_PREP_003",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_but_rejected",
+            "repair_applied": false,
+            "repair_reason": "legacy_action_reason_without_applied_flag",
+            "repair_attempt_reason": "replaced_weak_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_DE_PREP_003:overlay:6e0be1abf4548709"
+            ],
+            "chosen_support_ids": [
+              "KC_DE_PREP_003:overlay:6e0be1abf4548709"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "replaced_weak_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_DE_PREP_004",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": -2,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_DE_PREP_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_DE_PREP_006",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_DE_PREP_006:overlay:999c95941e4c683a",
+              "KC_DE_PREP_006:overlay:8ea732f5a28a8a26",
+              "KC_DE_PREP_006:overlay:47406090eb6e2cc7"
+            ],
+            "chosen_support_ids": [
+              "KC_DE_PREP_006:overlay:47406090eb6e2cc7",
+              "KC_DE_PREP_006:overlay:8ea732f5a28a8a26"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_002",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "touched_and_unchanged",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_EVAL_BASIC_002:overlay:83e3f1df24bb8586",
+              "KC_EVAL_BASIC_002:overlay:56595f355dedc24d"
+            ],
+            "chosen_support_ids": [
+              "KC_EVAL_BASIC_002:overlay:8f706071a68036db",
+              "KC_EVAL_BASIC_002:overlay:83e3f1df24bb8586"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": true,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_003",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 1,
+          "binding_touch_classification": "touched_and_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_and_applied",
+            "repair_applied": true,
+            "repair_reason": "promoted_bounded_multi_row_definition_binding",
+            "repair_attempt_reason": "promoted_bounded_multi_row_definition_binding",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_EVAL_BASIC_003:overlay:eeb4419a42fdaea7",
+              "KC_EVAL_BASIC_003:overlay:84309ff05aaf98fe",
+              "KC_EVAL_BASIC_003:overlay:24c3c31897a7c185",
+              "KC_EVAL_BASIC_003:overlay:c021890a04cf2bad"
+            ],
+            "chosen_support_ids": [
+              "KC_EVAL_BASIC_003:overlay:6097bd1c83d3b38f",
+              "KC_EVAL_BASIC_003:overlay:84309ff05aaf98fe"
+            ],
+            "current_binding_mode": "multi_row",
+            "final_binding_mode": "multi_row",
+            "stronger_same_kc_candidate_existed": true,
+            "raw_repair_reason": "promoted_bounded_multi_row_definition_binding"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_005",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": -2,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_006",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded",
+          "delta": 1,
+          "binding_touch_classification": "untouched_but_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_repair_needed",
+            "repair_applied": false,
+            "repair_reason": "retained_existing_binding",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_EVAL_BASIC_006:overlay:c0edf5a5505ad459"
+            ],
+            "chosen_support_ids": [
+              "KC_EVAL_BASIC_006:overlay:c0edf5a5505ad459"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "retained_existing_binding"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_007",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_008",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_009",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_BASIC_010",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_COMP_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_COMP_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_COMP_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_COMP_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor_with_risks",
+          "candidate_trust_state": "fallback_seed_floor_with_risks",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_COMP_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_COMP_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_COMP_007",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_COMP_008",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_ENS_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_ENS_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_ENS_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_ENS_004",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_but_rejected",
+            "repair_applied": false,
+            "repair_reason": "legacy_action_reason_without_applied_flag",
+            "repair_attempt_reason": "replaced_weak_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_EVAL_ENS_004:overlay:b7988f2d71f31283"
+            ],
+            "chosen_support_ids": [
+              "KC_EVAL_ENS_004:overlay:b7988f2d71f31283"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "replaced_weak_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_IMBAL_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_IMBAL_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_IMBAL_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_IMBAL_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_IMBAL_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_IMBAL_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_SAMP_001",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": -1,
+          "binding_touch_classification": "untouched_but_regressed",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_but_rejected",
+            "repair_applied": false,
+            "repair_reason": "legacy_action_reason_without_applied_flag",
+            "repair_attempt_reason": "replaced_weak_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_EVAL_SAMP_001:overlay:dac9b6ff7a94d563"
+            ],
+            "chosen_support_ids": [
+              "KC_EVAL_SAMP_001:overlay:dac9b6ff7a94d563"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "replaced_weak_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_SAMP_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_SAMP_003",
+          "baseline_status": "direct_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_repair_needed",
+            "repair_applied": false,
+            "repair_reason": "retained_existing_binding",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_EVAL_SAMP_003:overlay:a61cd7c2d0aa789e"
+            ],
+            "chosen_support_ids": [
+              "KC_EVAL_SAMP_003:overlay:a61cd7c2d0aa789e"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "retained_existing_binding"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_SAMP_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_EVAL_SAMP_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_FUND_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_FUND_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_FUND_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_FUND_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_FW_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_FW_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_FW_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_FW_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GEN_001",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GEN_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GEN_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GEN_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GEN_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GEN_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GEN_007",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GOOD_001",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "normalized_grounded",
+          "baseline_trust_state": "grounded",
+          "candidate_trust_state": "grounded",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_but_rejected",
+            "repair_applied": false,
+            "repair_reason": "legacy_action_reason_without_applied_flag",
+            "repair_attempt_reason": "replaced_weak_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_FSEL_GOOD_001:overlay:9dbb01bce0e2b1c4"
+            ],
+            "chosen_support_ids": [
+              "KC_FSEL_GOOD_001:overlay:9dbb01bce0e2b1c4"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "replaced_weak_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GOOD_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GOOD_003",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded_with_gaps",
+          "delta": 1,
+          "binding_touch_classification": "untouched_but_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_repair_needed",
+            "repair_applied": false,
+            "repair_reason": "retained_existing_binding",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_FSEL_GOOD_003:overlay:e4e5e2cb071e25f5"
+            ],
+            "chosen_support_ids": [
+              "KC_FSEL_GOOD_003:overlay:e4e5e2cb071e25f5"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "retained_existing_binding"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GOOD_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GOOD_005",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_GOOD_006",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_STAT_001",
+          "baseline_status": "normalized_grounded",
+          "candidate_status": "direct_grounded",
+          "baseline_trust_state": "grounded_with_gaps",
+          "candidate_trust_state": "grounded",
+          "delta": 1,
+          "binding_touch_classification": "untouched_but_improved",
+          "binding_repair_diagnostics": {
+            "repair_state": "repair_attempted_but_rejected",
+            "repair_applied": false,
+            "repair_reason": "legacy_action_reason_without_applied_flag",
+            "repair_attempt_reason": "replaced_weak_definition_anchor",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [
+              "KC_FSEL_STAT_001:overlay:76c49fb575e4dc66"
+            ],
+            "chosen_support_ids": [
+              "KC_FSEL_STAT_001:overlay:76c49fb575e4dc66"
+            ],
+            "current_binding_mode": "single_row",
+            "final_binding_mode": "single_row",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "replaced_weak_definition_anchor"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_STAT_002",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_STAT_003",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        },
+        {
+          "kc_id": "KC_FSEL_STAT_004",
+          "baseline_status": "seed_floor_fallback",
+          "candidate_status": "seed_floor_fallback",
+          "baseline_trust_state": "fallback_seed_floor",
+          "candidate_trust_state": "fallback_seed_floor",
+          "delta": 0,
+          "binding_touch_classification": "untouched_and_stable",
+          "binding_repair_diagnostics": {
+            "repair_state": "no_binding_possible",
+            "repair_applied": false,
+            "repair_reason": "definition_not_grounded",
+            "repair_attempt_reason": "",
+            "basis": "legacy_binding_diagnostics_inference",
+            "current_support_ids": [],
+            "chosen_support_ids": [],
+            "current_binding_mode": "none",
+            "final_binding_mode": "none",
+            "stronger_same_kc_candidate_existed": false,
+            "raw_repair_reason": "definition_not_grounded"
+          }
+        }
+      ],
+      "no_regression_gate": {
+        "pass": false,
+        "baseline_run_id": "2026-04-16_194203",
+        "candidate_run_id": "2026-04-17_194932",
+        "direct_to_fallback_kcs": [
+          "KC_CLU_EVAL_001",
+          "KC_CLU_EVAL_002",
+          "KC_DE_PREP_004",
+          "KC_EVAL_BASIC_005"
+        ],
+        "baseline_seed_floor_fallback": 113,
+        "candidate_seed_floor_fallback": 115,
+        "baseline_grounded_total": 31,
+        "candidate_grounded_total": 29,
+        "grounded_gain": -2,
+        "baseline_llm_calls": 580,
+        "candidate_llm_calls": 862,
+        "llm_call_delta": 282,
+        "material_llm_call_increase_threshold": 58,
+        "reasons": [
+          "previously direct-grounded KCs fell to seed-floor fallback: KC_CLU_EVAL_001, KC_CLU_EVAL_002, KC_DE_PREP_004, KC_EVAL_BASIC_005",
+          "seed-floor fallback increased from 113 to 115",
+          "llm_calls rose materially without enough grounded gain (delta=282, grounded_gain=-2)"
+        ]
+      }
+    }
+  ]
+}

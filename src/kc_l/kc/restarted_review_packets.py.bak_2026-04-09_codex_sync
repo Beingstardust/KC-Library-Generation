@@ -1,0 +1,801 @@
+from __future__ import annotations
+
+from collections import Counter
+from collections.abc import Mapping, Sequence
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+from kc_l.kc.review_packets import (
+    CONTENT_SOURCE_MODE_DRAFT_PRIMARY,
+    REVIEW_PACKET_STATE,
+    validate_review_packet,
+)
+from kc_l.kc.supervision import compute_review_priority, derive_system_recommendation
+from kc_l.utils.json_io import write_json, write_jsonl
+
+
+RESTARTED_GENERATION_STAGE = "step6_8_restarted_review_packet_emission"
+RESTARTED_PACKET_RULE_VERSION = "step6.8.review_packet_restart.v1"
+RESTARTED_EVIDENCE_EXTRACTION_METHOD = "step6_8_restarted_review_packet_evidence"
+SCOPE_GAP_FLAG = "scope_gap_reviewer_editable"
+SCOPE_CANDIDATE_ABSTAINED_FLAG = "scope_candidate_abstained"
+DRAFT_READY_WITH_HOLDS_FLAG = "draft_ready_with_holds"
+REVIEW_QUEUE_WEAK_COVERAGE_FLAG = "review_queue_weak_coverage"
+EXCLUDED_HELD_REASON = "excluded_held_draft_bundle"
+MIXED_FOREIGN_DEFINITION_SUPPORT_FLAG = "definition_decisive_support_mixed_foreign"
+HELD_REVIEW_SALVAGE_FLAG = "held_bundle_review_salvage"
+DEFINITION_REVIEW_SALVAGE_UNVERIFIED_FLAG = "definition_review_salvage_unverified"
+
+
+@dataclass(frozen=True)
+class PacketExclusion:
+    kc_candidate_id: str
+    draft_status: str
+    reasons: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class RestartedReviewPacketEmissionResult:
+    output_dir: Path
+    packet_path: Path
+    summary_path: Path
+    preview_path: Path
+    packet_count: int
+    excluded_candidate_count: int
+
+
+def _append_unique(items: list[str], value: str) -> None:
+    if value and value not in items:
+        items.append(value)
+
+
+def _as_text(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _as_bool(value: Any) -> bool | None:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        lowered = value.strip().lower()
+        if lowered in {"true", "1", "yes"}:
+            return True
+        if lowered in {"false", "0", "no"}:
+            return False
+    return None
+
+
+def _quote_verified(value: Any) -> bool:
+    direct = _as_bool(value)
+    if direct is not None:
+        return direct
+    text = _as_text(value).lower()
+    return text.startswith("verified")
+
+
+def _normalize_bbox(value: Any) -> list[float] | None:
+    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)) or len(value) != 4:
+        return None
+    out: list[float] = []
+    for item in value:
+        if not isinstance(item, (int, float)):
+            return None
+        out.append(float(item))
+    return out
+
+
+def _normalize_string_list(values: Any) -> list[str]:
+    out: list[str] = []
+    for value in values or []:
+        text = _as_text(value)
+        if text:
+            _append_unique(out, text)
+    return out
+
+
+def _normalize_field_hold_reasons(payload: Mapping[str, Any]) -> dict[str, list[str]]:
+    out: dict[str, list[str]] = {}
+    for key in ("definition_full_candidate", "definition_short_candidate", "scope_candidate"):
+        values = _normalize_string_list(payload.get(key))
+        if values:
+            out[key] = values
+    return out
+
+
+def _normalize_field_provenance_entry(payload: Mapping[str, Any] | None) -> dict[str, Any]:
+    obj = dict(payload or {})
+    return {
+        "status": _as_text(obj.get("status")) or "unknown",
+        "overlay_candidate_ids": _normalize_string_list(obj.get("overlay_candidate_ids")),
+        "source_set_ids": _normalize_string_list(obj.get("source_set_ids")),
+        "source_run_ids": _normalize_string_list(obj.get("source_run_ids")),
+    }
+
+
+def _normalize_field_provenance_map(payload: Mapping[str, Any]) -> dict[str, Any]:
+    obj = dict(payload or {})
+    return {
+        "definition_full_candidate": _normalize_field_provenance_entry(obj.get("definition_full_candidate")),
+        "definition_short_candidate": _normalize_field_provenance_entry(obj.get("definition_short_candidate")),
+        "scope_candidate": _normalize_field_provenance_entry(obj.get("scope_candidate")),
+        "evidence_bundle": _normalize_field_provenance_entry(obj.get("evidence_bundle")),
+    }
+
+
+def _candidate_payload(bundle: Mapping[str, Any], key: str) -> dict[str, Any]:
+    value = bundle.get(key)
+    if isinstance(value, Mapping):
+        return dict(value)
+    return {}
+
+
+def _grounded_llm_field_payload(payload: Mapping[str, Any] | None) -> dict[str, Any]:
+    obj = dict(payload or {})
+    text = _as_text(obj.get("text"))
+    supporting_ids = _normalize_string_list(obj.get("supporting_overlay_candidate_ids"))
+    if _as_text(obj.get("status")) != "grounded" or not text or not supporting_ids:
+        return {}
+    return {
+        "status": "grounded",
+        "text": text,
+        "supporting_overlay_candidate_ids": supporting_ids,
+    }
+
+
+def _looks_review_salvageable_definition_text(text: str) -> bool:
+    normalized = _as_text(text)
+    if len(normalized) < 30:
+        return False
+    if normalized.endswith(":"):
+        return False
+    alpha_chars = sum(1 for ch in normalized if ch.isalpha())
+    digit_chars = sum(1 for ch in normalized if ch.isdigit())
+    if alpha_chars < 20:
+        return False
+    if "=" in normalized and alpha_chars <= digit_chars + 5:
+        return False
+    return True
+
+
+def _all_support_ids_local_to_kc(supporting_ids: Sequence[str], kc_id: str) -> bool:
+    ids = _normalize_string_list(supporting_ids)
+    return bool(ids) and all(_overlay_candidate_owner_kc_id(item) == kc_id for item in ids)
+
+
+def _held_review_salvage_definition(
+    bundle: Mapping[str, Any],
+    *,
+    kc_id: str,
+) -> tuple[dict[str, Any], str, list[str]]:
+    if _as_text(bundle.get("draft_status")) != "held":
+        return {}, "", []
+    hold_reasons = _normalize_string_list(bundle.get("hold_reasons"))
+    if "sibling_boundary_mismatch" in hold_reasons:
+        return {}, "", []
+
+    llm = dict(((bundle.get("selection_diagnostics") or {}).get("llm_drafting")) or {})
+    candidates = [
+        (
+            "step6_7.selection_diagnostics.llm_drafting.definition_redraft_verify_response.definition",
+            _grounded_llm_field_payload(dict((llm.get("definition_redraft_verify_response") or {}).get("definition") or {})),
+        ),
+        (
+            "step6_7.selection_diagnostics.llm_drafting.definition_redraft_response.definition",
+            _grounded_llm_field_payload(dict((llm.get("definition_redraft_response") or {}).get("definition") or {})),
+        ),
+        (
+            "step6_7.selection_diagnostics.llm_drafting.verify_response.definition",
+            _grounded_llm_field_payload(dict((llm.get("verify_response") or {}).get("definition") or {})),
+        ),
+        (
+            "step6_7.selection_diagnostics.llm_drafting.draft_response.definition",
+            _grounded_llm_field_payload(dict((llm.get("draft_response") or {}).get("definition") or {})),
+        ),
+    ]
+
+    for source, payload in candidates:
+        if not payload:
+            continue
+        text = _as_text(payload.get("text"))
+        supporting_ids = _normalize_string_list(payload.get("supporting_overlay_candidate_ids"))
+        if not _all_support_ids_local_to_kc(supporting_ids, kc_id):
+            continue
+        if not _looks_review_salvageable_definition_text(text):
+            continue
+        notes = [
+            "Held Step 6.7 bundle exposed to review via a persisted local-only LLM definition proposal.",
+            "This proposal was not accepted as grounded by the Step 6.7 verifier and must be treated as reviewer-salvageable, not verifier-approved.",
+        ]
+        return payload, source, notes
+
+    return {}, "", []
+
+
+def _choose_definition_payload(bundle: Mapping[str, Any]) -> tuple[dict[str, Any], str]:
+    full_payload = _candidate_payload(bundle, "definition_full_candidate")
+    short_payload = _candidate_payload(bundle, "definition_short_candidate")
+    if _as_text(full_payload.get("status")) == "grounded" and _as_text(full_payload.get("text")):
+        return full_payload, "step6_7.kc_draft_bundles.definition_full_candidate"
+    return short_payload, "step6_7.kc_draft_bundles.definition_short_candidate"
+
+
+def _scope_payload(bundle: Mapping[str, Any]) -> dict[str, Any]:
+    return _candidate_payload(bundle, "scope_candidate")
+
+
+def _definition_provenance_key(definition_source: str) -> str:
+    if definition_source.endswith("definition_full_candidate"):
+        return "definition_full_candidate"
+    return "definition_short_candidate"
+
+
+def _overlay_candidate_owner_kc_id(overlay_candidate_id: str) -> str:
+    text = _as_text(overlay_candidate_id)
+    if ":overlay:" not in text:
+        return ""
+    return text.split(":overlay:", 1)[0].strip()
+
+
+def _mixed_foreign_definition_support(
+    *,
+    kc_id: str,
+    field_provenance_map: Mapping[str, Any],
+    definition_source: str,
+) -> bool:
+    provenance_key = _definition_provenance_key(definition_source)
+    definition_provenance = _normalize_field_provenance_entry(field_provenance_map.get(provenance_key))
+    local_ids = [
+        overlay_candidate_id
+        for overlay_candidate_id in definition_provenance.get("overlay_candidate_ids") or []
+        if _overlay_candidate_owner_kc_id(str(overlay_candidate_id)) == kc_id
+    ]
+    foreign_ids = [
+        overlay_candidate_id
+        for overlay_candidate_id in definition_provenance.get("overlay_candidate_ids") or []
+        if _overlay_candidate_owner_kc_id(str(overlay_candidate_id))
+        and _overlay_candidate_owner_kc_id(str(overlay_candidate_id)) != kc_id
+    ]
+    return bool(local_ids and foreign_ids)
+
+
+def _evidence_role(item: Mapping[str, Any], scope_support_ids: set[str]) -> str:
+    overlay_candidate_id = _as_text(item.get("overlay_candidate_id"))
+    bundle_role = _as_text(item.get("bundle_role"))
+    assessment = dict(item.get("assessment") or {})
+    if overlay_candidate_id in scope_support_ids:
+        return "scope"
+    if bundle_role == "definition_support":
+        return "definition"
+    if bundle_role == "equation_support":
+        return "equation"
+    if bundle_role == "context_support" and bool(assessment.get("scope_signal")):
+        return "scope"
+    return "other"
+
+
+def _build_evidence_spans(bundle: Mapping[str, Any], scope_support_ids: set[str]) -> list[dict[str, Any]]:
+    spans: list[dict[str, Any]] = []
+    for item in bundle.get("evidence_bundle") or []:
+        if not isinstance(item, Mapping):
+            continue
+        overlay_candidate_id = _as_text(item.get("overlay_candidate_id"))
+        doc_id = _as_text(item.get("doc_id"))
+        block_id = _as_text(item.get("block_id"))
+        layer = _as_text(item.get("layer"))
+        quote = _as_text(item.get("quote_surface")) or _as_text(item.get("source_block_text"))
+        page_index = item.get("page_index")
+        if not overlay_candidate_id or not doc_id or not block_id or not layer or not quote or not isinstance(page_index, int):
+            continue
+        provenance_flags = [
+            f"OverlayCandidateId:{overlay_candidate_id}",
+            f"BundleRole:{_as_text(item.get('bundle_role')) or 'other'}",
+            f"ProvenanceStatus:{_as_text(item.get('provenance_normalization_status')) or 'unknown'}",
+            f"ContaminationRisk:{_as_text(item.get('contamination_risk')) or 'unknown'}",
+        ]
+        spans.append(
+            {
+                "evidence_id": overlay_candidate_id,
+                "doc_id": doc_id,
+                "block_id": block_id,
+                "page_index": page_index,
+                "layer": layer,
+                "bbox": _normalize_bbox(item.get("bbox")),
+                "quote": quote,
+                "role": _evidence_role(item, scope_support_ids),
+                "extraction_method": RESTARTED_EVIDENCE_EXTRACTION_METHOD,
+                "quote_verified": _quote_verified(item.get("quote_verification_status")),
+                "provenance_quality_flags": provenance_flags,
+            }
+        )
+    return spans
+
+
+def _coverage_labels(evidence_spans: Sequence[Mapping[str, Any]]) -> list[str]:
+    roles = {str(span.get("role") or "") for span in evidence_spans}
+    labels: list[str] = []
+    if "definition" in roles or "equation" in roles:
+        labels.append("definition")
+    if "procedure" in roles:
+        labels.append("procedural_step")
+    return labels
+
+
+def _build_coverage_note(bundle: Mapping[str, Any], risk_flags: Sequence[str]) -> str:
+    parts: list[str] = []
+    scope_payload = _scope_payload(bundle)
+    if _as_text(scope_payload.get("status")) != "grounded":
+        parts.append("Scope field is intentionally blank and remains reviewer-editable.")
+    caution_flags = [flag for flag in risk_flags if flag not in {SCOPE_GAP_FLAG, SCOPE_CANDIDATE_ABSTAINED_FLAG, DRAFT_READY_WITH_HOLDS_FLAG}]
+    if caution_flags:
+        parts.append(f"Caution flags: {', '.join(caution_flags)}.")
+    return " ".join(parts).strip()
+
+
+def _source_document_ids(evidence_spans: Sequence[Mapping[str, Any]]) -> list[str]:
+    out: list[str] = []
+    for span in evidence_spans:
+        doc_id = _as_text(span.get("doc_id"))
+        if doc_id:
+            _append_unique(out, doc_id)
+    return out
+
+
+def _priority_features(
+    bundle: Mapping[str, Any],
+    evidence_spans: Sequence[Mapping[str, Any]],
+    risk_flags: Sequence[str],
+    *,
+    mixed_foreign_definition_support: bool = False,
+) -> dict[str, Any]:
+    draft_status = _as_text(bundle.get("draft_status"))
+    support_summary = dict(bundle.get("support_summary") or {})
+    scope_payload = _scope_payload(bundle)
+    semantic_tier = 2
+    if draft_status == "draft_ready_with_holds" or REVIEW_QUEUE_WEAK_COVERAGE_FLAG in risk_flags:
+        semantic_tier = 1
+    definition_status = "coherent_supported" if _as_text(support_summary.get("support_state")) == "strict_leaf_support" else "fragmentary_supported"
+    if mixed_foreign_definition_support and definition_status == "coherent_supported":
+        definition_status = "fragmentary_supported"
+    return {
+        "semantic_tier": semantic_tier,
+        "definition_status": definition_status,
+        "accepted_quote_count": sum(1 for span in evidence_spans if bool(span.get("quote_verified"))),
+        "evidence_span_count": len(evidence_spans),
+        "definition_short_contract_ok": _as_text(_candidate_payload(bundle, "definition_short_candidate").get("status")) == "grounded",
+        "support_contract_downgraded": False,
+        "contamination_category": "clean",
+        "sibling_ambiguity": mixed_foreign_definition_support,
+        "operational_support_present": _as_text(scope_payload.get("status")) == "grounded",
+    }
+
+
+
+def _build_notes_for_reviewer(bundle: Mapping[str, Any], risk_flags: Sequence[str]) -> str:
+    notes: list[str] = []
+    if _as_text(_scope_payload(bundle).get("status")) != "grounded":
+        notes.append("Scope is intentionally blank from the Step 6.7 draft and should be treated as a reviewer-editable gap.")
+    if REVIEW_QUEUE_WEAK_COVERAGE_FLAG in risk_flags:
+        notes.append("Upstream Step 5.3 weak-coverage caution is preserved on this packet.")
+    if "held_bundle_review_salvage" in risk_flags:
+        notes.append("Held Step 6.7 bundle exposed to review via a persisted local-only LLM definition proposal. This proposal was not accepted as grounded by the Step 6.7 verifier and must be treated as reviewer-salvageable, not verifier-approved.")
+    return " ".join(notes).strip()
+
+
+def _looks_discourse_leadin_definition(text: str) -> bool:
+    lowered = _as_text(text).lower()
+    if not lowered:
+        return False
+    leadins = (
+        "in this section",
+        "in this chapter",
+        "consider ",
+        "suppose ",
+        "note that",
+        "as described above",
+        "as indicated by",
+        "the preceding example",
+        "the following example",
+        "this example",
+        "thus,",
+        "although ",
+        "a high-level summary of",
+    )
+    return any(lowered.startswith(prefix) for prefix in leadins)
+
+
+def _looks_example_or_exposition_definition(text: str) -> bool:
+    lowered = _as_text(text).lower()
+    if not lowered:
+        return False
+    markers = (
+        "for example",
+        "illustrates",
+        "is summarized in",
+        "shown as",
+        "the example",
+        "the preceding example",
+        "the following example",
+        "as described above",
+        "as indicated by",
+    )
+    return any(marker in lowered for marker in markers)
+
+
+def _looks_fragmentary_definition_surface(text: str) -> bool:
+    stripped = _as_text(text)
+    if not stripped:
+        return False
+    lowered = stripped.lower()
+    if lowered.startswith(("and ", "or ", "but ", "that ", "which ")):
+        return True
+    if stripped.endswith((",", ";", ":")):
+        return True
+    formula_markers = ("=", "∑", "sum_", "chi^2", "avg(", "max(", "min(")
+    if any(marker in stripped for marker in formula_markers) and len(stripped) < 140:
+        return True
+    return False
+
+
+
+def _quarantine_reasons(packet: Mapping[str, Any]) -> list[str]:
+    definition_draft = _as_text(packet.get("definition_draft"))
+    risk_flags = set(_normalize_string_list(packet.get("risk_flags")))
+    scope_gap = _as_text(packet.get("scope_status")) != "grounded"
+    held_salvage = "held_bundle_review_salvage" in risk_flags
+
+    reasons: list[str] = []
+
+    if _looks_fragmentary_definition_surface(definition_draft):
+        _append_unique(reasons, "definition_fragmentary_surface")
+
+    if MIXED_FOREIGN_DEFINITION_SUPPORT_FLAG in risk_flags:
+        _append_unique(reasons, "definition_decisive_support_mixed_foreign")
+
+    weak_support_flags = {
+        "formula_only_definition_risk",
+        "heading_only_definition_risk",
+        REVIEW_QUEUE_WEAK_COVERAGE_FLAG,
+        MIXED_FOREIGN_DEFINITION_SUPPORT_FLAG,
+    }
+    if held_salvage and scope_gap and bool(risk_flags & weak_support_flags):
+        _append_unique(reasons, "scope_gap_weak_support")
+
+    return reasons
+
+
+def build_restarted_review_packet(
+    *,
+    draft_bundle: Mapping[str, Any],
+    step4_set_id: str,
+    step4_5_set_id: str,
+    step5_set_id: str,
+    step6_6_set_id: str,
+    step6_7_set_id: str,
+    step6_8_run_id: str,
+) -> dict[str, Any]:
+    draft_status = _as_text(draft_bundle.get("draft_status"))
+    if draft_status not in {"draft_ready", "draft_ready_with_holds"}:
+        raise ValueError(f"non-ready draft cannot become a ready packet: {draft_status}")
+
+    kc_id = _as_text(draft_bundle.get("kc_id"))
+    canonical_name = _as_text(draft_bundle.get("canonical_name"))
+    definition_payload, definition_source = _choose_definition_payload(draft_bundle)
+    definition_draft = _as_text(definition_payload.get("text"))
+    if not kc_id or not canonical_name or not definition_draft:
+        raise ValueError("missing required grounded draft content")
+
+    field_provenance_map = _normalize_field_provenance_map(draft_bundle.get("field_provenance_map") or {})
+    mixed_foreign_definition_support = _mixed_foreign_definition_support(
+        kc_id=kc_id,
+        field_provenance_map=field_provenance_map,
+        definition_source=definition_source,
+    )
+    scope_payload = _scope_payload(draft_bundle)
+    scope_status = _as_text(scope_payload.get("status")) or "abstained"
+    scope_draft = _as_text(scope_payload.get("text")) if scope_status == "grounded" else ""
+    scope_support_ids = set(_normalize_string_list(scope_payload.get("supporting_overlay_candidate_ids")))
+    evidence_spans = _build_evidence_spans(draft_bundle, scope_support_ids)
+    if not evidence_spans:
+        raise ValueError("no_grounded_step6_7_evidence_bundle")
+
+    risk_flags = _normalize_string_list(draft_bundle.get("contamination_flags"))
+    if draft_status == "draft_ready_with_holds":
+        _append_unique(risk_flags, DRAFT_READY_WITH_HOLDS_FLAG)
+    if scope_status != "grounded":
+        _append_unique(risk_flags, SCOPE_GAP_FLAG)
+        _append_unique(risk_flags, SCOPE_CANDIDATE_ABSTAINED_FLAG)
+    if mixed_foreign_definition_support:
+        _append_unique(risk_flags, MIXED_FOREIGN_DEFINITION_SUPPORT_FLAG)
+
+    priority_features = _priority_features(
+        draft_bundle,
+        evidence_spans,
+        risk_flags,
+        mixed_foreign_definition_support=mixed_foreign_definition_support,
+    )
+    review_priority = compute_review_priority(priority_features)
+    system_recommendation = derive_system_recommendation(priority_features, review_priority)
+
+    packet = {
+        "review_packet_id": f"step6_8:{step6_8_run_id}:{kc_id}",
+        "packet_state": REVIEW_PACKET_STATE,
+        "kc_candidate_id": kc_id,
+        "title_draft": canonical_name,
+        "level_draft": "atomic",
+        "definition_draft": definition_draft,
+        "scope_draft": scope_draft,
+        "scope_status": scope_status,
+        "kc_specific_criteria": "",
+        "draft_status": draft_status,
+        "draft_hold_reasons": _normalize_string_list(draft_bundle.get("hold_reasons")),
+        "draft_field_hold_reasons": _normalize_field_hold_reasons(draft_bundle.get("field_hold_reasons") or {}),
+        "field_provenance_map": field_provenance_map,
+        "evidence_spans": evidence_spans,
+        "evidence_coverage_summary": {
+            "evidence_span_count": len(evidence_spans),
+            "definition_support_state": priority_features["definition_status"],
+            "operational_support_present": priority_features["operational_support_present"],
+            "coverage_labels": _coverage_labels(evidence_spans),
+            "provenance_complete": True,
+            "coverage_note": _build_coverage_note(draft_bundle, risk_flags),
+        },
+        "source_provenance": {
+            "generation_stage": RESTARTED_GENERATION_STAGE,
+            "generation_run_id": step6_8_run_id,
+            "source_set_ids": {
+                "step4_set_id": step4_set_id,
+                "step4_5_set_id": step4_5_set_id,
+                "step5_set_id": step5_set_id,
+                "step6_6_set_id": step6_6_set_id,
+                "step6_7_set_id": step6_7_set_id,
+            },
+            "source_document_ids": _source_document_ids(evidence_spans),
+        },
+        "content_source_mode": CONTENT_SOURCE_MODE_DRAFT_PRIMARY,
+        "content_repair_applied": False,
+        "content_repair_reason": "",
+        "original_content_source": {
+            "definition_source": definition_source,
+            "evidence_source": "step6_7.kc_draft_bundles.evidence_bundle",
+        },
+        "review_content_source": {
+            "definition_source": definition_source,
+            "evidence_source": "step6_7.kc_draft_bundles.evidence_bundle",
+        },
+        "integrity_repair_notes": [],
+        "risk_flags": risk_flags,
+        "review_priority": review_priority,
+        "system_recommendation": system_recommendation,
+        "notes_for_reviewer": _build_notes_for_reviewer(draft_bundle, risk_flags),
+    }
+    return packet
+
+
+def validate_restarted_review_packet(packet: Mapping[str, Any]) -> None:
+    validate_review_packet(packet)
+    if _as_text(packet.get("content_source_mode")) != CONTENT_SOURCE_MODE_DRAFT_PRIMARY:
+        raise ValueError("restarted packet must use step6_7_draft_primary content source mode")
+    if _as_text(packet.get("draft_status")) not in {"draft_ready", "draft_ready_with_holds"}:
+        raise ValueError("draft_status invalid for restarted packet")
+    if "kc_specific_criteria" not in packet:
+        raise ValueError("kc_specific_criteria must be present and empty in this phase")
+    if _as_text(packet.get("kc_specific_criteria")):
+        raise ValueError("kc_specific_criteria must remain empty in this phase")
+    if _as_text(packet.get("scope_status")) not in {"grounded", "abstained"}:
+        raise ValueError("scope_status invalid")
+    if _as_text(packet.get("scope_status")) == "abstained" and _as_text(packet.get("scope_draft")):
+        raise ValueError("abstained scope packet must not emit scope_draft text")
+    provenance_map = packet.get("field_provenance_map")
+    if not isinstance(provenance_map, Mapping):
+        raise ValueError("field_provenance_map must be an object")
+    for key in ("definition_full_candidate", "definition_short_candidate", "scope_candidate", "evidence_bundle"):
+        value = provenance_map.get(key)
+        if not isinstance(value, Mapping):
+            raise ValueError(f"field_provenance_map.{key} must be an object")
+        for required_key in ("status", "overlay_candidate_ids", "source_set_ids", "source_run_ids"):
+            if required_key not in value:
+                raise ValueError(f"field_provenance_map.{key}.{required_key} missing")
+
+
+def build_summary(
+    *,
+    source_processed_dir: Path,
+    packets: Sequence[Mapping[str, Any]],
+    quarantine: Sequence[Mapping[str, Any]],
+    exclusions: Sequence[PacketExclusion],
+) -> dict[str, Any]:
+    priority_counts = Counter(packet["review_priority"]["bucket"] for packet in packets)
+    recommendation_counts = Counter(packet["system_recommendation"]["label"] for packet in packets)
+    risk_flag_counts = Counter(flag for packet in packets for flag in packet.get("risk_flags") or [])
+    scope_gap_ids = [packet["kc_candidate_id"] for packet in packets if packet.get("scope_status") == "abstained"]
+    caution_ids = [
+        packet["kc_candidate_id"]
+        for packet in packets
+        if any(
+            flag not in {SCOPE_GAP_FLAG, SCOPE_CANDIDATE_ABSTAINED_FLAG, DRAFT_READY_WITH_HOLDS_FLAG}
+            for flag in packet.get("risk_flags") or []
+        )
+    ]
+    draft_status_counts = Counter(packet.get("draft_status") for packet in packets)
+    quarantine_draft_status_counts = Counter(item.get("draft_status") for item in quarantine)
+    return {
+        "schema_version": "1.0",
+        "stage": RESTARTED_GENERATION_STAGE,
+        "rule_version": RESTARTED_PACKET_RULE_VERSION,
+        "source_processed_dir": str(source_processed_dir),
+        "packet_count": len(packets),
+        "included_kcs": [packet["kc_candidate_id"] for packet in packets],
+        "quarantine_count": len(quarantine),
+        "quarantined_kcs": [dict(item) for item in quarantine],
+        "excluded_kcs": [
+            {
+                "kc_candidate_id": item.kc_candidate_id,
+                "draft_status": item.draft_status,
+                "reasons": list(item.reasons),
+            }
+            for item in exclusions
+        ],
+        "packets_with_scope_gaps": scope_gap_ids,
+        "packets_with_caution_flags": caution_ids,
+        "recommendation_counts": dict(recommendation_counts),
+        "priority_counts": dict(priority_counts),
+        "draft_status_counts": dict(draft_status_counts),
+        "quarantine_draft_status_counts": dict(quarantine_draft_status_counts),
+        "risk_flag_counts": dict(risk_flag_counts),
+        "field_source_map": {
+            "definition_draft": "step6_7.kc_draft_bundles.definition_full_candidate or definition_short_candidate",
+            "scope_draft": "step6_7.kc_draft_bundles.scope_candidate when grounded; blank when reviewer-editable gap is preserved",
+            "field_provenance_map": "step6_7.kc_draft_bundles.field_provenance_map",
+            "evidence_spans": "step6_7.kc_draft_bundles.evidence_bundle",
+            "risk_flags": "step6_7 draft contamination flags plus explicit scope-gap metadata",
+            "review_priority": "src/kc_l/kc/supervision.py computed from conservative features derived from the Step 6.7 draft bundle",
+        },
+        "grounding_rules": {
+            "ready_only_rule": "Only Step 6.7 packets that survive the Step 6.8 quarantine boundary are emitted as ready review packets.",
+            "quarantine_rule": "Packets with discourse residue, exposition residue, fragmentary or formulaic definition surfaces, mixed-foreign decisive support, or weak scope-gap support are quarantined out of the ready review lane.",
+            "held_exclusion_rule": "Held Step 6.7 drafts that remain non-review-salvageable stay outside the ready packet set and are only reported as exclusions.",
+            "scope_gap_rule": "Missing scope is preserved as an explicit reviewer-editable gap and never invented.",
+            "content_repair_rule": "No new semantic repair is applied in the restarted packet stage.",
+        },
+    }
+
+
+def build_preview_markdown(
+    *,
+    source_processed_dir: Path,
+    packets: Sequence[Mapping[str, Any]],
+    summary: Mapping[str, Any],
+) -> str:
+    lines = [
+        "# Restarted Review Packet Preview",
+        "",
+        f"- Source processed dir: `{source_processed_dir}`",
+        f"- Packet count: `{summary['packet_count']}`",
+        f"- Included KCs: `{summary['included_kcs']}`",
+        f"- Quarantined KCs: `{summary.get('quarantined_kcs', [])}`",
+        f"- Excluded KCs: `{summary['excluded_kcs']}`",
+        f"- Scope-gap packets: `{summary['packets_with_scope_gaps']}`",
+        f"- Caution-flag packets: `{summary['packets_with_caution_flags']}`",
+        f"- Recommendation counts: `{summary['recommendation_counts']}`",
+        f"- Priority counts: `{summary['priority_counts']}`",
+        "",
+        "## Packets",
+        "",
+    ]
+    for packet in packets:
+        lines.extend(
+            [
+                f"### {packet['kc_candidate_id']} - {packet['title_draft']}",
+                "",
+                f"- Draft status: `{packet['draft_status']}`",
+                f"- Priority: `{packet['review_priority']['bucket']}`",
+                f"- Recommendation: `{packet['system_recommendation']['label']}`",
+                f"- Scope status: `{packet['scope_status']}`",
+                f"- Risk flags: `{packet['risk_flags']}`",
+                f"- Definition draft: `{packet['definition_draft']}`",
+                f"- Scope draft: `{packet['scope_draft']}`",
+                "",
+            ]
+        )
+    if summary.get("quarantined_kcs"):
+        lines.extend(["## Quarantined KCs", ""])
+        for item in summary["quarantined_kcs"]:
+            lines.append(f"- `{item['kc_candidate_id']}` (`{item['draft_status']}`): {', '.join(item['reasons'])}")
+    if summary["excluded_kcs"]:
+        lines.extend(["## Excluded KCs", ""])
+        for item in summary["excluded_kcs"]:
+            lines.append(f"- `{item['kc_candidate_id']}` (`{item['draft_status']}`): {', '.join(item['reasons'])}")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def emit_restarted_review_packets_from_draft_bundles(
+    *,
+    source_processed_dir: Path,
+    output_dir: Path,
+    draft_rows: Sequence[Mapping[str, Any]],
+    step4_set_id: str,
+    step4_5_set_id: str,
+    step5_set_id: str,
+    step6_6_set_id: str,
+    step6_7_set_id: str,
+    step6_8_run_id: str,
+) -> RestartedReviewPacketEmissionResult:
+    packets: list[dict[str, Any]] = []
+    quarantined: list[dict[str, Any]] = []
+    exclusions: list[PacketExclusion] = []
+
+    for row in draft_rows:
+        draft_status = _as_text(row.get("draft_status"))
+        kc_id = _as_text(row.get("kc_id"))
+
+        if draft_status == "held":
+            reasons = _normalize_string_list(row.get("hold_reasons")) or [EXCLUDED_HELD_REASON]
+            exclusions.append(
+                PacketExclusion(
+                    kc_candidate_id=kc_id,
+                    draft_status=draft_status,
+                    reasons=tuple(reasons),
+                )
+            )
+            continue
+
+        packet = build_restarted_review_packet(
+            draft_bundle=row,
+            step4_set_id=step4_set_id,
+            step4_5_set_id=step4_5_set_id,
+            step5_set_id=step5_set_id,
+            step6_6_set_id=step6_6_set_id,
+            step6_7_set_id=step6_7_set_id,
+            step6_8_run_id=step6_8_run_id,
+        )
+        validate_restarted_review_packet(packet)
+
+        quarantine_reasons = _quarantine_reasons(packet)
+        if quarantine_reasons:
+            quarantined.append(
+                {
+                    "kc_candidate_id": kc_id,
+                    "draft_status": packet.get("draft_status"),
+                    "reasons": quarantine_reasons,
+                    "definition_draft": packet.get("definition_draft"),
+                    "scope_status": packet.get("scope_status"),
+                }
+            )
+            continue
+
+        packets.append(packet)
+
+    summary = build_summary(
+        source_processed_dir=source_processed_dir,
+        packets=packets,
+        quarantine=quarantined,
+        exclusions=exclusions,
+    )
+    preview = build_preview_markdown(
+        source_processed_dir=source_processed_dir,
+        packets=packets,
+        summary=summary,
+    )
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    packet_path = output_dir / "review_packets.jsonl"
+    summary_path = output_dir / "review_packet_summary.json"
+    preview_path = output_dir / "review_packet_preview.md"
+
+    write_jsonl(packet_path, packets)
+    write_json(summary_path, summary)
+    preview_path.write_text(preview, encoding="utf-8")
+
+    return RestartedReviewPacketEmissionResult(
+        output_dir=output_dir,
+        packet_path=packet_path,
+        summary_path=summary_path,
+        preview_path=preview_path,
+        packet_count=len(packets),
+        excluded_candidate_count=len(exclusions) + len(quarantined),
+    )
+

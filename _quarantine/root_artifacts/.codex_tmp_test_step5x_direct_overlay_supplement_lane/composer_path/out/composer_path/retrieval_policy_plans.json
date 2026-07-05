@@ -1,0 +1,42 @@
+{
+  "KC_NEUTRAL_001": {
+    "authority_contract": "step5x_must_verify_against_source_rows",
+    "canonical_name": "Two-Way Option Partition",
+    "concept_head": "Two-Way Option Partition",
+    "concept_head_terms": [
+      "two",
+      "way",
+      "option",
+      "partition"
+    ],
+    "expanded_aliases": [],
+    "expected_evidence_needs": [],
+    "failure_hypothesis": "",
+    "knowledge_unit_id": "KC_NEUTRAL_001",
+    "knowledge_unit_type": "kc",
+    "label_descriptor_terms": [],
+    "lexical_atoms": [
+      "Two-Way Option Partition"
+    ],
+    "negative_sibling_terms": [],
+    "negative_terms": [],
+    "normalized_surface_variants": [
+      "Two-Way Option Partition"
+    ],
+    "policy_version": "step5x_v3_retrieval_policy_v1",
+    "profile_output_role": "retrieval_control_metadata_not_evidence",
+    "qualifiers": [],
+    "query_plan_id": "qplan_KC_NEUTRAL_001_dad9cb199c9638d1",
+    "region_locators": [],
+    "risk_hints": [],
+    "route_specific_optional_terms": [],
+    "route_specific_query_variants": [],
+    "route_specific_required_terms": [],
+    "shape_priors": [
+      "target_bound_concept_support"
+    ],
+    "sibling_terms": [
+      "One-Way Partition"
+    ]
+  }
+}

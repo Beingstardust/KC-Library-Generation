@@ -1,0 +1,35 @@
+{
+  "stage": "step5p_kc_retrieval_profile",
+  "profile_contract_version": "kc_retrieval_profile_v1",
+  "run_id": "route_serialization",
+  "created_at": "2026-05-13T16:23:36.591372+00:00",
+  "artifacts": {
+    "kc_retrieval_profiles_jsonl": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/out_route_serialization/route_serialization/kc_retrieval_profiles.jsonl",
+    "kc_retrieval_profile_stats_json": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/out_route_serialization/route_serialization/kc_retrieval_profile_stats.json",
+    "kc_retrieval_profile_schema_snapshot_json": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/out_route_serialization/route_serialization/kc_retrieval_profile_schema_snapshot.json",
+    "kc_retrieval_profile_audit_md": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/out_route_serialization/route_serialization/kc_retrieval_profile_audit.md",
+    "kc_retrieval_profile_checkpoint_json": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/out_route_serialization/route_serialization/kc_retrieval_profile_checkpoint.json"
+  },
+  "inputs": {
+    "registry_jsonl": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/route_serialization_kc_registry.jsonl",
+    "source_overlay_jsonl": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/route_serialization_sentence_overlay.jsonl",
+    "exact_kc_ids": [
+      "KC_ROUTE_SERIALIZE"
+    ],
+    "limit_kcs": null,
+    "base_profile_jsonl": "",
+    "feedback_gap_jsonl": "",
+    "feedback_round": 0
+  },
+  "checkpointing": {
+    "enabled": false,
+    "final": true,
+    "completed_kc_ids": [
+      "KC_ROUTE_SERIALIZE"
+    ],
+    "remaining_kc_ids": [],
+    "profile_jsonl": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/out_route_serialization/route_serialization/kc_retrieval_profiles.jsonl",
+    "checkpoint_json": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_step5p_profile_test/out_route_serialization/route_serialization/kc_retrieval_profile_checkpoint.json"
+  },
+  "active_pointer_policy": "do_not_update_active_pointer"
+}

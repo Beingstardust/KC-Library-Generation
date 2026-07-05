@@ -1,0 +1,22 @@
+{
+  "decision": "PACK_LANE_SEMANTIC_CONTRACT_V1_HAS_CONTRADICTIONS_REVIEW_REQUIRED",
+  "pack_jsonl": ".",
+  "stats_json": ".",
+  "counts": {
+    "pack_rows": 0,
+    "ordered_item_count": 0,
+    "drafting_core_item_count": 0,
+    "automatic_support_true_pack_count": 0,
+    "risk_core_item_count": 0,
+    "contradiction_count": 0
+  },
+  "route_counter": {},
+  "lane_counter": {},
+  "stats_core": {
+    "automatic_drafting_support_kc_count": null,
+    "automatic_drafting_support_contract": null,
+    "route_breakdown": null,
+    "evidence_lane_breakdown": null
+  },
+  "contradictions": []
+}

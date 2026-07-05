@@ -1,0 +1,44 @@
+{
+  "stage": "step67c_validate_lane_aware_drafts_generic",
+  "run_id": "2026-04-29_145350",
+  "created_utc": "2026-04-29T14:53:50.860493+00:00",
+  "lanes_path": "data/work/cache/diagnostics/step67_generic_lane_policy_v3_3_source_sense_replay/2026-04-29_123523/lane_packets.jsonl",
+  "drafts_path": "data/processed/step67_sidecar_lane_drafts_generic_full40_v3_3/think/2026-04-29_142701/onepass_drafts.jsonl",
+  "out_dir": "data/processed/step67_sidecar_lane_validated_generic_full40_v3_3/think/2026-04-29_145350",
+  "packet_count": 40,
+  "draft_row_count": 40,
+  "valid_row_count": 40,
+  "error_row_count": 0,
+  "warning_row_count": 9,
+  "status_counter": {
+    "definition::grounded": 8,
+    "scope::grounded": 12,
+    "definition::abstained": 32,
+    "scope::abstained": 28
+  },
+  "mode_counter": {
+    "definition::single_strong_context": 3,
+    "scope::single_strong_context": 4,
+    "scope::contextual_synthesis": 7,
+    "definition::abstained": 32,
+    "scope::abstained": 28,
+    "definition::contextual_synthesis": 3,
+    "scope::direct_scope": 1,
+    "definition::direct_definition": 2
+  },
+  "issue_counter": {
+    "WARNING::definition: single_strong_context should be human-reviewed as weaker than direct_definition or contextual_synthesis": 3,
+    "WARNING::scope: single_strong_context should be human-reviewed as weaker than direct_scope or contextual_synthesis": 4,
+    "WARNING::scope: grounded only from context_lane": 3,
+    "WARNING::scope: single_strong_context uses one definition_lane id; human review required because scope is inferred from definition-support evidence": 1
+  },
+  "validation_policy": {
+    "definition_direct": "direct_definition must cite at least one definition_lane id",
+    "definition_contextual": "contextual_synthesis may cite definition, scope, or context ids, must cite at least two positive evidence ids, and must include scope/context support",
+    "definition_single_strong_context": "single_strong_context may cite exactly one strong scope or context id and should be human-reviewed",
+    "scope": "scope may cite definition, scope, or context ids; quarantine/sibling ids are errors",
+    "scope_single_strong_context": "single_strong_context may cite exactly one strong definition, scope, or context id and should be human-reviewed",
+    "abstained": "text, support ids, and supporting_lanes must be empty"
+  },
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

@@ -1,0 +1,3 @@
+# Default bootstrap for the full retained pipeline.
+# This is the closest replacement for the old repo's single-file requirements entrypoint.
+-r requirements-runtime.txt

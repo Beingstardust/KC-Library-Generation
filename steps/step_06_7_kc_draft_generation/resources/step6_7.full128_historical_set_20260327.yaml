@@ -1,0 +1,11 @@
+inputs:
+  step6_6_set_manifest: data/processed/kc_drafting_input_overlay/_sets/2026-03-27_112701_step6_6_kc_drafting_input_overlay_set.json
+outputs:
+  processed_root: data/processed/kc_drafts
+  sets_root: data/processed/kc_drafts/_sets
+  runs_root: data/runs
+slice:
+  limit_kcs: 128
+selection:
+  max_bundle_size: 4
+  max_explanatory_candidates: 3

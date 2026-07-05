@@ -1,0 +1,181 @@
+{
+  "status_counts": {
+    "normalized_grounded": 72,
+    "seed_floor_fallback": 50,
+    "direct_grounded": 22
+  },
+  "good_results": {
+    "KC_CLU_DBS_002": {
+      "canonical_name": "Border Point",
+      "status": "direct_grounded",
+      "text": "A border point is a non-core point that lies within the neighborhood of a core point."
+    },
+    "KC_CLU_DBS_003": {
+      "canonical_name": "Noise Point",
+      "status": "direct_grounded",
+      "text": "A noise point is a point that is neither a core point nor a border point."
+    },
+    "KC_EVAL_BASIC_002": {
+      "canonical_name": "Accuracy",
+      "status": "direct_grounded",
+      "text": "Accuracy is the fraction of correctly classified instances, calculated as (true positives + true negatives) divided by the total number of instances."
+    },
+    "KC_EVAL_SAMP_001": {
+      "canonical_name": "Holdout Method",
+      "status": "direct_grounded",
+      "text": "A single random partition of a labeled dataset into training and test sets for model evaluation."
+    },
+    "KC_FSEL_STAT_001": {
+      "canonical_name": "Null Hypothesis (H0)",
+      "status": "direct_grounded",
+      "text": "The null hypothesis is assumed to be true until there is sufficient evidence to indicate otherwise."
+    }
+  },
+  "suspect_count": 24,
+  "suspect_rows": [
+    {
+      "kc_id": "KC_CLF_DT_004",
+      "canonical_name": "Gini Index",
+      "bucket": "fragment_or_formula_anchor",
+      "text": "Gini index=1−∑i=0c−1pi(t)2, (3.5)."
+    },
+    {
+      "kc_id": "KC_CLF_DT_005",
+      "canonical_name": "Entropy (Node)",
+      "bucket": "procedure_or_instruction",
+      "text": "If the classes of values in an interval occur equally often (the interval is as impure as possible), then the entropy is a maximum."
+    },
+    {
+      "kc_id": "KC_CLF_DT_008",
+      "canonical_name": "Gain Ratio",
+      "bucket": "anchor_only_formula",
+      "text": "Gain ratio=ΔinfoSplit Info=Entropy(Parent)-∑i=1kN(vi)NEntropy(vi) -∑i=1kN(vi)Nlog2N(vi)N (3.9)."
+    },
+    {
+      "kc_id": "KC_CLF_DT_011",
+      "canonical_name": "Binary Decision Tree",
+      "bucket": "context_only",
+      "text": "A binary decision tree uses only binary splits."
+    },
+    {
+      "kc_id": "KC_CLF_NB_001",
+      "canonical_name": "Bayes' Theorem",
+      "bucket": "anchor_only_formula",
+      "text": "Bayes' Theorem states that P(H|E) = P(E|H) * P(H) / P(E), the posterior probability of a class H given evidence E."
+    },
+    {
+      "kc_id": "KC_CLF_NB_009",
+      "canonical_name": "NB for Numerical Attributes (Gaussian NB)",
+      "bucket": "anchor_only_formula",
+      "text": "Using the Gaussian density function given in Equation 8.7 , we compute that andprob(0|θ1)=0.12 ."
+    },
+    {
+      "kc_id": "KC_CLF_NB_010",
+      "canonical_name": "Sample Mean and Variance",
+      "bucket": "anchor_only_formula",
+      "text": "Sample Mean and Variance states that Parameters of the Gaussian distribution estimated from training data: mean = avg(a for x in Dy), variance = sample variance."
+    },
+    {
+      "kc_id": "KC_CLU_DBS_005",
+      "canonical_name": "Directly Density-Reachable",
+      "bucket": "anchor_only_formula",
+      "text": "In this case, a density feature constructed from the mass and volume features, i.e., density =mass/volume , would most directly yield an accurate classification."
+    },
+    {
+      "kc_id": "KC_CLU_EVAL_002",
+      "canonical_name": "SSE (Cluster Quality)",
+      "bucket": "anchor_only_formula",
+      "text": "Cluster SSE= ∑ x∈ C i dist ( c i ,x) 2 = 1 2 m i ∑ x∈ C i ∑ y∈ C i dist (x,y) 2 (7.14)."
+    },
+    {
+      "kc_id": "KC_CLU_EVAL_005",
+      "canonical_name": "Silhouette Coefficient",
+      "bucket": "anchor_only_formula",
+      "text": "Silhouette Coefficient states that silhouette(x) = (b(x) - a(x)) / max(a(x), b(x)), where a(x) = avg intra-cluster distance, b(x) = min avg distance to any other cluster."
+    },
+    {
+      "kc_id": "KC_CLU_HIER_007",
+      "canonical_name": "Ward's Method",
+      "bucket": "anchor_only_formula",
+      "text": "Ward's Method states that Cluster distance = increase in SSE that results from merging two clusters."
+    },
+    {
+      "kc_id": "KC_CLU_SIM_003",
+      "canonical_name": "Euclidean Distance",
+      "bucket": "anchor_only_formula",
+      "text": "Euclidean distance De = \u0004m i=1 (xi −yi)2 1."
+    },
+    {
+      "kc_id": "KC_CLU_SIM_007",
+      "canonical_name": "Jaccard Coefficient",
+      "bucket": "anchor_only_formula",
+      "text": "Jaccard Coefficient states that Jaccard coefficient = agree11 / (agree11 + disagree10 + disagree01)."
+    },
+    {
+      "kc_id": "KC_CLU_SIM_008",
+      "canonical_name": "Similarity Matrix",
+      "bucket": "anchor_only_formula",
+      "text": "Similarity Matrix states that An n×n symmetric matrix where entry (i,j) = similarity(xi, xj), with 1s on the diagonal."
+    },
+    {
+      "kc_id": "KC_EVAL_BASIC_003",
+      "canonical_name": "Precision",
+      "bucket": "anchor_only_formula",
+      "text": "precision = tp/(tp + f p)"
+    },
+    {
+      "kc_id": "KC_EVAL_BASIC_006",
+      "canonical_name": "F-Measure",
+      "bucket": "anchor_only_formula",
+      "text": "F-Measure states that Harmonic mean of precision and recall: F = 2*p*r / (p+r)."
+    },
+    {
+      "kc_id": "KC_EVAL_BASIC_009",
+      "canonical_name": "Multi-class Confusion Matrix",
+      "bucket": "fragment_or_formula_anchor",
+      "text": "Given an uncertainty function U and the prior class probabilities $P ( c _ { i } )$ where $i = 1 , 2 , \\dots , C$ , being C the number of classes; the information gain from a feature A, $I G ( A )$ , is defined as the difference between the prior uncertainty $\\sum _ { i } U ( P ( c _ { i } ) )$ and the expected posterior uncertainty using A, i.e.,"
+    },
+    {
+      "kc_id": "KC_EVAL_SAMP_002",
+      "canonical_name": "Random Subsampling",
+      "bucket": "procedure_or_instruction",
+      "text": "If we call $X _ { o b s }$ the observed part of X and we denote the missing part as $X _ { m i s }$ so that $X = ( X _ { o b s } , X _ { m i s } )$ , we can provide a first intuitive definition of what missing at random (MAR) means. Informally talking, when the probability that an observation is missing may depend on $X _ { o b s }$ but not on $X _ { m i s }$ we can state that the missing data is missing at random."
+    },
+    {
+      "kc_id": "KC_EVAL_SAMP_005",
+      "canonical_name": "Bootstrap Sampling",
+      "bucket": "example_or_update",
+      "text": "For example, a common approach for generating new data sets is to use bootstrap sampling, where data instances are randomly selected with replacement such that the resultant data set is of the same size as the original set."
+    },
+    {
+      "kc_id": "KC_FSEL_FW_003",
+      "canonical_name": "Wrapper Approach",
+      "bucket": "example_or_update",
+      "text": "In other words, the wrapper approach [23] uses a learning algorithm as a black box together with statistical validation (CV for example) to avoid over-fitting to select the best feature subset, agreeing on a predictive measure."
+    },
+    {
+      "kc_id": "KC_FSEL_GEN_001",
+      "canonical_name": "Sequential Forward Generation (SFG)",
+      "bucket": "context_only",
+      "text": "• Sequential Forward Generation (SFG):."
+    },
+    {
+      "kc_id": "KC_FSEL_GEN_006",
+      "canonical_name": "Heuristic Search",
+      "bucket": "context_only",
+      "text": "Large tree classifier with heuristic search."
+    },
+    {
+      "kc_id": "KC_FSEL_GOOD_003",
+      "canonical_name": "Covariance",
+      "bucket": "fragment_or_formula_anchor",
+      "text": "covariance(x, y)=sxy=1n−1∑k=1n(xk−x¯)(yk−y¯) (2.11)."
+    },
+    {
+      "kc_id": "KC_FSEL_STAT_004",
+      "canonical_name": "One-sided vs. Two-sided Tests",
+      "bucket": "anchor_only_formula",
+      "text": "The horizontal axis p refers to the fraction of instancesp0(t)+p1(t)=1 that belong to one of the two classes."
+    }
+  ]
+}

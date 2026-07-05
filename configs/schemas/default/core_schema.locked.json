@@ -1,0 +1,100 @@
+{
+  "schema_profile_version": "kc_library.locked_core.v1",
+  "description": "Locked core schema for the KC Library operator repo.",
+  "topic_library_locked_core": [
+    {
+      "field_id": "topic_id",
+      "type": "string",
+      "required_at": ["draft", "frozen"],
+      "editable": false,
+      "description": "Stable topic identity."
+    },
+    {
+      "field_id": "topic_title",
+      "type": "string",
+      "required_at": ["draft", "frozen"],
+      "editable": false,
+      "description": "Human-readable topic title."
+    },
+    {
+      "field_id": "parent_topic_id",
+      "type": "string_or_null",
+      "required_at": ["draft", "frozen"],
+      "editable": false,
+      "description": "Resolved structural parent topic."
+    },
+    {
+      "field_id": "source_provenance",
+      "type": "json",
+      "required_at": ["draft", "frozen"],
+      "editable": false,
+      "description": "Grounding provenance for the topic record."
+    }
+  ],
+  "kc_library_locked_core": [
+    {
+      "field_id": "kc_id",
+      "type": "string",
+      "required_at": ["draft", "review", "frozen"],
+      "editable": false,
+      "description": "Stable KC identity."
+    },
+    {
+      "field_id": "title",
+      "type": "string",
+      "required_at": ["draft", "review", "frozen"],
+      "editable": false,
+      "description": "Canonical KC title."
+    },
+    {
+      "field_id": "draft_definition",
+      "type": "markdown",
+      "required_at": ["draft", "review"],
+      "editable": false,
+      "description": "Grounded draft definition text."
+    },
+    {
+      "field_id": "evidence_refs",
+      "type": "json",
+      "required_at": ["draft", "review", "frozen"],
+      "editable": false,
+      "description": "Evidence bundle references for review and audit."
+    },
+    {
+      "field_id": "review_status",
+      "type": "enum",
+      "required_at": ["review", "frozen"],
+      "editable": false,
+      "description": "Review decision state."
+    },
+    {
+      "field_id": "approval_status",
+      "type": "enum",
+      "required_at": ["frozen"],
+      "editable": false,
+      "description": "Approved-only boundary status."
+    },
+    {
+      "field_id": "source_provenance",
+      "type": "json",
+      "required_at": ["draft", "review", "frozen"],
+      "editable": false,
+      "description": "Grounding provenance for the KC record."
+    },
+    {
+      "field_id": "kc_specific_criteria",
+      "type": "json",
+      "required_at": ["draft", "review", "frozen"],
+      "editable": false,
+      "must_remain_empty": true,
+      "description": "Reserved field kept empty in this phase."
+    }
+  ],
+  "locked_constraints": {
+    "topic_library_separate_from_kc_library": true,
+    "human_approval_required_for_usable_library": true,
+    "approved_only_library": true,
+    "topic_contains_kc_semantics": "conservative candidate membership only",
+    "knowledge_library_is_umbrella_only": true
+  }
+}

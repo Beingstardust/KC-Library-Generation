@@ -1,0 +1,21 @@
+{
+  "stage": "step67b_lane_aware_onepass_generic",
+  "run_id": "2026-04-28_221418",
+  "created_utc": "2026-04-28T22:18:18.866318+00:00",
+  "lanes_path": "data/work/cache/diagnostics/step67bc_think_retry2_input_20260428T221349Z/retry2_lane_packets.jsonl",
+  "out_dir": "data/processed/step67_sidecar_lane_drafts_generic_retry/think_retry2/2026-04-28_221418",
+  "onepass_drafts_path": "data/processed/step67_sidecar_lane_drafts_generic_retry/think_retry2/2026-04-28_221418/onepass_drafts.jsonl",
+  "packet_count": 2,
+  "model": "gemma4:31b",
+  "base_url": "http://127.0.0.1:33143",
+  "reasoning_mode": "think",
+  "num_ctx": 8192,
+  "num_predict": 8192,
+  "temperature": 0.0,
+  "call_policy": "exactly_one_model_call_per_kc_no_verifier_no_retry",
+  "prompt_policy": "lane_aware_generic_v1_controlled_contextual_synthesis",
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer",
+  "raw_thinking_storage_policy": "do_not_store_raw_thinking_only_presence_and_length",
+  "ok_count": 2,
+  "fail_count": 0
+}

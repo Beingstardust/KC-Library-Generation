@@ -1,0 +1,13 @@
+inputs:
+  step6_11_set_manifest: data/processed/kc_library_reviewed_restarted/_sets/2026-03-26_154021_step6_11_kc_library_reviewed_restarted_set.json
+  step6_12_set_manifest: data/processed/kc_library_runtime_restarted/_sets/2026-03-26_154046_step6_12_kc_library_runtime_restarted_set.json
+  retrieval_source_set_manifest: data/processed/kc_retrieval_alias_improvement_restarted/_sets/2026-03-26_174937_step6_13_reviewed_retrieval_source_restarted_set.json
+  retrieval_index_set_manifest: data/processed/kc_retrieval_alias_improvement_restarted/_sets/2026-03-26_174937_step6_13_reviewed_retrieval_index_restarted_set.json
+
+outputs:
+  processed_root: data/processed/kc_exchange_matching_pilot_restarted
+  sets_root: data/processed/kc_exchange_matching_pilot_restarted/_sets
+  runs_root: data/runs
+
+pilot:
+  top_k: 5

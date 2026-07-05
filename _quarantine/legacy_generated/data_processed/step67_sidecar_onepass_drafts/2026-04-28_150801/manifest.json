@@ -1,0 +1,20 @@
+{
+  "stage": "step67b_gemma4_onepass_draft_diag_v2",
+  "run_id": "2026-04-28_150801",
+  "created_utc": "2026-04-28T15:08:01.077157+00:00",
+  "packets_path": "data/processed/step67_sidecar_packets/2026-04-28_130527/evidence_packets.jsonl",
+  "out_dir": "data/processed/step67_sidecar_onepass_drafts/2026-04-28_150801",
+  "onepass_drafts_path": "data/processed/step67_sidecar_onepass_drafts/2026-04-28_150801/onepass_drafts.jsonl",
+  "packet_count": 10,
+  "model": "gemma4:31b",
+  "base_url": "http://127.0.0.1:31053",
+  "think": true,
+  "num_ctx": 8192,
+  "num_predict": 900,
+  "timeout": 240.0,
+  "temperature": 0.0,
+  "call_policy": "exactly_one_model_call_per_kc_no_verifier_no_retry",
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer",
+  "raw_thinking_storage_policy": "do_not_store_raw_thinking_only_presence_and_length",
+  "diagnostic_policy": "preserve_visible_content_and_response_shape_even_when_json_parse_fails"
+}

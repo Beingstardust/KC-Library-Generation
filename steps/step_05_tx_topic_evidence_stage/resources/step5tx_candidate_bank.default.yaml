@@ -1,0 +1,19 @@
+inputs:
+  topic_registry_jsonl: ""
+  topic_to_kc_edges_jsonl: ""
+  source_overlay_jsonl: ""
+  topic_profile_jsonl: ""
+  exact_topic_ids: []
+  limit_topics:
+
+outputs:
+  output_root: data/processed/topic_evidence_stage_v3_candidate_bank
+  set_manifest_root: data/processed/topic_evidence_stage_v3_candidate_bank/_sets
+
+source_surface_fallback:
+  enabled: true
+  max_fallback_per_kc: 80
+  min_score: 4.0
+
+direct_overlay_supplement:
+  enabled: false

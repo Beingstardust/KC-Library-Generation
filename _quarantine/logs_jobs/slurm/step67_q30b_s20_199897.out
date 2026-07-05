@@ -1,0 +1,48 @@
+TIME_START=Wed Apr  8 18:28:29 CEST 2026
+HOSTNAME=gpu03
+SLURM_JOB_ID=199897
+SLURM_JOB_NODELIST=gpu03
+CUDA_VISIBLE_DEVICES=0
+OLLAMA_HOST=127.0.0.1:11567
+GPU 0: NVIDIA A100 80GB PCIe (UUID: GPU-18317f28-ba83-3c72-33a2-cf394808f5dd)
+GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-d8bb9110-6f0b-acb3-f8d6-4f568c5dc7dd)
+Python 3.11.3
+Warning: could not connect to a running Ollama instance
+Warning: client version is 0.19.0
+OLLAMA_PID=1111856
+UID          PID    PPID  C STIME TTY          TIME CMD
+aryp26yc 1111856 1111836  1 18:28 ?        00:00:00 /beegfs1/home/aryp26yc/apps/ollama_clean/bin/ollama serve
+time=2026-04-08T18:28:29.697+02:00 level=INFO source=routes.go:1742 msg="server config" env="map[CUDA_VISIBLE_DEVICES:0 GGML_VK_VISIBLE_DEVICES: GPU_DEVICE_ORDINAL:0 HIP_VISIBLE_DEVICES: HSA_OVERRIDE_GFX_VERSION: HTTPS_PROXY: HTTP_PROXY: NO_PROXY: OLLAMA_CONTEXT_LENGTH:0 OLLAMA_DEBUG:INFO OLLAMA_DEBUG_LOG_REQUESTS:false OLLAMA_EDITOR: OLLAMA_FLASH_ATTENTION:false OLLAMA_GPU_OVERHEAD:0 OLLAMA_HOST:http://127.0.0.1:11567 OLLAMA_KEEP_ALIVE:5m0s OLLAMA_KV_CACHE_TYPE: OLLAMA_LLM_LIBRARY: OLLAMA_LOAD_TIMEOUT:5m0s OLLAMA_MAX_LOADED_MODELS:1 OLLAMA_MAX_QUEUE:512 OLLAMA_MODELS:/beegfs2/scratch/aryp26yc/kc_l/ollama/models OLLAMA_MULTIUSER_CACHE:false OLLAMA_NEW_ENGINE:false OLLAMA_NOHISTORY:false OLLAMA_NOPRUNE:false OLLAMA_NO_CLOUD:false OLLAMA_NUM_PARALLEL:1 OLLAMA_ORIGINS:[http://localhost https://localhost http://localhost:* https://localhost:* http://127.0.0.1 https://127.0.0.1 http://127.0.0.1:* https://127.0.0.1:* http://0.0.0.0 https://0.0.0.0 http://0.0.0.0:* https://0.0.0.0:* app://* file://* tauri://* vscode-webview://* vscode-file://*] OLLAMA_REMOTES:[ollama.com] OLLAMA_SCHED_SPREAD:false OLLAMA_VULKAN:false ROCR_VISIBLE_DEVICES:0 http_proxy: https_proxy: no_proxy:]"
+time=2026-04-08T18:28:29.698+02:00 level=INFO source=routes.go:1744 msg="Ollama cloud disabled: false"
+time=2026-04-08T18:28:29.712+02:00 level=INFO source=images.go:477 msg="total blobs: 12"
+time=2026-04-08T18:28:29.718+02:00 level=INFO source=images.go:484 msg="total unused blobs removed: 0"
+time=2026-04-08T18:28:29.722+02:00 level=INFO source=routes.go:1800 msg="Listening on 127.0.0.1:11567 (version 0.19.0)"
+time=2026-04-08T18:28:29.727+02:00 level=INFO source=runner.go:67 msg="discovering available GPUs..."
+time=2026-04-08T18:28:29.727+02:00 level=WARN source=runner.go:485 msg="user overrode visible devices" CUDA_VISIBLE_DEVICES=0
+time=2026-04-08T18:28:29.727+02:00 level=WARN source=runner.go:485 msg="user overrode visible devices" ROCR_VISIBLE_DEVICES=0
+time=2026-04-08T18:28:29.727+02:00 level=WARN source=runner.go:485 msg="user overrode visible devices" GPU_DEVICE_ORDINAL=0
+time=2026-04-08T18:28:29.727+02:00 level=WARN source=runner.go:489 msg="if GPUs are not correctly discovered, unset and try again"
+time=2026-04-08T18:28:29.730+02:00 level=INFO source=server.go:432 msg="starting runner" cmd="/beegfs1/home/aryp26yc/apps/ollama_clean/bin/ollama runner --ollama-engine --port 38005"
+time=2026-04-08T18:28:30.914+02:00 level=INFO source=server.go:432 msg="starting runner" cmd="/beegfs1/home/aryp26yc/apps/ollama_clean/bin/ollama runner --ollama-engine --port 46643"
+time=2026-04-08T18:28:31.820+02:00 level=INFO source=runner.go:106 msg="experimental Vulkan support disabled.  To enable, set OLLAMA_VULKAN=1"
+time=2026-04-08T18:28:31.823+02:00 level=INFO source=server.go:432 msg="starting runner" cmd="/beegfs1/home/aryp26yc/apps/ollama_clean/bin/ollama runner --ollama-engine --port 37333"
+time=2026-04-08T18:28:32.916+02:00 level=INFO source=types.go:42 msg="inference compute" id=GPU-18317f28-ba83-3c72-33a2-cf394808f5dd filter_id="" library=CUDA compute=8.0 name=CUDA0 description="NVIDIA A100 80GB PCIe" libdirs=ollama,cuda_v12 driver=12.4 pci_id=0000:31:00.0 type=discrete total="80.0 GiB" available="79.1 GiB"
+time=2026-04-08T18:28:32.916+02:00 level=INFO source=routes.go:1850 msg="vram-based default context" total_vram="80.0 GiB" default_num_ctx=262144
+{"models":[{"name":"gemma3:27b","model":"gemma3:27b","modified_at":"2026-04-03T18:49:35+02:00","size":17396936941,"digest":"a418f5838eaf7fe2cfe0a3046c8384b68ba43a4435542c942f9db00a5f342203","details":{"parent_model":"","format":"gguf","family":"gemma3","families":["gemma3"],"parameter_size":"27.4B","quantization_level":"Q4_K_M"}},{"name":"qwen3-embedding:8b","model":"qwen3-embedding:8b","modified_at":"2026-04-03T18:45:51+02:00","size":4676805193,"digest":"64b933495768fbd3b87c20583d379728a07471e0c66733a9df87cd1901b3c44b","details":{"parent_model":"","format":"gguf","family":"qwen3","families":["qwen3"],"parameter_size":"7.6B","quantization_level":"Q4_K_M"}},{"name":"qwen3:30b","model":"qwen3:30b","modified_at":"2026-04-03T13:10:02+02:00","size":18556699314,"digest":"ad815644918f0eaab341c12b67837cc6dd4562342cdaf118f83d5d554cb37226","details":{"parent_model":"","format":"gguf","family":"qwen3moe","families":["qwen3moe"],"parameter_size":"30.5B","quantization_level":"Q4_K_M"}}]}WROTE slurm/step6_7_slice20_job_199897.yaml
+STEP67_SLICE20_RUN_START=Wed Apr  8 18:28:37 CEST 2026
+{
+  "run_id": "2026-04-08_162838",
+  "processed_dir": "data/processed/kc_drafts/2026-04-08_162838",
+  "audit_dir": "data/runs/2026-04-08_162838_step6_7",
+  "model_name": "qwen3:30b"
+}
+STEP67_SLICE20_RUN_EXIT_CODE=0
+STEP67_SLICE20_RUN_END=Wed Apr  8 18:33:02 CEST 2026
+LATEST_RUN=data/runs/2026-04-08_162838_step6_7
+2026-04-08 18:28:38.0000000000 config_snapshot.yaml
+2026-04-08 18:33:02.0000000000 input_manifest.json
+2026-04-08 18:33:02.0000000000 output_manifest.json
+2026-04-08 18:33:02.0000000000 summary.json
+LATEST_OUT=data/processed/kc_drafts/2026-04-08_162838
+2026-04-08 18:33:02.0000000000 draft_stats.json
+2026-04-08 18:33:02.0000000000 kc_draft_bundles.jsonl

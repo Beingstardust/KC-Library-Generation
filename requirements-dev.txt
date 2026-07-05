@@ -1,0 +1,5 @@
+# Repo development / test surface for the clean operator repo.
+-r requirements-operator.txt
+
+pytest>=8.0.0
+ruff>=0.5.0

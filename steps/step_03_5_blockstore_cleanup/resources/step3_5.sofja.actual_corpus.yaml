@@ -1,0 +1,43 @@
+project:
+  timezone: "Europe/Amsterdam"
+
+input:
+  step2_sets_dir: "/beegfs2/scratch/aryp26yc/kc_l/data/processed/blockstore/_sets"
+  step2_active_set_file: "/beegfs2/scratch/aryp26yc/kc_l/data/processed/blockstore/_sets/ACTIVE_STEP2_SET.txt"
+
+  step3_sets_dir: "/beegfs2/scratch/aryp26yc/kc_l/data/processed/doctree/_sets"
+  step3_active_set_file: "/beegfs2/scratch/aryp26yc/kc_l/data/processed/doctree/_sets/ACTIVE_STEP3_SET.txt"
+
+output:
+  processed_enriched_dir: "/beegfs2/scratch/aryp26yc/kc_l/data/processed/blockstore_enriched"
+  enriched_sets_dir: "/beegfs2/scratch/aryp26yc/kc_l/data/processed/blockstore_enriched/_sets"
+  runs_dir: "/beegfs2/scratch/aryp26yc/kc_l/data/runs"
+
+boilerplate:
+  enabled: true
+  apply_layers: ["mineru"]
+  apply_content_types: ["text"]
+
+  min_page_frac: 0.60
+  min_pages_abs: 10
+  max_line_len: 120
+
+  bottom_y_frac: 0.78
+  bottom_majority_frac: 0.60
+
+  patterns:
+    page_number: true
+    url_email: true
+    copyright: true
+
+  protect_step3_titles: true
+
+formula_qa:
+  enabled: true
+  suspicious_if:
+    eq_count_mineru_is_zero: true
+    math_symbol_ratio_ge: 0.08
+    min_chars_for_math_check: 200
+
+logging:
+  verbose: true

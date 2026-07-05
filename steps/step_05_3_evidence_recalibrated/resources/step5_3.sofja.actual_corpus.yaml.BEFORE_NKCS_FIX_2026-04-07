@@ -1,0 +1,105 @@
+# Clean-start default for the operator repo.
+# Refresh current artifact aliases with: python scripts/maintenance/refresh_current_step_artifacts.py
+project:
+  timezone: Europe/Berlin
+
+inputs:
+  kc_registry_path: data/work/cache/current_step_artifacts/step1_kc_registry.current.jsonl
+  step4_5_active_set_pointer: /beegfs2/scratch/aryp26yc/kc_l/data/processed/retrieval_sentence_overlay/_sets/ACTIVE_STEP4_5_SET.txt
+  baseline_step5_2_active_set_pointer: data/processed/kc_evidence_sharp/_sets/ACTIVE_STEP5_2_EVIDENCE_SHARP_SET.txt
+  active_step5_3_set_pointer: data/processed/kc_evidence_recalibrated/_sets/ACTIVE_STEP5_3_EVIDENCE_SET.txt
+
+models:
+  reranker:
+    preferred: /beegfs2/scratch/aryp26yc/kc_l/models/rerankers/tomaarsen__Qwen3-Reranker-4B-seq-cls
+    fallback:
+      - /beegfs2/scratch/aryp26yc/kc_l/models/rerankers/BAAI__bge-reranker-v2-m3
+    device: auto
+    batch_size: 8
+
+runtime:
+  competitor_pool_size: 12
+  heuristic_shortlist_per_kc: 64
+  review_queue_min_strong_candidates: 2
+  review_examples_per_kc: 5
+  sample_kcs: 12
+  contamination_audit_top_k: 5
+  contamination_audit_subset:
+    - KC_CLF_DT_003
+    - KC_CLF_DT_004
+    - KC_CLF_DT_006
+    - KC_CLF_NB_001
+    - KC_CLF_NB_004
+    - KC_CLU_EVAL_005
+    - KC_CLU_SIM_006
+    - KC_FSEL_FUND_004
+
+selection:
+  max_candidates_per_kc: 18
+  max_candidates_per_doc: 6
+  max_candidates_per_page: 3
+  reserve_structured_candidates: 2
+
+scoring:
+  weights:
+    exact_name_phrase: 5.0
+    exact_alias_phrase: 4.0
+    canonical_token: 2.0
+    alias_token: 1.5
+    seed_keyword: 0.9
+    heading_name_token: 0.6
+    doc_group_match: 1.8
+    definition_like: 1.8
+    formula_like: 1.8
+    procedure_like: 1.4
+    example_like: 0.5
+    page_index_present: 0.3
+    patch_id_present: 0.3
+    canonical_reveal_page: 0.4
+    rerank_target: 6.0
+    rerank_margin: 4.0
+  penalties:
+    is_meta: 5.0
+    is_nav_boilerplate: 6.0
+    is_author_affiliation: 8.0
+    is_transition_text: 4.0
+    is_heading_like: 0.8
+    missing_page_index: 0.8
+    missing_patch_id: 0.4
+    noncanonical_reveal_page: 0.4
+    doc_group_mismatch: 4.5
+    competitor_token_hit: 1.0
+    short_sentence: 1.2
+    very_short_sentence: 2.5
+  thresholds:
+    short_sentence_chars: 42
+    very_short_sentence_chars: 18
+    strong_seed_overlap_min: 1
+    rerank_target_min: 0.55
+    rerank_margin_min: 0.0
+    exact_phrase_rerank_target_min: 0.52
+    exact_phrase_rerank_margin_min: -0.01
+    multi_token_rerank_margin_min: -0.01
+    doc_mismatch_rerank_target_min: 0.7
+    doc_mismatch_rerank_margin_min: 0.1
+    strong_doc_mismatch_override_margin: 0.2
+    high_risk_negative_margin: -0.03
+    top_candidate_suppressed_max: 6
+
+outputs:
+  processed_root: data/processed/kc_evidence_recalibrated
+  sets_dir: data/processed/kc_evidence_recalibrated/_sets
+
+audit:
+  runs_dir: data/runs
+
+acceptance:
+  n_kcs_total: 128
+  max_candidates_per_kc: 18
+  min_median_same_topic_fraction_lift_vs_step5_2: 0.05
+  min_median_same_topic_fraction_relative_lift_vs_step5_2: 0.25
+  min_kcs_with_2_strong_candidates: 100
+  max_top_candidate_suppressed: 6
+  max_high_risk_audit_candidates: 8
+
+

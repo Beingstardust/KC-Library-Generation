@@ -1,0 +1,31 @@
+{
+  "KC_SIGNAL_001": {
+    "authority_contract": "step5x_must_verify_against_source_rows",
+    "canonical_name": "Signal Dropout Cause",
+    "concept_head_terms": [
+      "signal",
+      "dropout",
+      "cause"
+    ],
+    "failure_hypothesis": "",
+    "knowledge_unit_id": "KC_SIGNAL_001",
+    "knowledge_unit_type": "kc",
+    "label_descriptor_terms": [],
+    "lexical_atoms": [
+      "Signal Dropout Cause",
+      "signal dropout occurs"
+    ],
+    "negative_terms": [],
+    "policy_version": "step5x_v3_retrieval_policy_v1",
+    "profile_output_role": "retrieval_control_metadata_not_evidence",
+    "query_plan_id": "qplan_KC_SIGNAL_001_8b5f22bac8942748",
+    "region_locators": [],
+    "shape_priors": [
+      "target_bound_concept_support",
+      "definition"
+    ],
+    "sibling_terms": [
+      "Signal Dropout Effect"
+    ]
+  }
+}

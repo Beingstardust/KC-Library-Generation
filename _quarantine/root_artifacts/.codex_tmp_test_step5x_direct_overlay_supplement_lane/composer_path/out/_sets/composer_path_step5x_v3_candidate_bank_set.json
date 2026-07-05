@@ -1,0 +1,80 @@
+{
+  "artifacts": {
+    "candidate_bank_jsonl": ".codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/out/composer_path/candidate_bank.jsonl",
+    "candidate_bank_manifest_json": ".codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/out/composer_path/candidate_bank_manifest.json",
+    "candidate_bank_schema_snapshot_json": ".codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/out/composer_path/candidate_bank_schema_snapshot.json",
+    "candidate_bank_stats_json": ".codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/out/composer_path/candidate_bank_stats.json",
+    "profile_guidance_controls_json": ".codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/out/composer_path/profile_guidance_controls.json",
+    "retrieval_policy_plans_json": ".codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/out/composer_path/retrieval_policy_plans.json"
+  },
+  "compatibility": {
+    "step6_6_ready": false,
+    "step6_7_contract_changed": false
+  },
+  "created_at": "2026-05-09T15:00:15.221995Z",
+  "inputs": {
+    "allow_seed_bearing_input_for_diagnostic": false,
+    "config_path": "tests://direct_overlay_supplement",
+    "direct_overlay_supplement": {
+      "candidate_count_by_kc": {
+        "KC_NEUTRAL_001": 1
+      },
+      "candidate_rows_added": 1,
+      "dropped_duplicate_count": 0,
+      "dropped_same_patch_weaker_variant_count": 0,
+      "enabled": true,
+      "input_row_count": 1,
+      "invalid_row_count": 0,
+      "quarantine_count": 0,
+      "rehydration_queue_count": 0,
+      "rejected_counts": {},
+      "supplement_jsonl": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/direct_overlay_supplement.jsonl"
+    },
+    "exact_kc_ids": [
+      "KC_NEUTRAL_001"
+    ],
+    "limit_kcs": 1,
+    "mode": "clean_slate_registry_sentence_overlay",
+    "profile_jsonl": "",
+    "registry_jsonl": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/seedless_registry.jsonl",
+    "seed_field_detection": {
+      "direct_overlay_supplement_input": {
+        "by_key": {},
+        "total": 0
+      },
+      "registry_input": {
+        "by_key": {},
+        "total": 0
+      }
+    },
+    "source_manifest": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/sentence_overlay.jsonl",
+    "source_overlay_jsonl": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/sentence_overlay.jsonl",
+    "source_surface_fallback": {
+      "broad_tokens": [],
+      "candidate_count_by_kc": {
+        "KC_NEUTRAL_001": 0
+      },
+      "candidate_rows_added": 0,
+      "dropped_duplicate_count": 0,
+      "enabled": true,
+      "fallback_tier_counter": {},
+      "forced_for_clean_slate": true,
+      "hierarchy_match_type_counter": {},
+      "rejected_counts": {
+        "no_surface_match": 1
+      },
+      "requested_enabled": false,
+      "resolved_from": "direct_source_overlay_jsonl",
+      "sentence_source_jsonl": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/sentence_overlay.jsonl",
+      "sentence_source_manifest": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/.codex_tmp_test_step5x_direct_overlay_supplement_lane/composer_path/sentence_overlay.jsonl",
+      "source_surface": "source_surface_fallback",
+      "surface_match_type_counter": {},
+      "total_kcs_considered": 1,
+      "total_sentence_rows_scanned": 1
+    },
+    "step5_3_candidates_jsonl": "",
+    "step5_3_set_manifest": ""
+  },
+  "run_id": "composer_path",
+  "stage": "step5x_v3_candidate_bank"
+}

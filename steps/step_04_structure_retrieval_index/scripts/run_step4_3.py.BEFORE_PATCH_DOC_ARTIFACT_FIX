@@ -1,0 +1,1648 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import os
+import platform
+import re
+import subprocess
+import sys
+import time
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional, Tuple
+
+import numpy as np
+
+try:
+    import yaml  # type: ignore
+except Exception as e:
+    yaml = None
+
+
+def utc_ts() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d_%H%M%S")
+
+
+def read_text(p: Path) -> str:
+    return p.read_text(encoding="utf-8")
+
+
+def write_text(p: Path, s: str) -> None:
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(s, encoding="utf-8")
+
+
+def write_json(p: Path, obj: Any) -> None:
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def sha256_file(p: Path) -> str:
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def jsonl_iter(p: Path) -> Iterable[Dict[str, Any]]:
+    with p.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            yield json.loads(line)
+
+
+def jsonl_write(p: Path, rows: Iterable[Dict[str, Any]]) -> None:
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", encoding="utf-8") as f:
+        for r in rows:
+            f.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+
+def pip_freeze() -> str:
+    try:
+        out = subprocess.check_output([sys.executable, "-m", "pip", "freeze"], stderr=subprocess.STDOUT)
+        return out.decode("utf-8", errors="replace")
+    except Exception as e:
+        return f"<<pip freeze failed: {type(e).__name__}: {e}>>\n"
+
+
+def resolve_active_pointer(pointer_path: Path) -> Path:
+    """
+    Convention: pointer file contains a filename relative to its own parent directory.
+    """
+    target_rel = read_text(pointer_path).strip()
+    if not target_rel:
+        raise RuntimeError(f"Empty ACTIVE pointer: {pointer_path}")
+    target = (pointer_path.parent / target_rel).resolve()
+    if not target.exists():
+        raise FileNotFoundError(f"ACTIVE pointer target missing: {target} (from {pointer_path})")
+    return target
+
+
+def to_manifest_path(p: Path, repo_root: Path) -> str:
+    try:
+        return str(p.resolve().relative_to(repo_root.resolve())).replace(os.sep, "/")
+    except Exception:
+        return str(p.resolve()).replace(os.sep, "/")
+
+def docs_to_map(docs_obj: Any) -> Dict[str, Dict[str, Any]]:
+    """
+    Accepts either:
+      - dict: {doc_id: entry}
+      - list: [entry, ...] where entry has doc_id
+    Returns normalized dict keyed by doc_id.
+    """
+    if isinstance(docs_obj, dict):
+        # If already dict keyed by doc_id, keep it.
+        return {str(k): v for k, v in docs_obj.items()}
+
+    if isinstance(docs_obj, list):
+        out: Dict[str, Dict[str, Any]] = {}
+        for e in docs_obj:
+            if not isinstance(e, dict):
+                raise TypeError(f"docs list contains non-dict entry: {type(e).__name__}")
+            did = e.get("doc_id") or e.get("id") or e.get("doc")  # tolerate mild variants
+            if not did:
+                raise KeyError("docs list entry missing doc_id")
+            did = str(did)
+            if did in out:
+                raise ValueError(f"Duplicate doc_id in docs list: {did}")
+            out[did] = e
+        return out
+
+    raise TypeError(f"Unsupported docs container type: {type(docs_obj).__name__}")
+
+
+def get_doc_entry(set_obj: Dict[str, Any], doc_id: str) -> Dict[str, Any]:
+    docs_obj = set_obj.get("docs")
+    m = docs_to_map(docs_obj)
+    e = m.get(doc_id)
+    if e is None:
+        raise KeyError(f"doc_id not found in set docs: {doc_id}")
+    return e
+
+
+def _path_from_val(repo_root: Path, v: Any) -> Optional[Path]:
+    if isinstance(v, str) and v.strip():
+        return (repo_root / Path(v)).resolve()
+    if isinstance(v, dict):
+        pv = v.get("path") or v.get("relpath")
+        if isinstance(pv, str) and pv.strip():
+            return (repo_root / Path(pv)).resolve()
+    return None
+
+
+def _append_candidate_path(candidates: List[Path], seen: set[str], p: Optional[Path], filename: str) -> None:
+    if p is None:
+        return
+    candidate = p if p.name == filename else (p / filename)
+    key = str(candidate)
+    if key in seen:
+        return
+    seen.add(key)
+    candidates.append(candidate)
+
+
+def resolve_doc_file(repo_root: Path, doc_entry: Dict[str, Any], filename: str, candidate_keys: List[str]) -> Path:
+    """
+    Resolve a required file either via explicit artifact path, or via out_dir + filename.
+    """
+    candidates: List[Path] = []
+    seen: set[str] = set()
+
+    # 1) artifacts dict
+    arts = doc_entry.get("artifacts")
+    if isinstance(arts, dict):
+        for k in candidate_keys:
+            if k in arts:
+                _append_candidate_path(candidates, seen, _path_from_val(repo_root, arts[k]), filename)
+
+    # 2) direct keys in doc_entry
+    for k in candidate_keys:
+        if k in doc_entry:
+            _append_candidate_path(candidates, seen, _path_from_val(repo_root, doc_entry[k]), filename)
+
+    # 3) out_dir style
+    for k in ["out_dir", "doc_out_dir", "output_dir", "dir", "path"]:
+        if k in doc_entry:
+            _append_candidate_path(candidates, seen, _path_from_val(repo_root, doc_entry[k]), filename)
+
+    # 4) stage-specific dir keys commonly used in frozen set manifests
+    for k, v in doc_entry.items():
+        if k.endswith("_out_dir") or k.endswith("_dir"):
+            _append_candidate_path(candidates, seen, _path_from_val(repo_root, v), filename)
+
+    for p in candidates:
+        if p.exists():
+            return p
+
+    if candidates:
+        return candidates[0]
+
+    raise FileNotFoundError(f"Could not resolve {filename} for doc_entry keys={list(doc_entry.keys())}")
+def norm_ws(s: str) -> str:
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def fingerprint_text(s: str) -> str:
+    s2 = norm_ws(s).lower()
+    return hashlib.sha1(s2.encode("utf-8")).hexdigest()
+
+
+_TOKEN_RE = re.compile(r"[A-Za-z0-9]+")
+_TEXT_DIRECT_KEYS = [
+    "text",
+    "content",
+    "text_norm",
+    "text_clean",
+    "text_raw",
+    "markdown",
+    "latex",
+]
+_TEXT_NESTED_KEYS = [
+    "lines",
+    "spans",
+    "items",
+    "blocks",
+    "children",
+    "paragraphs",
+    "cells",
+    "tokens",
+    "segments",
+]
+
+_MIN_STOP = {
+    "the", "and", "or", "of", "to", "in", "for", "a", "an", "is", "are", "be", "as", "on", "by", "with", "at",
+    "from", "that", "this", "it", "we", "you", "your", "our", "can", "may", "not", "do", "does", "did",
+}
+
+
+def tokenize(s: str, max_token_len: int = 40, lowercase: bool = True, stopwords: Optional[set] = None) -> List[str]:
+    if lowercase:
+        s = s.lower()
+    toks = _TOKEN_RE.findall(s)
+    out: List[str] = []
+    for t in toks:
+        if len(t) > max_token_len:
+            continue
+        if stopwords is not None and t in stopwords:
+            continue
+        out.append(t)
+    return out
+
+
+def bm25_idf(n_docs: int, df: int) -> float:
+    return math.log(((n_docs - df + 0.5) / (df + 0.5)) + 1.0)
+
+
+@dataclass
+class LexicalIndex:
+    vocab: Dict[str, int]                 # term -> term_id
+    df: np.ndarray                        # [V] int32
+    idf: np.ndarray                       # [V] float32
+    doclens: np.ndarray                   # [N] int32
+    offsets: np.ndarray                   # [V+1] int64
+    post_docids: np.ndarray               # [nnz] int32
+    post_tfs: np.ndarray                  # [nnz] int16
+    avgdl: float
+    k1: float
+    b: float
+
+    def score(self, query_toks: List[str], topk: int = 50) -> List[Tuple[int, float]]:
+        """
+        Returns list of (doc_id, bm25_score) sorted desc.
+        """
+        N = int(self.doclens.shape[0])
+        scores: Dict[int, float] = {}
+        # term freq in query not used (BM25 standard); could be used but keep simple.
+        for t in query_toks:
+            tid = self.vocab.get(t)
+            if tid is None:
+                continue
+            start = int(self.offsets[tid])
+            end = int(self.offsets[tid + 1])
+            idf = float(self.idf[tid])
+            for i in range(start, end):
+                doc_id = int(self.post_docids[i])
+                tf = int(self.post_tfs[i])
+                dl = float(self.doclens[doc_id])
+                denom = tf + self.k1 * (1.0 - self.b + self.b * (dl / self.avgdl))
+                s = idf * (tf * (self.k1 + 1.0) / (denom + 1e-12))
+                scores[doc_id] = scores.get(doc_id, 0.0) + s
+        items = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        return items[:topk]
+
+
+def build_lexical_index(doc_texts: List[str], k1: float, b: float, min_df: int,
+                        max_token_len: int, lowercase: bool, stopwords: Optional[set]) -> LexicalIndex:
+    N = len(doc_texts)
+    doc_toks: List[List[str]] = []
+    df_map: Dict[str, int] = {}
+    tf_maps: List[Dict[str, int]] = []
+    doclens = np.zeros((N,), dtype=np.int32)
+
+    for i, txt in enumerate(doc_texts):
+        toks = tokenize(txt, max_token_len=max_token_len, lowercase=lowercase, stopwords=stopwords)
+        doc_toks.append(toks)
+        doclens[i] = len(toks)
+        seen: set = set()
+        tf: Dict[str, int] = {}
+        for t in toks:
+            tf[t] = tf.get(t, 0) + 1
+            if t not in seen:
+                df_map[t] = df_map.get(t, 0) + 1
+                seen.add(t)
+        tf_maps.append(tf)
+
+    # filter by min_df
+    terms = [t for t, df in df_map.items() if df >= min_df]
+    terms.sort()
+    vocab = {t: j for j, t in enumerate(terms)}
+    V = len(terms)
+
+    df = np.zeros((V,), dtype=np.int32)
+    idf = np.zeros((V,), dtype=np.float32)
+
+    for t, tid in vocab.items():
+        dfi = df_map[t]
+        df[tid] = dfi
+        idf[tid] = bm25_idf(N, dfi)
+
+    postings: List[List[Tuple[int, int]]] = [[] for _ in range(V)]
+    for doc_id, tf in enumerate(tf_maps):
+        for t, cnt in tf.items():
+            tid = vocab.get(t)
+            if tid is None:
+                continue
+            postings[tid].append((doc_id, cnt))
+
+    # flatten postings
+    offsets = np.zeros((V + 1,), dtype=np.int64)
+    nnz = 0
+    for tid in range(V):
+        offsets[tid] = nnz
+        nnz += len(postings[tid])
+    offsets[V] = nnz
+
+    post_docids = np.zeros((nnz,), dtype=np.int32)
+    post_tfs = np.zeros((nnz,), dtype=np.int16)
+
+    k = 0
+    for tid in range(V):
+        for doc_id, cnt in postings[tid]:
+            post_docids[k] = doc_id
+            post_tfs[k] = cnt if cnt < 32767 else 32767
+            k += 1
+
+    avgdl = float(doclens.mean()) if N > 0 else 0.0
+    return LexicalIndex(
+        vocab=vocab,
+        df=df,
+        idf=idf,
+        doclens=doclens,
+        offsets=offsets,
+        post_docids=post_docids,
+        post_tfs=post_tfs,
+        avgdl=avgdl,
+        k1=k1,
+        b=b,
+    )
+
+
+def l2_normalize(x: np.ndarray) -> np.ndarray:
+    denom = np.linalg.norm(x, axis=1, keepdims=True) + 1e-12
+    return x / denom
+
+
+def ollama_embed(base_url: str, model: str, inputs: List[str], truncate: bool, dimensions: int,
+                 keep_alive: str, options: Dict[str, Any], timeout_s: float = 120.0) -> List[List[float]]:
+    """
+    Uses stdlib urllib to avoid adding dependencies.
+    """
+    import urllib.request
+
+    url = base_url.rstrip("/") + "/api/embed"
+    payload = {
+        "model": model,
+        "input": inputs,
+        "truncate": bool(truncate),
+        "dimensions": int(dimensions),
+        "keep_alive": keep_alive,
+        "options": options or {},
+    }
+    data = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"}, method="POST")
+    with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+        raw = resp.read().decode("utf-8", errors="replace")
+    obj = json.loads(raw)
+    embs = obj.get("embeddings")
+    if not isinstance(embs, list):
+        raise RuntimeError(f"Ollama embed response missing embeddings: keys={list(obj.keys())}")
+    return embs
+
+
+def ollama_version(base_url: str, timeout_s: float = 15.0) -> str:
+    import urllib.request
+    url = base_url.rstrip("/") + "/api/version"
+    with urllib.request.urlopen(url, timeout=timeout_s) as resp:
+        raw = resp.read().decode("utf-8", errors="replace")
+    obj = json.loads(raw)
+    return str(obj.get("version", ""))
+
+
+def pretruncate(s: str, max_chars: int) -> str:
+    if max_chars <= 0:
+        return s
+    if len(s) <= max_chars:
+        return s
+    return s[:max_chars]
+
+
+def best_effort_get(d: Dict[str, Any], keys: List[str], default: Any = None) -> Any:
+    for k in keys:
+        if k in d and d[k] is not None:
+            return d[k]
+    return default
+
+
+def _append_text_part(parts: List[str], value: Any) -> None:
+    if not isinstance(value, str):
+        return
+    s = norm_ws(value)
+    if not s:
+        return
+    if not parts or parts[-1] != s:
+        parts.append(s)
+
+
+def _collect_nested_text(value: Any, parts: List[str], depth: int = 0, budget: int = 256) -> None:
+    if value is None or depth > 4 or len(parts) >= budget:
+        return
+    if isinstance(value, str):
+        _append_text_part(parts, value)
+        return
+    if isinstance(value, list):
+        for item in value:
+            if len(parts) >= budget:
+                break
+            _collect_nested_text(item, parts, depth + 1, budget)
+        return
+    if isinstance(value, dict):
+        for key in _TEXT_DIRECT_KEYS + _TEXT_NESTED_KEYS:
+            if key in value:
+                _collect_nested_text(value[key], parts, depth + 1, budget)
+
+
+def page_heading_value(page_row: Dict[str, Any]) -> str:
+    return norm_ws(str(best_effort_get(page_row, ["heading_norm", "heading", "title_norm", "title"], "")))
+
+
+def stable_phrase(text: str, max_words: int = 12, max_chars: int = 96) -> str:
+    s = norm_ws(text)
+    if not s:
+        return ""
+    words = s.split(" ")
+    short = " ".join(words[:max_words])
+    if len(short) > max_chars:
+        clipped = short[:max_chars].rstrip()
+        if " " in clipped:
+            clipped = clipped.rsplit(" ", 1)[0]
+        short = clipped
+    return norm_ws(short.strip(" ,;:.-"))
+
+
+def patch_pages(p: Dict[str, Any]) -> List[int]:
+    # tolerate multiple schemas
+    if "page_indices" in p and isinstance(p["page_indices"], list):
+        return [int(x) for x in p["page_indices"]]
+    if "pages" in p and isinstance(p["pages"], list):
+        return [int(x) for x in p["pages"]]
+    ps = best_effort_get(p, ["page_start", "start_page", "page_i0", "i0"], None)
+    pe = best_effort_get(p, ["page_end", "end_page", "page_i1", "i1"], None)
+    if ps is not None and pe is not None:
+        ps_i = int(ps)
+        pe_i = int(pe)
+        if pe_i < ps_i:
+            ps_i, pe_i = pe_i, ps_i
+        return list(range(ps_i, pe_i + 1))
+    # fallback: empty
+    return []
+
+
+def patch_id(p: Dict[str, Any], idx: int) -> str:
+    v = best_effort_get(p, ["patch_id", "id"], None)
+    if v is None:
+        return f"patch_{idx:06d}"
+    return str(v)
+
+
+def patch_type(p: Dict[str, Any]) -> str:
+    return str(best_effort_get(p, ["patch_type", "type"], "unknown"))
+
+
+def patch_heading(p: Dict[str, Any]) -> str:
+    explicit = norm_ws(str(best_effort_get(p, ["heading_norm", "heading", "title_norm", "title"], "")))
+    if explicit:
+        return explicit
+    title_cues = p.get("title_cues")
+    if isinstance(title_cues, list):
+        cues = [norm_ws(str(x)) for x in title_cues if norm_ws(str(x))]
+        if cues:
+            return " | ".join(cues[:3])
+    return ""
+
+
+def patch_span_source(p: Dict[str, Any]) -> str:
+    return str(best_effort_get(p, ["span_source"], "unknown"))
+
+
+def reveal_group_maps(reveal_rows: List[Dict[str, Any]]) -> Tuple[Dict[int, str], Dict[int, bool], Dict[str, int]]:
+    """
+    Returns:
+      page -> group_id
+      page -> is_noncanonical
+      group_id -> canonical_page
+    """
+    page_to_gid: Dict[int, str] = {}
+    page_to_noncanon: Dict[int, bool] = {}
+    gid_to_canon: Dict[str, int] = {}
+    for r in reveal_rows:
+        gid = str(best_effort_get(r, ["reveal_group_id", "group_id", "gid"], ""))
+        if not gid:
+            continue
+        canon = best_effort_get(r, ["canonical_page_index", "canonical_page", "canon_page"], None)
+        if canon is None:
+            continue
+        canon_i = int(canon)
+        gid_to_canon[gid] = canon_i
+        page_to_gid[canon_i] = gid
+        page_to_noncanon[canon_i] = False
+
+        nonc = best_effort_get(r, ["noncanonical_page_indices", "noncanonical_pages", "noncanon_pages"], [])
+        if isinstance(nonc, list):
+            for p in nonc:
+                pi = int(p)
+                page_to_gid[pi] = gid
+                page_to_noncanon[pi] = True
+    return page_to_gid, page_to_noncanon, gid_to_canon
+
+
+def layer_tag(block: Dict[str, Any]) -> str:
+    return str(best_effort_get(block, ["layer", "layer_tag", "source_layer"], "unknown")).lower()
+
+
+def block_text(block: Dict[str, Any]) -> str:
+    parts: List[str] = []
+    for key in _TEXT_DIRECT_KEYS:
+        _append_text_part(parts, block.get(key))
+    if parts:
+        return norm_ws(" ".join(parts))
+
+    for key in _TEXT_NESTED_KEYS:
+        if key in block:
+            _collect_nested_text(block.get(key), parts)
+    return norm_ws(" ".join(parts))
+
+
+def block_bbox(block: Dict[str, Any]) -> Optional[Any]:
+    return best_effort_get(block, ["bbox", "bbox_xyxy", "bbox_ltrb", "bbox_pt"], None)
+
+
+def safe_snip(s: str, n: int = 240) -> str:
+    s = norm_ws(s)
+    if len(s) <= n:
+        return s
+    return s[:n] + "..."
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--config", required=True)
+    ap.add_argument("--repo-root", default=".")
+    ap.add_argument("--doc-id", default=None)
+    ap.add_argument("--max-blocks-embed", type=int, default=0)
+    ap.add_argument("--run-id", default=None)
+    args = ap.parse_args()
+
+    repo_root = Path(args.repo_root).resolve()
+    cfg_path = (repo_root / args.config).resolve()
+    if yaml is None:
+        raise RuntimeError("PyYAML not available. Install pyyaml or convert config to JSON.")
+    cfg = yaml.safe_load(read_text(cfg_path))
+
+    retrieval_root = (repo_root / cfg["outputs"]["retrieval_root"]).resolve()
+
+    run_id = args.run_id or cfg["runtime"].get("run_id", "auto")
+    if run_id == "auto":
+        run_id = f"{utc_ts()}_step4_3_1"
+
+    run_dir = (repo_root / "data/runs" / run_id).resolve()
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    logs_path = run_dir / "logs.txt"
+
+    def log(msg: str) -> None:
+        print(msg)
+        with logs_path.open("a", encoding="utf-8") as f:
+            f.write(msg + "\n")
+
+    t0 = time.time()
+    log(f"[step4.3] run_id={run_id}")
+    log(f"[step4.3] config={to_manifest_path(cfg_path, repo_root)}")
+    write_text(run_dir / "invocation.txt", " ".join([sys.executable] + sys.argv) + "\n")
+    write_text(run_dir / "pip_freeze.txt", pip_freeze())
+    write_json(run_dir / "env.json", {
+        "platform": platform.platform(),
+        "python": sys.version,
+        "executable": sys.executable,
+        "cwd": str(Path.cwd()),
+    })
+    write_text(run_dir / "config_snapshot.yaml", read_text(cfg_path))
+
+    # Resolve ACTIVE sets
+    step3_set_active = (repo_root / cfg["inputs"]["step3_set_active"]).resolve()
+    step3_6_set_active = (repo_root / cfg["inputs"]["step3_6_set_active"]).resolve()
+    step4_patches_active = (repo_root / cfg["inputs"]["step4_patches_set_active"]).resolve()
+
+    step3_set_json = resolve_active_pointer(step3_set_active)
+    step3_6_set_json = resolve_active_pointer(step3_6_set_active)
+    step4_patches_set_json = resolve_active_pointer(step4_patches_active)
+
+    step3_set = json.loads(read_text(step3_set_json))
+    step3_6_set = json.loads(read_text(step3_6_set_json))
+    patches_set = json.loads(read_text(step4_patches_set_json))
+
+    patches_docs = docs_to_map(patches_set.get("docs"))
+    docs = sorted(list(patches_docs.keys()))
+    if args.doc_id:
+        if args.doc_id not in patches_docs:
+            raise KeyError(f"Requested --doc-id not present in active Step 4.2 set: {args.doc_id}")
+        docs = [args.doc_id]
+    log(f"[step4.3] n_docs={len(docs)} docs={docs}")
+
+    # Ollama preflight
+    emb_cfg = cfg["embedding"]
+    ollama_base = emb_cfg["base_url"]
+    ollama_model = emb_cfg["model"]
+    emb_dims = int(emb_cfg["dimensions"])
+    log(f"[step4.3] ollama_version={ollama_version(ollama_base)}")
+    # lightweight embed smoke
+    sm = ollama_embed(
+        base_url=ollama_base,
+        model=ollama_model,
+        inputs=["warmup"],
+        truncate=bool(emb_cfg["truncate"]),
+        dimensions=emb_dims,
+        keep_alive=str(emb_cfg["keep_alive"]),
+        options=dict(emb_cfg.get("options", {})),
+        timeout_s=120.0,
+    )
+    if len(sm) != 1 or len(sm[0]) != emb_dims:
+        raise RuntimeError(f"Ollama smoke dims mismatch: got {len(sm[0]) if sm else 'none'} expected {emb_dims}")
+
+    # Optional FAISS
+    prefer_faiss = bool(cfg["vector_index"].get("prefer_faiss", True))
+    faiss = None
+    if prefer_faiss:
+        try:
+            import faiss  # type: ignore
+            faiss = faiss
+            log("[step4.3] faiss_import=OK")
+        except Exception as e:
+            log(f"[step4.3] faiss_import=FAIL ({type(e).__name__}: {e}) -> fallback matrix_exact_ip")
+            faiss = None
+
+    write_json(run_dir / "tool_versions.json", {
+        "python": sys.version,
+        "pip_freeze_path": "pip_freeze.txt",
+        "ollama_version": ollama_version(ollama_base),
+        "faiss_available": bool(faiss is not None),
+    })
+
+    stopwords = _MIN_STOP if cfg["lexical"].get("stopwords") == "minimal_v1" else None
+
+    # Collect run-level manifests
+    inputs_manifest: Dict[str, Any] = {
+        "active_pointers": {
+            "step3_set_active": to_manifest_path(step3_set_active, repo_root),
+            "step3_6_set_active": to_manifest_path(step3_6_set_active, repo_root),
+            "step4_patches_set_active": to_manifest_path(step4_patches_active, repo_root),
+        },
+        "resolved_sets": {
+            "step3_set_json": to_manifest_path(step3_set_json, repo_root),
+            "step3_6_set_json": to_manifest_path(step3_6_set_json, repo_root),
+            "step4_patches_set_json": to_manifest_path(step4_patches_set_json, repo_root),
+        },
+        "files": [],
+    }
+
+    outputs_manifest: Dict[str, Any] = {"files": []}
+
+    # Smoke queries
+    smoke_queries: List[str] = list(cfg.get("smoke_queries", []))
+    global_smoke_best: Dict[str, Any] = {}
+
+    rows_summary: List[Dict[str, Any]] = []
+    doc_timings: Dict[str, float] = {}
+
+    for doc_id in docs:
+        doc_t0 = time.time()
+        log("")
+        log(f"[doc] {doc_id}")
+
+        # Step 3.6 paths
+        s36_doc = get_doc_entry(step3_6_set, doc_id)
+
+        blocks_path = resolve_doc_file(
+            repo_root,
+            s36_doc,
+            "blocks_merged.jsonl",
+            ["blocks_merged.jsonl", "blocks_path", "blocks_merged_path"],
+        )
+        try:
+            blocks_enriched_path = resolve_doc_file(
+                repo_root,
+                s36_doc,
+                "blocks_enriched.jsonl",
+                ["blocks_enriched.jsonl", "blocks_enriched_path"],
+            )
+        except Exception:
+            blocks_enriched_path = None
+        pages_path = resolve_doc_file(
+            repo_root,
+            s36_doc,
+            "pages.jsonl",
+            ["pages.jsonl", "pages_path"],
+        )
+        s36_out_dir = blocks_path.parent
+        if not blocks_path.exists():
+            raise FileNotFoundError(blocks_path)
+        if not pages_path.exists():
+            raise FileNotFoundError(pages_path)
+
+        # Step 3 paths (page index)
+        s3_doc = get_doc_entry(step3_set, doc_id)
+
+        page_index_path = resolve_doc_file(
+            repo_root,
+            s3_doc,
+            "page_index.jsonl",
+            ["page_index.jsonl", "page_index_path"],
+        )
+        s3_out_dir = page_index_path.parent
+        if not page_index_path.exists():
+            raise FileNotFoundError(page_index_path)
+
+        # Step 4.2 paths
+        p_doc = get_doc_entry(patches_set, doc_id)
+        patch_idx_path = (repo_root / p_doc["artifacts"]["page_patch_index.jsonl"]["path"].replace("/", os.sep)).resolve()
+        reveal_path = (repo_root / p_doc["artifacts"]["page_reveal_groups.jsonl"]["path"].replace("/", os.sep)).resolve()
+        patch_summary_path = (repo_root / p_doc["artifacts"]["patch_summary.json"]["path"].replace("/", os.sep)).resolve()
+        for p in [patch_idx_path, reveal_path, patch_summary_path]:
+            if not p.exists():
+                raise FileNotFoundError(p)
+
+        # Record inputs
+        input_paths = [blocks_path, pages_path, page_index_path, patch_idx_path, reveal_path, patch_summary_path]
+        if blocks_enriched_path is not None and blocks_enriched_path.exists():
+            input_paths.append(blocks_enriched_path)
+        for p in input_paths:
+            inputs_manifest["files"].append({
+                "path": to_manifest_path(p, repo_root),
+                "sha256": sha256_file(p),
+                "size_bytes": int(p.stat().st_size),
+                "mtime_utc": datetime.utcfromtimestamp(p.stat().st_mtime).isoformat() + "Z",
+            })
+
+        # Load pages to get n_pages
+        pages = list(jsonl_iter(pages_path))
+        n_pages = len(pages)
+
+        # Load page index headings
+        page_heading: Dict[int, str] = {}
+        for r in jsonl_iter(page_index_path):
+            pi = int(best_effort_get(r, ["page_index", "page"], -1))
+            if pi < 0:
+                continue
+            h = page_heading_value(r)
+            if h:
+                page_heading[pi] = h
+
+        # Load reveal groups
+        reveal_rows = list(jsonl_iter(reveal_path))
+        page_to_gid, page_to_noncanon, gid_to_canon = reveal_group_maps(reveal_rows)
+
+        # Load patches
+        patch_rows = list(jsonl_iter(patch_idx_path))
+        patches: List[Dict[str, Any]] = []
+        patch_pages_map: Dict[str, List[int]] = {}
+        patch_heading_map: Dict[str, str] = {}
+        patch_heading_explicit_map: Dict[str, str] = {}
+        patch_derived_heading_map: Dict[str, str] = {}
+        patch_type_map: Dict[str, str] = {}
+        patch_span_src_map: Dict[str, str] = {}
+
+        for i, pr in enumerate(patch_rows):
+            pid = patch_id(pr, i)
+            ppages = patch_pages(pr)
+            patches.append(pr)
+            patch_pages_map[pid] = ppages
+            patch_heading_explicit_map[pid] = patch_heading(pr)
+            patch_type_map[pid] = patch_type(pr)
+            patch_span_src_map[pid] = patch_span_source(pr)
+
+        n_patches = len(patches)
+
+        # Window formula check (best effort)
+        win1 = sum(1 for pid in patch_type_map if patch_type_map[pid] == "window_1")
+        win2 = sum(1 for pid in patch_type_map if patch_type_map[pid] == "window_2")
+        win3 = sum(1 for pid in patch_type_map if patch_type_map[pid] == "window_3")
+        exp1 = n_pages
+        exp2 = max(n_pages - 1, 0)
+        exp3 = max(n_pages - 2, 0)
+        window_ok = (win1 == exp1 and win2 == exp2 and win3 == exp3)
+
+        # Block to patch membership by page
+        page_to_patches: Dict[int, List[str]] = {}
+        for pid, pps in patch_pages_map.items():
+            for pi in pps:
+                page_to_patches.setdefault(pi, []).append(pid)
+
+        blocks = list(jsonl_iter(blocks_path))
+        enriched_by_id: Dict[str, Dict[str, Any]] = {}
+        if blocks_enriched_path is not None and blocks_enriched_path.exists():
+            for eb in jsonl_iter(blocks_enriched_path):
+                bid = str(best_effort_get(eb, ["block_id", "id"], ""))
+                if bid and bid not in enriched_by_id:
+                    enriched_by_id[bid] = eb
+        n_blocks_total = len(blocks)
+
+        # Determine dedupe winners inside each reveal group: (gid, fp) -> winner_idx
+        # winner preference: canonical page first, then layer priority
+        layer_pr = cfg["scoring"]["layer_prior"]
+        layer_rank = {
+            "mineru": 3,
+            "docling": 2,
+            "pymupdf": 1,
+        }
+
+        group_bucket: Dict[Tuple[str, str], List[int]] = {}
+        block_page: List[int] = []
+        block_layer: List[str] = []
+        block_ids: List[str] = []
+        block_texts_raw: List[str] = []
+        block_texts_full: List[str] = []
+        block_text_source: List[str] = []
+        page_first_block_text: Dict[int, str] = {}
+
+        n_text_primary = 0
+        n_text_fallback_enriched = 0
+        n_text_empty = 0
+
+        for bi, b in enumerate(blocks):
+            pi = int(best_effort_get(b, ["page_index", "page"], -1))
+            block_page.append(pi)
+            lyr = layer_tag(b)
+            block_layer.append(lyr)
+            bid = str(best_effort_get(b, ["block_id", "id"], f"block_{bi:06d}"))
+            block_ids.append(bid)
+
+            txt_primary = block_text(b)
+            txt = txt_primary
+            source = "blocks_merged"
+            if txt_primary:
+                n_text_primary += 1
+            else:
+                eb = enriched_by_id.get(bid)
+                txt_enriched = block_text(eb) if eb is not None else ""
+                if txt_enriched:
+                    txt = txt_enriched
+                    source = "blocks_enriched"
+                    n_text_fallback_enriched += 1
+                else:
+                    txt = ""
+                    source = "empty"
+                    n_text_empty += 1
+            block_texts_raw.append(txt)
+            block_text_source.append(source)
+            if txt and pi not in page_first_block_text:
+                page_first_block_text[pi] = txt
+
+            title = page_heading.get(pi, "")
+            full = (title + " " + txt).strip() if title else txt
+            full = norm_ws(full)
+            block_texts_full.append(full)
+
+            gid = page_to_gid.get(pi)
+            if gid and full:
+                fp = fingerprint_text(full)
+                group_bucket.setdefault((gid, fp), []).append(bi)
+
+        for pid, ppages in patch_pages_map.items():
+            explicit = patch_heading_explicit_map.get(pid, "")
+            if explicit:
+                patch_derived_heading_map[pid] = explicit
+                patch_heading_map[pid] = explicit
+                continue
+            derived = ""
+            if ppages:
+                derived = page_heading.get(ppages[0], "")
+                if not derived:
+                    for pi in ppages:
+                        candidate = page_first_block_text.get(pi, "")
+                        if candidate:
+                            derived = stable_phrase(candidate)
+                            break
+            patch_derived_heading_map[pid] = derived
+            patch_heading_map[pid] = derived
+
+        winners: set = set()
+        dup_of: Dict[int, int] = {}  # loser_idx -> winner_idx
+
+        for (gid, fp), idxs in group_bucket.items():
+            canon_page = gid_to_canon.get(gid)
+            # sort by: is_canonical desc, layer_rank desc, then stable idx
+            def key(i: int) -> Tuple[int, int, int]:
+                pi = block_page[i]
+                is_c = 1 if (canon_page is not None and pi == canon_page) else 0
+                lr = layer_rank.get(block_layer[i], 0)
+                return (is_c, lr, -i)
+
+            best = sorted(idxs, key=key, reverse=True)[0]
+            winners.add(best)
+            for i in idxs:
+                if i != best:
+                    dup_of[i] = best
+
+        # Any block not in reveal group bucket is indexed by default
+        for i in range(n_blocks_total):
+            pi = block_page[i]
+            if page_to_gid.get(pi) is None:
+                winners.add(i)
+
+        # Build output directory for this doc
+        out_doc_dir = (retrieval_root / doc_id / run_id).resolve()
+        out_doc_dir.mkdir(parents=True, exist_ok=True)
+
+        # Write block_text_corpus.jsonl (all blocks, indexed flag)
+        corpus_rows: List[Dict[str, Any]] = []
+        by_layer_total: Dict[str, int] = {}
+        indexed_bis = [bi for bi in sorted(list(winners)) if bool(block_texts_full[bi])]
+        if args.max_blocks_embed and args.max_blocks_embed > 0:
+            indexed_bis = indexed_bis[:int(args.max_blocks_embed)]
+        indexed_set = set(indexed_bis)
+        by_layer_indexed: Dict[str, int] = {}
+
+        for bi, b in enumerate(blocks):
+            pi = block_page[bi]
+            lyr = block_layer[bi]
+            by_layer_total[lyr] = by_layer_total.get(lyr, 0) + 1
+
+            is_idx = bi in indexed_set
+            if is_idx:
+                by_layer_indexed[lyr] = by_layer_indexed.get(lyr, 0) + 1
+
+            row = {
+                "doc_id": doc_id,
+                "block_id": block_ids[bi],
+                "page_index": pi,
+                "layer": lyr,
+                "bbox": block_bbox(b),
+                "text": block_texts_raw[bi],
+                "text_source": block_text_source[bi],
+                "page_heading_norm": page_heading.get(pi, ""),
+                "text_for_index": block_texts_full[bi],
+                "reveal_group_id": page_to_gid.get(pi),
+                "is_noncanonical_reveal_page": bool(page_to_noncanon.get(pi, False)),
+                "is_indexed": bool(is_idx),
+                "dup_of_block_i": int(dup_of[bi]) if bi in dup_of else None,
+            }
+            corpus_rows.append(row)
+
+        jsonl_write(out_doc_dir / "block_text_corpus.jsonl", corpus_rows)
+
+        # Build indexed rows list with contiguous row_id
+        idx_rows: List[Dict[str, Any]] = []
+        doc_texts: List[str] = []
+        bi_to_rowid: Dict[int, int] = {}
+
+        for rid, bi in enumerate(indexed_bis):
+            bi_to_rowid[bi] = rid
+            r = corpus_rows[bi]
+            idx_rows.append({
+                "row_id": rid,
+                "doc_id": doc_id,
+                "block_id": r["block_id"],
+                "page_index": r["page_index"],
+                "layer": r["layer"],
+                "bbox": r["bbox"],
+                "reveal_group_id": r["reveal_group_id"],
+                "is_noncanonical_reveal_page": r["is_noncanonical_reveal_page"],
+            })
+            doc_texts.append(pretruncate(str(r["text_for_index"]), int(emb_cfg["max_chars"])))
+
+        jsonl_write(out_doc_dir / "index_rows.jsonl", idx_rows)
+
+        n_blocks_indexed = len(idx_rows)
+
+        page_sample_texts: Dict[int, List[str]] = {}
+        for bi in indexed_bis:
+            pi = block_page[bi]
+            samples = page_sample_texts.setdefault(pi, [])
+            if len(samples) >= 2:
+                continue
+            sample = stable_phrase(block_texts_raw[bi], max_words=20, max_chars=180)
+            if sample:
+                samples.append(sample)
+
+        doc_diag = {
+            "doc_id": doc_id,
+            "blocks": {
+                "n_total": n_blocks_total,
+                "n_text_primary": n_text_primary,
+                "n_text_fallback_enriched": n_text_fallback_enriched,
+                "n_text_empty": n_text_empty,
+                "pct_with_text": ((n_blocks_total - n_text_empty) / n_blocks_total) if n_blocks_total else 0.0,
+                "n_indexed_nonempty": n_blocks_indexed,
+                "max_blocks_embed_limit": int(args.max_blocks_embed) if args.max_blocks_embed and args.max_blocks_embed > 0 else None,
+            },
+            "page_headings": {
+                "n_pages": n_pages,
+                "n_nonempty": len(page_heading),
+                "pct_nonempty": (len(page_heading) / n_pages) if n_pages else 0.0,
+            },
+            "patch_headings": {
+                "n_patches": n_patches,
+                "n_explicit_nonempty": sum(1 for v in patch_heading_explicit_map.values() if v),
+                "n_final_nonempty": sum(1 for v in patch_heading_map.values() if v),
+                "pct_final_nonempty": (sum(1 for v in patch_heading_map.values() if v) / n_patches) if n_patches else 0.0,
+            },
+        }
+
+        # Embeddings
+        emb_dir = out_doc_dir / "embeddings"
+        emb_dir.mkdir(parents=True, exist_ok=True)
+
+        batch_size = int(emb_cfg["batch_size"])
+        all_vecs: List[np.ndarray] = []
+
+        log(f"[doc] embedding n={n_blocks_indexed} batch_size={batch_size}")
+        for i0 in range(0, n_blocks_indexed, batch_size):
+            i1 = min(i0 + batch_size, n_blocks_indexed)
+            batch = doc_texts[i0:i1]
+            # always pretruncate; still send truncate=True
+            tries = 0
+            while True:
+                tries += 1
+                try:
+                    embs = ollama_embed(
+                        base_url=ollama_base,
+                        model=ollama_model,
+                        inputs=batch,
+                        truncate=bool(emb_cfg["truncate"]),
+                        dimensions=emb_dims,
+                        keep_alive=str(emb_cfg["keep_alive"]),
+                        options=dict(emb_cfg.get("options", {})),
+                        timeout_s=240.0,
+                    )
+                    break
+                except Exception as e:
+                    if tries >= 4:
+                        raise
+                    time.sleep(1.5 * tries)
+            if len(embs) != len(batch):
+                raise RuntimeError(f"Ollama embeddings count mismatch: got {len(embs)} expected {len(batch)}")
+            arr = np.asarray(embs, dtype=np.float32)
+            if arr.shape[1] != emb_dims:
+                raise RuntimeError(f"Ollama dims mismatch: got {arr.shape[1]} expected {emb_dims}")
+            all_vecs.append(arr)
+
+        emb_mat = np.vstack(all_vecs) if all_vecs else np.zeros((0, emb_dims), dtype=np.float32)
+        if bool(cfg["vector_index"].get("l2_normalize", True)) and emb_mat.shape[0] > 0:
+            emb_mat = l2_normalize(emb_mat)
+
+        np.save(emb_dir / "embeddings.f32.npy", emb_mat)
+        jsonl_write(emb_dir / "rows.jsonl", idx_rows)
+        write_json(emb_dir / "meta.json", {
+            "provider": "ollama",
+            "base_url": ollama_base,
+            "model": ollama_model,
+            "dimensions": emb_dims,
+            "truncate": bool(emb_cfg["truncate"]),
+            "max_chars": int(emb_cfg["max_chars"]),
+            "keep_alive": str(emb_cfg["keep_alive"]),
+            "options": dict(emb_cfg.get("options", {})),
+            "l2_normalized": bool(cfg["vector_index"].get("l2_normalize", True)),
+        })
+
+        # Vector index (faiss or fallback)
+        vdir = out_doc_dir / "vector_index"
+        vdir.mkdir(parents=True, exist_ok=True)
+
+        vector_kind = "matrix_exact_ip"
+        if faiss is not None and emb_mat.shape[0] > 0:
+            vector_kind = "faiss_IndexFlatIP"
+            index = faiss.IndexFlatIP(emb_dims)
+            index.add(emb_mat)
+            faiss.write_index(index, str(vdir / "faiss.index"))
+
+        # fallback always writes meta with pointer
+        write_json(vdir / "meta.json", {
+            "kind": vector_kind,
+            "dimensions": emb_dims,
+            "l2_normalized": bool(cfg["vector_index"].get("l2_normalize", True)),
+            "embeddings_pointer": str((emb_dir / "embeddings.f32.npy").relative_to(out_doc_dir)).replace(os.sep, "/"),
+            "rows_pointer": str((emb_dir / "rows.jsonl").relative_to(out_doc_dir)).replace(os.sep, "/"),
+        })
+
+        # Lexical index (BM25)
+        lex_cfg = cfg["lexical"]
+        lex_dir = out_doc_dir / "lexical"
+        lex_dir.mkdir(parents=True, exist_ok=True)
+
+        lex = build_lexical_index(
+            doc_texts=doc_texts,
+            k1=float(lex_cfg["k1"]),
+            b=float(lex_cfg["b"]),
+            min_df=int(lex_cfg["min_df"]),
+            max_token_len=int(lex_cfg["max_token_len"]),
+            lowercase=bool(lex_cfg["lowercase"]),
+            stopwords=stopwords,
+        )
+
+        write_json(lex_dir / "vocab.json", lex.vocab)
+        np.save(lex_dir / "df.i32.npy", lex.df)
+        np.save(lex_dir / "idf.f32.npy", lex.idf)
+        np.save(lex_dir / "doclens.i32.npy", lex.doclens)
+        np.save(lex_dir / "postings_offsets.i64.npy", lex.offsets)
+        np.save(lex_dir / "postings_docids.i32.npy", lex.post_docids)
+        np.save(lex_dir / "postings_tfs.i16.npy", lex.post_tfs)
+        jsonl_write(lex_dir / "rows.jsonl", idx_rows)
+        write_json(lex_dir / "meta.json", {
+            "kind": "bm25",
+            "tokenizer": str(lex_cfg["tokenizer"]),
+            "lowercase": bool(lex_cfg["lowercase"]),
+            "max_token_len": int(lex_cfg["max_token_len"]),
+            "stopwords": str(lex_cfg.get("stopwords")),
+            "k1": float(lex_cfg["k1"]),
+            "b": float(lex_cfg["b"]),
+            "min_df": int(lex_cfg["min_df"]),
+            "n_docs": int(n_blocks_indexed),
+            "vocab_size": int(len(lex.vocab)),
+            "avgdl": float(lex.avgdl),
+        })
+
+        # Retrieve helper
+        scoring = cfg["scoring"]
+        w_lex = float(scoring["w_lex"])
+        w_emb = float(scoring["w_emb"])
+        layer_prior = {k.lower(): float(v) for k, v in scoring["layer_prior"].items()}
+        struct_boost = float(scoring["structure_span_boost"])
+        noncanon_pen = float(scoring["noncanonical_page_penalty"])
+        top_patches = int(cfg["navigate"]["top_patches"])
+        top_blocks = int(cfg["fetch"]["top_blocks"])
+
+        # Patch docs for navigate
+        patch_docs: List[Tuple[str, str, List[str]]] = []
+        for i, pr in enumerate(patch_rows):
+            pid = patch_id(pr, i)
+            h = patch_heading_map.get(pid, "")
+            t = patch_type_map.get(pid, "unknown")
+            ss = patch_span_src_map.get(pid, "unknown")
+            sample_parts: List[str] = []
+            for pi in patch_pages_map.get(pid, []):
+                sample_parts.extend(page_sample_texts.get(pi, [])[:2])
+            sample_text = " ".join(sample_parts[:6])
+            text = norm_ws(f"{h} {t} {ss} {sample_text}")
+            toks = tokenize(text, max_token_len=int(lex_cfg["max_token_len"]),
+                            lowercase=bool(lex_cfg["lowercase"]), stopwords=stopwords)
+            patch_docs.append((pid, text, toks))
+
+        patch_doc_df: Dict[str, int] = {}
+        for _, _, toks in patch_docs:
+            for tok in set(toks):
+                patch_doc_df[tok] = patch_doc_df.get(tok, 0) + 1
+
+        def navigate_rank(query: str) -> List[Tuple[str, float]]:
+            qt = tokenize(query, max_token_len=int(lex_cfg["max_token_len"]),
+                          lowercase=bool(lex_cfg["lowercase"]), stopwords=stopwords)
+            scores: List[Tuple[str, float]] = []
+            P = len(patch_docs)
+            for pid, _, toks in patch_docs:
+                tf: Dict[str, int] = {}
+                for t in toks:
+                    tf[t] = tf.get(t, 0) + 1
+                s = 0.0
+                for t in qt:
+                    dfi = patch_doc_df.get(t)
+                    if dfi is None:
+                        continue
+                    idf = bm25_idf(P, dfi)
+                    s += idf * float(tf.get(t, 0))
+                scores.append((pid, s))
+            scores.sort(key=lambda x: (-x[1], x[0]))
+            return scores[:top_patches]
+
+        def embed_query(q: str) -> np.ndarray:
+            q2 = pretruncate(q, int(emb_cfg["max_chars"]))
+            em = ollama_embed(
+                base_url=ollama_base,
+                model=ollama_model,
+                inputs=[q2],
+                truncate=bool(emb_cfg["truncate"]),
+                dimensions=emb_dims,
+                keep_alive=str(emb_cfg["keep_alive"]),
+                options=dict(emb_cfg.get("options", {})),
+                timeout_s=120.0,
+            )
+            v = np.asarray(em, dtype=np.float32)
+            if v.shape != (1, emb_dims):
+                raise RuntimeError(f"query embed shape mismatch: {v.shape}")
+            if bool(cfg["vector_index"].get("l2_normalize", True)):
+                v = l2_normalize(v)
+            return v[0]
+
+        def fetch_rank(query: str, patch_ids: List[str]) -> List[Dict[str, Any]]:
+            # candidate row_ids from selected patches
+            cand_bis: set = set()
+            for pid in patch_ids:
+                for pi in patch_pages_map.get(pid, []):
+                    for bi in indexed_bis:
+                        if block_page[bi] == pi:
+                            cand_bis.add(bi)
+            if not cand_bis:
+                return []
+
+            cand_rowids: List[int] = []
+            cand_meta: List[Tuple[int, str, bool]] = []
+            for bi in cand_bis:
+                rid = bi_to_rowid.get(bi)
+                if rid is None:
+                    continue
+                cand_rowids.append(rid)
+                pi = block_page[bi]
+                lyr = block_layer[bi]
+                nonc = bool(page_to_noncanon.get(pi, False))
+                cand_meta.append((pi, lyr, nonc))
+
+            # lexical scores
+            qt = tokenize(query, max_token_len=int(lex_cfg["max_token_len"]),
+                          lowercase=bool(lex_cfg["lowercase"]), stopwords=stopwords)
+            lex_scores = dict(lex.score(qt, topk=max(200, top_blocks * 20)))
+            # embed sim
+            qv = embed_query(query)
+            sims = emb_mat @ qv if emb_mat.shape[0] > 0 else np.zeros((len(doc_texts),), dtype=np.float32)
+
+            # build combined
+            max_lex = max(lex_scores.values()) if lex_scores else 0.0
+            out: List[Tuple[int, float, float, float]] = []  # rid, combined, lex_norm, emb01
+            for rid, (pi, lyr, nonc) in zip(cand_rowids, cand_meta):
+                lx = float(lex_scores.get(rid, 0.0))
+                lx_n = lx / (max_lex + 1e-12) if max_lex > 0 else 0.0
+                emb = float(sims[rid])  # [-1,1] after l2 norm and IP
+                emb01 = (emb + 1.0) / 2.0
+                comb = w_lex * lx_n + w_emb * emb01
+
+                # priors
+                comb *= float(layer_prior.get(lyr, 1.0))
+
+                if nonc:
+                    comb *= noncanon_pen
+
+                out.append((rid, comb, lx_n, emb01))
+
+            out.sort(key=lambda x: (-x[1], idx_rows[x[0]]["block_id"]))
+
+            res: List[Dict[str, Any]] = []
+            for rid, comb, lx_n, emb01 in out[:top_blocks]:
+                r = idx_rows[rid]
+                # approximate structural boost: if any selected patch is structure_span and heading overlaps, boost
+                boosted = False
+                for pid in patch_ids:
+                    if patch_type_map.get(pid) == "structure_span":
+                        h = patch_heading_map.get(pid, "")
+                        if h:
+                            ht = set(tokenize(h, max_token_len=int(lex_cfg["max_token_len"]),
+                                              lowercase=bool(lex_cfg["lowercase"]), stopwords=stopwords))
+                            qtset = set(qt)
+                            if ht and qtset and (len(ht & qtset) / max(1, len(qtset))) >= 0.2:
+                                comb2 = comb * struct_boost
+                                comb = comb2
+                                boosted = True
+                                break
+
+                bi_guess = indexed_bis[rid]
+                full_txt = corpus_rows[bi_guess]["text_for_index"]
+                res.append({
+                    "row_id": rid,
+                    "doc_id": doc_id,
+                    "block_id": r["block_id"],
+                    "page_index": r["page_index"],
+                    "layer": r["layer"],
+                    "bbox": r["bbox"],
+                    "score": float(comb),
+                    "score_lex_norm": float(lx_n),
+                    "score_emb01": float(emb01),
+                    "boosted_structure_span": bool(boosted),
+                    "snippet": safe_snip(full_txt, 260),
+                })
+            return res
+
+        # Traces
+        traces_dir = out_doc_dir / "retrieval_traces"
+        traces_dir.mkdir(parents=True, exist_ok=True)
+
+        # Evaluate patch-heading self consistency (HitRate@k + MRR@k)
+        eval_cfg = cfg["eval"]
+        ks = [int(x) for x in eval_cfg["ks"]]
+        max_patch_q = int(eval_cfg["patch_heading_eval_max_queries"])
+        patch_ids_sorted = sorted(list(patch_heading_map.keys()))
+        patch_q_ids = patch_ids_sorted[:max_patch_q]
+
+        def metrics_init() -> Dict[int, Dict[str, float]]:
+            return {k: {"hits": 0.0, "rr_sum": 0.0} for k in ks}
+
+        m_patch = metrics_init()
+        n_patch_q_used = 0
+        patch_eval_skips: Dict[str, int] = {
+            "empty_patch_heading": 0,
+            "empty_navigation": 0,
+        }
+
+        for pid in patch_q_ids:
+            q = patch_heading_map.get(pid, "")
+            if not q:
+                patch_eval_skips["empty_patch_heading"] += 1
+                continue
+            nav = [x[0] for x in navigate_rank(q)]
+            if not nav:
+                patch_eval_skips["empty_navigation"] += 1
+                continue
+            n_patch_q_used += 1
+            blocks_top = fetch_rank(q, nav)
+            # relevance: any block in this patch
+            target_pages = set(patch_pages_map.get(pid, []))
+            # compute first rank where page in target_pages
+            first_rank = None
+            for i, btop in enumerate(blocks_top, start=1):
+                if int(btop["page_index"]) in target_pages:
+                    first_rank = i
+                    break
+            for k in ks:
+                if first_rank is not None and first_rank <= k:
+                    m_patch[k]["hits"] += 1.0
+                    m_patch[k]["rr_sum"] += 1.0 / float(first_rank)
+
+        patch_eval = {
+            "n_queries": int(n_patch_q_used),
+            "HitRate@k": {str(k): (m_patch[k]["hits"] / n_patch_q_used if n_patch_q_used else 0.0) for k in ks},
+            "MRR@k": {str(k): (m_patch[k]["rr_sum"] / n_patch_q_used if n_patch_q_used else 0.0) for k in ks},
+            "note": "Self-consistency metric: patch heading should retrieve blocks from the same patch.",
+        }
+
+        # KC-title anchored eval (proxy gold): match KC title to best patch heading in this doc, then test retrieval
+        kc_eval = {"n_queries": 0, "HitRate@k": {}, "MRR@k": {}, "note": ""}
+        kc_reg_path = (repo_root / cfg["inputs"]["hierarchy_kc_registry"]).resolve()
+        kc_rows = []
+        if kc_reg_path.exists():
+            kc_rows = list(jsonl_iter(kc_reg_path))
+
+        max_kc_q = int(eval_cfg["kc_title_eval_max_queries"])
+        kc_used = 0
+        m_kc = metrics_init()
+        kc_eval_skips: Dict[str, int] = {
+            "missing_registry": 0 if kc_rows else 1,
+            "empty_title": 0,
+            "empty_title_tokens": 0,
+            "no_patch_match": 0,
+            "empty_navigation": 0,
+        }
+
+        # precompute patch heading tokens for matching
+        patch_head_tokens: Dict[str, set] = {}
+        for pid in patch_heading_map:
+            h = patch_heading_map[pid]
+            patch_head_tokens[pid] = set(tokenize(h, max_token_len=int(lex_cfg["max_token_len"]),
+                                                 lowercase=bool(lex_cfg["lowercase"]), stopwords=stopwords))
+
+        for kc in kc_rows:
+            if kc_used >= max_kc_q:
+                break
+            title = str(best_effort_get(kc, ["title", "kc_title", "name", "canonical_name"], "")).strip()
+            if not title:
+                kc_eval_skips["empty_title"] += 1
+                continue
+            qtoks = set(tokenize(title, max_token_len=int(lex_cfg["max_token_len"]),
+                                 lowercase=bool(lex_cfg["lowercase"]), stopwords=stopwords))
+            if not qtoks:
+                kc_eval_skips["empty_title_tokens"] += 1
+                continue
+            # choose best patch by overlap ratio
+            best_pid = None
+            best_ov = 0.0
+            for pid, htoks in patch_head_tokens.items():
+                if not htoks:
+                    continue
+                ov = len(qtoks & htoks) / float(len(qtoks))
+                if ov > best_ov:
+                    best_ov = ov
+                    best_pid = pid
+            if best_pid is None or best_ov < 0.35:
+                kc_eval_skips["no_patch_match"] += 1
+                continue
+
+            q = title
+            nav = [x[0] for x in navigate_rank(q)]
+            if not nav:
+                kc_eval_skips["empty_navigation"] += 1
+                continue
+            blocks_top = fetch_rank(q, nav)
+            target_pages = set(patch_pages_map.get(best_pid, []))
+
+            first_rank = None
+            for i, btop in enumerate(blocks_top, start=1):
+                if int(btop["page_index"]) in target_pages:
+                    first_rank = i
+                    break
+
+            kc_used += 1
+            for k in ks:
+                if first_rank is not None and first_rank <= k:
+                    m_kc[k]["hits"] += 1.0
+                    m_kc[k]["rr_sum"] += 1.0 / float(first_rank)
+
+        kc_eval = {
+            "n_queries": int(kc_used),
+            "HitRate@k": {str(k): (m_kc[k]["hits"] / kc_used if kc_used else 0.0) for k in ks},
+            "MRR@k": {str(k): (m_kc[k]["rr_sum"] / kc_used if kc_used else 0.0) for k in ks},
+            "note": "Proxy metric: KC title matched to best patch heading in this doc (overlap>=0.35), then retrieval must hit that patch.",
+        }
+
+        # Smoke traces
+        for q in smoke_queries:
+            nav_scores = navigate_rank(q)
+            nav_pids = [x[0] for x in nav_scores]
+            blocks_top = fetch_rank(q, nav_pids)
+
+            trace = {
+                "doc_id": doc_id,
+                "query": q,
+                "navigate_top_patches": [
+                    {
+                        "patch_id": pid,
+                        "navigate_score": float(s),
+                        "patch_type": patch_type_map.get(pid),
+                        "span_source": patch_span_src_map.get(pid),
+                        "heading_norm": patch_heading_explicit_map.get(pid, ""),
+                        "derived_heading_norm": patch_derived_heading_map.get(pid, ""),
+                        "navigate_text": next((txt for patch_id0, txt, _ in patch_docs if patch_id0 == pid), ""),
+                        "page_span": (
+                            (min(patch_pages_map.get(pid, []) or [None]), max(patch_pages_map.get(pid, []) or [None]))
+                        ),
+                    }
+                    for pid, s in nav_scores
+                ],
+                "fetch_top_blocks": blocks_top,
+                "meta": {
+                    "w_lex": w_lex,
+                    "w_emb": w_emb,
+                    "layer_prior": layer_prior,
+                    "structure_span_boost": struct_boost,
+                    "noncanonical_page_penalty": noncanon_pen,
+                    "top_patches": top_patches,
+                    "top_blocks": top_blocks,
+                },
+            }
+            out_name = re.sub(r"[^A-Za-z0-9]+", "_", q).strip("_").lower()
+            write_json(traces_dir / f"trace_{out_name}.json", trace)
+
+            # update global best per query by top navigate score
+            best_nav = nav_scores[0][1] if nav_scores else 0.0
+            cur = global_smoke_best.get(q)
+            if cur is None or best_nav > float(cur["best_navigate_score"]):
+                global_smoke_best[q] = {
+                    "query": q,
+                    "best_doc_id": doc_id,
+                    "best_navigate_score": float(best_nav),
+                    "top_patch": trace["navigate_top_patches"][0] if trace["navigate_top_patches"] else None,
+                    "top_block": trace["fetch_top_blocks"][0] if trace["fetch_top_blocks"] else None,
+                }
+
+        # Load tests (lexical + vector)
+        load_ok = True
+        try:
+            # lexical
+            _ = json.loads(read_text(lex_dir / "vocab.json"))
+            _ = np.load(lex_dir / "idf.f32.npy")
+            # vector
+            _ = np.load(emb_dir / "embeddings.f32.npy")
+            if (vdir / "faiss.index").exists() and faiss is not None:
+                _ = faiss.read_index(str(vdir / "faiss.index"))
+        except Exception:
+            load_ok = False
+
+        # Summaries
+        index_summary = {
+            "doc_id": doc_id,
+            "n_pages": n_pages,
+            "n_patches": n_patches,
+            "window_counts": {"window_1": win1, "window_2": win2, "window_3": win3},
+            "window_expected": {"window_1": exp1, "window_2": exp2, "window_3": exp3},
+            "window_formula_ok": bool(window_ok),
+            "n_blocks_total": n_blocks_total,
+            "n_blocks_indexed": n_blocks_indexed,
+            "blocks_by_layer_total": by_layer_total,
+            "blocks_by_layer_indexed": by_layer_indexed,
+            "pct_blocks_with_text": doc_diag["blocks"]["pct_with_text"],
+            "pct_patches_with_heading": doc_diag["patch_headings"]["pct_final_nonempty"],
+            "embedding": {"model": ollama_model, "dimensions": emb_dims},
+            "vector_index_kind": vector_kind,
+            "lexical_vocab_size": int(len(lex.vocab)),
+            "load_ok": bool(load_ok),
+            "dedupe_within_reveal_groups": {
+                "n_group_buckets": int(len(group_bucket)),
+                "n_losers": int(len(dup_of)),
+            },
+        }
+        write_json(out_doc_dir / "index_summary.json", index_summary)
+        write_json(out_doc_dir / "retrieval_diagnostics.json", doc_diag)
+
+        retrieval_eval = {
+            "doc_id": doc_id,
+            "patch_heading_eval": patch_eval,
+            "kc_title_eval": kc_eval,
+        }
+        write_json(out_doc_dir / "retrieval_eval.json", retrieval_eval)
+        write_json(out_doc_dir / "retrieval_eval_diagnostics.json", {
+            "doc_id": doc_id,
+            "patch_heading_eval": {
+                "n_queries_used": int(n_patch_q_used),
+                "skip_reasons": patch_eval_skips,
+            },
+            "kc_title_eval": {
+                "n_queries_used": int(kc_used),
+                "skip_reasons": kc_eval_skips,
+            },
+        })
+
+        # Output manifest entries for doc
+        for p in [
+            out_doc_dir / "block_text_corpus.jsonl",
+            out_doc_dir / "index_rows.jsonl",
+            emb_dir / "embeddings.f32.npy",
+            emb_dir / "rows.jsonl",
+            emb_dir / "meta.json",
+            vdir / "meta.json",
+            lex_dir / "vocab.json",
+            lex_dir / "idf.f32.npy",
+            lex_dir / "postings_docids.i32.npy",
+            lex_dir / "postings_tfs.i16.npy",
+            lex_dir / "postings_offsets.i64.npy",
+            out_doc_dir / "index_summary.json",
+            out_doc_dir / "retrieval_diagnostics.json",
+            out_doc_dir / "retrieval_eval.json",
+            out_doc_dir / "retrieval_eval_diagnostics.json",
+        ]:
+            if p.exists():
+                outputs_manifest["files"].append({
+                    "path": to_manifest_path(p, repo_root),
+                    "sha256": sha256_file(p),
+                    "size_bytes": int(p.stat().st_size),
+                    "mtime_utc": datetime.utcfromtimestamp(p.stat().st_mtime).isoformat() + "Z",
+                })
+
+        rows_summary.append({
+            "doc_id": doc_id,
+            "n_pages": n_pages,
+            "n_patches": n_patches,
+            "window_ok": bool(window_ok),
+            "n_blocks_total": n_blocks_total,
+            "n_blocks_indexed": n_blocks_indexed,
+            "by_layer_indexed": by_layer_indexed,
+            "emb_model": ollama_model,
+            "emb_dim": emb_dims,
+            "vector_kind": vector_kind,
+            "lex_vocab": int(len(lex.vocab)),
+            "pct_blocks_with_text": float(doc_diag["blocks"]["pct_with_text"]),
+            "pct_patches_with_heading": float(doc_diag["patch_headings"]["pct_final_nonempty"]),
+            "patch_heading_eval_n_queries": int(patch_eval["n_queries"]),
+            "patch_heading_hit_rate_10": float(patch_eval["HitRate@k"].get("10", 0.0)),
+            "patch_heading_mrr_10": float(patch_eval["MRR@k"].get("10", 0.0)),
+            "load_ok": bool(load_ok),
+        })
+
+        doc_timings[doc_id] = round(time.time() - doc_t0, 3)
+        log(f"[doc] done {doc_id} pages={n_pages} patches={n_patches} blocks_indexed={n_blocks_indexed} load_ok={load_ok}")
+
+    # Write run-level manifests and global smoke summary
+    write_json(run_dir / "input_manifest.json", inputs_manifest)
+    write_json(run_dir / "output_manifest.json", outputs_manifest)
+    write_json(run_dir / "smoke_retrieval_best.json", global_smoke_best)
+
+    # Print acceptance summary table
+    log("")
+    log("=== STEP 4.3 ACCEPTANCE SUMMARY (per doc) ===")
+    hdr = [
+        "doc_id",
+        "n_pages",
+        "n_patches",
+        "window_ok",
+        "n_blocks_total",
+        "n_blocks_indexed",
+        "pct_blocks_with_text",
+        "pct_patches_with_heading",
+        "patch_heading_eval.n_queries",
+        "HitRate@10",
+        "MRR@10",
+        "emb_dim",
+        "vector_kind",
+        "load_ok",
+    ]
+    log("\t".join(hdr))
+    for r in rows_summary:
+        log("\t".join([
+            r["doc_id"],
+            str(r["n_pages"]),
+            str(r["n_patches"]),
+            str(r["window_ok"]),
+            str(r["n_blocks_total"]),
+            str(r["n_blocks_indexed"]),
+            f"{r['pct_blocks_with_text']:.3f}",
+            f"{r['pct_patches_with_heading']:.3f}",
+            str(r["patch_heading_eval_n_queries"]),
+            f"{r['patch_heading_hit_rate_10']:.3f}",
+            f"{r['patch_heading_mrr_10']:.3f}",
+            str(r["emb_dim"]),
+            str(r["vector_kind"]),
+            str(r["load_ok"]),
+        ]))
+
+    dt = time.time() - t0
+    write_json(run_dir / "timings.json", {
+        "total_seconds": round(dt, 3),
+        "per_doc_seconds": doc_timings,
+    })
+    summary = {
+        "run_id": run_id,
+        "n_docs": len(docs),
+        "seconds": round(dt, 3),
+        "rows_summary": rows_summary,
+        "smoke_best": global_smoke_best,
+    }
+    write_json(run_dir / "summary.json", summary)
+
+    log("")
+    log("[DONE] Step 4.3 build complete.")
+    log(f"[RUN_DIR] {to_manifest_path(run_dir, repo_root)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

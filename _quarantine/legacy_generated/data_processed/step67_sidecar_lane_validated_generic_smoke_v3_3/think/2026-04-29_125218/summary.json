@@ -1,0 +1,42 @@
+{
+  "stage": "step67c_validate_lane_aware_drafts_generic",
+  "run_id": "2026-04-29_125218",
+  "created_utc": "2026-04-29T12:52:18.745290+00:00",
+  "lanes_path": "data/work/cache/diagnostics/step67_v3_3_gemma_smoke8_20260429T123859Z/target_smoke8_lane_packets.jsonl",
+  "drafts_path": "data/processed/step67_sidecar_lane_drafts_generic_smoke_v3_3/think/2026-04-29_124102/onepass_drafts.jsonl",
+  "out_dir": "data/processed/step67_sidecar_lane_validated_generic_smoke_v3_3/think/2026-04-29_125218",
+  "packet_count": 8,
+  "draft_row_count": 8,
+  "valid_row_count": 7,
+  "error_row_count": 1,
+  "warning_row_count": 2,
+  "status_counter": {
+    "definition::grounded": 4,
+    "scope::grounded": 5,
+    "definition::abstained": 4,
+    "scope::abstained": 3
+  },
+  "mode_counter": {
+    "definition::direct_definition": 2,
+    "scope::direct_scope": 2,
+    "definition::abstained": 4,
+    "scope::abstained": 3,
+    "scope::contextual_synthesis": 3,
+    "definition::single_strong_context": 1,
+    "definition::contextual_synthesis": 1
+  },
+  "issue_counter": {
+    "ERROR::scope: direct_scope lacks scope_lane support": 1,
+    "WARNING::scope: grounded only from context_lane": 1,
+    "WARNING::definition: single_strong_context should be human-reviewed as weaker than direct_definition or contextual_synthesis": 1
+  },
+  "validation_policy": {
+    "definition_direct": "direct_definition must cite at least one definition_lane id",
+    "definition_contextual": "contextual_synthesis may cite definition, scope, or context ids, must cite at least two positive evidence ids, and must include scope/context support",
+    "definition_single_strong_context": "single_strong_context may cite exactly one strong scope or context id and should be human-reviewed",
+    "scope": "scope may cite definition, scope, or context ids; quarantine/sibling ids are errors",
+    "scope_single_strong_context": "single_strong_context may cite exactly one strong scope or context id and should be human-reviewed",
+    "abstained": "text, support ids, and supporting_lanes must be empty"
+  },
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=69.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kc-l"
+version = "0.2.0"
+description = "KC Library generation pipeline"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "PyYAML>=6.0.0",
+  "orjson>=3.10.0",
+  "rich>=13.7.0",
+]
+
+[project.optional-dependencies]
+runtime = [
+  "numpy",
+  "Pillow",
+  "PyMuPDF",
+  "opencv-python-headless",
+  "torch",
+  "transformers",
+  "sentence-transformers",
+  "huggingface-hub",
+]
+dev = [
+  "pytest>=8.0.0",
+  "ruff>=0.5.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

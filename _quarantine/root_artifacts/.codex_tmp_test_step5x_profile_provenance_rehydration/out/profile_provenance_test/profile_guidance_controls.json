@@ -1,0 +1,122 @@
+{
+  "KC_SIGNAL_001": {
+    "accepted_source_cue_count": 1,
+    "concept_head_terms_any": [
+      "signal",
+      "dropout",
+      "cause"
+    ],
+    "control_role": "step5x_retrieval_control_metadata_not_evidence",
+    "evidence_shape_hints": [
+      {
+        "confidence": "medium",
+        "profile_output_role": "retrieval_control_metadata_not_evidence",
+        "provenance": [
+          {
+            "field_path": "sentence_text",
+            "snippet_id": "SRC_SIGNAL_001"
+          }
+        ],
+        "shape": "definition_phrase",
+        "shape_family": "definition",
+        "source": "accepted_source_cue"
+      }
+    ],
+    "kc_id": "KC_SIGNAL_001",
+    "label_descriptor_terms_any": [],
+    "lexical_queries": [
+      {
+        "cue_type": "definition_phrase",
+        "profile_output_role": "retrieval_control_metadata_not_evidence",
+        "provenance": [
+          {
+            "field_path": "sentence_text",
+            "snippet_id": "SRC_SIGNAL_001"
+          }
+        ],
+        "query": "signal dropout occurs",
+        "requires_hierarchy_guard": false,
+        "risk_flags": [],
+        "source": "accepted_source_cue",
+        "variant_type": ""
+      }
+    ],
+    "negative_constraints": [],
+    "profile_input_status": "unknown",
+    "profile_only_queries": [],
+    "profile_status": "usable",
+    "query_atoms": [
+      "signal dropout occurs"
+    ],
+    "region_locator_payloads": [],
+    "retrieval_failure_hypothesis": "",
+    "retrieval_routes": [
+      {
+        "activation": "active",
+        "broad_context_only": false,
+        "can_create_candidates": true,
+        "can_create_positive_support": true,
+        "local_window_scope": "same_sentence_or_patch",
+        "negative_terms_any": [],
+        "primary_terms_any": [
+          "signal dropout occurs"
+        ],
+        "profile_output_role": "retrieval_control_metadata_not_evidence",
+        "provenance": [
+          {
+            "field_path": "sentence_text",
+            "snippet_id": "SRC_SIGNAL_001"
+          }
+        ],
+        "route_id": "route_signal_observed",
+        "route_strength": "strong",
+        "route_trust": "guidance",
+        "route_type": "anchored_phrase",
+        "source_provenance_ids": [
+          "SRC_SIGNAL_001"
+        ],
+        "step5x_verification_required": true,
+        "support_authority": "candidate_hint_step5x_must_verify",
+        "support_requirement": "boost_only",
+        "support_terms_all": [],
+        "support_terms_any": [],
+        "verification_status": "source_observed_same_window"
+      },
+      {
+        "activation": "active",
+        "broad_context_only": false,
+        "can_create_candidates": true,
+        "can_create_positive_support": true,
+        "local_window_scope": "same_sentence_or_patch",
+        "negative_terms_any": [],
+        "primary_terms_any": [
+          "signal dropout occurs"
+        ],
+        "profile_output_role": "retrieval_control_metadata_not_evidence",
+        "provenance": [
+          {
+            "field_path": "sentence_text",
+            "snippet_id": "SRC_SIGNAL_001"
+          }
+        ],
+        "route_id": "route_signal_duplicate",
+        "route_strength": "strong",
+        "route_trust": "guidance",
+        "route_type": "anchored_phrase",
+        "source_provenance_ids": [
+          "SRC_SIGNAL_001"
+        ],
+        "step5x_verification_required": true,
+        "support_authority": "candidate_hint_step5x_must_verify",
+        "support_requirement": "boost_only",
+        "support_terms_all": [],
+        "support_terms_any": [],
+        "verification_status": "source_observed_same_window"
+      }
+    ],
+    "safe_to_use_for_step5x": true,
+    "semantic_queries": [],
+    "source_window_ids": [],
+    "warnings": []
+  }
+}

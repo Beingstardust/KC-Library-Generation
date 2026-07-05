@@ -1,0 +1,38 @@
+{
+  "stage": "step67c_validate_lane_aware_drafts_generic",
+  "run_id": "2026-04-28_212844",
+  "created_utc": "2026-04-28T21:28:44.894529+00:00",
+  "lanes_path": "data/work/cache/diagnostics/step67_generic_lane_policy_v2_sofja_replay/2026-04-28_204204/lane_packets.jsonl",
+  "drafts_path": "data/processed/step67_sidecar_lane_drafts_generic_smoke_v2/nothink/2026-04-28_212749/onepass_drafts.jsonl",
+  "out_dir": "data/processed/step67_sidecar_lane_validated_generic_smoke_v2/nothink/2026-04-28_212844",
+  "packet_count": 40,
+  "draft_row_count": 5,
+  "valid_row_count": 4,
+  "error_row_count": 1,
+  "warning_row_count": 1,
+  "status_counter": {
+    "definition::abstained": 3,
+    "scope::abstained": 2,
+    "definition::grounded": 2,
+    "scope::grounded": 3
+  },
+  "mode_counter": {
+    "definition::abstained": 3,
+    "scope::abstained": 2,
+    "definition::contextual_synthesis": 2,
+    "scope::contextual_synthesis": 2,
+    "scope::direct_scope": 1
+  },
+  "issue_counter": {
+    "ERROR::definition: contextual_synthesis requires at least two supporting evidence ids": 1,
+    "WARNING::scope: direct_scope has no scope_lane support": 1,
+    "WARNING::scope: grounded only from context_lane": 1
+  },
+  "validation_policy": {
+    "definition_direct": "direct_definition must cite at least one definition_lane id",
+    "definition_contextual": "contextual_synthesis may cite definition, scope, or context ids, must cite at least two positive evidence ids, and must include scope/context support",
+    "scope": "scope may cite definition, scope, or context ids; quarantine/sibling ids are errors",
+    "abstained": "text, support ids, and supporting_lanes must be empty"
+  },
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

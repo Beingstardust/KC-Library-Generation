@@ -1,0 +1,11 @@
+review_cycle:
+  review_actions:
+    - approve
+    - edit_and_approve
+    - reject
+  input_root: data/runs
+  staging_root: data/work/staging
+  notes:
+    - Review remains the usability boundary.
+    - Approved-only items may later enter the frozen library.
+    - Rejected and unresolved items must stay outside the active usable library.

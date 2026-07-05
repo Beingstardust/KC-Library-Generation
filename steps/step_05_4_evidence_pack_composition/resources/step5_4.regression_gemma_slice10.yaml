@@ -1,0 +1,51 @@
+# Bounded regression slice aligned to the post-Step-6.7 Gemma validation set.
+inputs:
+  step5_3_active_set_pointer: data/processed/kc_evidence_recalibrated/_sets/ACTIVE_STEP5_3_EVIDENCE_SET.txt
+  kc_registry_path: data/work/cache/current_step_artifacts/step1_seedless_hierarchy_registry.current.jsonl
+  hierarchy_overlay_manifest: data/work/cache/current_step_artifacts/step1_5_overlay_manifest.current.json
+
+outputs:
+  processed_root: data/processed/kc_evidence_packs
+  sets_root: data/processed/kc_evidence_packs/_sets
+  active_set_pointer: data/processed/kc_evidence_packs/_sets/ACTIVE_STEP5_4_EVIDENCE_PACK_SET.txt
+  runs_root: data/runs
+
+slice:
+  limit_kcs: 10
+  exact_kc_ids:
+    - KC_CLU_EVAL_001
+    - KC_CLU_EVAL_002
+    - KC_DE_PREP_003
+    - KC_EVAL_SAMP_003
+    - KC_CLU_DBS_003
+    - KC_CLU_CORE_002
+    - KC_CLU_DBS_001
+    - KC_CLF_NB_011
+    - KC_CLU_EVAL_012
+    - KC_EVAL_BASIC_005
+
+composition:
+  max_slots_total: 10
+  max_definition_kernel: 2
+  max_explanatory_gloss: 3
+  max_formula_notation: 2
+  max_scope_condition: 2
+  max_context_completion: 2
+  max_example_or_procedure: 1
+  max_sibling_contrast: 2
+  max_context_completion_items: 2
+  max_context_completion_chars: 420
+  max_chars_for_drafting: 1800
+  max_candidates_considered_per_kc: 18
+  context_window_sentences: 1
+  min_definition_score: 3.0
+  min_explanatory_score: 2.0
+  min_formula_score: 2.5
+  min_scope_score: 2.0
+  min_example_score: 2.0
+  min_sibling_score: 1.5
+
+routing:
+  standard_min_coverage_score: 0.58
+  standard_min_density_score: 0.32
+  partial_min_coverage_score: 0.2

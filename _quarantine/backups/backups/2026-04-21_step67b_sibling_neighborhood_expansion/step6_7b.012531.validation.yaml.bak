@@ -1,0 +1,21 @@
+inputs:
+  step6_7_set_manifest: data/processed/kc_drafts/_sets/2026-04-19_012531_step6_7_kc_drafts_set.json
+
+outputs:
+  processed_root: data/processed/kc_seed_floor_triage_and_rescue
+  sets_root: data/processed/kc_seed_floor_triage_and_rescue/_sets
+  runs_root: data/runs
+
+model_rescue:
+  execution_mode: llm
+  generation_base_url: http://127.0.0.1:11567
+  generation_model_alias: qwen3:30b
+  max_evidence_items: 8
+  max_retries: 2
+  timeout_seconds: 180
+  num_ctx: 8192
+  temperature: 0.0
+  top_p: 1.0
+  repeat_penalty: 1.0
+  think: null
+  validation_force_model_for_all_rescue_eligible: true

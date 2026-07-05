@@ -1,0 +1,10 @@
+# Historical bounded Step 6.8 config preserved from the pre-clean repo state.
+# It intentionally keeps a dated Step 6.7 set manifest and is not a clean-start default.
+inputs:
+  step6_7_set_manifest: data/processed/kc_drafts/_sets/2026-03-23_134318_step6_7_kc_drafts_set.json
+
+outputs:
+  processed_root: data/processed/kc_review_packets_restarted
+  sets_root: data/processed/kc_review_packets_restarted/_sets
+  runs_root: data/runs
+

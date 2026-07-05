@@ -1,0 +1,64 @@
+{
+  "KC_NEUTRAL_001": {
+    "authority_contract": "step5x_must_verify_against_source_rows",
+    "canonical_name": "Two-Way Option Partition",
+    "concept_head": "Two-Way Option Partition",
+    "concept_head_terms": [
+      "two",
+      "way",
+      "option",
+      "partition"
+    ],
+    "expanded_aliases": [],
+    "expected_evidence_needs": [
+      {
+        "need": "phase_process",
+        "priority": "primary",
+        "source": "shape_hint"
+      },
+      {
+        "need": "definition_concept",
+        "priority": "secondary",
+        "source": "inferred"
+      },
+      {
+        "need": "algorithm_procedure",
+        "priority": "tertiary",
+        "source": "inferred"
+      }
+    ],
+    "failure_hypothesis": "",
+    "knowledge_unit_id": "KC_NEUTRAL_001",
+    "knowledge_unit_type": "kc",
+    "label_descriptor_terms": [],
+    "lexical_atoms": [
+      "Two-Way Option Partition"
+    ],
+    "negative_sibling_terms": [
+      "one-way partition"
+    ],
+    "negative_terms": [
+      "one-way partition"
+    ],
+    "normalized_surface_variants": [
+      "Two-Way Option Partition",
+      "Two Way Option Partition"
+    ],
+    "policy_version": "step5x_v3_retrieval_policy_v1",
+    "profile_output_role": "retrieval_control_metadata_not_evidence",
+    "qualifiers": [],
+    "query_plan_id": "qplan_KC_NEUTRAL_001_e0ef1effa439fbed",
+    "region_locators": [],
+    "risk_hints": [],
+    "route_specific_optional_terms": [],
+    "route_specific_query_variants": [],
+    "route_specific_required_terms": [],
+    "shape_priors": [
+      "target_bound_concept_support",
+      "process"
+    ],
+    "sibling_terms": [
+      "One-Way Partition"
+    ]
+  }
+}

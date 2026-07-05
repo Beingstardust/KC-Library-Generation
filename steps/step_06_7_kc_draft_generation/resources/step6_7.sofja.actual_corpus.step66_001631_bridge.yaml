@@ -1,0 +1,20 @@
+inputs:
+  step6_6_set_manifest: data/processed/kc_drafting_input_overlay/_sets/2026-04-30_001631_step6_6_kc_drafting_input_overlay_set.json
+outputs:
+  processed_root: data/processed/kc_drafts
+  sets_root: data/processed/kc_drafts/_sets
+  runs_root: data/runs
+slice:
+  limit_kcs: 144
+selection:
+  max_bundle_size: 4
+  max_explanatory_candidates: 3
+bridge_notes:
+  step66_to_step67_direct_pin:
+    reason: Avoid mutable current_step_artifacts alias resolution. Step6.7 is pinned
+      directly to the KC-level validated Step6.6 run 2026-04-30_001631.
+    previous_step6_6_set_manifest_value: data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json
+    accepted_step6_6_set_manifest: data/processed/kc_drafting_input_overlay/_sets/2026-04-30_001631_step6_6_kc_drafting_input_overlay_set.json
+    accepted_step6_6_overlay_jsonl: data/processed/kc_drafting_input_overlay/2026-04-30_001631/candidate_sentence_overlay.jsonl
+    accepted_step6_6_closeout: data/work/cache/diagnostics/step66_step5x_bridge_kc_level_validation_20260430T002016Z/STEP66_STEP5X_BRIDGE_KC_LEVEL_CLOSEOUT.md
+    created_by: manual_bridge_config

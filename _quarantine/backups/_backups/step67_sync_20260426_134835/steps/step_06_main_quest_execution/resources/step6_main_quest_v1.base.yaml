@@ -1,0 +1,210 @@
+project:
+  timezone: Europe/Berlin
+
+main_quest:
+  lane: main_quest_execution
+  version: step6_main_quest_v1
+  status: active_lane_config_base
+  execution_authorized_by_config_alone: false
+  authorization_artifact_path: PROJECT_STATE/MAIN_QUEST_EXECUTION_AUTHORIZATION.md
+  accepted_step6_baseline_pointer: data/processed/kc_library/_sets/ACTIVE_STEP6_KC_LIBRARY_SET.txt
+  accepted_step6_baseline_expected_set: data/processed/kc_library/_sets/2026-03-06_223146_step6_3_kc_library_set.json
+  active_must_remain_unchanged: true
+  sidequest_step6_4_2_status: paused
+  semantic_gating_policy_path: PROJECT_STATE/KC_SEMANTIC_GATING_POLICY_FROM_SIDEQUEST.md
+  same_semantics_across_runtime_overlays: true
+
+hierarchy_policy:
+  preserve_curriculum_hierarchy: true
+  topic_tier_separate_from_atomic_kc_tier: true
+  emit_topic_nodes_as_atomic_kcs: false
+  final_atomic_outputs_leaf_only: true
+  hierarchy_overlay_required: true
+
+runtime_contract:
+  rendered_config_required: true
+  local_overlay_path: steps/step_06_main_quest_execution/resources/step6_main_quest_v1.local_gpu.yaml
+  hpc_overlay_path: steps/step_06_main_quest_execution/resources/step6_main_quest_v1.hpc_gpu.yaml
+  local_hpc_semantics_must_match: true
+
+inputs:
+  active_step6_set_pointer: data/processed/kc_library/_sets/ACTIVE_STEP6_KC_LIBRARY_SET.txt
+  active_step5_primary_set_pointer: data/processed/kc_evidence_recalibrated/_sets/ACTIVE_STEP5_3_EVIDENCE_SET.txt
+  active_step5_2_set_pointer: data/processed/kc_evidence_sharp/_sets/ACTIVE_STEP5_2_EVIDENCE_SHARP_SET.txt
+  step4_active_set_pointer: data/processed/retrieval_index/_sets/ACTIVE_STEP4_SET.txt
+  kc_registry_path: data/work/cache/current_step_artifacts/step1_kc_registry.current.jsonl
+  hierarchy_overlay_node_index_path: data/processed/hierarchy_overlay/2026-04-08_103432_hierarchy_overlay/overlay_node_index.json
+  hierarchy_leaf_ancestry_path: data/processed/hierarchy_overlay/2026-04-08_103432_hierarchy_overlay/leaf_to_overlay_ancestry.json
+
+models:
+  generation:
+    generation_model: UNRESOLVED_STEP67_GENERATION_MODEL_ALIAS
+    provider: ollama
+    resolved_model_alias: UNRESOLVED_STEP67_GENERATION_MODEL_ALIAS
+    backend_kind: ollama
+    transport_mode: ollama_chat
+    base_url: UNRESOLVED_STEP67_MODEL_ENDPOINT
+    temperature: 0
+    num_ctx: 8192
+    max_retries: 2
+    top_p: 1.0
+    repeat_penalty: 1.0
+    thinking_enabled: true
+    thinking_activation_mode: request_flag
+    thinking_system_prefix: ""
+    strip_thought_block_before_parse: true
+    response_parse_mode: message_content_or_response_or_thinking
+  reranker:
+    preferred: BAAI/bge-reranker-v2-m3
+    fallback:
+      - cross-encoder/ms-marco-MiniLM-L6-v2
+    batch_size: 8
+  gate_llm:
+    provider: ollama
+    resolved_model_alias: UNRESOLVED_STEP67_GATE_MODEL_ALIAS
+    base_url: UNRESOLVED_STEP67_GATE_MODEL_ENDPOINT
+
+step6_7:
+  contract_version: step6_7_authoritative_runtime_v1
+  config_authority: rendered_main_quest_config
+  active_runner: steps/step_06_7_kc_draft_generation/scripts/run_step6_7_kc_draft_generation.py
+  execution_mode: llm
+  llm_required: true
+  fail_closed_when_llm_unavailable: true
+  heuristic_mode_name: heuristic_extract_grounded_v1
+  inputs:
+    step6_6_set_manifest: data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json
+  outputs:
+    processed_root: data/processed/kc_drafts
+    sets_root: data/processed/kc_drafts/_sets
+    runs_root: data/runs
+  slice:
+    limit_kcs: 144
+  selection:
+    max_bundle_size: 6
+    max_explanatory_candidates: 5
+  drafting_policy:
+    domain_policy: model_evaluation_background_v1
+    definition_candidate_limit: 5
+    scope_candidate_limit: 5
+    family_context_limit: 4
+    completion_context_limit: 4
+    evidence_text_max_chars: 320
+    short_definition_max_chars: 220
+    short_definition_max_tokens: 32
+
+semantic_gates:
+  token_hit_min: 1
+  seed_kw_overlap_min: 2
+  embed_sim_min: 0.4
+  margin_min: 0.06
+  rerank_min: 0.4
+  rerank_margin: 0.15
+  doc_mismatch_penalty: 4.0
+
+gate_policy:
+  enable_d2_kc_id_gate: true
+  enable_d3_verifier_gate: false
+  borderline_rule: small_margin OR doc_mismatch OR close_competitor
+  max_gate_llm_calls_per_kc: 12
+
+contamination_adjudication:
+  sibling_competitor_rank_max: 3
+  sibling_query_similarity_min: 0.55
+  bundle_rerank_clear_margin: 0.05
+
+enrichment:
+  max_candidate_blocks_per_kc: 18
+  max_sentences_considered: 120
+  evidence_minimal_target: 4
+  definition_full_max_quotes: 3
+  allow_cross_doc_if_margin_passes: true
+  bundle_max_quotes: 3
+  bundle_same_page_alignment_min: 0.55
+  local_support_window_blocks: 1
+  local_bundle_rescue_margin_slack: 0.05
+  local_bundle_rescue_bundle_margin: 0.05
+  local_bundle_rescue_max_quotes: 2
+
+provenance_normalization:
+  layer_preference:
+    - mineru
+    - pymupdf
+    - docling
+  allow_normalized_quote_rebind: true
+  require_raw_quote_verification: true
+
+role_assignment:
+  definition_cues:
+    - ' is '
+    - ' defined as '
+    - ' we call '
+    - denote
+    - denotes
+    - ' means '
+    - ' called '
+    - ' refers to '
+  procedure_cues:
+    - algorithm
+    - procedure
+    - step
+    - repeat
+    - compute
+    - for each
+    - first
+    - second
+    - third
+  example_cues:
+    - example
+    - for example
+    - e.g.
+  warning_cues:
+    - warning
+    - pitfall
+    - note
+    - incorrect
+    - wrong
+    - avoid
+  weak_score_threshold: 1.75
+  ambiguity_gap_threshold: 0.9
+  dominant_score_threshold: 3.0
+  dominant_gap_threshold: 1.25
+  strong_definition_score: 2.5
+
+acceptance_targets:
+  tier1_required: 128
+  tier2_min: 90
+  usable_curriculum_min: 90
+  definition_full_min: 90
+  definition_status_supported_min: 90
+  semantic_contamination_max: 2
+  dry_run_semantic_contamination_max: 0
+  dry_run_tier2_min: 10
+  dry_run_usable_curriculum_min: 10
+  dry_run_definition_full_min: 10
+  dry_run_definition_status_supported_min: 10
+  dry_run_definition_short_contract_fail_max: 0
+  dry_run_false_rejection_failures_max: 2
+  dry_run_thinking_used_frac_target: 0.08
+  definition_short_contract_fail_max: 0
+  quote_mismatch_max: 0
+  false_rejection_audit_required: true
+
+outputs:
+  processed_root: data/processed/kc_library/main_quest
+  sets_dir: data/processed/kc_library/main_quest/_sets
+
+audit:
+  runs_dir: data/runs/main_quest
+
+required_outputs:
+  must_emit:
+    - config_snapshot.yaml
+    - invocation.json
+    - input_manifest.json
+    - environment_snapshot.json
+    - tool_versions.json
+    - run.log
+    - summary.json
+    - output_manifest.json
+  substrate_closeout_reports_are_expected: true

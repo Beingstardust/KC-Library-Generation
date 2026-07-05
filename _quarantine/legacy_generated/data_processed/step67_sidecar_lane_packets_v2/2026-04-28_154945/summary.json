@@ -1,0 +1,35 @@
+{
+  "stage": "step67a_build_field_lane_packets_v2",
+  "run_id": "2026-04-28_154945",
+  "created_utc": "2026-04-28T15:49:45.367753+00:00",
+  "packets_path": "data/processed/step67_sidecar_packets/2026-04-28_130527/evidence_packets.jsonl",
+  "overlay_path": "data/processed/kc_drafting_input_overlay/2026-04-28_002730/candidate_sentence_overlay.jsonl",
+  "out_dir": "data/processed/step67_sidecar_lane_packets_v2/2026-04-28_154945",
+  "lane_packets_path": "data/processed/step67_sidecar_lane_packets_v2/2026-04-28_154945/lane_packets.jsonl",
+  "packet_count": 10,
+  "lane_counter_all_items": {
+    "quarantine_or_irrelevant": 38,
+    "definition_candidate": 4,
+    "scope_candidate": 5,
+    "context_candidate": 1,
+    "sibling_contrast": 2
+  },
+  "selected_counter": {
+    "definition_lane": 4,
+    "scope_lane": 5,
+    "context_lane": 1
+  },
+  "flag_counter": {
+    "high_contamination_risk": 46,
+    "formula_or_equation_like": 10,
+    "contamination_signals_present": 4,
+    "negative_rerank_margin": 15,
+    "source_block_completion_used": 47,
+    "ambiguous_role_hint": 11,
+    "fragmentary_surface": 10,
+    "needs_context_completion": 9,
+    "question_or_exercise_prompt": 2,
+    "negated_target_or_sibling_contrast": 2
+  },
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

@@ -1,0 +1,7 @@
+freeze_cycle:
+  approved_source_root: data/work/staging
+  frozen_library_root: data/library/frozen
+  active_pointer_path: data/library/active/knowledge_library_release_pointer.json
+  exports_root: data/exports
+  approved_only_library_required: true
+  topic_library_and_kc_library_remain_separate: true

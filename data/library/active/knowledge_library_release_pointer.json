@@ -1,0 +1,9 @@
+{
+  "pointer_version": "kc_library.active_pointer.v1",
+  "state": "none",
+  "release_id": null,
+  "release_root": null,
+  "release_manifest_path": null,
+  "updated_utc": "2026-04-02T00:00:00Z",
+  "notes": "Clean operator repo; no frozen Knowledge Library release has been produced yet."
+}

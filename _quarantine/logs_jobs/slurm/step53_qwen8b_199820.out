@@ -1,0 +1,26 @@
+HOSTNAME=gpu03
+SLURM_JOB_ID=199820
+CUDA_VISIBLE_DEVICES=0
+PATH=/beegfs1/home/aryp26yc/.vscode-server/cli/servers/Stable-e7fb5e96c0730b9deb70b33781f98e2f35975036/server/bin/remote-cli:/usr/share/Modules/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+LD_LIBRARY_PATH=/beegfs1/software/python/python-3.11.3/lib
+PYBIN=/home/aryp26yc/venvs/kc_l_v2/bin/python
+Python 3.11.3
+GPU 0: NVIDIA A100 80GB PCIe (UUID: GPU-18317f28-ba83-3c72-33a2-cf394808f5dd)
+GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-d8bb9110-6f0b-acb3-f8d6-4f568c5dc7dd)
+[2026-04-08T09:03:32.662569Z] run_id_step5_3=2026-04-08_090332
+[2026-04-08T09:07:45.213815Z] Reranker bootstrap passed: model=/beegfs2/scratch/aryp26yc/kc_l/models/rerankers/tomaarsen__Qwen3-Reranker-8B-seq-cls device=cuda score=0.867188
+[2026-04-08T09:07:47.743901Z] Loaded registry rows=144 sentence_rows=77470 baseline_rows=144
+[2026-04-08T09:51:01.230915Z] Wrote Step 5.3 recalibrated evidence set: data/processed/kc_evidence_recalibrated/_sets/2026-04-08_090332_step5_3_kc_evidence_recalibrated_set.json
+[2026-04-08T09:51:01.232682Z] Updated ACTIVE pointer: data/processed/kc_evidence_recalibrated/_sets/ACTIVE_STEP5_3_EVIDENCE_SET.txt -> 2026-04-08_090332_step5_3_kc_evidence_recalibrated_set.json
+n_kcs_total=144
+median_candidates_per_kc=18.00
+median_same_topic_fraction=0.3333
+baseline_median_same_topic_fraction=0.1667
+median_same_topic_fraction_lift=0.1667
+median_same_topic_fraction_relative_lift=1.0000
+kcs_with_at_least_2_strong_candidates=125
+kcs_with_at_least_2_structured_candidates=120
+top_candidate_suppressed_count=0
+high_risk_audit_candidates=2
+review_queue_count=24
+acceptance_passed=true

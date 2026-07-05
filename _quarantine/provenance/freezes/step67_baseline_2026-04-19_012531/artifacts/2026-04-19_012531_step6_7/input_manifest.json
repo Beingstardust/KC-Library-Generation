@@ -1,0 +1,38 @@
+[
+  {
+    "exists": true,
+    "path": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/data/work/cache/generated_configs/main_quest.hpc_gpu.yaml",
+    "sha256": "a0f94b827a0269216649b2e0c57f208d08f982f93a45fd21e79f310f9d12b46e",
+    "stat": {
+      "mtime": 1775859491.0,
+      "size": 6719
+    }
+  },
+  {
+    "exists": true,
+    "path": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json",
+    "sha256": "e55bca09b9459b7175635aa0f731c66f10dc372ac5dfbfa18f8504ff55eb6f37",
+    "stat": {
+      "mtime": 1776559677.0,
+      "size": 6104
+    }
+  },
+  {
+    "exists": true,
+    "path": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/data/processed/kc_drafting_input_overlay/2026-04-08_105028/candidate_sentence_overlay.jsonl",
+    "sha256": "ccebb2acfefcbdd9107e84ba50e15568e65e2e6178692b09eabb8c3f748c19bf",
+    "stat": {
+      "mtime": 1775645430.0,
+      "size": 19697732
+    }
+  },
+  {
+    "exists": true,
+    "path": "/beegfs1/home/aryp26yc/projects/kc_l_v2_clean/data/processed/kc_drafting_input_overlay/2026-04-08_105028/overlay_stats.json",
+    "sha256": "7bfbf93e215cec0cc2ba1929200c2e8a45da3ed8d5bf78a223b3e4b149bafa13",
+    "stat": {
+      "mtime": 1775645430.0,
+      "size": 4583
+    }
+  }
+]

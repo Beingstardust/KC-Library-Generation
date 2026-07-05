@@ -1,0 +1,51 @@
+step: 4
+stage: patches
+
+inputs:
+  active_step3_set: /beegfs2/scratch/aryp26yc/kc_l/data/processed/doctree/_sets/ACTIVE_STEP3_SET.txt
+  active_step3_6_set: /beegfs2/scratch/aryp26yc/kc_l/data/processed/blockstore_math_salvaged/_sets/ACTIVE_STEP3_6_SET.txt
+  canonical_blocks_filename: blocks_merged.jsonl
+
+outputs:
+  processed_root: /beegfs2/scratch/aryp26yc/kc_l/data/processed/retrieval_index
+  sets_dir: /beegfs2/scratch/aryp26yc/kc_l/data/processed/retrieval_index/_sets
+
+run:
+  dry_run: false
+  strict: true
+  doc_id_allowlist: []
+
+patches:
+  window_sizes: [1, 2, 3]
+  window_stride: 1
+
+  doctree_spans:
+    enabled: true
+    min_span_pages: 2
+    max_span_pages: 250
+    include_node_depths: [0, 1, 2, 3, 4]
+
+reveal_dedupe:
+  enabled: true
+  adjacency_only: true
+
+  min_tokens: 10
+  min_overlap_ratio: 0.80
+  min_intersection_tokens: 20
+  use_heading_gate: true
+  heading_mismatch_min_overlap: 0.95
+  require_non_decreasing_tokens: true
+  epsilon_token_growth: 0.02
+
+  image_hash_enabled: true
+  image_hash_max_hamming: 5
+  image_hash_require_heading_match: true
+  image_hash_heading_mismatch_max_hamming: 2
+
+text_build:
+  use_field_order: [text_clean, text_raw]
+  drop_boilerplate_if_true: true
+
+audit:
+  freeze_inputs: false
+  log_level: INFO

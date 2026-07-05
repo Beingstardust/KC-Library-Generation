@@ -1,0 +1,50 @@
+[
+  {
+    "relpath": "candidate_bank.jsonl",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stat": {
+      "mtime": 1778342942.0,
+      "size": 0
+    }
+  },
+  {
+    "relpath": "candidate_bank_manifest.json",
+    "sha256": "3a5a50e8cb2612b88e5f4df917a4123a2b3f33ba5e639e71cb0c8c4ff98a6075",
+    "stat": {
+      "mtime": 1778342942.0,
+      "size": 6454
+    }
+  },
+  {
+    "relpath": "candidate_bank_schema_snapshot.json",
+    "sha256": "6cc8d3635fdfb367645ba11d62042cdf57a69fb7bdfcfc59ef96214726f03861",
+    "stat": {
+      "mtime": 1778342942.0,
+      "size": 1405
+    }
+  },
+  {
+    "relpath": "candidate_bank_stats.json",
+    "sha256": "cf217357604f72c2c8e3ee02c4e6a097707b43a15c70577a6b2e6bff652d294e",
+    "stat": {
+      "mtime": 1778342942.0,
+      "size": 5232
+    }
+  },
+  {
+    "relpath": "profile_guidance_controls.json",
+    "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "stat": {
+      "mtime": 1778342942.0,
+      "size": 2
+    }
+  },
+  {
+    "relpath": "retrieval_policy_plans.json",
+    "sha256": "d2c4d700c63e3f7022903e6df64a2a045d8db4354b16dc345f12721e3560fef5",
+    "stat": {
+      "mtime": 1778342942.0,
+      "size": 1195
+    }
+  }
+]

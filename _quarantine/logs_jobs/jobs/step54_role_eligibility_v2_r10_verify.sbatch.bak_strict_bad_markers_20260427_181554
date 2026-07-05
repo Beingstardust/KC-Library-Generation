@@ -1,0 +1,343 @@
+#!/bin/bash
+#SBATCH --job-name=s54v2_r10
+#SBATCH --partition=gpu46GB
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=24G
+#SBATCH --time=01:00:00
+#SBATCH --output=logs/s54v2_r10-%j.out
+#SBATCH --error=logs/s54v2_r10-%j.err
+
+set -euo pipefail
+
+cd /beegfs1/home/aryp26yc/projects/kc_l_v2_clean
+
+export PYTHON_BIN=/home/aryp26yc/venvs/kc_l_v2/bin/python
+export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
+export LD_LIBRARY_PATH=/beegfs1/software/python/python-3.11.3/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+
+echo "==== job context ===="
+date -u
+hostname
+echo "PYTHON_BIN=$PYTHON_BIN"
+"$PYTHON_BIN" --version
+echo "PWD=$PWD"
+
+echo
+echo "==== source guard: expected Step 5.4 v2 files ===="
+test -f src/kc_l/retrieval_gate/evidence_pack_composition.py
+test -f tests/test_step54_evidence_pack_composition.py
+ls -l src/kc_l/retrieval_gate/evidence_pack_composition.py tests/test_step54_evidence_pack_composition.py
+
+echo
+echo "==== source guard: no seed-definition active residue in touched files ===="
+if grep -R -nE 'seed_definition|SEED_DEFINITION_FLOOR_ACTIVE_FLAG|hierarchy\.seed_definition|seed_floor_active_count' \
+  src/kc_l/retrieval_gate/evidence_pack_composition.py \
+  tests/test_step54_evidence_pack_composition.py
+then
+  echo "CRITICAL: seed-definition residue found in Step 5.4 v2 touched files."
+  exit 1
+else
+  echo "NO_CRITICAL_SEED_MATCHES"
+fi
+
+echo
+echo "==== source guard: look for v2 semantic-role concepts ===="
+grep -nE 'qualifier|definition_subject|subject alignment|ordered_pack_for_drafting|sibling_contrast|formula_notation|target_binding|candidate_pool_membership|context_completion' \
+  src/kc_l/retrieval_gate/evidence_pack_composition.py \
+  tests/test_step54_evidence_pack_composition.py \
+  | sed -n '1,220p' || true
+
+echo
+echo "==== py_compile ===="
+"$PYTHON_BIN" -m py_compile \
+  src/kc_l/retrieval_gate/evidence_pack_composition.py \
+  tests/test_step54_evidence_pack_composition.py
+
+echo
+echo "==== direct focused tests without pytest ===="
+"$PYTHON_BIN" - <<'PY'
+import importlib.util
+import inspect
+import pathlib
+import sys
+import tempfile
+
+repo = pathlib.Path(".").resolve()
+sys.path.insert(0, str(repo))
+sys.path.insert(0, str(repo / "src"))
+
+path = repo / "tests" / "test_step54_evidence_pack_composition.py"
+spec = importlib.util.spec_from_file_location("test_step54_evidence_pack_composition", path)
+mod = importlib.util.module_from_spec(spec)
+sys.modules[path.stem] = mod
+spec.loader.exec_module(mod)
+
+passed = 0
+for name, fn in sorted(vars(mod).items()):
+    if not name.startswith("test_") or not callable(fn):
+        continue
+    sig = inspect.signature(fn)
+    kwargs = {}
+    with tempfile.TemporaryDirectory() as td:
+        if "tmp_path" in sig.parameters:
+            kwargs["tmp_path"] = pathlib.Path(td)
+        fn(**kwargs)
+    print("PASS", name)
+    passed += 1
+
+print("STEP54_DIRECT_TESTS_OK", passed)
+PY
+
+echo
+echo "==== resolve Step 5.3 manifest robustly ===="
+"$PYTHON_BIN" - <<'PY'
+from pathlib import Path
+import json
+
+root = Path(".")
+ptr = root / "data/processed/kc_evidence_recalibrated/_sets/ACTIVE_STEP5_3_EVIDENCE_SET.txt"
+
+if not ptr.exists():
+    raise SystemExit(f"Missing Step 5.3 active pointer: {ptr}")
+
+raw = ptr.read_text(encoding="utf-8").strip()
+candidates = []
+
+raw_path = Path(raw)
+if raw_path.is_absolute():
+    candidates.append(raw_path)
+else:
+    candidates.append(root / raw_path)
+    candidates.append(root / "data/processed/kc_evidence_recalibrated/_sets" / raw_path.name)
+
+fallbacks = sorted((root / "data/processed/kc_evidence_recalibrated/_sets").glob("*_step5_3_kc_evidence_recalibrated_set.json"))
+candidates.extend(fallbacks[::-1])
+
+chosen = None
+for c in candidates:
+    if c.exists():
+        chosen = c
+        break
+
+if chosen is None:
+    print("ACTIVE_POINTER =", ptr)
+    print("RAW_POINTER_TEXT =", raw)
+    print("CANDIDATES =")
+    for c in candidates:
+        print(" ", c, "exists=", c.exists())
+    raise SystemExit("Could not resolve Step 5.3 set manifest.")
+
+m = json.loads(chosen.read_text(encoding="utf-8"))
+print("STEP53_SET =", chosen.as_posix())
+print("STEP53_RUN_ID =", m.get("run_id"))
+print("STEP53_SET_ID =", m.get("set_id"))
+for k, v in (m.get("artifacts") or {}).items():
+    p = root / v
+    print("ARTIFACT", k, p.as_posix(), "EXISTS", p.exists())
+
+(root / "data/work/cache/diagnostics").mkdir(parents=True, exist_ok=True)
+(root / "data/work/cache/diagnostics/last_resolved_step53_set.txt").write_text(chosen.as_posix(), encoding="utf-8")
+PY
+
+STEP53_SET="$(cat data/work/cache/diagnostics/last_resolved_step53_set.txt)"
+RUN_ID="step54_role_eligibility_v2_r10_$(date -u +%Y%m%d_%H%M%S)"
+
+echo
+echo "==== run Step 5.4 role-eligibility v2 regression slice ===="
+echo "STEP53_SET=$STEP53_SET"
+echo "RUN_ID=$RUN_ID"
+
+"$PYTHON_BIN" steps/step_05_4_evidence_pack_composition/scripts/run_step5_4_evidence_pack_composition.py \
+  --config steps/step_05_4_evidence_pack_composition/resources/step5_4.regression_gemma_slice10.yaml \
+  --step5-3-set-manifest "$STEP53_SET" \
+  --run-id "$RUN_ID"
+
+STEP54_SET="data/processed/kc_evidence_packs/_sets/${RUN_ID}_step5_4_kc_evidence_packs_set.json"
+test -f "$STEP54_SET"
+
+echo
+echo "==== build explicit Step 6.6 override config ===="
+STEP66_CFG="data/work/cache/generated_configs/step6_6.regression_gemma_slice10.with_${RUN_ID}.yaml"
+
+STEP54_SET="$STEP54_SET" STEP66_CFG="$STEP66_CFG" "$PYTHON_BIN" - <<'PY'
+from pathlib import Path
+import os
+import yaml
+
+base = Path("steps/step_06_6_kc_drafting_input_overlay/resources/step6_6.regression_gemma_slice10.yaml")
+if not base.exists():
+    raise SystemExit(f"Missing base Step 6.6 config: {base}")
+
+cfg = yaml.safe_load(base.read_text(encoding="utf-8"))
+cfg.setdefault("inputs", {})["step5_4_set_manifest"] = os.environ["STEP54_SET"]
+
+out = Path(os.environ["STEP66_CFG"])
+out.parent.mkdir(parents=True, exist_ok=True)
+out.write_text(yaml.safe_dump(cfg, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+print("WROTE", out.as_posix())
+print("STEP5_4_SET_MANIFEST", os.environ["STEP54_SET"])
+PY
+
+echo
+echo "==== run Step 6.6 with explicit Step 5.4 manifest ===="
+"$PYTHON_BIN" steps/step_06_6_kc_drafting_input_overlay/scripts/run_step6_6_kc_drafting_input_overlay.py \
+  --config "$STEP66_CFG"
+
+echo
+echo "==== inspect Step 5.4 and Step 6.6 outputs ===="
+STEP54_SET="$STEP54_SET" STEP66_CFG="$STEP66_CFG" "$PYTHON_BIN" - <<'PY'
+from pathlib import Path
+import json
+import os
+from collections import Counter
+
+root = Path(".")
+step54_set = Path(os.environ["STEP54_SET"])
+step54_obj = json.loads(step54_set.read_text(encoding="utf-8"))
+
+packs_path = root / step54_obj["artifacts"]["kc_evidence_packs_jsonl"]
+stats_path = root / step54_obj["artifacts"]["evidence_pack_stats_json"]
+stats = json.loads(stats_path.read_text(encoding="utf-8"))
+packs = [json.loads(line) for line in packs_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+step66_sets = sorted((root / "data/processed/kc_drafting_input_overlay/_sets").glob("*_step6_6_kc_drafting_input_overlay_set.json"))
+if not step66_sets:
+    raise SystemExit("No Step 6.6 set manifests found after run.")
+step66_set = step66_sets[-1]
+step66_obj = json.loads(step66_set.read_text(encoding="utf-8"))
+overlay_path = root / step66_obj["artifacts"]["candidate_sentence_overlay_jsonl"]
+overlay_stats_path = root / step66_obj["artifacts"]["overlay_stats_json"]
+overlay_stats = json.loads(overlay_stats_path.read_text(encoding="utf-8"))
+
+positive_roles = [
+    "definition_kernel",
+    "explanatory_gloss",
+    "formula_notation",
+    "scope_condition",
+    "context_completion",
+    "example_or_procedure",
+]
+
+bad_markers = {
+    "KC_CLF_NB_011": [
+        "decision tree classifier",
+        "knn instances",
+        "mar missing data mechanism",
+        "patients have missing values",
+    ],
+    "KC_CLU_DBS_001": [
+        "a border point is a point that is not a core point",
+        "a border point is not a core point",
+    ],
+    "KC_CLU_DBS_003": [
+        "random component of a measurement error",
+        "notice that some of the noise points are",
+    ],
+    "KC_EVAL_SAMP_003": [
+        "best choice of the hyper-parameter value",
+        "hyper-parameter",
+    ],
+    "KC_CLU_CORE_002": [
+        "precision is only 0.167",
+    ],
+    "KC_CLU_EVAL_001": [
+        "covariance of the random variable",
+        "covariance",
+    ],
+}
+
+print("STEP54_SET =", step54_set.as_posix())
+print("STEP54_STATS =", stats_path.as_posix())
+print("STEP54_PACKS =", packs_path.as_posix())
+print("STEP66_SET =", step66_set.as_posix())
+print("STEP66_OVERLAY =", overlay_path.as_posix())
+print("STEP66_OVERLAY_STATS =", overlay_stats_path.as_posix())
+
+print()
+print("route_breakdown =", stats.get("route_breakdown", {}))
+print("formula_dominance_risk_breakdown =", stats.get("formula_dominance_risk_breakdown", {}))
+print("sibling_contamination_risk_breakdown =", stats.get("sibling_contamination_risk_breakdown", {}))
+print("definition_anchor_present_count =", stats.get("definition_anchor_present_count"))
+print("definition_anchor_natural_language_count =", stats.get("definition_anchor_natural_language_count"))
+print("context_completion_used_count =", stats.get("context_completion_used_count"))
+print("insufficient_reason_breakdown =", stats.get("insufficient_reason_breakdown", {}))
+print("overlay_evidence_pack_available_count =", overlay_stats.get("evidence_pack_available_count"))
+
+ordered_sibling_violations = []
+bad_marker_summary = {}
+
+for row in sorted(packs, key=lambda r: r.get("kc_id", "")):
+    kc_id = row.get("kc_id")
+    q = row.get("pack_quality") or {}
+    slots = row.get("slots") or {}
+    ordered = row.get("ordered_pack_for_drafting") or []
+
+    ordered_roles = [str(item.get("role") or item.get("slot") or "") for item in ordered]
+    if "sibling_contrast" in ordered_roles:
+        ordered_sibling_violations.append(kc_id)
+
+    positive_texts = []
+    for role in positive_roles:
+        for item in slots.get(role) or []:
+            text = item.get("text") or item.get("quote") or item.get("candidate_text") or ""
+            positive_texts.append(" ".join(str(text).split()))
+
+    merged = " ".join(t.lower() for t in positive_texts)
+    matched = [m for m in bad_markers.get(kc_id, []) if m.lower() in merged]
+    bad_marker_summary[kc_id] = matched
+
+    print()
+    print("KC =", kc_id, "|", row.get("canonical_name"))
+    print("  route =", q.get("route"))
+    print("  insufficient_reasons =", q.get("insufficient_reasons", []))
+    print("  definition_anchor_natural_language =", q.get("definition_anchor_natural_language"))
+    print("  formula_risk =", q.get("formula_dominance_risk"))
+    print("  sibling_risk =", q.get("sibling_contamination_risk"))
+    print("  ordered_roles =", ordered_roles)
+    print("  known_bad_rows_removed =", not matched)
+    print("  matched_bad_markers =", matched)
+    print("  definition_kernel =", [item.get("text") for item in (slots.get("definition_kernel") or [])])
+    print("  formula_notation =", [item.get("text") for item in (slots.get("formula_notation") or [])])
+    print("  context_completion =", [item.get("text") for item in (slots.get("context_completion") or [])])
+
+print()
+print("ORDERED_SIBLING_VIOLATIONS =", ordered_sibling_violations)
+print("BAD_MARKER_SUMMARY =", bad_marker_summary)
+
+summary = {
+    "step54_set": step54_set.as_posix(),
+    "step54_stats": stats_path.as_posix(),
+    "step54_packs": packs_path.as_posix(),
+    "step66_set": step66_set.as_posix(),
+    "step66_overlay": overlay_path.as_posix(),
+    "step66_overlay_stats": overlay_stats_path.as_posix(),
+    "step66_cfg": os.environ["STEP66_CFG"],
+    "stats": stats,
+    "overlay_evidence_pack_available_count": overlay_stats.get("evidence_pack_available_count"),
+    "ordered_sibling_violations": ordered_sibling_violations,
+    "bad_marker_summary": bad_marker_summary,
+}
+
+out = root / "data/work/cache/diagnostics" / f"{step54_set.stem}_assessment_summary.json"
+out.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+print("ASSESSMENT_SUMMARY_JSON =", out.as_posix())
+
+if ordered_sibling_violations:
+    raise SystemExit("FAIL: sibling_contrast leaked into ordered_pack_for_drafting.")
+
+critical_bad = {
+    kc: matches
+    for kc, matches in bad_marker_summary.items()
+    if matches
+}
+if critical_bad:
+    print("WARNING: known bad positive markers still present:", critical_bad)
+else:
+    print("KNOWN_BAD_MARKERS_CLEAN")
+PY
+
+echo
+echo "PIPELINE_STEP54_66_V2_OK"

@@ -1,0 +1,27 @@
+runtime_profile:
+  name: hpc_gpu
+  status: future_hpc_runtime_overlay
+  execution_authorized_by_profile_alone: false
+  intended_use: future_hpc_portable_runtime_profile
+
+execution:
+  interpreter_path: UNRESOLVED_HPC_INTERPRETER_OR_WRAPPER
+  launcher_kind: UNRESOLVED_HPC_SCHEDULER_WRAPPER
+  device_mode: cuda
+  current_activation_branch: UNRESOLVED_HPC_EXECUTION_STATE
+
+models:
+  generation:
+    generation_model: gemma4:31b
+    resolved_model_alias: qwen3:30b
+    base_url: http://127.0.0.1:11567
+  reranker:
+    device: cuda
+  gate_llm:
+    resolved_model_alias: qwen3:30b
+    base_url: http://127.0.0.1:11567
+
+runtime:
+  hpc_portable_semantics: true
+  scheduler_policy: UNRESOLVED_HPC_SCHEDULER_POLICY
+  artifact_schema_must_match_local: true

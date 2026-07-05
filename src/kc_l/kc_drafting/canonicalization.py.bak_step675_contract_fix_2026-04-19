@@ -1,0 +1,602 @@
+from __future__ import annotations
+
+import re
+from collections import Counter
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, Mapping, Sequence
+
+from kc_l.utils.json_io import write_json, write_jsonl
+
+
+STEP675_CANONICALIZATION_CONTRACT_VERSION = "step6_75_evidence_grounded_draft_canonicalization_v1"
+
+CANONICALIZATION_MODE_FIELD_MISSING = "field_missing"
+CANONICALIZATION_MODE_IDENTITY = "identity"
+CANONICALIZATION_MODE_DETERMINISTIC_CLEANUP = "deterministic_cleanup"
+CANONICALIZATION_MODE_EXTRACTIVE_SELECTION = "extractive_selection"
+CANONICALIZATION_MODE_EXTRACTIVE_SELECTION_WITH_CLEANUP = "extractive_selection_with_cleanup"
+CANONICALIZATION_MODE_RAW_PASSTHROUGH = "raw_passthrough"
+
+REVIEW_BURDEN_LOW = "low"
+REVIEW_BURDEN_MEDIUM = "medium"
+REVIEW_BURDEN_HIGH = "high"
+
+_DISCOURSE_PREFIXES = (
+    "as previously mentioned",
+    "because ",
+    "consider ",
+    "for example",
+    "for the following",
+    "in figure ",
+    "in the following",
+    "note that",
+    "on the other hand",
+    "suppose ",
+    "thus ",
+    "these ",
+    "this ",
+)
+_EXAMPLE_PREFIXES = (
+    "exercise",
+    "example",
+    "e.g.,",
+)
+_PROCEDURE_PREFIXES = (
+    "add ",
+    "apply ",
+    "assign ",
+    "calculate ",
+    "choose ",
+    "classify ",
+    "comment on ",
+    "compute ",
+    "merge ",
+    "predict ",
+    "repeat ",
+    "select ",
+    "start ",
+    "use ",
+)
+_HISTORY_OR_PROVENANCE_PATTERNS = (
+    r"^definition\s+\d",
+    r"\baccording to\b",
+    r"\bcompared\b",
+    r"\bdescribed in\b",
+    r"\bintroduced by\b",
+    r"\bnamed by\b",
+    r"\bstudied\b",
+    r"\bsuggests that\b",
+    r"\bwas named\b",
+)
+_DEFINITION_VERBS = (
+    "are",
+    "constructs",
+    "defined as",
+    "denotes",
+    "describes",
+    "is",
+    "means",
+    "measures",
+    "operates",
+    "predicts",
+    "refers to",
+    "uses",
+)
+_STRONG_RISK_FLAGS = {
+    "discourse_led_surface",
+    "example_or_exercise_led_surface",
+    "formula_led_surface",
+    "fragmentary_surface",
+    "history_or_provenance_surface",
+    "procedure_led_surface",
+    "support_row_not_definition_like",
+}
+
+
+@dataclass(frozen=True)
+class CanonicalizationEmissionResult:
+    output_dir: Path
+    bundle_path: Path
+    stats_path: Path
+    bundle_count: int
+    stats: Dict[str, Any]
+
+
+@dataclass(frozen=True)
+class FieldCanonicalizationResult:
+    candidate: Dict[str, Any]
+    metadata: Dict[str, Any]
+
+
+def _as_text(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _normalize_ws(text: Any) -> str:
+    return re.sub(r"\s+", " ", str(text or "")).strip()
+
+
+def _text_key(text: Any) -> str:
+    return re.sub(r"[^a-z0-9]+", "", _normalize_ws(text).lower())
+
+
+def _string_list(values: Any) -> list[str]:
+    out: list[str] = []
+    for value in values or []:
+        text = _as_text(value)
+        if text and text not in out:
+            out.append(text)
+    return out
+
+
+def _candidate_payload(bundle: Mapping[str, Any], field_name: str) -> Dict[str, Any]:
+    value = bundle.get(field_name)
+    if isinstance(value, Mapping):
+        return dict(value)
+    return {}
+
+
+def _field_selection_reason(field_name: str) -> str:
+    return f"step6_75_{field_name}_canonicalized"
+
+
+def _strip_leading_scaffold(text: str) -> tuple[str, list[str]]:
+    cleaned = _normalize_ws(text)
+    actions: list[str] = []
+    updated = re.sub(r"^\s*(?:[-*•]+|\(?\d+[.)]|[A-Za-z][.)])\s+", "", cleaned)
+    if updated != cleaned and _normalize_ws(updated):
+        cleaned = _normalize_ws(updated)
+        actions.append("remove_leading_scaffold")
+    return cleaned, actions
+
+
+def _cleanup_spacing_artifacts(text: str) -> tuple[str, list[str]]:
+    cleaned = _normalize_ws(text)
+    actions: list[str] = []
+    updated = re.sub(r"\s+([,.;:!?])", r"\1", cleaned)
+    updated = re.sub(r"\(\s+", "(", updated)
+    updated = re.sub(r"\s+\)", ")", updated)
+    updated = _normalize_ws(updated)
+    if updated != cleaned:
+        cleaned = updated
+        actions.append("cleanup_spacing_artifacts")
+    return cleaned, actions
+
+
+def _looks_sentence_like(text: str) -> bool:
+    cleaned = _normalize_ws(text)
+    if len(re.findall(r"[A-Za-z0-9]+", cleaned)) < 6:
+        return False
+    lowered = cleaned.lower()
+    if any(f" {verb} " in f" {lowered} " for verb in _DEFINITION_VERBS):
+        return True
+    return bool(re.search(r"[.!?]$", cleaned))
+
+
+def _ensure_terminal_period(text: str) -> tuple[str, list[str]]:
+    cleaned = _normalize_ws(text)
+    if not cleaned or re.search(r"[.!?]$", cleaned):
+        return cleaned, []
+    if not _looks_sentence_like(cleaned):
+        return cleaned, []
+    return f"{cleaned}.", ["add_terminal_period"]
+
+
+def _trim_dangling_tail_fragment(text: str) -> tuple[str, list[str]]:
+    cleaned = _normalize_ws(text)
+    actions: list[str] = []
+    updated = re.sub(r",?\s*i\.e\.,?[.!?]?\s*$", "", cleaned, flags=re.IGNORECASE)
+    updated = re.sub(r",?\s*e\.g\.,?[.!?]?\s*$", "", updated, flags=re.IGNORECASE)
+    updated = re.sub(r"[:;]\s*$", "", updated)
+    updated = _normalize_ws(updated.rstrip(" ,;:"))
+    if not updated or updated == cleaned:
+        return cleaned, actions
+    if not _looks_sentence_like(updated):
+        return cleaned, actions
+    updated, period_actions = _ensure_terminal_period(updated)
+    actions.append("trim_dangling_tail_fragment")
+    actions.extend(period_actions)
+    return updated, actions
+
+
+def _deterministic_cleanup(text: str) -> tuple[str, list[str]]:
+    cleaned = _normalize_ws(text)
+    actions: list[str] = []
+    cleaned, new_actions = _strip_leading_scaffold(cleaned)
+    actions.extend(new_actions)
+    cleaned, new_actions = _cleanup_spacing_artifacts(cleaned)
+    actions.extend(new_actions)
+    cleaned, new_actions = _trim_dangling_tail_fragment(cleaned)
+    actions.extend(new_actions)
+    cleaned = _normalize_ws(cleaned)
+    return cleaned, actions
+
+
+def _name_variants(canonical_name: str, aliases: Sequence[str]) -> list[str]:
+    out: list[str] = []
+    for raw_value in [canonical_name, *aliases]:
+        text = _normalize_ws(raw_value)
+        if text and text.lower() not in {item.lower() for item in out}:
+            out.append(text)
+    return out
+
+
+def _surface_risk_flags(
+    text: str,
+    *,
+    row: Mapping[str, Any] | None = None,
+) -> list[str]:
+    cleaned = _normalize_ws(text)
+    lowered = cleaned.lower()
+    flags: list[str] = []
+    if not cleaned:
+        return ["missing_surface"]
+    if any(lowered.startswith(prefix) for prefix in _DISCOURSE_PREFIXES):
+        flags.append("discourse_led_surface")
+    if any(lowered.startswith(prefix) for prefix in _EXAMPLE_PREFIXES):
+        flags.append("example_or_exercise_led_surface")
+    if any(lowered.startswith(prefix) for prefix in _PROCEDURE_PREFIXES):
+        flags.append("procedure_led_surface")
+    if any(re.search(pattern, lowered) for pattern in _HISTORY_OR_PROVENANCE_PATTERNS):
+        flags.append("history_or_provenance_surface")
+    alpha_count = len(re.findall(r"[A-Za-z]", cleaned))
+    symbol_count = len(re.findall(r"[=∑∏±×÷<>/\\^_{}[\]]", cleaned))
+    if alpha_count == 0 or (symbol_count >= 4 and alpha_count < 18):
+        flags.append("formula_led_surface")
+    if re.match(r"^(?:and|or|but|because|thus|therefore)\b", lowered):
+        flags.append("fragmentary_surface")
+    elif not _looks_sentence_like(cleaned) and len(re.findall(r"[A-Za-z0-9]+", cleaned)) < 8:
+        flags.append("fragmentary_surface")
+    if isinstance(row, Mapping):
+        if row.get("is_definition_like") is False:
+            flags.append("support_row_not_definition_like")
+        if row.get("is_procedure_like") is True:
+            flags.append("support_row_procedure_like")
+        heading = _normalize_ws(row.get("patch_heading") or "").lower()
+        if heading.startswith("exercise") or " exercises" in heading:
+            flags.append("exercise_heading_source")
+    return [flag for flag in flags if flag]
+
+
+def _definition_surface_quality(
+    text: str,
+    *,
+    canonical_name: str,
+    aliases: Sequence[str],
+    row: Mapping[str, Any] | None = None,
+) -> Dict[str, Any]:
+    cleaned = _normalize_ws(text)
+    lowered = cleaned.lower()
+    variants = _name_variants(canonical_name, aliases)
+    has_name_anchor = any(variant.lower() in lowered for variant in variants if variant)
+    has_definition_verb = any(f" {verb} " in f" {lowered} " for verb in _DEFINITION_VERBS)
+    risk_flags = _surface_risk_flags(cleaned, row=row)
+    strong_risk_count = sum(1 for flag in risk_flags if flag in _STRONG_RISK_FLAGS)
+    standalone_definition_quality = (
+        bool(cleaned)
+        and _looks_sentence_like(cleaned)
+        and strong_risk_count == 0
+        and (has_name_anchor or has_definition_verb or bool((row or {}).get("is_definition_like")))
+    )
+    return {
+        "risk_flags": risk_flags,
+        "has_name_anchor": has_name_anchor,
+        "has_definition_verb": has_definition_verb,
+        "standalone_definition_quality": standalone_definition_quality,
+        "strong_risk_count": strong_risk_count,
+    }
+
+
+def _quote_surface_selection_candidate(
+    *,
+    raw_text: str,
+    raw_source_text_field: str,
+    support_ids: Sequence[str],
+    overlay_by_id: Mapping[str, Mapping[str, Any]],
+    canonical_name: str,
+    aliases: Sequence[str],
+) -> Dict[str, Any]:
+    raw_key = _text_key(raw_text)
+    if not raw_key or raw_source_text_field != "source_block_text":
+        return {}
+    best_candidate: Dict[str, Any] = {}
+    best_score = -1.0
+    for support_id in support_ids:
+        row = dict(overlay_by_id.get(support_id) or {})
+        quote_surface = _as_text(row.get("quote_surface"))
+        if not quote_surface:
+            continue
+        cleaned_quote, cleanup_actions = _deterministic_cleanup(quote_surface)
+        if not cleaned_quote:
+            continue
+        quote_key = _text_key(cleaned_quote)
+        if not quote_key:
+            continue
+        source_block_key = _text_key(row.get("source_block_text") or raw_text)
+        if quote_key not in raw_key and quote_key not in source_block_key:
+            continue
+        quality = _definition_surface_quality(
+            cleaned_quote,
+            canonical_name=canonical_name,
+            aliases=aliases,
+            row=row,
+        )
+        if not quality["standalone_definition_quality"]:
+            continue
+        score = 10.0 - float(quality["strong_risk_count"])
+        if quote_key == raw_key:
+            score += 2.0
+        if len(cleaned_quote) < len(raw_text):
+            score += 1.0
+        if bool(row.get("is_definition_like")):
+            score += 1.0
+        if score <= best_score:
+            continue
+        best_score = score
+        best_candidate = {
+            "text": cleaned_quote,
+            "source_text_field": "quote_surface",
+            "supporting_overlay_candidate_ids": [str(support_id)],
+            "actions": ["prefer_same_evidence_quote_surface", *cleanup_actions],
+            "risk_flags": list(quality["risk_flags"]),
+        }
+    return best_candidate
+
+
+def _review_burden_estimate(
+    *,
+    mode: str,
+    risk_flags: Sequence[str],
+) -> str:
+    if mode in {CANONICALIZATION_MODE_FIELD_MISSING, CANONICALIZATION_MODE_RAW_PASSTHROUGH}:
+        return REVIEW_BURDEN_HIGH
+    if risk_flags:
+        return REVIEW_BURDEN_MEDIUM
+    return REVIEW_BURDEN_LOW
+
+
+def _aggregate_review_burden(values: Sequence[str]) -> str:
+    if REVIEW_BURDEN_HIGH in values:
+        return REVIEW_BURDEN_HIGH
+    if REVIEW_BURDEN_MEDIUM in values:
+        return REVIEW_BURDEN_MEDIUM
+    return REVIEW_BURDEN_LOW
+
+
+def canonicalize_bundle_field(
+    *,
+    bundle: Mapping[str, Any],
+    field_name: str,
+    overlay_by_id: Mapping[str, Mapping[str, Any]],
+    allow_extractive_selection: bool,
+) -> FieldCanonicalizationResult:
+    raw_candidate = _candidate_payload(bundle, field_name)
+    raw_text = _as_text(raw_candidate.get("text"))
+    raw_status = _as_text(raw_candidate.get("status"))
+    raw_source_text_field = _as_text(raw_candidate.get("source_text_field"))
+    raw_support_ids = _string_list(raw_candidate.get("supporting_overlay_candidate_ids"))
+    canonical_name = _as_text(bundle.get("canonical_name"))
+    aliases = _string_list(bundle.get("aliases"))
+
+    if not raw_text:
+        candidate = {
+            "status": raw_status or "abstained",
+            "text": raw_text,
+            "supporting_overlay_candidate_ids": raw_support_ids,
+            "selection_reason": _field_selection_reason(field_name),
+            "source_text_field": raw_source_text_field,
+        }
+        metadata = {
+            "raw_text": raw_text,
+            "raw_source_text_field": raw_source_text_field,
+            "raw_supporting_overlay_candidate_ids": raw_support_ids,
+            "canonicalization_mode": CANONICALIZATION_MODE_FIELD_MISSING,
+            "canonicalization_actions": [],
+            "canonicalization_evidence_ids": raw_support_ids,
+            "canonicalization_risk_flags": ["missing_surface"] if raw_status != "abstained" else [],
+            "residual_uncertainty_flags": ["missing_surface"] if raw_status != "abstained" else [],
+            "review_burden_estimate": REVIEW_BURDEN_HIGH if raw_status != "abstained" else REVIEW_BURDEN_MEDIUM,
+            "changed": False,
+            "cannot_safely_canonicalize": False,
+            "surface_origin": "raw_candidate",
+        }
+        return FieldCanonicalizationResult(candidate=candidate, metadata=metadata)
+
+    cleaned_raw_text, cleanup_actions = _deterministic_cleanup(raw_text)
+    raw_quality = _definition_surface_quality(
+        cleaned_raw_text,
+        canonical_name=canonical_name,
+        aliases=aliases,
+    ) if field_name == "definition_full_candidate" else {
+        "risk_flags": _surface_risk_flags(cleaned_raw_text),
+        "strong_risk_count": 0,
+    }
+
+    selected_text = cleaned_raw_text
+    selected_source_text_field = raw_source_text_field
+    selected_support_ids = list(raw_support_ids)
+    selected_actions = list(cleanup_actions)
+    selected_risk_flags = list(raw_quality.get("risk_flags") or [])
+    mode = CANONICALIZATION_MODE_IDENTITY if not cleanup_actions else CANONICALIZATION_MODE_DETERMINISTIC_CLEANUP
+    surface_origin = "raw_candidate"
+
+    if field_name == "definition_full_candidate" and allow_extractive_selection:
+        quote_candidate = _quote_surface_selection_candidate(
+            raw_text=raw_text,
+            raw_source_text_field=raw_source_text_field,
+            support_ids=raw_support_ids,
+            overlay_by_id=overlay_by_id,
+            canonical_name=canonical_name,
+            aliases=aliases,
+        )
+        if quote_candidate:
+            selected_text = _as_text(quote_candidate.get("text"))
+            selected_source_text_field = _as_text(quote_candidate.get("source_text_field"))
+            selected_support_ids = _string_list(quote_candidate.get("supporting_overlay_candidate_ids"))
+            selected_actions = _string_list(quote_candidate.get("actions"))
+            selected_risk_flags = _string_list(quote_candidate.get("risk_flags"))
+            surface_origin = "support_quote_surface"
+            mode = (
+                CANONICALIZATION_MODE_EXTRACTIVE_SELECTION_WITH_CLEANUP
+                if any(action != "prefer_same_evidence_quote_surface" for action in selected_actions)
+                else CANONICALIZATION_MODE_EXTRACTIVE_SELECTION
+            )
+
+    strong_risk_count = sum(1 for flag in selected_risk_flags if flag in _STRONG_RISK_FLAGS)
+    cannot_safely_canonicalize = mode == CANONICALIZATION_MODE_IDENTITY and strong_risk_count > 0 and not selected_actions
+    if cannot_safely_canonicalize:
+        mode = CANONICALIZATION_MODE_RAW_PASSTHROUGH
+        selected_text = raw_text
+        selected_source_text_field = raw_source_text_field
+        selected_support_ids = list(raw_support_ids)
+        selected_actions = []
+        selected_risk_flags = list(raw_quality.get("risk_flags") or [])
+        surface_origin = "raw_candidate"
+
+    review_burden = _review_burden_estimate(mode=mode, risk_flags=selected_risk_flags)
+    candidate = {
+        "status": raw_status or "grounded",
+        "text": selected_text,
+        "supporting_overlay_candidate_ids": selected_support_ids,
+        "selection_reason": _field_selection_reason(field_name),
+        "source_text_field": selected_source_text_field,
+    }
+    metadata = {
+        "raw_text": raw_text,
+        "raw_source_text_field": raw_source_text_field,
+        "raw_supporting_overlay_candidate_ids": raw_support_ids,
+        "canonicalization_mode": mode,
+        "canonicalization_actions": selected_actions,
+        "canonicalization_evidence_ids": selected_support_ids,
+        "canonicalization_risk_flags": selected_risk_flags,
+        "residual_uncertainty_flags": selected_risk_flags,
+        "review_burden_estimate": review_burden,
+        "changed": (
+            _text_key(selected_text) != _text_key(raw_text)
+            or selected_source_text_field != raw_source_text_field
+        ),
+        "cannot_safely_canonicalize": mode == CANONICALIZATION_MODE_RAW_PASSTHROUGH,
+        "surface_origin": surface_origin,
+    }
+    return FieldCanonicalizationResult(candidate=candidate, metadata=metadata)
+
+
+def canonicalize_draft_bundle_row(
+    bundle: Mapping[str, Any],
+    *,
+    overlay_by_id: Mapping[str, Mapping[str, Any]],
+    allow_definition_extractive_selection: bool = True,
+    allow_scope_extractive_selection: bool = False,
+) -> Dict[str, Any]:
+    definition_result = canonicalize_bundle_field(
+        bundle=bundle,
+        field_name="definition_full_candidate",
+        overlay_by_id=overlay_by_id,
+        allow_extractive_selection=allow_definition_extractive_selection,
+    )
+    scope_result = canonicalize_bundle_field(
+        bundle=bundle,
+        field_name="scope_candidate",
+        overlay_by_id=overlay_by_id,
+        allow_extractive_selection=allow_scope_extractive_selection,
+    )
+
+    review_burden = _aggregate_review_burden(
+        [
+            _as_text(definition_result.metadata.get("review_burden_estimate")),
+            _as_text(scope_result.metadata.get("review_burden_estimate")),
+        ]
+    )
+    aggregate_risk_flags = _string_list(
+        [
+            *list(definition_result.metadata.get("canonicalization_risk_flags") or []),
+            *list(scope_result.metadata.get("canonicalization_risk_flags") or []),
+        ]
+    )
+
+    output = dict(bundle)
+    output["canonicalization_contract_version"] = STEP675_CANONICALIZATION_CONTRACT_VERSION
+    output["definition_full_candidate_canonicalized"] = definition_result.candidate
+    output["scope_candidate_canonicalized"] = scope_result.candidate
+    output["canonicalization_metadata"] = {
+        "definition_full_candidate": definition_result.metadata,
+        "scope_candidate": scope_result.metadata,
+    }
+    output["canonicalization_risk_flags"] = aggregate_risk_flags
+    output["review_burden_estimate"] = review_burden
+    return output
+
+
+def emit_canonicalized_draft_bundles(
+    *,
+    output_dir: Path,
+    draft_rows: Sequence[Mapping[str, Any]],
+    overlay_rows: Sequence[Mapping[str, Any]],
+    allow_definition_extractive_selection: bool = True,
+    allow_scope_extractive_selection: bool = False,
+) -> CanonicalizationEmissionResult:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    overlay_by_id = {
+        _as_text(row.get("overlay_candidate_id")): dict(row)
+        for row in overlay_rows
+        if _as_text(row.get("overlay_candidate_id"))
+    }
+    output_rows: list[dict[str, Any]] = []
+    field_mode_counts: dict[str, Counter[str]] = {
+        "definition_full_candidate": Counter(),
+        "scope_candidate": Counter(),
+    }
+    field_action_counts: dict[str, Counter[str]] = {
+        "definition_full_candidate": Counter(),
+        "scope_candidate": Counter(),
+    }
+    risk_flag_counts: Counter[str] = Counter()
+    review_burden_counts: Counter[str] = Counter()
+    changed_bundle_count = 0
+
+    for bundle in draft_rows:
+        output = canonicalize_draft_bundle_row(
+            bundle,
+            overlay_by_id=overlay_by_id,
+            allow_definition_extractive_selection=allow_definition_extractive_selection,
+            allow_scope_extractive_selection=allow_scope_extractive_selection,
+        )
+        output_rows.append(output)
+
+        metadata = dict(output.get("canonicalization_metadata") or {})
+        bundle_changed = False
+        for field_name in ("definition_full_candidate", "scope_candidate"):
+            field_meta = dict(metadata.get(field_name) or {})
+            field_mode_counts[field_name][_as_text(field_meta.get("canonicalization_mode")) or CANONICALIZATION_MODE_FIELD_MISSING] += 1
+            for action in _string_list(field_meta.get("canonicalization_actions")):
+                field_action_counts[field_name][action] += 1
+            for flag in _string_list(field_meta.get("canonicalization_risk_flags")):
+                risk_flag_counts[flag] += 1
+            bundle_changed = bundle_changed or bool(field_meta.get("changed"))
+        if bundle_changed:
+            changed_bundle_count += 1
+        review_burden_counts[_as_text(output.get("review_burden_estimate")) or REVIEW_BURDEN_LOW] += 1
+
+    bundle_path = output_dir / "kc_draft_bundles_canonicalized.jsonl"
+    stats_path = output_dir / "canonicalization_stats.json"
+    write_jsonl(bundle_path, output_rows)
+    stats = {
+        "canonicalization_contract_version": STEP675_CANONICALIZATION_CONTRACT_VERSION,
+        "bundle_count": len(output_rows),
+        "changed_bundle_count": changed_bundle_count,
+        "field_mode_counts": {field_name: dict(counter) for field_name, counter in field_mode_counts.items()},
+        "field_action_counts": {field_name: dict(counter) for field_name, counter in field_action_counts.items()},
+        "risk_flag_counts": dict(risk_flag_counts),
+        "review_burden_counts": dict(review_burden_counts),
+    }
+    write_json(stats_path, stats)
+    return CanonicalizationEmissionResult(
+        output_dir=output_dir,
+        bundle_path=bundle_path,
+        stats_path=stats_path,
+        bundle_count=len(output_rows),
+        stats=stats,
+    )

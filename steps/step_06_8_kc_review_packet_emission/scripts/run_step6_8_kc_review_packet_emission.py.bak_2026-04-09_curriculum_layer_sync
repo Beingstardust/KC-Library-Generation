@@ -1,0 +1,315 @@
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+try:
+    import yaml  # type: ignore
+except Exception:
+    yaml = None
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_SRC = REPO_ROOT / "src"
+if str(REPO_SRC) not in sys.path:
+    sys.path.insert(0, str(REPO_SRC))
+
+from kc_l.audit.manifests import build_input_manifest, build_output_manifest, env_snapshot, try_cmd_version
+from kc_l.kc.restarted_review_packets import emit_restarted_review_packets_from_draft_bundles
+from kc_l.utils.json_io import read_json, read_jsonl, write_json
+
+
+DEFAULT_CONFIG = Path("steps/step_06_8_kc_review_packet_emission/resources/step6_8.slice10.yaml")
+
+
+def now_utc_iso() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def utc_stamp() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d_%H%M%S")
+
+
+def read_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
+
+
+def load_yaml_or_json(path: Path) -> Dict[str, Any]:
+    text = read_text(path)
+    if yaml is not None:
+        obj = yaml.safe_load(text)
+    else:
+        obj = json.loads(text)
+    if not isinstance(obj, dict):
+        raise RuntimeError(f"Expected mapping at config root: {path}")
+    return obj
+
+
+def resolve_repo_path(raw_path: Any, *, base_dir: Optional[Path] = None) -> Path:
+    candidate = Path(str(raw_path))
+    if candidate.is_absolute():
+        return candidate
+    root = base_dir if base_dir is not None else REPO_ROOT
+    return (root / candidate).resolve()
+
+
+def rel_path(path: Path) -> str:
+    return path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
+
+
+def choose_run_paths(processed_root: Path, runs_root: Path, sets_root: Path) -> Dict[str, Path]:
+    base_stamp = utc_stamp()
+    suffix = 0
+    while True:
+        run_id = base_stamp if suffix == 0 else f"{base_stamp}_{suffix:02d}"
+        processed_dir = (processed_root / run_id).resolve()
+        audit_dir = (runs_root / f"{run_id}_step6_8").resolve()
+        set_path = (sets_root / f"{run_id}_step6_8_kc_review_packets_restarted_set.json").resolve()
+        if not processed_dir.exists() and not audit_dir.exists() and not set_path.exists():
+            return {
+                "run_id_step6_8": Path(run_id),
+                "processed_dir": processed_dir,
+                "audit_dir": audit_dir,
+                "set_path": set_path,
+            }
+        suffix += 1
+
+
+def copy_config_snapshot(config_path: Path, audit_dir: Path) -> Path:
+    target = audit_dir / "config_snapshot.yaml"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(config_path, target)
+    return target
+
+
+def resolve_active_set_manifest(pointer_path: Path) -> Path:
+    active_name = read_text(pointer_path).strip()
+    if not active_name:
+        raise RuntimeError(f"Empty active pointer: {pointer_path}")
+    return (pointer_path.parent / active_name).resolve()
+
+
+def resolve_preferred_set_manifest(
+    local_pointer_path: Path,
+    *,
+    fallback_pointer_path: Optional[Path] = None,
+    fallback_target_path: Optional[Path] = None,
+) -> tuple[Optional[Path], Path]:
+    if local_pointer_path.exists():
+        return local_pointer_path, resolve_active_set_manifest(local_pointer_path)
+
+    if fallback_target_path is not None and fallback_target_path.exists():
+        if fallback_pointer_path is not None and fallback_pointer_path.exists():
+            return fallback_pointer_path, fallback_target_path.resolve()
+        return None, fallback_target_path.resolve()
+
+    checked = [str(local_pointer_path)]
+    if fallback_pointer_path is not None:
+        checked.append(str(fallback_pointer_path))
+    if fallback_target_path is not None:
+        checked.append(str(fallback_target_path))
+    raise FileNotFoundError("No usable set-manifest surface found. Checked: " + ", ".join(checked))
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Emit restarted review packets from bounded Step 6.7 draft bundles.")
+    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+    config_path = resolve_repo_path(args.config)
+    cfg = load_yaml_or_json(config_path)
+
+    input_cfg = dict(cfg.get("inputs") or {})
+    output_cfg = dict(cfg.get("outputs") or {})
+
+    processed_root = resolve_repo_path(output_cfg.get("processed_root") or "data/processed/kc_review_packets_restarted")
+    sets_root = resolve_repo_path(output_cfg.get("sets_root") or "data/processed/kc_review_packets_restarted/_sets")
+    runs_root = resolve_repo_path(output_cfg.get("runs_root") or "data/runs")
+
+    step6_7_set_path = resolve_repo_path(
+        input_cfg.get("step6_7_set_manifest")
+        or "data/processed/kc_drafts/_sets/2026-03-23_001608_step6_7_kc_drafts_set.json"
+    )
+    step6_7_set_obj = read_json(step6_7_set_path)
+
+    step6_6_set_manifest_path = resolve_repo_path(
+        step6_7_set_obj.get("upstream", {}).get("step6_6_set_manifest_json")
+        or "data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json"
+    )
+    step6_6_set_obj = read_json(step6_6_set_manifest_path)
+
+    bundle_path = resolve_repo_path(step6_7_set_obj.get("artifacts", {}).get("kc_draft_bundles_jsonl"))
+    draft_stats_path = resolve_repo_path(step6_7_set_obj.get("artifacts", {}).get("draft_stats_json"))
+    draft_rows = read_jsonl(bundle_path)
+    source_processed_dir = bundle_path.parent
+
+    local_step4_pointer = resolve_repo_path("data/processed/retrieval_index/_sets/ACTIVE_STEP4_SET.txt")
+    local_step4_5_pointer = resolve_repo_path("data/processed/retrieval_sentence_overlay/_sets/ACTIVE_STEP4_5_SENTENCE_SET.txt")
+
+    fallback_step4_pointer = (
+        resolve_repo_path(step6_6_set_obj.get("upstream", {}).get("step4_active_set_pointer"))
+        if step6_6_set_obj.get("upstream", {}).get("step4_active_set_pointer")
+        else None
+    )
+    fallback_step4_target = (
+        resolve_repo_path(step6_6_set_obj.get("upstream", {}).get("step4_active_set_target"))
+        if step6_6_set_obj.get("upstream", {}).get("step4_active_set_target")
+        else None
+    )
+    fallback_step4_5_pointer = (
+        resolve_repo_path(step6_6_set_obj.get("upstream", {}).get("step4_5_active_set_pointer"))
+        if step6_6_set_obj.get("upstream", {}).get("step4_5_active_set_pointer")
+        else None
+    )
+    fallback_step4_5_target = (
+        resolve_repo_path(step6_6_set_obj.get("upstream", {}).get("step4_5_active_set_target"))
+        if step6_6_set_obj.get("upstream", {}).get("step4_5_active_set_target")
+        else None
+    )
+
+    step4_pointer, step4_set_manifest_path = resolve_preferred_set_manifest(
+        local_step4_pointer,
+        fallback_pointer_path=fallback_step4_pointer,
+        fallback_target_path=fallback_step4_target,
+    )
+    step4_5_pointer, step4_5_set_manifest_path = resolve_preferred_set_manifest(
+        local_step4_5_pointer,
+        fallback_pointer_path=fallback_step4_5_pointer,
+        fallback_target_path=fallback_step4_5_target,
+    )
+
+    step4_set_id = str(read_json(step4_set_manifest_path).get("set_id") or step4_set_manifest_path.stem)
+    step4_5_set_id = str(read_json(step4_5_set_manifest_path).get("set_id") or step4_5_set_manifest_path.stem)
+
+    step5_set_id = str(draft_rows[0].get("source_set_id") or "") if draft_rows else ""
+    step6_6_set_id = str(
+        step6_6_set_obj.get("set_id")
+        or (draft_rows[0].get("draft_input_overlay_set_id") if draft_rows else "")
+        or ""
+    )
+    step6_7_set_id = str(step6_7_set_obj.get("set_id") or "")
+
+    run_paths = choose_run_paths(processed_root, runs_root, sets_root)
+    run_id = str(run_paths["run_id_step6_8"])
+    processed_dir = run_paths["processed_dir"]
+    audit_dir = run_paths["audit_dir"]
+    set_path = run_paths["set_path"]
+    processed_dir.mkdir(parents=True, exist_ok=False)
+    audit_dir.mkdir(parents=True, exist_ok=False)
+    sets_root.mkdir(parents=True, exist_ok=True)
+
+    config_snapshot_path = copy_config_snapshot(config_path, audit_dir)
+
+    result = emit_restarted_review_packets_from_draft_bundles(
+        source_processed_dir=source_processed_dir,
+        output_dir=processed_dir,
+        draft_rows=draft_rows,
+        step4_set_id=step4_set_id,
+        step4_5_set_id=step4_5_set_id,
+        step5_set_id=step5_set_id,
+        step6_6_set_id=step6_6_set_id,
+        step6_7_set_id=step6_7_set_id,
+        step6_8_run_id=run_id,
+    )
+
+    packet_summary = read_json(result.summary_path)
+    input_manifest_paths = [
+        config_path,
+        step6_7_set_path,
+        step6_6_set_manifest_path,
+        bundle_path,
+        draft_stats_path,
+        step4_set_manifest_path,
+        step4_5_set_manifest_path,
+    ]
+    if step4_pointer is not None:
+        input_manifest_paths.append(step4_pointer)
+    if step4_5_pointer is not None:
+        input_manifest_paths.append(step4_5_pointer)
+
+    input_manifest = build_input_manifest(input_manifest_paths)
+    write_json(audit_dir / "input_manifest.json", input_manifest)
+
+    summary = {
+        "run_id": run_id,
+        "created_utc": now_utc_iso(),
+        "source_set_ids": {
+            "step4": step4_set_id,
+            "step4_5": step4_5_set_id,
+            "step5_3": step5_set_id,
+            "step6_6": step6_6_set_id,
+            "step6_7": step6_7_set_id,
+        },
+        "source_processed_dir": rel_path(source_processed_dir),
+        "stats": packet_summary,
+        "env": env_snapshot(),
+        "tool_versions": {
+            "python": try_cmd_version([sys.executable, "--version"]),
+        },
+    }
+    write_json(audit_dir / "summary.json", summary)
+
+    set_manifest = {
+        "schema_version": "1.0",
+        "kind": "step6_8_kc_review_packets_restarted_set",
+        "set_id": f"{run_id}_step6_8_kc_review_packets_restarted_set",
+        "created_utc": now_utc_iso(),
+        "run_id_step6_8": run_id,
+        "artifacts": {
+            "review_packet_jsonl": rel_path(result.packet_path),
+            "review_packet_summary_json": rel_path(result.summary_path),
+            "review_packet_preview_md": rel_path(result.preview_path),
+        },
+        "upstream": {
+            "step6_7_set_manifest_json": rel_path(step6_7_set_path),
+            "step6_6_set_manifest_json": rel_path(step6_6_set_manifest_path),
+            "kc_draft_bundles_jsonl": rel_path(bundle_path),
+            "draft_stats_json": rel_path(draft_stats_path),
+        },
+        "slice": {
+            "included_kcs": list(packet_summary.get("included_kcs") or []),
+            "excluded_kcs": list(packet_summary.get("excluded_kcs") or []),
+        },
+        "audit": {
+            "run_dir": rel_path(audit_dir),
+            "config_snapshot": rel_path(config_snapshot_path),
+            "input_manifest": rel_path(audit_dir / "input_manifest.json"),
+            "summary": rel_path(audit_dir / "summary.json"),
+            "output_manifest": rel_path(audit_dir / "output_manifest.json"),
+        },
+    }
+    write_json(set_path, set_manifest)
+
+    output_manifest = {
+        "processed_outputs": build_output_manifest(processed_dir),
+        "audit_outputs": build_output_manifest(audit_dir),
+        "set_manifest": {
+            "path": rel_path(set_path),
+        },
+    }
+    write_json(audit_dir / "output_manifest.json", output_manifest)
+
+    print(
+        json.dumps(
+            {
+                "run_id": run_id,
+                "processed_dir": rel_path(processed_dir),
+                "audit_dir": rel_path(audit_dir),
+                "packet_count": result.packet_count,
+                "excluded_candidate_count": result.excluded_candidate_count,
+            },
+            indent=2,
+        )
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

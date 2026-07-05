@@ -1,0 +1,22 @@
+{
+  "stage": "step67_make_stratified_sidecar_packets40",
+  "run_id": "2026-04-28_161958",
+  "created_utc": "2026-04-28T16:19:58.995846+00:00",
+  "overlay_path": "data/processed/kc_drafting_input_overlay/2026-04-28_002730/candidate_sentence_overlay.jsonl",
+  "out_dir": "data/processed/step67_sidecar_packets_40/2026-04-28_161958",
+  "packets_path": "data/processed/step67_sidecar_packets_40/2026-04-28_161958/evidence_packets.jsonl",
+  "selection_rows_path": "data/processed/step67_sidecar_packets_40/2026-04-28_161958/selection_rows.jsonl",
+  "overlay_row_count": 2592,
+  "available_kc_count": 144,
+  "selected_kc_count": 40,
+  "evidence_per_kc": 8,
+  "category_counter": {
+    "smoke_seed": 10,
+    "review_queue": 11,
+    "contamination_risk": 39,
+    "abbreviation": 9,
+    "strong_clean": 9,
+    "sparse_or_weak_definition_support": 4
+  },
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

@@ -1,0 +1,26 @@
+{
+  "stage": "step67c_validate_lane_aware_drafts",
+  "run_id": "2026-04-28_160703",
+  "created_utc": "2026-04-28T16:07:03.229896+00:00",
+  "lanes_path": "data/processed/step67_sidecar_lane_packets_v4/2026-04-28_155759/lane_packets.jsonl",
+  "drafts_path": "data/processed/step67_sidecar_lane_drafts/2026-04-28_160209/onepass_drafts.jsonl",
+  "out_dir": "data/processed/step67_sidecar_lane_validated/2026-04-28_160703",
+  "packet_count": 10,
+  "draft_row_count": 10,
+  "valid_row_count": 10,
+  "error_row_count": 0,
+  "warning_row_count": 0,
+  "status_counter": {
+    "definition::grounded": 5,
+    "scope::abstained": 7,
+    "scope::grounded": 3,
+    "definition::abstained": 5
+  },
+  "issue_counter": {},
+  "validation_policy": {
+    "definition": "grounded definition must cite at least one definition_lane id and no quarantine/sibling id",
+    "scope": "grounded scope may cite scope, definition, or context lane ids; missing scope_lane support is warning",
+    "abstained": "text and support ids must be empty"
+  },
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

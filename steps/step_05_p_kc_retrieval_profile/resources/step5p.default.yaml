@@ -1,0 +1,24 @@
+inputs:
+  registry_jsonl: ""
+  source_overlay_jsonl: ""
+  exact_kc_ids: []
+  limit_kcs: null
+
+outputs:
+  output_root: "data/processed/kc_retrieval_profiles"
+  set_manifest_root: "data/processed/kc_retrieval_profiles/_sets"
+
+behavior:
+  use_model: false
+  llm_policy: "never"
+  max_snippets_per_kc: 12
+  min_snippet_score: 4.0
+  dynamic_broad_token_min_df: 12
+
+model:
+  provider: "ollama"
+  base_url: "http://localhost:11434"
+  model: "qwen3-14b-kc-8k"
+  temperature: 0
+  think: false
+  timeout_seconds: 240

@@ -1,0 +1,9 @@
+inputs:
+  step6_11_set_manifest: data/processed/kc_library_reviewed_restarted/_sets/2026-03-26_154021_step6_11_kc_library_reviewed_restarted_set.json
+  step6_12_set_manifest: data/processed/kc_library_runtime_restarted/_sets/2026-03-26_154046_step6_12_kc_library_runtime_restarted_set.json
+outputs:
+  processed_root: data/processed/kc_library_retrieval_pilot_restarted
+  sets_root: data/processed/kc_library_retrieval_pilot_restarted/_sets
+  runs_root: data/runs
+query:
+  top_k: 5

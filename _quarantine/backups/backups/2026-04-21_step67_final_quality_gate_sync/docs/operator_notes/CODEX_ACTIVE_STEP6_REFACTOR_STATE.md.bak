@@ -1,0 +1,131 @@
+# CODEX Active Step 6 Refactor State
+
+Date: 2026-04-21
+Repo: `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+Mode: `Mode B: Patch implementation`
+Status: Final bounded Step 6.7 post-selection review-quality gate implemented locally; no full rerun or authoritative Sofja proof yet
+
+## Current Objective
+
+Complete the final bounded local patch before one full authoritative Sofja run:
+
+- keep the role-aware evidence packet and guarded `packet_multicandidate_v1` path from the prior slice
+- add a post-selection gate for selected definition surfaces that are not review-ready
+- preserve KC survival and selected text visibility
+- suppress plain review-ready / plain grounded semantics only when a hard-bad selected surface is detected
+- validate only against frozen local artifacts pinned to `data/processed/kc_drafts/2026-04-19_012531/kc_draft_bundles.jsonl`
+
+## Recovered State Summary
+
+- This local working root is not a Git checkout; all change accounting is file-list based.
+- Strong Step 6.7 baseline is present locally:
+  - `data/processed/kc_drafts/2026-04-19_012531/kc_draft_bundles.jsonl`
+  - baseline counts verified locally: `direct_grounded=74`, `normalized_grounded=37`, `seed_floor_fallback=33`
+- Step 6.75 baseline is present:
+  - `data/processed/kc_draft_canonicalization/2026-04-19_162253/kc_draft_bundles_canonicalized.jsonl`
+- Step 6.8 baseline is present:
+  - `data/processed/kc_review_packets_restarted/2026-04-20_131250/review_packets.jsonl`
+- The local current Step 6.7 alias remains stale/incomplete and must not be used for validation.
+
+## Files Changed In This Session
+
+- `src/kc_l/kc_drafting/heuristic_core.py`
+- `src/kc_l/utils/kc_step67_model_drafting.py`
+- `tests/test_kc_drafting_architecture.py`
+- `CHANGELOG.md`
+- `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+
+## What Changed
+
+- Added `selected_definition_review_quality(...)` in `heuristic_core.py`.
+- The helper flags these hard-bad selected surface families:
+  - `formula_only_anchor`
+  - `broken_fragment`
+  - `procedure_instruction_surface`
+  - `example_update_surface`
+  - `context_only_label_surface`
+  - `severe_ocr_or_broken_math_surface`
+- Updated `build_kc_draft_bundles_llm(...)` in `kc_step67_model_drafting.py` to call the gate after final `definition_full_candidate` selection and before `risk_flags`, `trust_state`, `review_readiness`, and `draft_status` are finalized.
+- Suppressed surfaces keep their selected definition text and hierarchy survival, but receive explicit `selected_definition_*` risk flags and `selected_definition_surface_review_suppressed`.
+- Plain `grounded` trust is downgraded to a qualified trust state through the existing risk/readiness machinery; authoritative definition status counts are not broadly demoted.
+- Added focused tests for formula-only, context/procedure, and bundle-level suppression behavior.
+
+## Commands Run
+
+- `Get-Location`
+- `Select-String -Path src\kc_l\utils\kc_step67_model_drafting.py -Pattern "definition_generation_mode|definition_evidence_packet|review_readiness|trust_state|draft_ready|selected_definition"`
+- `Select-String -Path src\kc_l\kc_drafting\heuristic_core.py -Pattern "DEFINITION_EVIDENCE_PACKET|build_definition_evidence_packet|Risk|review|surface|formula"`
+- `Get-Content docs\operator_notes\CODEX_ACTIVE_STEP6_REFACTOR_STATE.md -TotalCount 220`
+- `Get-Content CHANGELOG.md -TotalCount 80`
+- `Get-Content src\kc_l\kc_drafting\heuristic_core.py | Select-Object -Index (140..230)`
+- `Get-Content src\kc_l\kc_drafting\heuristic_core.py | Select-Object -Index (1900..2270)`
+- `Get-Content src\kc_l\utils\kc_step67_model_drafting.py | Select-Object -Index (5960..6048)`
+- `Get-Content src\kc_l\utils\kc_step67_model_drafting.py | Select-Object -Index (6840..7015)`
+- `Select-String -Path tests\test_kc_drafting_architecture.py -Pattern "review_readiness|trust_state|packet_multicandidate|surface_quality|draft_ready|authoritative_definition_status"`
+- `python -m py_compile src\kc_l\kc_drafting\heuristic_core.py src\kc_l\utils\kc_step67_model_drafting.py tests\test_kc_drafting_architecture.py`
+- Direct callable smoke with `PYTHONPATH=src` for:
+  - `test_selected_definition_review_quality_flags_formula_only_without_gloss`
+  - `test_selected_definition_review_quality_flags_context_and_procedure_surfaces`
+  - `test_build_kc_draft_bundles_llm_suppresses_formula_only_review_ready_surface`
+  - `test_build_kc_draft_bundles_llm_packet_multicandidate_selects_faithful_candidate_without_llm`
+- `python -m pytest tests\test_kc_drafting_architecture.py -k "selected_definition_review_quality or suppresses_formula_only"`
+- Full frozen-artifact validation via inline Python pinned to:
+  - `data/processed/kc_drafts/2026-04-19_012531/kc_draft_bundles.jsonl`
+
+## Validations Passed
+
+- `py_compile` passed on all touched Python files.
+- Direct callable smoke checks passed for the new helper and bundle-level suppression path.
+- Full frozen-artifact validation pinned to `data/processed/kc_drafts/2026-04-19_012531/kc_draft_bundles.jsonl` passed:
+  - `bundle_count=144`
+  - `represented_kc_count=144`
+  - `survives_review_lane_count=144`
+  - baseline status counts unchanged: `direct_grounded=74`, `normalized_grounded=37`, `seed_floor_fallback=33`
+  - curated good cases preserved unsuppressed:
+    - `KC_CLF_NB_001`
+    - `KC_CLU_DBS_001`
+    - `KC_CLU_DBS_002`
+    - `KC_CLU_DBS_003`
+    - `KC_CLU_DBS_009`
+    - `KC_CLU_EVAL_001`
+    - `KC_CLF_DT_011`
+    - `KC_CLF_DT_012`
+  - suspicious unqualified grounded survivors moved from `34` to `0` under simulated gate application
+  - suspicious draft-ready survivors moved from `7` to `0` under simulated gate application
+  - detected family counts: `broken_fragment=5`, `context_only_label_surface=1`, `example_update_surface=10`, `formula_only_anchor=6`, `procedure_instruction_surface=6`, `severe_ocr_or_broken_math_surface=6`
+
+## Validations Failed
+
+- First direct callable smoke failed until `PYTHONPATH=src` was set.
+- `python -m pytest tests\test_kc_drafting_architecture.py -k "selected_definition_review_quality or suppresses_formula_only"` failed because `pytest` is not installed in this local interpreter: `No module named pytest`.
+
+## Latest Important Artifact Paths
+
+- `data/processed/kc_drafts/2026-04-19_012531/kc_draft_bundles.jsonl`
+- `data/processed/kc_drafts/2026-04-19_012531/draft_stats.json`
+- `data/processed/kc_draft_canonicalization/2026-04-19_162253/kc_draft_bundles_canonicalized.jsonl`
+- `data/processed/kc_review_packets_restarted/2026-04-20_131250/review_packets.jsonl`
+- `data/processed/kc_review_packets_restarted/2026-04-20_131250/review_packet_summary.json`
+
+## Current Known Risks
+
+- This is local-mirror validation only; no authoritative Sofja rerun has been performed.
+- The frozen-artifact validation simulates the new quality gate over already emitted `2026-04-19_012531` bundles; it does not prove full-run behavior with newly generated Step 6.7 outputs.
+- The gate intentionally suppresses review-readiness/trust semantics, not hierarchy survival and not selected text visibility.
+- The gate does not implement Step 6.8 dual-lane packetization.
+
+## Files To Sync Back To Sofja If Accepted
+
+- `src/kc_l/kc_drafting/heuristic_core.py`
+- `src/kc_l/utils/kc_step67_model_drafting.py`
+- `tests/test_kc_drafting_architecture.py`
+- `CHANGELOG.md`
+- `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+
+## Exact Next Action
+
+Prepare one authoritative Sofja Step 6.7 run from `/beegfs1/home/aryp26yc/projects/kc_l_v2_clean` with the guarded candidate-family mode enabled (`definition_generation_mode: packet_multicandidate_v1`) and this post-selection quality gate synced. Pin comparison to the strong baseline `2026-04-19_012531`.
+
+## Explicit Stop Point For Resume
+
+Stop local patching here. Do not add another support-binding or review-quality patch family before the full authoritative run. Next work is either one full authoritative Sofja run or restoring the five files listed above from manual backups.

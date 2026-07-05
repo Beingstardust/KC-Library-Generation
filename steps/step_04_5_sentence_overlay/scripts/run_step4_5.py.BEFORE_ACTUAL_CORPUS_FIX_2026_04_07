@@ -1,0 +1,881 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import re
+import shutil
+import sys
+import time
+from collections import Counter
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
+
+try:
+    import yaml  # type: ignore
+except Exception:
+    yaml = None
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_SRC = REPO_ROOT / "src"
+if str(REPO_SRC) not in sys.path:
+    sys.path.insert(0, str(REPO_SRC))
+
+from kc_l.audit.manifests import build_input_manifest, build_output_manifest, env_snapshot, pip_freeze, try_cmd_version
+
+DEFAULT_CONFIG = Path("steps/step_04_5_sentence_overlay/resources/step4_5.default.yaml")
+SENTENCE_SPLIT_RE = re.compile(r"(?:\r?\n)+|(?<=[\.\?!;:])\s+")
+TOKEN_RE = re.compile(r"[A-Za-z0-9_']+")
+ALPHA_TOKEN_RE = re.compile(r"[A-Za-z]+(?:['-][A-Za-z]+)?")
+TITLE_TOKEN_RE = re.compile(r"[A-Z][a-z]+(?:['-][A-Za-z]+)?")
+EMAIL_RE = re.compile(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}")
+FORMULA_SYMBOL_RE = re.compile(r"[$\\=<>≤≥∑ΣμσπλξΔ^{}]")
+PATCH_TYPE_RANK_DEFAULT = {"structure_span": 0, "window_1": 1, "window_2": 2, "window_3": 3, "unknown": 4}
+FLAG_FIELDS = [
+    "is_meta",
+    "is_nav_boilerplate",
+    "is_author_affiliation",
+    "is_transition_text",
+    "is_heading_like",
+    "is_formula_like",
+    "is_definition_like",
+    "is_procedure_like",
+    "is_example_like",
+]
+
+
+def now_utc_iso() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def utc_stamp() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d_%H%M%S")
+
+
+def read_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
+
+
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def write_json(path: Path, obj: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def write_jsonl(path: Path, rows: Iterable[Mapping[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        for row in rows:
+            handle.write(json.dumps(dict(row), ensure_ascii=False) + "\n")
+
+
+def jsonl_iter(path: Path) -> Iterable[Dict[str, Any]]:
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            yield json.loads(line)
+
+
+def load_yaml(path: Path) -> Dict[str, Any]:
+    if yaml is None:
+        raise RuntimeError("PyYAML is required for Step 4.5.")
+    obj = yaml.safe_load(read_text(path))
+    if not isinstance(obj, dict):
+        raise RuntimeError(f"Expected mapping config root at {path}")
+    return obj
+
+
+def load_json(path: Path) -> Dict[str, Any]:
+    obj = json.loads(read_text(path))
+    if not isinstance(obj, dict):
+        raise RuntimeError(f"Expected JSON object at {path}")
+    return obj
+
+
+def sha256_file(path: Path) -> str:
+    hasher = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            hasher.update(chunk)
+    return hasher.hexdigest()
+
+
+def normalize_ws(text: str) -> str:
+    return " ".join(str(text).split())
+
+
+def match_normalize(text: str) -> str:
+    return (
+        normalize_ws(text)
+        .lower()
+        .replace("’", "'")
+        .replace("‘", "'")
+        .replace("“", '"')
+        .replace("”", '"')
+        .replace("–", "-")
+        .replace("—", "-")
+        .replace("−", "-")
+    )
+
+
+def tokenize(text: str, *, min_len: int = 1) -> List[str]:
+    return [token.lower() for token in TOKEN_RE.findall(str(text)) if len(token) >= min_len]
+
+
+def resolve_repo_path(repo_root: Path, raw_path: Any, *, base_dir: Optional[Path] = None) -> Path:
+    candidate = Path(str(raw_path))
+    if candidate.is_absolute():
+        return candidate
+    root = base_dir if base_dir is not None else repo_root
+    return (root / candidate).resolve()
+
+
+def resolve_pointer(pointer_path: Path) -> Path:
+    raw = read_text(pointer_path).strip()
+    if not raw:
+        raise RuntimeError(f"Pointer file is empty: {pointer_path}")
+    return resolve_repo_path(REPO_ROOT, raw, base_dir=pointer_path.parent)
+
+
+def rel_path(path: Path, repo_root: Path) -> str:
+    return path.resolve().relative_to(repo_root.resolve()).as_posix()
+
+
+def describe_file(path: Path, repo_root: Path) -> Dict[str, Any]:
+    payload: Dict[str, Any] = {"path": rel_path(path, repo_root), "exists": path.exists()}
+    if path.exists() and path.is_file():
+        stat = path.stat()
+        payload["sha256"] = sha256_file(path)
+        payload["stat"] = {
+            "size_bytes": int(stat.st_size),
+            "mtime_utc": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc).isoformat().replace("+00:00", "Z"),
+        }
+    return payload
+
+
+def choose_run_paths(repo_root: Path, processed_root_rel: str, runs_dir_rel: str, sets_dir_rel: str) -> Dict[str, Path]:
+    base_stamp = utc_stamp()
+    suffix = 0
+    while True:
+        run_id = base_stamp if suffix == 0 else f"{base_stamp}_{suffix:02d}"
+        processed_dir = (repo_root / processed_root_rel / run_id).resolve()
+        audit_dir = (repo_root / runs_dir_rel / f"{run_id}_step4_5").resolve()
+        set_path = (repo_root / sets_dir_rel / f"{run_id}_step4_5_sentence_set.json").resolve()
+        if not processed_dir.exists() and not audit_dir.exists() and not set_path.exists():
+            return {
+                "run_id_step4_5": Path(run_id),
+                "processed_dir": processed_dir,
+                "audit_dir": audit_dir,
+                "set_path": set_path,
+            }
+        suffix += 1
+
+
+class AuditLog:
+    def __init__(self, path: Path) -> None:
+        self.path = path
+
+    def info(self, message: str) -> None:
+        line = f"[{now_utc_iso()}] {message}"
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        with self.path.open("a", encoding="utf-8") as handle:
+            handle.write(line + "\n")
+        print(line)
+
+
+def patch_heading(row: Mapping[str, Any]) -> str:
+    explicit = normalize_ws(str(row.get("heading_norm") or row.get("heading") or row.get("title_norm") or row.get("title") or ""))
+    if explicit:
+        return explicit
+    title_cues = row.get("title_cues")
+    if isinstance(title_cues, list):
+        cues = [normalize_ws(str(item)) for item in title_cues if normalize_ws(str(item))]
+        if cues:
+            return " | ".join(cues[:3])
+    return ""
+
+
+def patch_pages(row: Mapping[str, Any]) -> List[int]:
+    if isinstance(row.get("page_indices"), list):
+        return sorted({int(item) for item in row["page_indices"]})
+    if isinstance(row.get("pages"), list):
+        return sorted({int(item) for item in row["pages"]})
+    if row.get("page_start") is not None and row.get("page_end") is not None:
+        start = int(row["page_start"])
+        end = int(row["page_end"])
+        if end < start:
+            start, end = end, start
+        return list(range(start, end + 1))
+    if row.get("page_index") is not None:
+        return [int(row["page_index"])]
+    return []
+
+
+def patch_sort_key(row: Mapping[str, Any], cfg: Mapping[str, Any]) -> Tuple[Any, ...]:
+    pages = patch_pages(row)
+    heading = patch_heading(row)
+    patch_type = str(row.get("patch_type") or row.get("type") or "unknown")
+    type_rank_map = cfg["patch_selection"].get("patch_type_rank") or PATCH_TYPE_RANK_DEFAULT
+    page_start = int(min(pages)) if pages else int(row.get("page_start") or 0)
+    span_len = int(len(pages) or row.get("n_pages") or 999999)
+    return (
+        0 if heading else 1,
+        int(type_rank_map.get(patch_type, type_rank_map.get("unknown", 999))),
+        span_len,
+        page_start,
+        str(row.get("patch_id") or row.get("id") or ""),
+    )
+
+
+def build_page_patch_map(patch_rows: Sequence[Mapping[str, Any]], cfg: Mapping[str, Any]) -> Dict[int, Dict[str, Any]]:
+    page_map: Dict[int, Dict[str, Any]] = {}
+    raw_rows: Dict[int, Mapping[str, Any]] = {}
+    for row in patch_rows:
+        meta = {
+            "patch_id": str(row.get("patch_id") or row.get("id") or ""),
+            "patch_heading": patch_heading(row),
+            "patch_type": str(row.get("patch_type") or row.get("type") or "unknown"),
+            "patch_span_source": str(row.get("span_source") or "unknown"),
+        }
+        pages = patch_pages(row)
+        if not pages:
+            continue
+        for page_index in pages:
+            current_raw = raw_rows.get(page_index)
+            if current_raw is None or patch_sort_key(row, cfg) < patch_sort_key(current_raw, cfg):
+                raw_rows[page_index] = row
+                page_map[page_index] = meta
+    return page_map
+
+
+def build_reveal_page_map(reveal_rows: Sequence[Mapping[str, Any]]) -> Dict[int, Dict[str, Any]]:
+    page_map: Dict[int, Dict[str, Any]] = {}
+    for row in reveal_rows:
+        page_index = row.get("page_index")
+        if page_index is None:
+            continue
+        page_map[int(page_index)] = {
+            "reveal_group_id": row.get("reveal_group_id"),
+            "reveal_canonical_page_index": row.get("reveal_canonical_page_index"),
+            "is_reveal_canonical": bool(row.get("is_reveal_canonical")),
+        }
+    return page_map
+
+
+def trim_span(text: str, start: int, end: int) -> Optional[Tuple[int, int, str]]:
+    left = start
+    right = end
+    while left < right and text[left].isspace():
+        left += 1
+    while right > left and text[right - 1].isspace():
+        right -= 1
+    if left >= right:
+        return None
+    return left, right, text[left:right]
+
+
+def split_sentence_spans(text: str) -> List[Tuple[int, int, str]]:
+    if not text:
+        return []
+    spans: List[Tuple[int, int, str]] = []
+    start = 0
+    for match in SENTENCE_SPLIT_RE.finditer(text):
+        trimmed = trim_span(text, start, match.start())
+        if trimmed is not None and normalize_ws(trimmed[2]):
+            spans.append(trimmed)
+        start = match.end()
+    trimmed_tail = trim_span(text, start, len(text))
+    if trimmed_tail is not None and normalize_ws(trimmed_tail[2]):
+        spans.append(trimmed_tail)
+    if spans:
+        return spans
+    stripped = trim_span(text, 0, len(text))
+    if stripped is None or not normalize_ws(stripped[2]):
+        return []
+    return [stripped]
+
+
+def lowercase_keywords(values: Sequence[Any]) -> List[str]:
+    out: List[str] = []
+    for value in values:
+        text = match_normalize(str(value))
+        if text:
+            out.append(text)
+    return out
+
+
+def starts_with_any(text: str, phrases: Sequence[str]) -> bool:
+    return any(text.startswith(phrase) for phrase in phrases)
+
+
+def contains_any(text: str, phrases: Sequence[str]) -> bool:
+    return any(phrase in text for phrase in phrases)
+
+
+def title_case_ratio(text: str) -> float:
+    title_tokens = TITLE_TOKEN_RE.findall(text)
+    alpha_tokens = ALPHA_TOKEN_RE.findall(text)
+    if not alpha_tokens:
+        return 0.0
+    return len(title_tokens) / len(alpha_tokens)
+
+
+def uppercase_ratio(text: str) -> float:
+    letters = [char for char in text if char.isalpha()]
+    if not letters:
+        return 0.0
+    return sum(1 for char in letters if char.isupper()) / len(letters)
+
+
+def title_name_heuristic(text: str, page_index: int, cfg: Mapping[str, Any], nav_keywords: Sequence[str], lower: str) -> bool:
+    tokens = ALPHA_TOKEN_RE.findall(text)
+    if page_index > 1:
+        return False
+    if not (2 <= len(tokens) <= int(cfg["flags"]["author_name_max_tokens"])):
+        return False
+    if contains_any(lower, nav_keywords):
+        return False
+    compact = normalize_ws(text)
+    if compact != " ".join(tokens):
+        return False
+    return all(token[:1].isupper() for token in tokens)
+
+
+def classify_flags(
+    *,
+    sentence_text: str,
+    page_index: int,
+    patch_heading_text: str,
+    page_heading_text: str,
+    cfg: Mapping[str, Any],
+) -> Dict[str, bool]:
+    lower = match_normalize(sentence_text)
+    patch_heading_lower = match_normalize(patch_heading_text)
+    page_heading_lower = match_normalize(page_heading_text)
+    alpha_tokens = ALPHA_TOKEN_RE.findall(sentence_text)
+    token_count = len(alpha_tokens)
+    heading_max_tokens = int(cfg["flags"]["heading_max_tokens"])
+    page0_heading_max_tokens = int(cfg["flags"]["page0_heading_max_tokens"])
+    nav_keywords = lowercase_keywords(cfg["flags"]["nav_keywords"])
+    transition_phrases = lowercase_keywords(cfg["flags"]["transition_phrases"])
+    definition_phrases = lowercase_keywords(cfg["flags"]["definition_phrases"])
+    procedure_phrases = lowercase_keywords(cfg["flags"]["procedure_phrases"])
+    example_phrases = lowercase_keywords(cfg["flags"]["example_phrases"])
+    affiliation_keywords = lowercase_keywords(cfg["flags"]["affiliation_keywords"])
+    course_markers = lowercase_keywords(cfg["flags"]["course_markers"])
+
+    no_terminal_punct = not sentence_text.rstrip().endswith((".", "!", "?"))
+    heading_like = bool(
+        token_count > 0
+        and token_count <= heading_max_tokens
+        and (
+            "|" in sentence_text
+            or title_case_ratio(sentence_text) >= 0.6
+            or uppercase_ratio(sentence_text) >= 0.45
+            or no_terminal_punct
+        )
+    )
+    formula_like = bool(
+        FORMULA_SYMBOL_RE.search(sentence_text)
+        or sentence_text.count("=") >= 1
+        or sentence_text.count("$") >= 2
+        or sentence_text.count("\\") >= 1
+        or re.search(r"\bp\s*\(", lower) is not None
+    )
+    example_like = contains_any(lower, example_phrases)
+    procedure_like = contains_any(lower, procedure_phrases) or starts_with_any(lower, ["if ", "repeat ", "compute ", "pick ", "set ", "select "])
+    definition_like = contains_any(lower, definition_phrases) or (
+        "=" in sentence_text and token_count <= 24 and not contains_any(lower, nav_keywords)
+    )
+    author_affiliation = bool(
+        EMAIL_RE.search(sentence_text)
+        or contains_any(lower, affiliation_keywords)
+        or title_name_heuristic(sentence_text, page_index, cfg, nav_keywords, lower)
+    )
+    nav_boilerplate = bool(
+        contains_any(lower, nav_keywords)
+        and (heading_like or token_count <= 18 or "|" in sentence_text or lower == patch_heading_lower or lower == page_heading_lower)
+    )
+    transition_text = bool(
+        contains_any(lower, transition_phrases)
+        and not formula_like
+        and token_count <= 30
+    )
+    page0_title_like = bool(
+        page_index == 0
+        and heading_like
+        and token_count <= page0_heading_max_tokens
+        and not formula_like
+        and not definition_like
+        and not procedure_like
+    )
+    course_meta = contains_any(lower, course_markers)
+    is_meta = bool(author_affiliation or nav_boilerplate or page0_title_like or course_meta)
+    return {
+        "is_meta": is_meta,
+        "is_nav_boilerplate": nav_boilerplate,
+        "is_author_affiliation": author_affiliation,
+        "is_transition_text": transition_text,
+        "is_heading_like": heading_like,
+        "is_formula_like": formula_like,
+        "is_definition_like": definition_like,
+        "is_procedure_like": procedure_like,
+        "is_example_like": example_like,
+    }
+
+
+def validate_sentence_row(row: Mapping[str, Any]) -> List[str]:
+    errors: List[str] = []
+    required_string_fields = ["sentence_id", "doc_id", "block_id", "layer", "source_block_text", "sentence_text"]
+    for key in required_string_fields:
+        value = row.get(key)
+        if not isinstance(value, str) or not value:
+            errors.append(f"{key}: expected non-empty string")
+    page_index = row.get("page_index")
+    if page_index is not None and (not isinstance(page_index, int) or page_index < 0):
+        errors.append("page_index: expected integer >= 0 or null")
+    for key in ["sent_idx", "char_start", "char_end"]:
+        value = row.get(key)
+        if not isinstance(value, int) or value < 0:
+            errors.append(f"{key}: expected integer >= 0")
+    source_text = row.get("source_block_text")
+    sentence_text = row.get("sentence_text")
+    char_start = row.get("char_start")
+    char_end = row.get("char_end")
+    if isinstance(source_text, str) and isinstance(sentence_text, str) and isinstance(char_start, int) and isinstance(char_end, int):
+        if char_end < char_start or char_end > len(source_text):
+            errors.append("char range: out of bounds")
+        elif source_text[char_start:char_end] != sentence_text:
+            errors.append("sentence_text: char range does not match source substring")
+        elif sentence_text not in source_text:
+            errors.append("sentence_text: not a literal substring of source_block_text")
+    for flag_name in FLAG_FIELDS:
+        if not isinstance(row.get(flag_name), bool):
+            errors.append(f"{flag_name}: expected boolean")
+    bbox = row.get("bbox")
+    if bbox is not None:
+        if not isinstance(bbox, list) or len(bbox) != 4 or not all(isinstance(item, (int, float)) for item in bbox):
+            errors.append("bbox: expected [x0, y0, x1, y1] or null")
+    return errors
+
+
+def build_closeout_report(
+    *,
+    run_id: str,
+    created_utc: str,
+    acceptance_passed: bool,
+    acceptance_failures: Sequence[str],
+    summary: Mapping[str, Any],
+    changed_inputs: Sequence[str],
+) -> str:
+    stats = summary["stats"]
+    flag_counts = stats["flag_counts"]
+    top_flags = sorted(flag_counts.items(), key=lambda item: (-int(item[1]), item[0]))[:10]
+    lines = [
+        "STEP 4.5 CLOSEOUT REPORT",
+        "",
+        "1) Executive summary",
+        f"- Run id: {run_id}",
+        f"- Created UTC: {created_utc}",
+        f"- Acceptance: {'PASS' if acceptance_passed else 'FAIL'}",
+        f"- Sentences total: {stats['n_sentences_total']}",
+        f"- Docs with sentences: {stats['docs_with_sentences']} / {stats['n_docs_total']}",
+        "",
+        "2) Run metadata",
+        f"- Step 4 set id: {summary['step4_set_id']}",
+        f"- Step 4 patches set id: {summary['step4_patches_set_id']}",
+        f"- Processed dir: {summary['processed_dir']}",
+        f"- Audit dir: {summary['audit_dir']}",
+        "",
+        "3) Acceptance table",
+        f"- docs_total: {stats['n_docs_total']}",
+        f"- docs_with_sentences: {stats['docs_with_sentences']}",
+        f"- blocks_total: {stats['n_blocks_total']}",
+        f"- blocks_with_text: {stats['n_blocks_with_text']}",
+        f"- sentence_count: {stats['n_sentences_total']}",
+        f"- sentences_without_page_index: {stats['n_sentences_without_page_index']}",
+        f"- invalid_sentence_rows: {stats['invalid_sentence_rows']}",
+        f"- sentences_with_patch_id: {stats['sentences_with_patch_id']}",
+        f"- sentences_with_reveal_group_id: {stats['sentences_with_reveal_group_id']}",
+        f"- upstream_inputs_changed: {len(changed_inputs)}",
+        "",
+        "4) Top failure reasons",
+    ]
+    if acceptance_failures:
+        for reason in acceptance_failures[:10]:
+            lines.append(f"- {reason}")
+    else:
+        lines.append("- none")
+    lines.extend(["", "5) Top flag counts"])
+    if top_flags:
+        for flag_name, count in top_flags:
+            lines.append(f"- {flag_name}: {count}")
+    else:
+        lines.append("- none")
+    lines.extend(["", "6) Recommendation"])
+    if acceptance_passed:
+        lines.append("- NOT_READY_FOR_FULL")
+        lines.append("- Reason: Step 4.5 overlay accepted, but Step 5.3 recalibration and the repeated Step 6.4.2 dry run have not been completed yet.")
+    else:
+        lines.append("- NOT_READY_FOR_FULL")
+        lines.append("- Reason: Step 4.5 acceptance failed.")
+    return "\n".join(lines) + "\n"
+
+
+def copy_config_snapshot(config_path: Path, audit_dir: Path) -> Path:
+    target = audit_dir / "config_snapshot.yaml"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(config_path, target)
+    return target
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="STEP 4.5: sentence-aware retrieval overlay on frozen Step 4.")
+    parser.add_argument("--config", default=str(DEFAULT_CONFIG))
+    args = parser.parse_args()
+
+    repo_root = REPO_ROOT
+    config_path = resolve_repo_path(repo_root, args.config)
+    cfg = load_yaml(config_path)
+
+    step4_pointer_path = resolve_repo_path(repo_root, cfg["inputs"]["step4_active_set_pointer"])
+    active_pointer_path = resolve_repo_path(repo_root, cfg["inputs"]["active_step4_5_set_pointer"])
+    run_paths = choose_run_paths(
+        repo_root,
+        str(cfg["outputs"]["processed_root"]),
+        str(cfg["audit"]["runs_dir"]),
+        str(cfg["outputs"]["sets_dir"]),
+    )
+    run_id = run_paths["run_id_step4_5"].name
+    processed_dir = run_paths["processed_dir"]
+    audit_dir = run_paths["audit_dir"]
+    set_path = run_paths["set_path"]
+
+    audit_dir.mkdir(parents=True, exist_ok=True)
+    logger = AuditLog(audit_dir / "run.log")
+    timings: Dict[str, float] = {}
+    t0 = time.time()
+    logger.info(f"run_id_step4_5={run_id}")
+
+    step4_set_path = resolve_pointer(step4_pointer_path)
+    step4_manifest = load_json(step4_set_path)
+    patches_target_raw = (
+        step4_manifest.get("provenance", {})
+        .get("step4_patches_set", {})
+        .get("target_path")
+    )
+    if not patches_target_raw:
+        raise RuntimeError("Step 4 manifest does not expose linked Step 4 patches set target_path.")
+    step4_patches_set_path = resolve_repo_path(repo_root, patches_target_raw)
+    step4_patches_manifest = load_json(step4_patches_set_path)
+
+    docs_manifest = step4_manifest.get("docs")
+    patch_docs_manifest = step4_patches_manifest.get("docs")
+    if not isinstance(docs_manifest, dict) or not isinstance(patch_docs_manifest, dict):
+        raise RuntimeError("Expected Step 4 and Step 4 patches manifests to expose docs as mappings.")
+
+    input_paths: List[Path] = [config_path, step4_pointer_path, step4_set_path, step4_patches_set_path]
+    doc_inputs: Dict[str, Dict[str, Path]] = {}
+    doc_ids = sorted(docs_manifest.keys())
+    for doc_id in doc_ids:
+        step4_doc = docs_manifest[doc_id]
+        patch_doc = patch_docs_manifest.get(doc_id)
+        if not isinstance(step4_doc, dict) or not isinstance(patch_doc, dict):
+            raise RuntimeError(f"Missing doc manifest entries for {doc_id}")
+        block_corpus_rel = step4_doc["artifacts"]["block_text_corpus.jsonl"]["path"]
+        patch_index_rel = patch_doc["artifacts"]["page_patch_index.jsonl"]["path"]
+        reveal_rel = patch_doc["artifacts"]["page_reveal_groups.jsonl"]["path"]
+        block_corpus_path = resolve_repo_path(repo_root, block_corpus_rel)
+        patch_index_path = resolve_repo_path(repo_root, patch_index_rel)
+        reveal_path = resolve_repo_path(repo_root, reveal_rel)
+        doc_inputs[doc_id] = {
+            "block_corpus": block_corpus_path,
+            "page_patch_index": patch_index_path,
+            "page_reveal_groups": reveal_path,
+        }
+        input_paths.extend([block_corpus_path, patch_index_path, reveal_path])
+
+    pre_input_manifest = build_input_manifest(input_paths)
+    pre_hash_map = {
+        str(item["path"]): item["sha256"]
+        for item in pre_input_manifest
+        if item.get("exists") and isinstance(item.get("sha256"), str)
+    }
+    timings["load_inputs_seconds"] = time.time() - t0
+
+    sentences: List[Dict[str, Any]] = []
+    invalid_rows: List[Dict[str, Any]] = []
+    doc_stats: Dict[str, Dict[str, Any]] = {}
+    flag_counts: Counter[str] = Counter()
+    layer_counts: Counter[str] = Counter()
+    t_build = time.time()
+    for doc_id in doc_ids:
+        block_rows = list(jsonl_iter(doc_inputs[doc_id]["block_corpus"]))
+        patch_rows = list(jsonl_iter(doc_inputs[doc_id]["page_patch_index"]))
+        reveal_rows = list(jsonl_iter(doc_inputs[doc_id]["page_reveal_groups"]))
+        page_patch_map = build_page_patch_map(patch_rows, cfg)
+        reveal_page_map = build_reveal_page_map(reveal_rows)
+
+        doc_sentence_count = 0
+        doc_sentences_without_page_index = 0
+        doc_flag_counts: Counter[str] = Counter()
+        blocks_with_text = 0
+        for block_row in block_rows:
+            source_text = str(block_row.get("text") or "")
+            if not source_text:
+                continue
+            blocks_with_text += 1
+            raw_page_index = block_row.get("page_index")
+            page_index = int(raw_page_index) if isinstance(raw_page_index, int) and raw_page_index >= 0 else None
+            page_lookup = page_index if page_index is not None else -1
+            page_patch = page_patch_map.get(page_lookup, {})
+            reveal_meta = reveal_page_map.get(page_lookup, {})
+            layer = str(block_row.get("layer") or "")
+            layer_counts[layer] += 1
+            page_heading_text = str(block_row.get("page_heading_norm") or "")
+            for sent_idx, (char_start, char_end, sentence_text) in enumerate(split_sentence_spans(source_text)):
+                flags = classify_flags(
+                    sentence_text=sentence_text,
+                    page_index=page_index if page_index is not None else -1,
+                    patch_heading_text=str(page_patch.get("patch_heading") or ""),
+                    page_heading_text=page_heading_text,
+                    cfg=cfg,
+                )
+                if page_index is None:
+                    doc_sentences_without_page_index += 1
+                is_noncanonical = bool(
+                    (reveal_meta.get("reveal_group_id") not in (None, ""))
+                    and not bool(reveal_meta.get("is_reveal_canonical"))
+                )
+                sentence_id = f"{doc_id}::{block_row['block_id']}::s{sent_idx:03d}"
+                row = {
+                    "sentence_id": sentence_id,
+                    "doc_id": doc_id,
+                    "block_id": str(block_row["block_id"]),
+                    "sent_idx": sent_idx,
+                    "char_start": char_start,
+                    "char_end": char_end,
+                    "page_index": page_index,
+                    "layer": layer,
+                    "bbox": block_row.get("bbox"),
+                    "reveal_group_id": reveal_meta.get("reveal_group_id", block_row.get("reveal_group_id")),
+                    "reveal_canonical_page_index": reveal_meta.get("reveal_canonical_page_index"),
+                    "is_reveal_canonical": bool(reveal_meta.get("is_reveal_canonical")),
+                    "is_noncanonical_reveal_page": is_noncanonical if reveal_meta else bool(block_row.get("is_noncanonical_reveal_page")),
+                    "patch_id": page_patch.get("patch_id"),
+                    "patch_heading": page_patch.get("patch_heading"),
+                    "patch_type": page_patch.get("patch_type"),
+                    "patch_span_source": page_patch.get("patch_span_source"),
+                    "page_heading_norm": page_heading_text,
+                    "text_source": block_row.get("text_source"),
+                    "source_block_text": source_text,
+                    "sentence_text": sentence_text,
+                    **flags,
+                }
+                errors = validate_sentence_row(row)
+                if errors:
+                    invalid_rows.append({"sentence_id": sentence_id, "errors": errors})
+                sentences.append(row)
+                doc_sentence_count += 1
+                for flag_name, flag_value in flags.items():
+                    if flag_value:
+                        flag_counts[flag_name] += 1
+                        doc_flag_counts[flag_name] += 1
+        doc_stats[doc_id] = {
+            "n_blocks_total": len(block_rows),
+            "n_blocks_with_text": blocks_with_text,
+            "n_sentences": doc_sentence_count,
+            "n_sentences_without_page_index": doc_sentences_without_page_index,
+            "flag_counts": dict(sorted(doc_flag_counts.items())),
+            "block_corpus_path": rel_path(doc_inputs[doc_id]["block_corpus"], repo_root),
+            "page_patch_index_path": rel_path(doc_inputs[doc_id]["page_patch_index"], repo_root),
+            "page_reveal_groups_path": rel_path(doc_inputs[doc_id]["page_reveal_groups"], repo_root),
+        }
+    timings["build_overlay_seconds"] = time.time() - t_build
+
+    processed_dir.mkdir(parents=True, exist_ok=True)
+    corpus_path = processed_dir / "sentence_corpus.jsonl"
+    stats_path = processed_dir / "sentence_stats.json"
+    write_jsonl(corpus_path, sentences)
+    stats_payload = {
+        "run_id_step4_5": run_id,
+        "created_utc": now_utc_iso(),
+        "step4_set_id": step4_manifest.get("set_id"),
+        "step4_patches_set_id": step4_patches_manifest.get("set_id") or step4_patches_set_path.stem,
+        "n_docs_total": len(doc_ids),
+        "docs_with_sentences": sum(1 for item in doc_stats.values() if int(item["n_sentences"]) > 0),
+        "n_blocks_total": sum(int(item["n_blocks_total"]) for item in doc_stats.values()),
+        "n_blocks_with_text": sum(int(item["n_blocks_with_text"]) for item in doc_stats.values()),
+        "n_sentences_total": len(sentences),
+        "n_sentences_without_page_index": sum(int(item["n_sentences_without_page_index"]) for item in doc_stats.values()),
+        "invalid_sentence_rows": len(invalid_rows),
+        "sentences_with_patch_id": sum(1 for row in sentences if row.get("patch_id")),
+        "sentences_with_reveal_group_id": sum(1 for row in sentences if row.get("reveal_group_id") not in (None, "")),
+        "sentences_reveal_canonical": sum(1 for row in sentences if bool(row.get("is_reveal_canonical"))),
+        "sentences_noncanonical_reveal_page": sum(1 for row in sentences if bool(row.get("is_noncanonical_reveal_page"))),
+        "flag_counts": {flag_name: int(flag_counts.get(flag_name, 0)) for flag_name in FLAG_FIELDS},
+        "layer_counts": dict(sorted((layer, int(count)) for layer, count in layer_counts.items())),
+        "docs": doc_stats,
+    }
+    write_json(stats_path, stats_payload)
+
+    t_validate = time.time()
+    post_input_manifest = build_input_manifest(input_paths)
+    changed_inputs = []
+    for item in post_input_manifest:
+        if not item.get("exists"):
+            continue
+        path_str = str(item["path"])
+        expected_sha = pre_hash_map.get(path_str)
+        actual_sha = item.get("sha256")
+        if isinstance(expected_sha, str) and isinstance(actual_sha, str) and expected_sha != actual_sha:
+            changed_inputs.append(path_str)
+
+    acceptance_failures: List[str] = []
+    acceptance_cfg = cfg["acceptance"]
+    if len(invalid_rows) > int(acceptance_cfg["max_invalid_sentence_rows"]):
+        acceptance_failures.append(
+            f"invalid_sentence_rows {len(invalid_rows)} > {int(acceptance_cfg['max_invalid_sentence_rows'])}"
+        )
+    docs_with_sentences = int(stats_payload["docs_with_sentences"])
+    if docs_with_sentences < int(acceptance_cfg["min_docs_with_sentences"]):
+        acceptance_failures.append(
+            f"docs_with_sentences {docs_with_sentences} < {int(acceptance_cfg['min_docs_with_sentences'])}"
+        )
+    if len(sentences) == 0:
+        acceptance_failures.append("n_sentences_total == 0")
+    if bool(acceptance_cfg["require_patch_metadata_if_available"]):
+        if int(stats_payload["sentences_with_patch_id"]) == 0:
+            acceptance_failures.append("sentences_with_patch_id == 0")
+    if bool(acceptance_cfg["require_upstream_inputs_unchanged"]) and changed_inputs:
+        acceptance_failures.extend(f"UpstreamInputChanged:{path_str}" for path_str in changed_inputs[:10])
+    timings["validation_seconds"] = time.time() - t_validate
+
+    config_snapshot_path = copy_config_snapshot(config_path, audit_dir)
+    invocation_path = audit_dir / "invocation.json"
+    write_json(
+        invocation_path,
+        {
+            "argv": sys.argv,
+            "cwd": ".",
+            "config": rel_path(config_path, repo_root),
+            "run_id_step4_5": run_id,
+        },
+    )
+    input_manifest_path = audit_dir / "input_manifest.json"
+    write_json(input_manifest_path, pre_input_manifest)
+    environment_snapshot_path = audit_dir / "environment_snapshot.json"
+    environment_payload = env_snapshot()
+    environment_payload["python_executable"] = sys.executable
+    write_json(environment_snapshot_path, environment_payload)
+    tool_versions_path = audit_dir / "tool_versions.json"
+    write_json(
+        tool_versions_path,
+        {
+            "python": {"executable": sys.executable, "version": sys.version},
+            "git": try_cmd_version(["git", "--version"]),
+            "rg": try_cmd_version(["rg", "--version"]),
+            "pip_freeze": pip_freeze(),
+        },
+    )
+    timings["total_seconds"] = time.time() - t0
+    timings_path = audit_dir / "timings.json"
+    write_json(timings_path, timings)
+
+    summary_payload = {
+        "run_id_step4_5": run_id,
+        "created_utc": now_utc_iso(),
+        "step4_set_id": step4_manifest.get("set_id"),
+        "step4_patches_set_id": step4_patches_manifest.get("set_id") or step4_patches_set_path.stem,
+        "processed_dir": rel_path(processed_dir, repo_root),
+        "audit_dir": rel_path(audit_dir, repo_root),
+        "acceptance": {
+            "passed": len(acceptance_failures) == 0,
+            "reasons": acceptance_failures,
+        },
+        "stats": stats_payload,
+        "changed_inputs": changed_inputs,
+    }
+    summary_path = audit_dir / "summary.json"
+    write_json(summary_path, summary_payload)
+
+    set_manifest = {
+        "schema_version": "1.0",
+        "kind": "step4_5_sentence_overlay_set",
+        "set_id": set_path.stem,
+        "created_utc": now_utc_iso(),
+        "run_id_step4_5": run_id,
+        "artifacts": {
+            "sentence_corpus_jsonl": rel_path(corpus_path, repo_root),
+            "sentence_stats_json": rel_path(stats_path, repo_root),
+        },
+        "upstream": {
+            "step4_active_set_pointer": rel_path(step4_pointer_path, repo_root),
+            "step4_active_set_target": rel_path(step4_set_path, repo_root),
+            "step4_patches_set_target": rel_path(step4_patches_set_path, repo_root),
+            "step4_freeze_run_id": step4_manifest.get("freeze_run_id"),
+            "step4_retrieval_run_id": step4_manifest.get("retrieval_run_id"),
+        },
+        "docs": doc_stats,
+        "audit": {
+            "run_dir": rel_path(audit_dir, repo_root),
+            "input_manifest": rel_path(input_manifest_path, repo_root),
+            "summary": rel_path(summary_path, repo_root),
+        },
+    }
+
+    if not acceptance_failures:
+        write_json(set_path, set_manifest)
+        write_text(active_pointer_path, set_path.name + "\n")
+
+    closeout_text = build_closeout_report(
+        run_id=run_id,
+        created_utc=summary_payload["created_utc"],
+        acceptance_passed=len(acceptance_failures) == 0,
+        acceptance_failures=acceptance_failures,
+        summary=summary_payload,
+        changed_inputs=changed_inputs,
+    )
+    closeout_path = audit_dir / "STEP4_5_CLOSEOUT_REPORT.txt"
+    write_text(closeout_path, closeout_text)
+
+    output_manifest_path = audit_dir / "output_manifest.json"
+    output_manifest_payload = {
+        "processed_outputs": build_output_manifest(processed_dir),
+        "audit_outputs": build_output_manifest(audit_dir),
+        "set_manifest": describe_file(set_path, repo_root) if set_path.exists() else {"path": rel_path(set_path, repo_root), "exists": False},
+        "active_pointer": describe_file(active_pointer_path, repo_root) if active_pointer_path.exists() else {"path": rel_path(active_pointer_path, repo_root), "exists": False},
+        "config_snapshot": describe_file(config_snapshot_path, repo_root),
+    }
+    write_json(output_manifest_path, output_manifest_payload)
+
+    if acceptance_failures:
+        logger.info("Step 4.5 acceptance failed.")
+        for reason in acceptance_failures[:10]:
+            logger.info(f"failure: {reason}")
+        print(f"run_id_step4_5={run_id}")
+        print(f"sentence_count={len(sentences)}")
+        print(f"invalid_sentence_rows={len(invalid_rows)}")
+        print("top_failure_reasons:")
+        for reason in acceptance_failures[:10]:
+            print(f"- {reason}")
+        return 1
+
+    logger.info(f"Updated ACTIVE pointer: {rel_path(active_pointer_path, repo_root)} -> {set_path.name}")
+    print(f"run_id_step4_5={run_id}")
+    print(f"sentence_count={len(sentences)}")
+    print(f"docs_with_sentences={docs_with_sentences}")
+    print(f"sentences_with_patch_id={int(stats_payload['sentences_with_patch_id'])}")
+    print(f"invalid_sentence_rows={len(invalid_rows)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

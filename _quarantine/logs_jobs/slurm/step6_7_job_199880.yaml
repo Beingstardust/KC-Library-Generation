@@ -1,0 +1,30 @@
+inputs:
+  step6_6_set_manifest: data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json
+outputs:
+  processed_root: data/processed/kc_drafts
+  sets_root: data/processed/kc_drafts/_sets
+  runs_root: data/runs
+slice:
+  limit_kcs: 144
+selection:
+  max_bundle_size: 6
+  max_explanatory_candidates: 5
+drafting:
+  definition_candidate_limit: 5
+  scope_candidate_limit: 5
+  family_context_limit: 4
+  completion_context_limit: 4
+  evidence_text_max_chars: 320
+  short_definition_max_chars: 220
+  short_definition_max_tokens: 32
+model:
+  base_url: http://127.0.0.1:11567
+  candidate_models:
+  - qwen3:30b
+  max_retries: 2
+  num_ctx: 8192
+  timeout_seconds: 180
+  temperature: 0.0
+  top_p: 1.0
+  repeat_penalty: 1.0
+  think: false

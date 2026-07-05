@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/kc-l/review-audit.schema.json",
+  "schema_version": "step6.review_audit.v2",
+  "title": "KC Review Audit Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "review_event_id",
+    "review_packet_id",
+    "reviewer_id",
+    "review_timestamp",
+    "kc_candidate_id",
+    "action_taken",
+    "final_status",
+    "edited_fields",
+    "rejection_reason",
+    "final_text",
+    "current_packet_text",
+    "linked_evidence_ids",
+    "field_linked_evidence_ids",
+    "scope_status_at_review",
+    "edit_resolution_status",
+    "review_mode"
+  ],
+  "properties": {
+    "review_event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_packet_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewer_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "kc_candidate_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action_taken": {
+      "type": "string",
+      "enum": [
+        "approve",
+        "edit",
+        "reject"
+      ]
+    },
+    "final_status": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "edited_approved",
+        "rejected",
+        "edit_pending"
+      ]
+    },
+    "edited_fields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "title",
+          "level",
+          "definition",
+          "scope"
+        ]
+      }
+    },
+    "rejection_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "final_text": {
+      "$ref": "#/$defs/ReviewTextSnapshot"
+    },
+    "current_packet_text": {
+      "$ref": "#/$defs/ReviewTextSnapshot"
+    },
+    "linked_evidence_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "field_linked_evidence_ids": {
+      "$ref": "#/$defs/FieldLinkedEvidenceIds"
+    },
+    "packet_review_priority_bucket": {
+      "type": "string",
+      "enum": [
+        "high_support",
+        "moderate_support",
+        "needs_review",
+        "low_support"
+      ]
+    },
+    "packet_system_recommendation_label": {
+      "type": "string",
+      "enum": [
+        "approve_ready",
+        "review_needed",
+        "reject_recommended"
+      ]
+    },
+    "scope_status_at_review": {
+      "type": "string",
+      "enum": [
+        "grounded",
+        "abstained"
+      ]
+    },
+    "edit_resolution_status": {
+      "type": "string",
+      "enum": [
+        "not_applicable",
+        "pending_final_text_capture",
+        "finalized"
+      ]
+    },
+    "review_mode": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_notes": {
+      "type": "string"
+    },
+    "packet_sufficiency": {
+      "type": "string",
+      "enum": [
+        "sufficient",
+        "borderline",
+        "not_reviewable"
+      ]
+    },
+    "packet_alone_sufficient": {
+      "type": "boolean"
+    },
+    "raw_internals_reopened": {
+      "type": "boolean"
+    },
+    "current_risk_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "source_review_packet_run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_review_packet_set_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_reviewer_session_run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_reviewer_session_set_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_draft_run_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_draft_set_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$defs": {
+    "ReviewTextSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "level",
+        "definition",
+        "scope"
+      ],
+      "properties": {
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "level": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "atomic",
+                "topic"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "definition": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scope": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "FieldLinkedEvidenceIds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "definition",
+        "scope"
+      ],
+      "properties": {
+        "definition": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,193 @@
+inputs:
+  step6_6_set_manifest: data/processed/kc_drafting_input_overlay/_sets/2026-04-30_001631_step6_6_kc_drafting_input_overlay_set.json
+outputs:
+  processed_root: data/processed/kc_drafts
+  sets_root: data/processed/kc_drafts/_sets
+  runs_root: data/runs
+slice:
+  limit_kcs: 144
+  exact_kc_ids: []
+selection:
+  max_bundle_size: 4
+  max_explanatory_candidates: 3
+bridge_notes:
+  step66_to_step67_direct_pin:
+    reason: Avoid mutable current_step_artifacts alias resolution. Step6.7 is pinned
+      directly to the KC-level validated Step6.6 run 2026-04-30_001631.
+    previous_step6_6_set_manifest_value: data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json
+    accepted_step6_6_set_manifest: data/processed/kc_drafting_input_overlay/_sets/2026-04-30_001631_step6_6_kc_drafting_input_overlay_set.json
+    accepted_step6_6_overlay_jsonl: data/processed/kc_drafting_input_overlay/2026-04-30_001631/candidate_sentence_overlay.jsonl
+    accepted_step6_6_closeout: data/work/cache/diagnostics/step66_step5x_bridge_kc_level_validation_20260430T002016Z/STEP66_STEP5X_BRIDGE_KC_LEVEL_CLOSEOUT.md
+    created_by: manual_bridge_config
+  step67_route_stratified_18:
+    reason: Bounded route-stratified Step6.7 run after smoke3 route-policy patch.
+      Selects six KCs from each Step6.6 evidence-pack route before any full 144-KC
+      run.
+    accepted_step6_6_set_manifest: data/processed/kc_drafting_input_overlay/_sets/2026-04-30_001631_step6_6_kc_drafting_input_overlay_set.json
+    accepted_step6_6_overlay_jsonl: data/processed/kc_drafting_input_overlay/2026-04-30_001631/candidate_sentence_overlay.jsonl
+    selected_kcs:
+    - kc_id: KC_CLF_DT_002
+      canonical_name: Node Impurity
+      route: standard_drafting
+      ordered_pack_len: 5
+      definition_kernel_count: 2
+      explanatory_gloss_count: 3
+      role_counts:
+        definition_kernel: 2
+        explanatory_gloss: 3
+    - kc_id: KC_CLF_DT_004
+      canonical_name: Gini Index
+      route: standard_drafting
+      ordered_pack_len: 8
+      definition_kernel_count: 2
+      explanatory_gloss_count: 3
+      role_counts:
+        explanatory_gloss: 3
+        definition_kernel: 2
+        context_completion: 1
+        formula_notation: 2
+    - kc_id: KC_CLF_DT_006
+      canonical_name: Information Gain
+      route: standard_drafting
+      ordered_pack_len: 7
+      definition_kernel_count: 2
+      explanatory_gloss_count: 3
+      role_counts:
+        formula_notation: 2
+        explanatory_gloss: 3
+        definition_kernel: 2
+    - kc_id: KC_CLF_DT_012
+      canonical_name: Splitting Continuous Attributes
+      route: standard_drafting
+      ordered_pack_len: 5
+      definition_kernel_count: 2
+      explanatory_gloss_count: 3
+      role_counts:
+        definition_kernel: 2
+        explanatory_gloss: 3
+    - kc_id: KC_CLF_NB_002
+      canonical_name: Prior Probability
+      route: standard_drafting
+      ordered_pack_len: 6
+      definition_kernel_count: 2
+      explanatory_gloss_count: 3
+      role_counts:
+        definition_kernel: 2
+        explanatory_gloss: 3
+        context_completion: 1
+    - kc_id: KC_CLU_DBS_004
+      canonical_name: DBSCAN Parameters (eps, minPts)
+      route: standard_drafting
+      ordered_pack_len: 5
+      definition_kernel_count: 2
+      explanatory_gloss_count: 3
+      role_counts:
+        definition_kernel: 2
+        explanatory_gloss: 3
+    - kc_id: KC_CLU_EVAL_005
+      canonical_name: Silhouette Coefficient
+      route: partial_grounded_packet
+      ordered_pack_len: 5
+      definition_kernel_count: 0
+      explanatory_gloss_count: 3
+      role_counts:
+        context_completion: 1
+        explanatory_gloss: 3
+        formula_notation: 1
+    - kc_id: KC_CLU_KM_006
+      canonical_name: Bisecting K-Means
+      route: partial_grounded_packet
+      ordered_pack_len: 5
+      definition_kernel_count: 0
+      explanatory_gloss_count: 3
+      role_counts:
+        explanatory_gloss: 3
+        context_completion: 2
+    - kc_id: KC_FSEL_GEN_005
+      canonical_name: Exhaustive Search
+      route: partial_grounded_packet
+      ordered_pack_len: 4
+      definition_kernel_count: 0
+      explanatory_gloss_count: 3
+      role_counts:
+        context_completion: 1
+        explanatory_gloss: 3
+    - kc_id: KC_EVAL_COMP_003
+      canonical_name: Comparing Two Models on Independent Test Sets
+      route: partial_grounded_packet
+      ordered_pack_len: 4
+      definition_kernel_count: 0
+      explanatory_gloss_count: 1
+      role_counts:
+        context_completion: 2
+        example_or_procedure: 1
+        explanatory_gloss: 1
+    - kc_id: KC_CLF_NB_010
+      canonical_name: Sample Mean and Variance
+      route: partial_grounded_packet
+      ordered_pack_len: 3
+      definition_kernel_count: 0
+      explanatory_gloss_count: 3
+      role_counts:
+        explanatory_gloss: 3
+    - kc_id: KC_CLU_EVAL_001
+      canonical_name: Internal Indices Overview
+      route: partial_grounded_packet
+      ordered_pack_len: 3
+      definition_kernel_count: 0
+      explanatory_gloss_count: 3
+      role_counts:
+        explanatory_gloss: 3
+    - kc_id: KC_CLF_DT_005
+      canonical_name: Entropy (Node)
+      route: insufficient_support_packet
+      ordered_pack_len: 0
+      definition_kernel_count: 0
+      explanatory_gloss_count: 0
+      role_counts: {}
+    - kc_id: KC_CLF_DT_007
+      canonical_name: Intrinsic Information
+      route: insufficient_support_packet
+      ordered_pack_len: 0
+      definition_kernel_count: 0
+      explanatory_gloss_count: 0
+      role_counts: {}
+    - kc_id: KC_CLF_DT_009
+      canonical_name: ID3 Algorithm
+      route: insufficient_support_packet
+      ordered_pack_len: 0
+      definition_kernel_count: 0
+      explanatory_gloss_count: 0
+      role_counts: {}
+    - kc_id: KC_CLF_NB_001
+      canonical_name: Bayes' Theorem
+      route: insufficient_support_packet
+      ordered_pack_len: 0
+      definition_kernel_count: 0
+      explanatory_gloss_count: 0
+      role_counts: {}
+    - kc_id: KC_CLF_NB_005
+      canonical_name: NB Learning Phase
+      route: insufficient_support_packet
+      ordered_pack_len: 0
+      definition_kernel_count: 0
+      explanatory_gloss_count: 0
+      role_counts: {}
+    - kc_id: KC_CLF_NB_006
+      canonical_name: NB Classification Phase
+      route: insufficient_support_packet
+      ordered_pack_len: 0
+      definition_kernel_count: 0
+      explanatory_gloss_count: 0
+      role_counts: {}
+    created_by: manual_route_stratified_18_config
+full144_notes:
+  created_utc: 20260430T101851Z
+  base_config: steps/step_06_7_kc_draft_generation/resources/step6_7.sofja.actual_corpus.step66_001631_route_strat18.yaml
+  purpose: Full144 heuristic Step6.7 replay pinned to accepted Step6.6 overlay 2026-04-30_001631
+    after route-strat18 passed strict audit.
+  accepted_step6_6_set_manifest: data/processed/kc_drafting_input_overlay/_sets/2026-04-30_001631_step6_6_kc_drafting_input_overlay_set.json
+  accepted_step6_6_overlay_jsonl: data/processed/kc_drafting_input_overlay/2026-04-30_001631/candidate_sentence_overlay.jsonl
+  active_pointer_policy: do_not_update_current_alias_or_active_pointer
+  domain_policy: none
+  execution_mode_expected: heuristic

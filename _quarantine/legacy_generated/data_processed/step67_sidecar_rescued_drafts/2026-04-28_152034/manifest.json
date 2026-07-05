@@ -1,0 +1,18 @@
+{
+  "stage": "step67b_rescue_failed_no_think",
+  "run_id": "2026-04-28_152034",
+  "created_utc": "2026-04-28T15:20:34.341219+00:00",
+  "packets_path": "data/processed/step67_sidecar_packets/2026-04-28_130527/evidence_packets.jsonl",
+  "previous_drafts_path": "data/processed/step67_sidecar_onepass_drafts/2026-04-28_150801/onepass_drafts.jsonl",
+  "out_dir": "data/processed/step67_sidecar_rescued_drafts/2026-04-28_152034",
+  "onepass_drafts_path": "data/processed/step67_sidecar_rescued_drafts/2026-04-28_152034/onepass_drafts.jsonl",
+  "model": "gemma4:31b",
+  "base_url": "http://127.0.0.1:31054",
+  "rescue_policy": "reuse_previous_ok_rows_and_retry_failed_rows_with_think_false",
+  "think": false,
+  "num_ctx": 8192,
+  "num_predict": 600,
+  "timeout": 180.0,
+  "temperature": 0.0,
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

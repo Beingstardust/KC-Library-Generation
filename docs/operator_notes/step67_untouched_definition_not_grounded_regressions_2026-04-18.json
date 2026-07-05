@@ -1,0 +1,205 @@
+{
+  "generated_at_utc": "2026-04-17T22:49:32Z",
+  "baseline_run_id": "2026-04-16_194203",
+  "candidate_run_id": "2026-04-17_194932",
+  "target_kc_ids": [
+    "KC_CLU_EVAL_001",
+    "KC_CLU_EVAL_002",
+    "KC_DE_PREP_004",
+    "KC_EVAL_BASIC_005"
+  ],
+  "dominant_collapse_path_summary": {
+    "verification_result_changed": 2,
+    "later_control_logic_changed": 2
+  },
+  "records": [
+    {
+      "kc_id": "KC_CLU_EVAL_001",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "seed_floor_fallback",
+      "binding_touch_classification": "untouched_but_regressed",
+      "candidate_binding_repair_state": "no_binding_possible",
+      "candidate_binding_repair_reason": "definition_not_grounded",
+      "candidate_binding_repair_attempt_reason": "",
+      "candidate_pool_changed": true,
+      "candidate_pool_added_ids": [
+        "KC_CLU_EVAL_001:overlay:f058a95d525add5e"
+      ],
+      "candidate_pool_removed_ids": [
+        "KC_CLU_EVAL_011:overlay:26e40f5eabea56b3"
+      ],
+      "preservation_result_changed": false,
+      "verification_result_changed": true,
+      "later_control_logic_changed": false,
+      "diagnostics_masking_real_step": false,
+      "dominant_collapse_path": "verification_result_changed",
+      "dominant_collapse_basis": "baseline verify path stayed grounded or accepted while candidate verify paths abstained",
+      "baseline_selection_reason": "definition_full_candidate_llm_multispan_verified",
+      "candidate_selection_reason": "definition_full_candidate_abstained",
+      "baseline_verify_status": "grounded",
+      "candidate_preservation_verify_status": "abstained",
+      "candidate_rescue_verify_status": "abstained",
+      "candidate_definition_redraft_verify_status": "abstained",
+      "baseline_verify_reason": "",
+      "candidate_preservation_verify_reason": "The evidence E1 states 'internal indices because they use only information present in the data set.' This is a direct match to the definition draft, but the evidence does not explicitly state 'without reference to ground truth.' The definition draft includes 'without reference to ground truth,' which is a key characteristic of internal indices. The evidence does not explicitly mention 'ground truth,' so the definition draft contains unsupported material. The evidence only states 'use only information present in the data set,' which is a bit different from 'without reference to ground truth.' Therefore, the definition draft is not fully supported by the evidence and should be rewritten conservatively to match the evidence. However, the evidence does not provide enough detail to support the exact phrasing of 'without reference to ground truth,' so the definition should be rewritten to match the evidence's wording. The evidence says 'internal indices because they use only information present in the data set.' So the definition should be rewritten to 'Evaluation measures that assess cluster quality using only information present in the data set.' This is a conservative rewrite that matches the evidence exactly. However, the evidence does not explicitly say 'internal indices,' but the context of the KC is about internal indices. The evidence label E1 is 'internal indices because they use only information present in the data set.' So the evidence is directly about internal indices. The definition draft is about internal indices, so the evidence supports it, but the draft includes 'without reference to ground truth,' which is not explicitly stated in the evidence. The evidence says 'use only information present in the data set,' which implies no reference to ground truth, but it's not explicit. However, the definition draft is a standard definition of internal indices, and the evidence is a direct quote supporting it. The evidence does not say 'without reference to ground truth,' but it's implied. However, the instruction says: 'If a drafted field contains unsupported material, rewrite it conservatively using only supported content or abstain.' The phrase 'without reference to ground truth' is not explicitly supported by the evidence, so it's unsupported material. Therefore, the definition should be rewritten to remove that phrase. The evidence says 'use only information present in the data set,' so the definition should be 'Evaluation measures that assess cluster quality using only information present in the data set.' This is a conservative rewrite. However, the evidence label E1 is 'internal indices because they use only information present in the data set.' So the evidence is about internal indices, and the definition is about internal indices, so the evidence supports the definition. The phrase 'without reference to ground truth' is a standard part of the definition, but since it's not in the evidence, we have to remove it. So the definition should be rewritten to match the evidence. Let's check the evidence again: 'internal indices because they use only information present in the data set.' So the evidence is saying that internal indices use only information present in the data set. Therefore, the definition should be 'Evaluation measures that assess cluster quality using only information present in the data set.' This is a conservative rewrite. The evidence does not mention 'ground truth,' so we can't include that phrase. So the definition draft should be rewritten to remove 'without reference to ground truth.' The new definition would be 'Evaluation measures that assess cluster quality using only information present in the data set.' Now, for the scope: The scope draft is 'They are used to determine the inherent structure of the data without external validation.' The evidence E2 says 'Unsupervised. Measures the goodness of a clustering structure without respect to external information. An example of this is the SSE. Unsupervised measures of cluster validity are often further divided into two classes: measures of cluster cohesion (compactness, tightness), which determine how closely related the ob...' The evidence E2 explicitly states 'without respect to external information,' which matches 'without external validation' in the scope draft. The evidence also says 'Unsupervised,' which is consistent with the scope draft. The scope draft says 'determine the inherent structure of the data,' which is a bit different from 'measures the goodness of a clustering structure,' but it's a reasonable interpretation. The evidence says 'Measures the goodness of a clustering structure without respect to external information,' so the scope draft is a valid interpretation. The evidence E2 supports the scope draft. Now, let's check if the scope draft contains any unsupported material. The scope draft says 'They are used to determine the inherent structure of the data without external validation.' The evidence says 'Measures the goodness of a clustering structure without respect to external information.' 'Inherent structure' is a bit different from 'goodness of a clustering structure,' but it's a reasonable paraphrase. The evidence does not explicitly say 'inherent structure,' but it's a common way to describe what internal indices do. The evidence does say 'without respect to external information,' which matches 'without external validation.' So the scope draft is supported by the evidence. Now, let's check the sibling contrast. The sibling contrast includes KC_CLU_EVAL_002 (SSE), which is mentioned in the evidence E2 as an example. The evidence E2 says 'An example of this is the SSE.' So SSE is an internal index, which is consistent with the definition. The sibling contrast also includes external indices like Entropy, Purity, etc., which are not internal indices, so the sibling contrast is correctly distinguishing internal from external indices. Now, for the definition: The evidence E1 says 'internal indices because they use only information present in the data set.' So the definition should be rewritten to match this. The original definition draft included 'without reference to ground truth,' which is not in the evidence, so it's unsupported. The conservative rewrite is to remove that phrase. So the definition should be 'Evaluation measures that assess cluster quality using only information present in the data set.' Now, for the scope: The evidence E2 supports the scope draft. The scope draft is 'They are used to determine the inherent structure of the data without external validation.' The evidence E2 says 'Measures the goodness of a clustering structure without respect to external information.' 'Goodness of a clustering structure' is a bit different from 'determine the inherent structure,' but it's a reasonable interpretation. The evidence does not explicitly say 'inherent structure,' but it's a common way to describe it. The evidence does say 'without respect to external information,' which matches 'without external validation.' So the scope draft is supported. Now, let's check if the scope draft matches a nearby sibling concept more strongly. The sibling contrast includes KC_CLU_EVAL_002 (SSE), which is an internal index, so it's not a sibling that would conflict with the scope. The scope is about internal indices, and SSE is an example of an internal index, so it's consistent. Now, let's check the JSON structure. We need to return a JSON with status, text, supporting_evidence_labels, and abstention_reason. For the definition, the status should be 'supported' if it's supported, or 'abstained' if we had to rewrite. Since we're rewriting the definition, the status should be 'supported' with the new text. Wait, the instruction says: 'If a drafted field contains unsupported material, rewrite it conservatively using only supported content or abstain.' So we're rewriting the definition to remove the unsupported part, so the new definition is supported. So the status for definition should be 'supported', with the new text. For scope, the draft is supported, so status is 'supported'. Now, let's confirm the evidence labels. For definition, the evidence label is E1, which is 'internal indices because they use only information present in the data set.' So supporting_evidence_labels should be [",
+      "candidate_definition_redraft_verify_reason": "Draft definition claims 'using only the data and the clustering itself' but evidence only states 'using only information present in the data set'. The phrase 'clustering itself' is not supported by evidence, and the evidence does not explicitly mention 'clustering itself' as a separate component from the data set.",
+      "baseline_errors": {
+        "verify_error": "",
+        "definition_redraft_verify_error": ""
+      },
+      "candidate_errors": {
+        "verify_error": "",
+        "preservation_verify_error": "",
+        "rescue_verify_error": "",
+        "definition_redraft_verify_error": ""
+      },
+      "supporting_artifact_refs": {
+        "baseline_bundle_path": "data/processed/kc_drafts/2026-04-16_194203/kc_draft_bundles.jsonl",
+        "candidate_bundle_path": "data/processed/kc_drafts/2026-04-17_194932/kc_draft_bundles.jsonl",
+        "baseline_summary_path": "data/runs/2026-04-16_194203_step6_7/summary.json",
+        "candidate_summary_path": "data/runs/2026-04-17_194932_step6_7/summary.json"
+      }
+    },
+    {
+      "kc_id": "KC_CLU_EVAL_002",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "seed_floor_fallback",
+      "binding_touch_classification": "untouched_but_regressed",
+      "candidate_binding_repair_state": "no_binding_possible",
+      "candidate_binding_repair_reason": "definition_not_grounded",
+      "candidate_binding_repair_attempt_reason": "",
+      "candidate_pool_changed": true,
+      "candidate_pool_added_ids": [
+        "KC_CLU_EVAL_002:overlay:79ece6a4f17b75f7"
+      ],
+      "candidate_pool_removed_ids": [
+        "KC_CLU_EVAL_002:overlay:ce01dad0b1c79ffe"
+      ],
+      "preservation_result_changed": false,
+      "verification_result_changed": false,
+      "later_control_logic_changed": true,
+      "diagnostics_masking_real_step": false,
+      "dominant_collapse_path": "later_control_logic_changed",
+      "dominant_collapse_basis": "baseline final definition came from definition_full_candidate_single_span_fallback, so the accepted baseline did not depend on a grounded verify response",
+      "baseline_selection_reason": "definition_full_candidate_single_span_fallback",
+      "candidate_selection_reason": "definition_full_candidate_abstained",
+      "baseline_verify_status": "abstained",
+      "candidate_preservation_verify_status": "abstained",
+      "candidate_rescue_verify_status": "abstained",
+      "candidate_definition_redraft_verify_status": "abstained",
+      "baseline_verify_reason": "Drafted definition contains unsupported material: 'normalized by cluster size' is not supported by evidence E1. Evidence E1 shows SSE as sum of squared distances without normalization, and the formula given in E1 matches the seed_definition's cluSSE(X) = (1/|X|)*sum pointSSE, but the drafted definition incorrectly states SSE as normalized by cluster size. The seed_definition clarifies that SSE = (1/K)*sum cluSSE(X), but the drafted definition does not reflect this correctly and adds unsupported normalization.",
+      "candidate_preservation_verify_reason": "Drafted definition contains unsupported material: 'normalized by cluster size' does not match cited evidence. Evidence shows SSE as sum of squared distances without normalization, and the formula in evidence (7.14) shows SSE as sum of squared distances (not normalized). The seed definition specifies 'cluSSE(X) = (1/|X|)*sum pointSSE' but the drafted definition incorrectly states 'normalized by cluster size' for SSE, which should be the sum of cluSSE across clusters, not normalized.",
+      "candidate_definition_redraft_verify_reason": "Draft definition claims SSE is 'sum of squared distances from each point to its cluster centroid, normalized by cluster size and number of clusters', but evidence E3 shows SSE = ∑_{x∈C_i} dist(c_i,x)^2 = (1/2m_i) ∑_{x∈C_i} ∑_{y∈C_i} dist(x,y)^2. The draft incorrectly states normalization by cluster size (1/|X|) and number of clusters (1/K), while evidence shows SSE is the raw sum of squared distances (not normalized), and the equation shows it's equal to a form involving pairwise distances. The draft's normalization claims are unsupported by evidence, which presents SSE as the raw sum (not normalized).",
+      "baseline_errors": {
+        "verify_error": "",
+        "definition_redraft_verify_error": "RuntimeError:Attempt1:TimeoutError:timed out;Attempt2:TimeoutError:timed out"
+      },
+      "candidate_errors": {
+        "verify_error": "",
+        "preservation_verify_error": "",
+        "rescue_verify_error": "",
+        "definition_redraft_verify_error": ""
+      },
+      "supporting_artifact_refs": {
+        "baseline_bundle_path": "data/processed/kc_drafts/2026-04-16_194203/kc_draft_bundles.jsonl",
+        "candidate_bundle_path": "data/processed/kc_drafts/2026-04-17_194932/kc_draft_bundles.jsonl",
+        "baseline_summary_path": "data/runs/2026-04-16_194203_step6_7/summary.json",
+        "candidate_summary_path": "data/runs/2026-04-17_194932_step6_7/summary.json"
+      }
+    },
+    {
+      "kc_id": "KC_DE_PREP_004",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "seed_floor_fallback",
+      "binding_touch_classification": "untouched_but_regressed",
+      "candidate_binding_repair_state": "no_binding_possible",
+      "candidate_binding_repair_reason": "definition_not_grounded",
+      "candidate_binding_repair_attempt_reason": "",
+      "candidate_pool_changed": true,
+      "candidate_pool_added_ids": [
+        "KC_DE_PREP_004:overlay:f25cec76a967119b"
+      ],
+      "candidate_pool_removed_ids": [
+        "KC_DE_PREP_004:overlay:c7d74a6c7d981d7b"
+      ],
+      "preservation_result_changed": false,
+      "verification_result_changed": true,
+      "later_control_logic_changed": false,
+      "diagnostics_masking_real_step": false,
+      "dominant_collapse_path": "verification_result_changed",
+      "dominant_collapse_basis": "baseline verify path stayed grounded or accepted while candidate verify paths abstained",
+      "baseline_selection_reason": "definition_full_candidate_llm_multispan_verified",
+      "candidate_selection_reason": "definition_full_candidate_abstained",
+      "baseline_verify_status": "grounded",
+      "candidate_preservation_verify_status": "abstained",
+      "candidate_rescue_verify_status": "abstained",
+      "candidate_definition_redraft_verify_status": "abstained",
+      "baseline_verify_reason": "",
+      "candidate_preservation_verify_reason": "The definition draft contains unsupported material: 'Values that violate range, format, or cross-field consistency constraints and therefore need to be detected and corrected.' The cited evidence only provides an example of inconsistent values (zip code not matching city) but does not mention 'range, format, or cross-field consistency constraints' or the need to 'detect and correct' them. The evidence is limited to a specific example without generalizing to the constraints mentioned in the draft.",
+      "candidate_definition_redraft_verify_reason": "Draft definition claims values 'violate range, format, or cross-field consistency constraints' but evidence only mentions 'inconsistent values' without specifying constraint types (range/format/cross-field). Evidence states inconsistent values 'must be resolved' but draft says 'need to be detected and corrected' - 'resolved' ≠ 'detected and corrected' (resolution implies correction, but draft adds 'detected' which isn't in evidence). Draft's 'therefore' implies causation not supported by evidence.",
+      "baseline_errors": {
+        "verify_error": "",
+        "definition_redraft_verify_error": ""
+      },
+      "candidate_errors": {
+        "verify_error": "",
+        "preservation_verify_error": "",
+        "rescue_verify_error": "",
+        "definition_redraft_verify_error": ""
+      },
+      "supporting_artifact_refs": {
+        "baseline_bundle_path": "data/processed/kc_drafts/2026-04-16_194203/kc_draft_bundles.jsonl",
+        "candidate_bundle_path": "data/processed/kc_drafts/2026-04-17_194932/kc_draft_bundles.jsonl",
+        "baseline_summary_path": "data/runs/2026-04-16_194203_step6_7/summary.json",
+        "candidate_summary_path": "data/runs/2026-04-17_194932_step6_7/summary.json"
+      }
+    },
+    {
+      "kc_id": "KC_EVAL_BASIC_005",
+      "baseline_status": "direct_grounded",
+      "candidate_status": "seed_floor_fallback",
+      "binding_touch_classification": "untouched_but_regressed",
+      "candidate_binding_repair_state": "no_binding_possible",
+      "candidate_binding_repair_reason": "definition_not_grounded",
+      "candidate_binding_repair_attempt_reason": "",
+      "candidate_pool_changed": true,
+      "candidate_pool_added_ids": [
+        "KC_EVAL_BASIC_005:overlay:c4b01862b901b6ce"
+      ],
+      "candidate_pool_removed_ids": [
+        "KC_EVAL_BASIC_005:overlay:1c82a750e23fcf1f"
+      ],
+      "preservation_result_changed": true,
+      "verification_result_changed": false,
+      "later_control_logic_changed": true,
+      "diagnostics_masking_real_step": false,
+      "dominant_collapse_path": "later_control_logic_changed",
+      "dominant_collapse_basis": "baseline final definition came from definition_full_candidate_single_span_fallback, so the accepted baseline did not depend on a grounded verify response",
+      "baseline_selection_reason": "definition_full_candidate_single_span_fallback",
+      "candidate_selection_reason": "definition_full_candidate_abstained",
+      "baseline_verify_status": "abstained",
+      "candidate_preservation_verify_status": "abstained",
+      "candidate_rescue_verify_status": "abstained",
+      "candidate_definition_redraft_verify_status": "abstained",
+      "baseline_verify_reason": "insufficient_evidence",
+      "candidate_preservation_verify_reason": "Drafted definition contains unsupported material: 'correctly predicted as negative' should be 'correctly identified as negative' to match evidence wording. Evidence states 'fraction of negative test instances correctly' without specifying 'predicted'.",
+      "candidate_definition_redraft_verify_reason": "Draft definition claims 'fraction correctly predicted as negative' but evidence states 'negative examples are misclassified' (contradiction).",
+      "baseline_errors": {
+        "verify_error": "RuntimeError:Attempt1:TimeoutError:timed out;Attempt2:TimeoutError:timed out",
+        "definition_redraft_verify_error": ""
+      },
+      "candidate_errors": {
+        "verify_error": "",
+        "preservation_verify_error": "",
+        "rescue_verify_error": "",
+        "definition_redraft_verify_error": ""
+      },
+      "supporting_artifact_refs": {
+        "baseline_bundle_path": "data/processed/kc_drafts/2026-04-16_194203/kc_draft_bundles.jsonl",
+        "candidate_bundle_path": "data/processed/kc_drafts/2026-04-17_194932/kc_draft_bundles.jsonl",
+        "baseline_summary_path": "data/runs/2026-04-16_194203_step6_7/summary.json",
+        "candidate_summary_path": "data/runs/2026-04-17_194932_step6_7/summary.json"
+      }
+    }
+  ]
+}

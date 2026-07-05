@@ -1,0 +1,31 @@
+step: 4
+
+inputs:
+  active_step3_set: data/processed/doctree/_sets/ACTIVE_STEP3_SET.txt
+  active_step3_6_set: data/processed/blockstore_math_salvaged/_sets/ACTIVE_STEP3_6_SET.txt
+
+  # which block file is canonical for indexing
+  canonical_blocks_filename: blocks_merged.jsonl
+  required_step3_files:
+    - doctree.json
+    - page_index.jsonl
+  required_step3_6_files:
+    - blocks_merged.jsonl
+    - pages.jsonl
+
+outputs:
+  processed_root: data/processed/retrieval_index
+  sets_dir: data/processed/retrieval_index/_sets
+
+run:
+  # dry_run true means: resolve inputs, validate, write audit, print summary, do NOT write processed outputs
+  dry_run: true
+  # if true, fails if any doc is missing any required file
+  strict: true
+  # optional allowlist of doc_ids; empty means all docs in active sets
+  doc_id_allowlist: []
+
+audit:
+  # inputs for step4 are processed outputs (step3/3.6). We still hash them.
+  freeze_inputs: false
+  log_level: INFO

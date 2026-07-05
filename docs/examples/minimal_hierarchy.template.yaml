@@ -1,0 +1,9 @@
+hierarchy_version: kc_library.input_hierarchy.v1
+course_id: REPLACE_ME_COURSE_ID
+course_title: REPLACE_ME_COURSE_TITLE
+topics:
+  - topic_id: topic_001
+    topic_title: REPLACE_ME_TOP_LEVEL_TOPIC
+    children:
+      - topic_id: topic_001_001
+        topic_title: REPLACE_ME_CHILD_TOPIC

@@ -1,0 +1,1528 @@
+# CODEX Active Step 6 Seedless Refactor State
+
+Date: 2026-04-29
+Mode: `Mode C: Validation And Rerun Planning`
+Status: Bounded Step 5x non-exact source-surface fallback repair implemented and locally assessed; authoritative target replay not yet performed
+
+## 2026-05-06T13:10:00Z - Shape-Aware Step 5p/5x Shadow Surgery Recovery
+
+- current objective:
+  - add a bounded, backward-compatible shape-aware shadow layer for Step 5p/5x so multi-label evidence needs can distinguish drafting-core, auxiliary, review-needed, and suspected-false-positive evidence without replacing the active pack contracts
+- exact repo root:
+  - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+- reference repo root:
+  - `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+- checkout status:
+  - synced editable mirror; `.git` is not present
+- latest Sofja inbound sync:
+  - `_sofja_inbound/shapeaware_surgery_20260506T123113Z/extracted`
+- recovered artifact truth boundary:
+  - repo-local Step 5p/5x source files and focused tests match the latest extracted Sofja snapshot byte-for-byte
+  - the expected repo-local full144 diagnostic artifacts for job `204794` are missing
+  - the extracted inbound snapshot contains the required Step 5p profile, Step 5x candidate, Step 5x scored, Step 5x pack, and audit artifacts, so those extracted artifacts are the authoritative local evidence source for this bounded task
+  - current-step alias manifests under `data/work/cache/current_step_artifacts/` remain present but resolve older April Step 1 / Step 6 surfaces and are not the truth boundary for this Step 5p/5x diagnostic patch
+- likely active files:
+  - `steps/step_05_p_kc_retrieval_profile/scripts/run_step5p_kc_retrieval_profile.py`
+  - `src/kc_l/retrieval_profile/schema.py`
+  - `src/kc_l/retrieval_profile/deterministic.py`
+  - `src/kc_l/retrieval_profile/builder.py`
+  - `src/kc_l/retrieval_gate/profile_guidance.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_retrieval_policy.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_scored_candidates.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_pack_composition.py`
+  - `tests/test_step5p_kc_retrieval_profile.py`
+  - `tests/test_step5x_profile_guidance.py`
+  - `tests/test_step5x_v3_scored_candidates.py`
+  - `tests/test_step5x_v3_pack_composition.py`
+- likely seed-definition dependency surfaces:
+  - no active `seed_definition` contract was observed in the recovered Step 5p/5x seam used for this task
+  - the active risk surface here is not seed text but definition-centric role and pack routing semantics that can suppress procedure, formula, relation, parameter, and phase/process evidence into empty or risky packs
+- rollback plan:
+  - no destructive git recovery is available
+  - restore touched files from the matching inbound extracted snapshot or repo-local audit/backups if the bounded patch needs to be reverted
+- stop boundary:
+  - Step 5p guidance/schema additions, Step 5x shadow scoring and pack-routing fields, focused tests, compact comparison diagnostics, durable notes, and local validation only
+  - no ACTIVE pointer mutation, no model jobs, no full rerun, and no unrelated Step 6 drafting refactor
+
+## 2026-05-06T13:13:30Z - Shape-Aware Step 5p/5x Shadow Surgery Closeout
+
+- current objective:
+  - complete the bounded shape-aware Step 5p/5x shadow implementation, validate it locally, and audit its effect against the full144 job `204794` artifacts without mutating the active production outputs
+- exact files changed:
+  - `src/kc_l/retrieval_gate/shapeaware_shadow.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_scored_candidates.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_pack_composition.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_retrieval_policy.py`
+  - `src/kc_l/retrieval_gate/profile_guidance.py`
+  - `src/kc_l/retrieval_profile/builder.py`
+  - `scripts/diagnostics/shapeaware_shadow_pack_comparison.py`
+  - `tests/test_step5x_shapeaware_shadow.py`
+  - `tests/test_step5x_v3_scored_candidates.py`
+  - `tests/test_step5x_v3_pack_composition.py`
+  - `tests/test_step5x_profile_guidance.py`
+  - `tests/test_step5x_retrieval_policy.py`
+  - `tests/test_step5p_kc_retrieval_profile.py`
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+- new additive fields and routes introduced:
+  - Step 5p / retrieval-policy shadow guidance:
+    - `concept_head`
+    - `qualifiers`
+    - `expanded_aliases`
+    - `normalized_surface_variants`
+    - `expected_evidence_needs`
+    - `route_specific_query_variants`
+    - `route_specific_required_terms`
+    - `route_specific_optional_terms`
+    - `negative_sibling_terms`
+    - `risk_hints`
+  - Step 5x scored-row shadow fields:
+    - `shapeaware_support_roles`
+    - `shapeaware_bucket`
+    - `review_risk_flags`
+    - `expected_evidence_needs`
+  - Step 5x pack shadow fields:
+    - `shapeaware_route`
+    - `evidence_need_satisfaction`
+    - `drafting_core_evidence`
+    - `auxiliary_evidence`
+    - `review_needed_evidence`
+    - `rejected_false_positive_evidence`
+  - shadow routes:
+    - `standard_definition_packet`
+    - `standard_procedure_packet`
+    - `standard_parameter_packet`
+    - `standard_metric_formula_packet`
+    - `standard_formal_relation_packet`
+    - `standard_phase_process_packet`
+    - `partial_grounded_packet`
+    - `variant_only_review_packet`
+    - `sibling_overlap_review_packet`
+    - `context_only_review_packet`
+    - `suspected_false_positive_review_packet`
+    - `insufficient_source_support_packet`
+- validations run:
+  - `python -m py_compile src\kc_l\retrieval_gate\shapeaware_shadow.py src\kc_l\retrieval_gate\evidence_stage_v3_scored_candidates.py src\kc_l\retrieval_gate\evidence_stage_v3_pack_composition.py src\kc_l\retrieval_gate\evidence_stage_v3_retrieval_policy.py src\kc_l\retrieval_gate\profile_guidance.py src\kc_l\retrieval_profile\builder.py scripts\diagnostics\shapeaware_shadow_pack_comparison.py tests\test_step5x_shapeaware_shadow.py tests\test_step5x_v3_scored_candidates.py tests\test_step5x_v3_pack_composition.py tests\test_step5x_profile_guidance.py tests\test_step5p_kc_retrieval_profile.py tests\test_step5x_retrieval_policy.py`
+  - `python tests\test_step5x_shapeaware_shadow.py`
+  - `python tests\test_step5x_v3_scored_candidates.py`
+  - `python tests\test_step5x_v3_pack_composition.py`
+  - `python tests\test_step5x_profile_guidance.py`
+  - `python tests\test_step5p_kc_retrieval_profile.py`
+  - `python tests\test_step5x_retrieval_policy.py`
+  - `python scripts\diagnostics\shapeaware_shadow_pack_comparison.py`
+- validations passed:
+  - all listed direct Step 5p / Step 5x tests passed
+  - `py_compile` passed for all touched source/test files
+  - comparison script completed without model calls and wrote a fresh audit bundle under `local_audits/shapeaware_shadow_pack_comparison_20260506T131255Z/`
+  - comparison script correctly fell back to the latest extracted inbound Sofja snapshot because the repo-local full144 job `204794` artifacts remain missing
+- validations failed:
+  - no remaining validation failures
+  - during implementation, the new shadow tests exposed and drove fixes for algorithm-vs-phase need ordering, parameter-relation cue singular forms, context-completion auxiliary bucketing, partial-grounded routing when secondary evidence is clean but the primary need is missing, and exact-match preference in the known-target diagnostics
+- comparison artifact paths:
+  - `local_audits/shapeaware_shadow_pack_comparison_20260506T131255Z/shapeaware_shadow_pack_comparison.json`
+  - `local_audits/shapeaware_shadow_pack_comparison_20260506T131255Z/shapeaware_shadow_pack_comparison.txt`
+  - `local_audits/shapeaware_shadow_pack_comparison_20260506T131255Z/RECOVERY_NOTE.md`
+- compact comparison readout:
+  - baseline route distribution: `standard_drafting=101`, `partial_grounded_packet=26`, `insufficient_support_packet=17`
+  - shadow route distribution: `partial_grounded_packet=104`, `context_only_review_packet=16`, `standard_metric_formula_packet=9`, `standard_procedure_packet=5`, `standard_phase_process_packet=3`, `standard_definition_packet=3`, `standard_formal_relation_packet=2`, `standard_parameter_packet=1`, `suspected_false_positive_review_packet=1`
+  - known target outcomes:
+    - `K-Means Algorithm` moved from `insufficient_support_packet` to `standard_procedure_packet`
+    - `DBSCAN Parameters (eps, minPts)` moved from `insufficient_support_packet` to `standard_parameter_packet`
+    - `Rand Index` moved from `insufficient_support_packet` to `standard_metric_formula_packet`
+    - `F-Measure` moved from `insufficient_support_packet` to `standard_metric_formula_packet`
+    - `NB Learning Phase` and `External Index: F-Measure` remained review-only / context-only rather than being silently promoted
+    - `Directly Density-Reachable` and `Density-Reachable` still lack clean target-bound formal-relation evidence in this shadow pass
+- current risks:
+  - the shadow audit is intentionally conservative and currently over-flags risk on many baseline-standard packs (`83` standard packs demoted by shadow routing, `0` unchanged-clean under the new shadow criteria)
+  - many shadow review flags are driven by weak or missing target binding in the existing scored rows, so the comparison is not yet a promotion signal
+  - full production proof is still missing because no authoritative Step 5p / Step 5x rerun was performed from this local mirror
+  - repo-local full144 job `204794` artifacts are still absent; comparison relied on the extracted inbound snapshot
+- rollback plan:
+  - no `.git` recovery is available in the synced mirror
+  - restore the touched Step 5p / Step 5x source and tests from `_sofja_inbound/shapeaware_surgery_20260506T123113Z/extracted` if this bounded shadow layer needs to be backed out
+- minimum authoritative rerun boundary:
+  - rerun authoritative Step 5p retrieval profiles -> Step 5x candidate bank -> Step 5x scored candidates -> Step 5x pack composition for a bounded diagnostic slice containing the watched KCs first
+  - only after that bounded slice is reviewed should the full144 diagnostic set be regenerated authoritatively
+- next action:
+  - inspect the new comparison bundle, then run a bounded authoritative Step 5p / Step 5x diagnostic slice that includes `NB Learning Phase`, `Rand Index`, `K-Means Algorithm`, `DBSCAN Parameters (eps, minPts)`, `Directly Density-Reachable`, `Density-Reachable`, `External Index: F-Measure`, and `F-Measure`
+- explicit resume point:
+  - `local_audits/shapeaware_shadow_pack_comparison_20260506T131255Z/RECOVERY_NOTE.md`
+
+## 2026-05-04T23:33:41Z - Step 5x Retrieval Policy Redesign Closeout
+
+- current objective:
+  - implement a domain-agnostic Step 5x retrieval-policy layer between Step 5p guidance and Step 5x candidate-bank generation, preserving source-grounded evidence authority and seedless contracts
+- exact repo root:
+  - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+- reference repo root:
+  - `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+- checkout status:
+  - synced editable mirror; `.git` is not present
+- truth boundary:
+  - live editable source and the strict seedless registry/sentence overlay/profile artifacts used by the bounded run; stale current-step Step 1 alias remains seed-bearing and was not used as authority
+- files changed:
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_retrieval_policy.py`
+  - `src/kc_l/retrieval_gate/profile_guidance.py`
+  - `src/kc_l/retrieval_windowing/source_surface_fallback.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_scored_candidates.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_pack_composition.py`
+  - `tests/test_step5x_retrieval_policy.py`
+  - `tests/test_step5x_profile_guidance.py`
+  - `tests/test_step5x_source_surface_fallback.py`
+  - `tests/test_step5x_clean_slate_candidate_bank.py`
+  - `tests/test_step5x_v3_candidate_bank.py`
+  - `tests/test_step5x_v3_scored_candidates.py`
+  - `tests/test_step5x_v3_pack_composition.py`
+  - `local_audits/codex_step5x_policy_redesign_20260504T184445Z/*`
+- validations run:
+  - `python -m py_compile` on all touched Python source/tests
+  - direct Step 5x tests: retrieval policy, profile guidance, source-surface fallback, clean-slate candidate bank, v3 candidate bank, v3 scored candidates, v3 pack composition
+  - existing Step 5p tests: retrieval profile, V3 timeout fallback, Step 5p/5x feedback loop, Step 5p/5x route contract
+  - bounded 9KC candidate/scored/pack replay from strict seedless registry, `2026-05-01_224745` sentence overlay, and V3E2 Step 5p profiles
+  - `python local_audits\codex_step5x_policy_redesign_20260504T184445Z\audit_step5x_policy_9kc_smoke.py`
+- validations passed:
+  - all listed direct tests passed
+  - bounded smoke emitted `138` candidate rows, `138` scored rows, and `9` packs
+  - smoke audit passed all criteria: all 9 KCs represented, no seed leakage, no context-only positive support, no reference/bibliography positive support, feedback zero by default, candidate/scored policy metadata present, empty packs have near-miss diagnostics
+  - `KC_EVAL_BASIC_006` and `KC_CLU_CORE_001` are honest insufficient packets with non-empty near-miss items and diagnoses, not fake draft evidence
+- validations failed:
+  - transient direct-test failures during implementation were fixed: temp-dir permission fixture, shape-name assertions, severe-feedback fixture, overly broad `source` reference regex, and metadata assertion alignment
+- current risks:
+  - authoritative external/Sofja runtime is not proven
+  - full 144 is blocked pending a 24-36 KC diagnostic slice
+  - watched KCs did not gain target-bound positive evidence; they now fail informatively
+  - downstream Step 6.6/6.7 was not replayed against the new sidecars
+- rollback plan:
+  - no `.git`; use package inventory and changed-file list to restore previous synced files from external sync/backups if needed
+- minimum authoritative rerun boundary:
+  - Step 5x candidate bank -> scored candidates -> pack composition for the same 9 KCs first, then a 24-36 KC diagnostic slice; do not run full 144 until slice passes
+- next action:
+  - run the prepared 36KC diagnostic slice from `local_audits/codex_step5x_policy_redesign_20260504T184445Z/NEXT_SLICE_COMMANDS.txt`, then audit candidate/scored/pack rows before any full 144 replay
+- explicit resume point:
+  - `local_audits/codex_step5x_policy_redesign_20260504T184445Z/COMPACTION_HANDOFF_PROMPT.md`
+- package:
+  - `R:\Thesis Project\codex_sync\step5x_policy_redesign_20260504T184445Z.zip`
+  - SHA256 `5E9DA8CF9428313A1DE1F6DFBD5391455B96320A9AAE056B9D1B4A54D2705A22`
+
+## Current Objective
+
+Make the editable seedless repo internally coherent at the source-of-truth input and active Step 5.3 to Step 6.8 boundary by removing live seed-definition dependencies and replacing them with explicit seedless separation between:
+
+- coverage survival
+- evidence support quality
+- review-lane eligibility
+
+Active source-of-truth rule:
+
+- KC-leaf `definition` fields are forbidden in the hierarchy input
+- `seed_definition` is forbidden in the active Step 5.3 to Step 6.8 runtime
+
+## 2026-05-02 Update: Generic Seedless Typed Hierarchy Registry
+
+- current objective:
+  - solve the local registry crisis only by adding a generic typed seedless hierarchy registry builder that can parse the active hierarchy input while preserving structure/provenance and ignoring semantic hierarchy content
+- exact repo root:
+  - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+- checkout status:
+  - synced mirror; `.git` is not present
+- files created:
+  - `src/kc_l/hierarchy_registry/__init__.py`
+  - `src/kc_l/hierarchy_registry/builder.py`
+  - `steps/step_01_seedless_hierarchy_registry/scripts/run_seedless_hierarchy_registry.py`
+  - `tests/test_seedless_hierarchy_registry.py`
+  - `local_audits/codex_seedless_registry_20260501T232824Z/RECOVERED_STATE_SUMMARY.md`
+  - `local_audits/codex_seedless_registry_20260501T232824Z/smoke_probe_seedless_registry.py`
+- files edited:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+- files intentionally not touched:
+  - Step 5p source/config/tests
+  - Step 5x retrieval behavior
+  - Step 6.7 drafting behavior
+  - model configs and all model execution paths
+  - `data/processed/hierarchy_seedless_registry/_sets/ACTIVE_SEEDLESS_KC_REGISTRY.txt`
+- validation run:
+  - `python -m py_compile src\kc_l\hierarchy_registry\__init__.py src\kc_l\hierarchy_registry\builder.py steps\step_01_seedless_hierarchy_registry\scripts\run_seedless_hierarchy_registry.py tests\test_seedless_hierarchy_registry.py`
+  - `python tests\test_seedless_hierarchy_registry.py`
+  - `python steps\step_01_seedless_hierarchy_registry\scripts\run_seedless_hierarchy_registry.py --hierarchy-json data\input\hierarchy\data_mining_kc_hierarchy_revised_.json --output-root data\processed\hierarchy_seedless_registry --set-manifest-root data\processed\hierarchy_seedless_registry\_sets --run-id local_seedless_registry_smoke --leaf-policy warn_topic`
+  - `python local_audits\codex_seedless_registry_20260501T232824Z\smoke_probe_seedless_registry.py`
+  - final `python -m py_compile` also included the smoke probe script
+  - after deterministic key-priority cleanup, reran `python -m py_compile`, `python tests\test_seedless_hierarchy_registry.py`, the smoke build, and the smoke probe; all passed again with the same counts
+  - `rg -n "Data Mining|KC_CLF|KC_EVAL|KC_CLU|144" src\kc_l\hierarchy_registry steps\step_01_seedless_hierarchy_registry tests\test_seedless_hierarchy_registry.py` timed out while walking directories
+  - `rg -n "Data Mining|KC_CLF|KC_EVAL|KC_CLU|144" src\kc_l\hierarchy_registry\__init__.py src\kc_l\hierarchy_registry\builder.py steps\step_01_seedless_hierarchy_registry\scripts\run_seedless_hierarchy_registry.py tests\test_seedless_hierarchy_registry.py`
+- validation passed:
+  - direct synthetic registry tests emitted `TEST_SEEDLESS_HIERARCHY_REGISTRY_OK`
+  - local smoke build emitted `SEEDLESS_HIERARCHY_REGISTRY_OK`
+  - smoke output counts: `171` typed knowledge units, `144` KCs, `27` topics, `170` edges, `0` warnings, `0` issues
+  - smoke probe emitted `SEEDLESS_REGISTRY_SMOKE_PROBE_OK kc_rows=144 topic_rows=27 knowledge_unit_rows=171`
+  - exact-file domain-specific grep over the new reusable implementation/tests returned no matches for `Data Mining`, current-corpus KC prefixes, or `144`
+- validation failed and fixed:
+  - first direct test run failed because Python `TemporaryDirectory(dir=REPO_ROOT)` hit a Windows permission issue; the test was changed to use the repo-local `.codex_tmp_seedless_registry_test` pattern and then passed
+- current risks:
+  - the new smoke output is local proof only, not a Sofja authoritative rerun
+  - the old seed-bearing Step 1 registry and failed zero-row seedless artifacts remain present for history and were not deleted
+  - Step 5p has not been integrated with the new registry in this task
+- next action:
+  - when explicitly requested, point Step 5p or downstream registry consumers at `data/processed/hierarchy_seedless_registry/local_seedless_registry_smoke/kc_registry_seedless.jsonl`, or rerun this stage with a timestamped production run id and `--update-active` only if the operator wants the ACTIVE pointer moved
+- resume point:
+  - continue from the new stage `steps/step_01_seedless_hierarchy_registry/scripts/run_seedless_hierarchy_registry.py`; do not assume Step 5p readiness or retrieval improvement from this registry-only task
+
+## 2026-05-02 Update: Strict Tree Invariant Patch For Seedless Registry
+
+- current objective:
+  - patch the new seedless hierarchy registry builder so the reusable implementation enforces the strict typed-tree invariant instead of merely succeeding on the current hierarchy input
+- exact repo root:
+  - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+- checkout status:
+  - synced mirror; `.git` is not present
+- files edited:
+  - `src/kc_l/hierarchy_registry/builder.py`
+  - `steps/step_01_seedless_hierarchy_registry/scripts/run_seedless_hierarchy_registry.py`
+  - `tests/test_seedless_hierarchy_registry.py`
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+- audit folder:
+  - `local_audits/codex_seedless_registry_tree_invariant_20260502T002133Z/`
+- backups created before editing:
+  - `local_audits/codex_seedless_registry_tree_invariant_20260502T002133Z/backups/builder.py`
+  - `local_audits/codex_seedless_registry_tree_invariant_20260502T002133Z/backups/test_seedless_hierarchy_registry.py`
+  - `local_audits/codex_seedless_registry_tree_invariant_20260502T002133Z/backups/run_seedless_hierarchy_registry.py`
+  - `local_audits/codex_seedless_registry_tree_invariant_20260502T002133Z/backups/CHANGELOG.md`
+  - `local_audits/codex_seedless_registry_tree_invariant_20260502T002133Z/backups/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+- invariant now enforced:
+  - topic nodes must be internal nodes only
+  - KC nodes must be leaf nodes only
+  - every leaf must be a KC
+  - any KC-marked node with children fails as `kc_node_has_children`
+  - any explicit topic leaf fails as `topic_node_without_children`
+  - ambiguous leaves default to KC classification with deterministic generated KC ids under `ambiguous_leaf_policy=kc`, or fail under `ambiguous_leaf_policy=error`
+  - edge sources must be topics and edge targets must be `topic|kc`
+  - every KC parent must be a topic
+- CLI surface:
+  - `--ambiguous-leaf-policy kc|error` is now the primary flag and defaults to `kc`
+  - hidden backward-compatible `--leaf-policy` remains available only for the safe `kc|error` values
+  - unsafe `warn_topic` / `topic` behavior is removed
+- validation run:
+  - `python -m py_compile src\kc_l\hierarchy_registry\builder.py steps\step_01_seedless_hierarchy_registry\scripts\run_seedless_hierarchy_registry.py tests\test_seedless_hierarchy_registry.py`
+  - `python tests\test_seedless_hierarchy_registry.py`
+  - `python steps\step_01_seedless_hierarchy_registry\scripts\run_seedless_hierarchy_registry.py --hierarchy-json data\input\hierarchy\data_mining_kc_hierarchy_revised_.json --output-root data\processed\hierarchy_seedless_registry --set-manifest-root data\processed\hierarchy_seedless_registry\_sets --run-id local_seedless_registry_strict_tree_smoke --ambiguous-leaf-policy kc`
+  - `python local_audits\codex_seedless_registry_tree_invariant_20260502T002133Z\strict_tree_smoke_probe.py`
+  - `rg -n "Data Mining|KC_CLF|KC_EVAL|KC_CLU|144" src\kc_l\hierarchy_registry\builder.py steps\step_01_seedless_hierarchy_registry\scripts\run_seedless_hierarchy_registry.py tests\test_seedless_hierarchy_registry.py`
+- validation passed:
+  - direct tests emitted `TEST_SEEDLESS_HIERARCHY_REGISTRY_OK`
+  - strict smoke emitted `SEEDLESS_HIERARCHY_REGISTRY_OK`
+  - strict smoke probe emitted `SEEDLESS_STRICT_TREE_SMOKE_PROBE_OK topics=27 kcs=144 knowledge_units=171 edges=170`
+  - exact-file grep found no Data Mining-specific terms, current-corpus KC prefixes, or hardcoded `144`
+- strict smoke outputs:
+  - `data/processed/hierarchy_seedless_registry/local_seedless_registry_strict_tree_smoke/knowledge_unit_registry.jsonl`
+  - `data/processed/hierarchy_seedless_registry/local_seedless_registry_strict_tree_smoke/kc_registry_seedless.jsonl`
+  - `data/processed/hierarchy_seedless_registry/local_seedless_registry_strict_tree_smoke/topic_registry_seedless.jsonl`
+  - `data/processed/hierarchy_seedless_registry/local_seedless_registry_strict_tree_smoke/hierarchy_edges.jsonl`
+  - `data/processed/hierarchy_seedless_registry/local_seedless_registry_strict_tree_smoke/registry_stats.json`
+  - `data/processed/hierarchy_seedless_registry/local_seedless_registry_strict_tree_smoke/schema_snapshot.json`
+  - `data/processed/hierarchy_seedless_registry/local_seedless_registry_strict_tree_smoke/REGISTRY_BUILD_REPORT.txt`
+  - `data/processed/hierarchy_seedless_registry/_sets/local_seedless_registry_strict_tree_smoke_seedless_hierarchy_registry_set.json`
+- strict smoke counts:
+  - `171` knowledge units
+  - `144` KCs
+  - `27` topics
+  - `170` edges
+  - `0` warnings
+  - `0` issues
+- current risks:
+  - this is still local mirror proof only, not an authoritative Sofja rerun
+  - the ACTIVE pointer intentionally still points to the older failed zero-row manifest and was not changed in this patch
+  - Step 5p remains untouched and unintegrated by design
+- next action:
+  - if explicitly requested, rerun or review the strict smoke output and then decide whether to move `ACTIVE_SEEDLESS_KC_REGISTRY.txt`
+- resume point:
+  - resume from `local_seedless_registry_strict_tree_smoke` and `src/kc_l/hierarchy_registry/builder.py`; do not branch into Step 5p, Step 5x, Step 6.7, or model execution from this patch alone
+
+## 2026-05-01 Recovery Update: Local Step 5p And Step 5x Parity Audit Kickoff
+
+- current objective:
+  - recover the local mirror toward the latest available Sofja Step 5x state, then make the new Step 5p retrieval-profile layer usable on real local artifacts if those artifacts can be located or faithfully regenerated, without running full drafting
+- recovered-state summary:
+  - exact editable repo root:
+    - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+  - exact reference repo root:
+    - `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+  - editable repo checkout status:
+    - synced mirror, not a live Git checkout
+  - exact active objective:
+    - recover bounded local parity for the active Step 5x evidence-stage v3 seam and audit the newly added Step 5p retrieval-profile stage under the thesis-grade seedless constraints
+  - exact truth boundary:
+    - live source files in the editable mirror, present local manifests, and concrete files under `R:\Thesis Project\blockstore`, `R:\Thesis Project\codex_sync`, and `R:\Thesis Project\sofja_syncs`
+    - stale alias pointers and missing named bundles are not treated as authoritative without matching local payloads
+  - likely active files:
+    - `src/kc_l/retrieval_gate/source_surface_fallback.py`
+    - `tests/test_step5x_source_surface_fallback.py`
+    - `src/kc_l/retrieval_profile/schema.py`
+    - `src/kc_l/retrieval_profile/deterministic.py`
+    - `src/kc_l/retrieval_profile/model_client.py`
+    - `src/kc_l/retrieval_profile/builder.py`
+    - `steps/step_05_p_kc_retrieval_profile/scripts/run_step5p_kc_retrieval_profile.py`
+    - `steps/step_05_p_kc_retrieval_profile/resources/step5p.default.yaml`
+    - `steps/step_05_p_kc_retrieval_profile/resources/step5p.local.qwen3_14b.yaml`
+    - `tests/test_step5p_kc_retrieval_profile.py`
+    - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+    - `CHANGELOG.md`
+  - likely seed-definition dependency surfaces:
+    - Step 5p schema validation, deterministic cue extraction, model post-validation, and any copied Step 5x fallback logic must remain free of `seed_definition`, `seed_floor`, and hidden aliases
+    - broader repo compatibility residue and stale manifest references still exist outside the new Step 5p surface and must not be mistaken for active seedless proof
+  - rollback plan:
+    - restore only the pre-edit backups captured under `local_audits\local_recovery_20260501T170852Z\backup_before_changes\`
+    - do not use destructive git recovery because this mirror is not a live checkout
+  - stop boundary:
+    - Step 5x parity recovery, Step 5p retrieval-profile audit and bounded patching, bounded local validation, and durable audit artifacts only
+    - no active-pointer updates, no full model drafting, no long unbounded model jobs
+- direct recovery findings before patching:
+  - local Step 5x parity against `R:\Thesis Project\sofja_syncs\step5x_current_remote_state_20260430_010608` is mostly good:
+    - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+    - `src/kc_l/retrieval_gate/evidence_stage_v3_scored_candidates.py`
+    - `src/kc_l/retrieval_gate/evidence_stage_v3_pack_composition.py`
+    - `tests/test_step5x_v3_candidate_bank.py`
+    - `tests/test_step5x_v3_scored_candidates.py`
+    - `tests/test_step5x_v3_pack_composition.py`
+    - `steps/step_05_x_evidence_stage_v3/resources/step5x_v3_scored_candidates.default.yaml`
+    - `steps/step_05_x_evidence_stage_v3/resources/step5x_v3_pack_composition.default.yaml`
+    - these files matched byte-for-byte
+  - local Step 5x fallback seam is not yet at latest Sofja parity:
+    - `src/kc_l/retrieval_gate/source_surface_fallback.py` differs from the newest Sofja sync copy
+    - `tests/test_step5x_source_surface_fallback.py` also differs from the newest Sofja sync copy
+    - the Sofja sync copy contains additional strict single-head binding and emitted-text anchoring guards, plus matching direct tests
+  - the required Step 5x candidate-bank fallback CLI flags are already present locally:
+    - `--step5-3-set-manifest`
+    - `--enable-source-surface-fallback`
+    - `--fallback-min-score`
+    - `--max-fallback-per-kc`
+  - the new Step 5p layer now exists locally and is source-grounded by design:
+    - schema forbids seed fields
+    - accepted cues require provenance
+    - deterministic mode is the default
+    - model suggestions are post-validated and quarantined when not source-confirmed
+  - the exact named bundles `step5x_generic_salvage_patch_prep_20260430T112604Z.tar.gz` and `step5x_bucket7_generic_salvage_replay_20260430T113936Z.tar.gz` were not found under the scanned local `codex_sync`, `sofja_syncs`, `blockstore`, or editable-repo roots
+  - current-step alias metadata is mixed and stale:
+    - `current_step_artifacts.status.json` claims newer alias resolutions than the alias payloads actually contain
+    - `step1_5_overlay_manifest.current.json` still points to `2026-04-08`
+    - `step6_6_set_manifest.current.json` and the Step 5.3 set manifest still reference remote `/beegfs2/.../retrieval_sentence_overlay/...` inputs
+  - live local processed data gaps remain substantial:
+    - `data/processed/doctree` missing
+    - `data/processed/retrieval_index` missing
+    - `data/processed/retrieval_sentence_overlay` missing
+    - `data/processed/kc_drafting_input_overlay` missing
+    - `data/processed/kc_drafts` missing
+    - `data/processed/kc_draft_canonicalization` missing
+  - external blockstore recovery surface is present and promising:
+    - `R:\Thesis Project\blockstore` contains Step 2 `_sets`, `blocks.jsonl`, `pages.jsonl`, `doc_manifest.json`, page images, and raw layer outputs for 3 docs
+    - MinerU raw output folders also contain `*_origin.pdf` files that look usable as local PDF sources for Step 3.6 if staged carefully
+  - faithful regeneration route is possible in principle but not yet proven:
+    - Step 3 can be regenerated from the external blockstore if a faithful local Step 2 surface or config override is staged
+    - Step 3.5 can then run from Step 2 plus Step 3
+    - Step 3.6 still needs locally resolvable PDFs, because the current external Step 2 manifests point to dead `/beegfs` paths
+    - Step 4 hard-requires overlapping Step 3 and Step 3.6 sets
+    - Step 4.5 depends on Step 4 outputs and patch metadata
+- next action:
+  - copy only the bounded Sofja-parity candidates for the stale Step 5x fallback seam into the mirror with full audit logging, then run the Step 5p contract audit and bounded local validation
+- explicit resume point:
+  - resume from local recovery folder `local_audits\local_recovery_20260501T170852Z\` after backing up touched files and before applying any Step 5x fallback or Step 5p edits
+
+## 2026-05-01 Update: Local Step 5p And Step 5x Recovery Closeout
+
+- current objective:
+  - recover the stale local Step 5x fallback seam from the newest locally available Sofja sync snapshot and harden the new Step 5p retrieval-profile layer so structural labels cannot leak in as source evidence
+- exact files changed:
+  - `src/kc_l/retrieval_gate/source_surface_fallback.py`
+  - `tests/test_step5x_source_surface_fallback.py`
+  - `src/kc_l/retrieval_profile/deterministic.py`
+  - `src/kc_l/retrieval_profile/builder.py`
+  - `tests/test_step5p_kc_retrieval_profile.py`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `CHANGELOG.md`
+  - audit artifacts under `local_audits\local_recovery_20260501T170852Z\`
+- exact recovery actions performed:
+  - copied `src/kc_l/retrieval_gate/source_surface_fallback.py` from `R:\Thesis Project\sofja_syncs\step5x_current_remote_state_20260430_010608\src\kc_l\retrieval_gate\source_surface_fallback.py`
+  - copied `tests/test_step5x_source_surface_fallback.py` from `R:\Thesis Project\sofja_syncs\step5x_current_remote_state_20260430_010608\tests\test_step5x_source_surface_fallback.py`
+  - recorded source paths, destination paths, SHA256 before/after values, and reasons in `local_audits\local_recovery_20260501T170852Z\FILE_RECOVERY_LOG.md`
+  - tightened Step 5p deterministic candidate intake so structural-only heading text is rejected unless a real sentence or quote-style evidence field is present
+- exact validations run:
+  - initial parallel compile attempt:
+    - `python -m py_compile src\kc_l\retrieval_gate\source_surface_fallback.py tests\test_step5x_source_surface_fallback.py src\kc_l\retrieval_profile\deterministic.py src\kc_l\retrieval_profile\builder.py tests\test_step5p_kc_retrieval_profile.py`
+  - authoritative compile rerun:
+    - `$env:PYTHONPYCACHEPREFIX='.codex_tmp_pycache'; python -m py_compile src\kc_l\retrieval_gate\source_surface_fallback.py tests\test_step5x_source_surface_fallback.py src\kc_l\retrieval_profile\deterministic.py src\kc_l\retrieval_profile\builder.py tests\test_step5p_kc_retrieval_profile.py`
+  - `python tests\test_step5p_kc_retrieval_profile.py`
+  - `python tests\test_step5x_source_surface_fallback.py`
+  - `python tests\test_step5x_v3_candidate_bank.py`
+  - `python -c "import importlib.util, pathlib, sys; repo=pathlib.Path('.').resolve(); sys.path.insert(0, str(repo/'src')); path=repo/'tests'/'test_step5x_v3_scored_candidates.py'; spec=importlib.util.spec_from_file_location('step5x_scored_direct', path); mod=importlib.util.module_from_spec(spec); sys.modules[spec.name]=mod; spec.loader.exec_module(mod); [getattr(mod, name)() for name in sorted(dir(mod)) if name.startswith('test_') and callable(getattr(mod, name)) and getattr(getattr(mod, name), '__code__', None) and getattr(mod, name).__code__.co_argcount == 0]; print('TEST_STEP5X_V3_SCORED_CANDIDATES_DIRECT_OK')"`
+  - `python -c "import importlib.util, pathlib, sys; repo=pathlib.Path('.').resolve(); sys.path.insert(0, str(repo/'src')); path=repo/'tests'/'test_step5x_v3_pack_composition.py'; spec=importlib.util.spec_from_file_location('step5x_pack_direct', path); mod=importlib.util.module_from_spec(spec); sys.modules[spec.name]=mod; spec.loader.exec_module(mod); skipped=[]; [getattr(mod, name)() if getattr(mod, name).__code__.co_argcount == 0 else skipped.append(name) for name in sorted(dir(mod)) if name.startswith('test_') and callable(getattr(mod, name)) and getattr(getattr(mod, name), '__code__', None)]; print({'status':'TEST_STEP5X_V3_PACK_COMPOSITION_DIRECT_OK','skipped':skipped})"`
+  - `rg -n 'seed_definition|seed_floor|Data Mining|KC_CLF_|KC_EVAL_|KC_CLU_|KC_DE_|KC_FSEL_' src\kc_l\retrieval_profile steps\step_05_p_kc_retrieval_profile tests\test_step5p_kc_retrieval_profile.py`
+  - Step 6.7 stale-check hashes:
+    - `Get-FileHash src\kc_l\kc_drafting\heuristic_core.py`
+    - `Get-FileHash src\kc_l\utils\kc_step67_model_drafting.py`
+    - compared against `R:\Thesis Project\codex_sync\extracted_step5x_strict_fallback_20260429T190804Z\step5x_strict_fallback_codex_input_20260429T190004Z\repo_source\src\kc_l\kc_drafting\heuristic_core.py`
+    - compared against `R:\Thesis Project\codex_sync\extracted_step5x_strict_fallback_20260429T190804Z\step5x_strict_fallback_codex_input_20260429T190004Z\repo_source\src\kc_l\utils\kc_step67_model_drafting.py`
+- exact validations passed:
+  - the authoritative `py_compile` rerun passed for all touched Python files
+  - `tests\test_step5p_kc_retrieval_profile.py` passed with `TEST_STEP5P_KC_RETRIEVAL_PROFILE_OK`
+  - `tests\test_step5x_source_surface_fallback.py` passed with `TEST_STEP5X_SOURCE_SURFACE_FALLBACK_OK`
+  - `tests\test_step5x_v3_candidate_bank.py` passed with `TEST_STEP5X_V3_CANDIDATE_BANK_OK`
+  - fixture-free direct harness coverage passed for `tests\test_step5x_v3_scored_candidates.py`
+  - fixture-free zero-argument coverage passed for `tests\test_step5x_v3_pack_composition.py`, with only the fixture-bound tests skipped
+  - Step 5p grep returned only expected seed-forbiddance and test-assertion hits; no Data Mining-specific or hardcoded production KC IDs were found in the Step 5p implementation files
+  - `src/kc_l\kc_drafting\heuristic_core.py` and `src\kc_l\utils\kc_step67_model_drafting.py` matched the newest comparable bundled copies that were actually present locally, so no Step 6.7 replacement was needed
+- exact validations failed:
+  - the first parallel `py_compile` attempt failed once due a transient Windows `__pycache__` access collision during concurrent writes
+  - no source-level validation remained failed after the isolated-pycache rerun
+- current risks:
+  - the live local Step 4.5 sentence overlay is still missing, so no real Step 5p build against `sentence_corpus.jsonl` was executed
+  - the current-step alias layer remains mixed and stale, especially around Step 1.5, Step 5.3, and Step 6.6 upstream path claims
+  - the exact named Apr 30 salvage tarballs described in operator memory were not found under the scanned local roots, so this session used the newest concrete Sofja sync bundle that was actually present instead
+  - the local repo still lacks live `data/processed/doctree`, `retrieval_index`, and `retrieval_sentence_overlay` trees
+- minimum authoritative rerun boundary:
+  - local proof for a real Step 5p run begins at Step 2 corpus restaging from the recovered `*_origin.pdf` files and continues through Step 3, Step 3.5, Step 3.6, Step 4 patches, Step 4.3 retrieval index, and Step 4.5 sentence overlay
+  - once a live local `sentence_corpus.jsonl` exists, the first bounded authoritative local Step 5p check should be the 8-KC probe in `local_audits\local_recovery_20260501T170852Z\NEXT_COMMANDS.md`
+- next action:
+  - if the operator wants real local Step 5p data rather than source-level validation only, restage the blockstore `*_origin.pdf` files into `data/input/course_materials` and run the exact command chain captured in `local_audits\local_recovery_20260501T170852Z\NEXT_COMMANDS.md`
+- explicit resume point:
+  - resume from `local_audits\local_recovery_20260501T170852Z\NEXT_COMMANDS.md`, starting with the three PDF copy commands and `python scripts/local/run_stage.py draft-preflight`
+
+## 2026-04-29 Recovery Update: Step 5x Non-Exact Fallback Repair Kickoff
+
+- current objective:
+  - repair the bounded Step 5x source-surface fallback seam so it can recover conservative non-exact candidate-bank rows for generic label-source mismatch cases without changing Step 6.6 or any downstream drafting stage
+- recovered-state summary:
+  - exact editable repo root:
+    - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+  - exact reference repo root:
+    - `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+  - editable repo checkout status:
+    - synced mirror, not the authoritative runtime
+  - exact active objective:
+    - preserve the existing exact fallback as Tier 1, then add conservative target-token, definition-head, and branch-local-heading tiers inside Step 5x candidate-bank generation only
+  - exact truth boundary:
+    - local source plus present manifests and durable repo notes define the contract surface here; local synthetic validation can prove only code-path correctness, while proof for `KC_CLF_NB_007`, `KC_CLF_UND_001`, and `KC_CLU_CORE_001` requires the first bounded Sofja replay after this patch
+  - likely active files:
+    - `src/kc_l/retrieval_gate/source_surface_fallback.py`
+    - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+    - `tests/test_step5x_source_surface_fallback.py`
+    - `tests/test_step5x_v3_candidate_bank.py`
+    - `CHANGELOG.md`
+    - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - likely seed-definition dependency surfaces:
+    - fallback payload generation and candidate-bank row adaptation must stay fully seed-free while preserving the existing seed-field stripping already enforced in the candidate-bank stage
+  - rollback plan:
+    - if the non-exact tiers become too permissive, restore only the bounded Step 5x fallback logic, tests, changelog, and durable note changes from this session while leaving the earlier strict exact fallback intact
+  - stop boundary:
+    - Step 5x fallback candidate recall, its audit metadata passthrough, focused tests, and durable notes only; no Step 6.6, Step 6.7, Step 6.8, graph, UI, evaluator, segmentation, or pointer updates
+- files inspected before patching:
+  - `AGENTS.md`
+  - `codex_context/STEP5X_NONEXACT_FALLBACK_TASK_BRIEF.md`
+  - `codex_context/BUNDLE_SUMMARY.txt`
+  - `codex_context/BUNDLE_FILE_LIST.txt`
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `data/work/cache/current_step_artifacts/current_step_artifacts.status.json`
+  - `data/work/cache/current_step_artifacts/step1_5_overlay_manifest.current.json`
+  - `src/kc_l/retrieval_gate/source_surface_fallback.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - `steps/step_05_x_evidence_stage_v3/scripts/run_step5x_v3_candidate_bank.py`
+  - `steps/step_05_x_evidence_stage_v3/resources/step5x_v3_candidate_bank.default.yaml`
+  - `tests/test_step5x_source_surface_fallback.py`
+  - `tests/test_step5x_v3_candidate_bank.py`
+- current candidate-bank seam:
+  - active CLI entrypoint is `steps/step_05_x_evidence_stage_v3/scripts/run_step5x_v3_candidate_bank.py`
+  - active stage seam is `run_candidate_bank_stage(...)` in `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - fallback payloads currently enter the candidate-bank row schema through `_candidate_bank_row_from_fallback_payload(...)`, which is the narrow additive passthrough point for any new audit fields
+- current candidate-bank row surface:
+  - base contract is still the Step 5x candidate-bank row in `REQUIRED_ROW_KEYS`
+  - fallback rows already add `candidate_source`, `fallback_reason`, `fallback_score_reasons`, `matched_surface_terms`, `surface_match_type`, `hierarchy_match_type`, `target_branch_tokens`, and `source_heading_text`
+  - new non-exact tiers should extend that additive audit surface rather than changing downstream-required keys
+- current risks:
+  - one-token non-exact matches can easily become too permissive unless strong cue and hierarchy gates remain tighter than the exact tier
+  - generic suffix stripping must stay generic and auditable rather than becoming a hidden synonym table
+  - any new metadata must remain schema-compatible with current Step 5x scored-candidate and pack-composition consumers
+- next action:
+  - refactor `src/kc_l/retrieval_gate/source_surface_fallback.py` around tiered candidate evaluation, then extend focused tests and the candidate-bank payload passthrough
+- explicit resume point:
+  - resume from the fallback row adapter in `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py` after the fallback module emits a stable tiered payload schema
+
+## 2026-04-29 Update: Step 5x Non-Exact Fallback Closeout
+
+- current objective:
+  - preserve the strict exact Tier 1 fallback while adding conservative non-exact target-token, definition-head, and branch-local-heading recall tiers inside Step 5x candidate-bank generation only
+- exact files changed:
+  - `src/kc_l/retrieval_gate/source_surface_fallback.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - `tests/test_step5x_source_surface_fallback.py`
+  - `tests/test_step5x_v3_candidate_bank.py`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `CHANGELOG.md`
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_gate\source_surface_fallback.py src\kc_l\retrieval_gate\evidence_stage_v3_candidate_bank.py steps\step_05_x_evidence_stage_v3\scripts\run_step5x_v3_candidate_bank.py tests\test_step5x_source_surface_fallback.py tests\test_step5x_v3_candidate_bank.py`
+  - `python tests\test_step5x_source_surface_fallback.py`
+  - `python tests\test_step5x_v3_candidate_bank.py`
+- exact validations passed:
+  - touched Step 5x fallback source, candidate-bank adapter, runner entrypoint, and the two direct-callable test files compiled successfully
+  - direct execution of `tests/test_step5x_source_surface_fallback.py` returned `TEST_STEP5X_SOURCE_SURFACE_FALLBACK_OK`
+  - direct execution of `tests/test_step5x_v3_candidate_bank.py` returned `TEST_STEP5X_V3_CANDIDATE_BANK_OK`
+  - new synthetic coverage proves:
+    - exact phrase fallback still works
+    - broad unrelated one-token matches are rejected
+    - generic suffix stripping can recover a definition-style source sentence
+    - token fallback requires relation/scope support
+    - prompt-like, fragmentary, caption-only, and formula-only rows are rejected
+    - no seed fields propagate into fallback candidate rows
+    - fallback metadata remains explicit and auditable through the candidate-bank schema boundary
+    - fallback disabled still preserves prior candidate-bank behavior and no active pointers are written
+- exact validations failed:
+  - none in this bounded local validation pass
+- current risks:
+  - this session still does not prove the target KCs `KC_CLF_NB_007`, `KC_CLF_UND_001`, and `KC_CLU_CORE_001` receive fallback rows on the authoritative corpus
+  - the non-exact tiers remain intentionally conservative, so some real label-source mismatch cases may still need another bounded pass after the first target replay diagnostics
+- next action:
+  - sync the bounded Step 5x patch back to Sofja and run the target-only candidate-bank replay before attempting any wider replay
+- explicit resume point:
+  - resume from the Sofja target replay command bundle in `codex_context/EXPECTED_TARGET_REPLAY_COMMANDS.md` and inspect the emitted `candidate_bank.jsonl` plus fallback row counts for the three known-missing KCs
+
+## 2026-04-29 Update: Step 5x Fallback Assessment Bundle
+
+- current objective:
+  - create a bounded local assessment bundle for the current Step 5x source-surface fallback patch without changing production logic
+- exact files changed:
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `CHANGELOG.md`
+  - `data/work/cache/diagnostics/step5x_v3_source_surface_fallback_review/20260429T205619Z/PATCH.diff`
+  - `data/work/cache/diagnostics/step5x_v3_source_surface_fallback_review/20260429T205619Z/CHANGED_FILE_HASHES.json`
+  - `data/work/cache/diagnostics/step5x_v3_source_surface_fallback_review/20260429T205619Z/STATIC_SAFETY_AUDIT.md`
+  - `data/work/cache/diagnostics/step5x_v3_source_surface_fallback_review/20260429T205619Z/FALLBACK_DECISION_TABLE.md`
+  - `data/work/cache/diagnostics/step5x_v3_source_surface_fallback_review/20260429T205619Z/TEST_OUTPUTS.txt`
+  - `data/work/cache/diagnostics/step5x_v3_source_surface_fallback_review/20260429T205619Z/LOCAL_SYNTHETIC_CASES.jsonl`
+  - `data/work/cache/diagnostics/step5x_v3_source_surface_fallback_review/20260429T205619Z/ASSESSMENT_SUMMARY.md`
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_gate\source_surface_fallback.py src\kc_l\retrieval_gate\evidence_stage_v3_candidate_bank.py steps\step_05_x_evidence_stage_v3\scripts\run_step5x_v3_candidate_bank.py tests\test_step5x_source_surface_fallback.py tests\test_step5x_v3_candidate_bank.py`
+  - `python tests\test_step5x_source_surface_fallback.py`
+  - `python tests\test_step5x_v3_candidate_bank.py`
+- exact validations passed:
+  - the assessment bundle captures repo-local patch diffs, file hashes, static safety audit notes, a fallback decision table, rerun command outputs, and synthetic diagnostic cases for the current Step 5x fallback state
+  - the bounded compile and direct-callable Step 5x tests remained green during bundle creation
+- exact validations failed:
+  - none during bundle creation
+- current risks:
+  - this bundle is still local and synthetic; it does not prove fallback emission for `KC_CLF_NB_007`, `KC_CLF_UND_001`, or `KC_CLU_CORE_001`
+  - diff baselines come from repo-local pre-Step5x snapshots because this editable mirror is not a live Git checkout
+- next action:
+  - sync the current Step 5x patch to Sofja and run the bounded target replay before any wider replay
+- explicit resume point:
+  - resume from `data/work/cache/diagnostics/step5x_v3_source_surface_fallback_review/20260429T205619Z/ASSESSMENT_SUMMARY.md` and `codex_context/EXPECTED_TARGET_REPLAY_COMMANDS.md`
+
+## 2026-04-29 Recovery Update: Step 5x Strict Source-Surface Fallback Kickoff
+
+- current objective:
+  - add a strict, seedless, source-surface fallback recall lane inside Step 5x candidate-bank generation only, so extra candidates still flow through existing Step 5x scoring and pack composition without any pointer update or Step 6.7 lane bypass
+- recovered-state summary:
+  - exact editable repo root:
+    - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+  - exact reference repo root:
+    - `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+  - editable repo checkout status:
+    - synced mirror, not a live Git checkout
+  - exact active objective:
+    - implement a conservative, domain-agnostic, model-agnostic Step 5x fallback candidate lane that supplements candidate-bank rows from strict source-surface matches under hierarchy-compatible context
+  - exact truth boundary:
+    - live Step 5x source files plus present manifests in this editable mirror outrank chat memory; current manifests still point to some remote or missing upstream artifacts, so local source-level contracts and explicit manifest fields are the reliable local truth
+  - likely active files:
+    - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+    - `src/kc_l/retrieval_gate/source_surface_fallback.py`
+    - `steps/step_05_x_evidence_stage_v3/scripts/run_step5x_v3_candidate_bank.py`
+    - `steps/step_05_x_evidence_stage_v3/resources/step5x_v3_candidate_bank.default.yaml`
+    - `tests/test_step5x_source_surface_fallback.py`
+    - `tests/test_step5x_v3_candidate_bank.py`
+    - `CHANGELOG.md`
+    - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - likely seed-definition dependency surfaces:
+    - none should be introduced in this patch; active watch points are candidate-bank input sanitation, fallback target-surface construction, and any propagated audit metadata that might accidentally reuse historical seed-named fields
+  - rollback plan:
+    - no destructive reset; rollback means manually restoring only the explicitly touched Step 5x source, config, tests, changelog, and durable note files
+  - stop boundary:
+    - candidate-bank generation, its runner/config, and focused Step 5x tests only; no active pointer update, no model drafting, no frozen or reviewed artifact mutation, and no Step 6.7 policy widening
+- files inspected before patching:
+  - `AGENTS.md`
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json`
+  - `data/work/cache/current_step_artifacts/step6_7_set_manifest.current.json`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_scored_candidates.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_pack_composition.py`
+  - `src/kc_l/retrieval_gate/semantic.py`
+  - `steps/step_05_x_evidence_stage_v3/scripts/run_step5x_v3_candidate_bank.py`
+  - `steps/step_05_x_evidence_stage_v3/resources/step5x_v3_candidate_bank.default.yaml`
+  - `steps/step_05_x_evidence_stage_v3/resources/step5x_v3_candidate_bank.regression_gemma_slice10.yaml`
+  - `steps/step_05_3_evidence_recalibrated/scripts/run_step5_3.py`
+  - `tests/test_step5x_v3_candidate_bank.py`
+  - `tests/test_step5x_v3_scored_candidates.py`
+  - read-only context:
+    - `R:\Thesis Project\codex_sync\readonly_context_step5x_strict_fallback_20260429T190834Z\context_notes\README_FOR_CODEX.md`
+    - small schema samples for `candidate_bank`, `scored_candidates`, and `sentence_corpus`
+    - small diagnostic summaries only
+- current candidate-bank seam:
+  - entrypoint is `run_candidate_bank_stage(...)` in `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - current Stage 1 row contract is one candidate-bank row per nested Step 5.3 evidence item with KC identity, topic path, source text/block text, location/provenance, retrieval/alignment/support metadata, and structural flags, but no Stage 2 scoring outputs or Stage 3 pack fields
+  - chosen integration point is immediately after normal Step 5.3 candidate-bank flattening, using the existing Step 5.3 upstream sentence-corpus manifest path to append conservative fallback rows before Stage 2 scoring
+- current risks:
+  - local mirrors do not contain the full authoritative upstream processed artifacts, so validation will stay synthetic and source-level in this session
+  - the scored-candidate stage rebuilds rows field-by-field, so any fallback audit details that must survive later stages need to live in already preserved nested fields or in a narrow additive passthrough
+  - sentence-corpus row surfaces vary by extraction layer and may include meta, prompt-like, or heading-only text, so the fallback must stay strict to avoid flooding the bank
+- next action:
+  - implement the new fallback module, wire it into candidate-bank generation/config/CLI, and add synthetic tests that prove strict source-sense retention and rejection behavior without using corpus-specific hardcoding
+- explicit resume point:
+  - resume from the candidate-bank seam in `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py` after normal Step 5.3 flattening and before Stage 1 artifacts are written
+
+## 2026-04-29 Update: Step 5x Strict Source-Surface Fallback Closeout
+
+- current objective:
+  - supplement Step 5x candidate-bank rows with a strict source-surface fallback recall lane that stays seedless, domain-agnostic, audit-friendly, and downstream-compatible
+- exact files changed:
+  - `src/kc_l/retrieval_gate/source_surface_fallback.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - `steps/step_05_x_evidence_stage_v3/scripts/run_step5x_v3_candidate_bank.py`
+  - `steps/step_05_x_evidence_stage_v3/resources/step5x_v3_candidate_bank.default.yaml`
+  - `tests/test_step5x_source_surface_fallback.py`
+  - `tests/test_step5x_v3_candidate_bank.py`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `CHANGELOG.md`
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_gate\source_surface_fallback.py src\kc_l\retrieval_gate\evidence_stage_v3_candidate_bank.py steps\step_05_x_evidence_stage_v3\scripts\run_step5x_v3_candidate_bank.py tests\test_step5x_source_surface_fallback.py tests\test_step5x_v3_candidate_bank.py`
+  - `python tests\test_step5x_source_surface_fallback.py`
+  - `python tests\test_step5x_v3_candidate_bank.py`
+  - `python -m pytest tests\test_step5x_source_surface_fallback.py tests\test_step5x_v3_candidate_bank.py`
+  - `python -c "import importlib.util, pathlib, sys; repo=pathlib.Path('.').resolve(); sys.path.insert(0, str(repo/'src')); path=repo/'tests'/'test_step5x_v3_scored_candidates.py'; spec=importlib.util.spec_from_file_location('step5x_scored_direct', path); mod=importlib.util.module_from_spec(spec); sys.modules[spec.name]=mod; spec.loader.exec_module(mod); [getattr(mod, name)() for name in sorted(dir(mod)) if name.startswith('test_') and callable(getattr(mod, name)) and getattr(getattr(mod, name), '__code__', None) and getattr(mod, name).__code__.co_argcount == 0]; print('TEST_STEP5X_V3_SCORED_CANDIDATES_DIRECT_OK')"`
+  - `python -c "import importlib.util, pathlib, sys; repo=pathlib.Path('.').resolve(); sys.path.insert(0, str(repo/'src')); path=repo/'tests'/'test_step5x_v3_pack_composition.py'; spec=importlib.util.spec_from_file_location('step5x_pack_direct', path); mod=importlib.util.module_from_spec(spec); sys.modules[spec.name]=mod; spec.loader.exec_module(mod); skipped=[]; [getattr(mod, name)() if getattr(mod, name).__code__.co_argcount == 0 else skipped.append(name) for name in sorted(dir(mod)) if name.startswith('test_') and callable(getattr(mod, name)) and getattr(getattr(mod, name), '__code__', None)]; print({'status':'TEST_STEP5X_V3_PACK_COMPOSITION_DIRECT_OK','skipped':skipped})"`
+- exact validations passed:
+  - touched Step 5x source, runner, and test files compiled successfully
+  - direct execution of `tests/test_step5x_source_surface_fallback.py` returned `TEST_STEP5X_SOURCE_SURFACE_FALLBACK_OK`
+  - direct execution of `tests/test_step5x_v3_candidate_bank.py` returned `TEST_STEP5X_V3_CANDIDATE_BANK_OK`
+  - zero-argument direct-callable coverage in `tests/test_step5x_v3_scored_candidates.py` returned `TEST_STEP5X_V3_SCORED_CANDIDATES_DIRECT_OK`
+  - zero-argument direct-callable coverage in `tests/test_step5x_v3_pack_composition.py` returned `TEST_STEP5X_V3_PACK_COMPOSITION_DIRECT_OK`, with the two fixture-bound tests explicitly skipped: `test_build_artifacts_creates_step66_compatible_manifest_without_active_pointer` and `test_loader_supports_stage2_set_manifest_and_exact_kc_filter`
+  - new synthetic coverage proves:
+    - strict exact surface matches survive when hierarchy context is compatible
+    - wrong-sense same-surface rows are rejected
+    - broad branch overlap alone does not create fallback candidates
+    - parenthetical acronym matches work generically
+    - prompt-like and formula-only rows are rejected
+    - deduplication and per-KC caps are enforced
+    - fallback disabled leaves candidate-bank row behavior unchanged while fallback enabled adds marked fallback rows without any active pointer update
+- exact validations failed:
+  - `python -m pytest tests\test_step5x_source_surface_fallback.py tests\test_step5x_v3_candidate_bank.py` failed because `pytest` is not installed in this interpreter (`No module named pytest`)
+- current risks:
+  - local validation remained synthetic and source-level only; no authoritative corpus replay has been run from this mirror
+  - fallback audit metadata now survives in candidate-bank rows and preserved nested fields, but the broader downstream artifact impact still needs authoritative inspection on real sentence-corpus inputs
+  - the optional direct-callable Step 5x pack-composition pass intentionally skipped the two `tmp_path` fixture-dependent tests because this was not a full `pytest` session
+- next action:
+  - on Sofja, run the bounded Step 5x candidate-bank -> scored-candidates -> evidence-pack path with fallback enabled on a targeted weak/no-positive slice, inspect whether the new rows survive scoring and enter clean packs, and only then decide whether any Step 6.6 or Step 6.7 replay is justified
+- explicit resume point:
+  - resume from `steps/step_05_x_evidence_stage_v3/resources/step5x_v3_candidate_bank.default.yaml` or an experiment override that sets `source_surface_fallback.enabled: true`, then replay Step 5x over the targeted slice containing weak/no-positive KCs such as the current known recall failures
+- minimum authoritative rerun boundary:
+  - rerun `step5x_v3_candidate_bank`, `step5x_v3_scored_candidates`, and `step5x_v3_pack_composition` on Sofja with fallback enabled, then regenerate Step 6.6 only for the same bounded slice because this patch changes candidate recall only at the Step 5x bank boundary and must prove survival through scoring, pack composition, and overlay construction before any later-stage claims
+
+## 2026-04-28 Update: Generic Step 6.7 Sidecar Lane Policy Repair
+
+- current objective:
+  - repair the bounded Step 6.7 sidecar evidence-lane policy so false local definition promotions are demoted generically without touching production orchestration
+- exact files changed:
+  - `src/kc_l/kc_drafting/evidence_lane_policy.py`
+  - `tests/test_evidence_lane_policy.py`
+  - `docs/operator_notes/STEP67_GENERIC_LANE_POLICY_2026-04-28.md`
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+- exact validations run:
+  - `python -m py_compile src\kc_l\kc_drafting\evidence_lane_policy.py scripts\experimental\step67a_build_field_lane_packets_generic.py tests\test_evidence_lane_policy.py tests\test_step67_sidecar_domain_agnosticity.py`
+  - `python tests\test_evidence_lane_policy.py`
+  - `python tests\test_step67_sidecar_domain_agnosticity.py`
+  - `python scripts\experimental\step67a_build_field_lane_packets_generic.py --packets _reference_artifacts\sofja_step67_policy_context_20260428T175121Z\data\processed\step67_sidecar_packets_40\2026-04-28_161958\evidence_packets.jsonl --overlay _reference_artifacts\sofja_step67_policy_context_20260428T175121Z\data\processed\kc_drafting_input_overlay\2026-04-28_002730\candidate_sentence_overlay.jsonl --out-root data\work\cache\diagnostics\step67_generic_lane_policy_v2_20260428`
+- exact validations passed:
+  - the repaired policy and focused tests compiled successfully
+  - direct execution of `tests/test_evidence_lane_policy.py` and `tests/test_step67_sidecar_domain_agnosticity.py` returned `TEST_EVIDENCE_LANE_POLICY_OK` and `TEST_STEP67_SIDECAR_DOMAIN_AGNOSTICITY_OK`
+  - the bounded non-LLM replay emitted 40 lane packets plus `summary.json` and `lane_audit.md` under `data/work/cache/diagnostics/step67_generic_lane_policy_v2_20260428/2026-04-28_191021/`
+  - replay summary recorded `selected_counter={definition_lane: 1, scope_lane: 19, context_lane: 60, sibling_contrast_lane: 3, quarantine_lane: 219}` after the repair, down from `definition_lane: 15` in the prior local sidecar replay
+  - manual inspection of the requested high-risk packets found zero remaining definition-lane rows for the incomplete-fragment, usage-caption, procedural-step, commonness, short-target-collision, loose-called, and off-target-likelihood cases, while preserving one clean table-called-target definition row
+- exact validations failed:
+  - `python -m pytest tests\test_evidence_lane_policy.py tests\test_step67_sidecar_domain_agnosticity.py` was not rerun because `pytest` is still not installed in this interpreter from the earlier pass
+- current risks:
+  - this remains a sidecar-only diagnostic surface and is not integrated into active Step 6.7 orchestration
+  - the stricter policy now abstains on some formerly promoted named-target rows, so recall tradeoffs still need future review before any architecture import point is considered
+  - no authoritative rerun has been performed from this repaired sidecar state
+- next action:
+  - keep the repaired sidecar files local, treat `data/work/cache/diagnostics/step67_generic_lane_policy_v2_20260428/2026-04-28_191021/` as the current bounded audit result, and defer any broader decision until a future explicitly authorized replay or import-point review
+- explicit resume point:
+  - resume from `data/work/cache/diagnostics/step67_generic_lane_policy_v2_20260428/2026-04-28_191021/` and inspect any remaining non-selected named-target abstentions before considering further sidecar policy changes
+
+## 2026-04-28 Update: Generic Step 6.7 Sidecar Lane Policy
+
+- current objective:
+  - capture the reusable Step 6.7 lane-policy lessons from the Sofja diagnostic as a bounded sidecar surface without patching the active production drafting path
+- exact files changed:
+  - `src/kc_l/kc_drafting/evidence_lane_policy.py`
+  - `scripts/experimental/step67a_build_field_lane_packets_generic.py`
+  - `tests/test_evidence_lane_policy.py`
+  - `tests/test_step67_sidecar_domain_agnosticity.py`
+  - `docs/operator_notes/STEP67_GENERIC_LANE_POLICY_2026-04-28.md`
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+- exact validations run:
+  - `python -m py_compile src\kc_l\kc_drafting\evidence_lane_policy.py scripts\experimental\step67a_build_field_lane_packets_generic.py tests\test_evidence_lane_policy.py tests\test_step67_sidecar_domain_agnosticity.py`
+  - `python tests\test_evidence_lane_policy.py`
+  - `python tests\test_step67_sidecar_domain_agnosticity.py`
+  - `python -m pytest tests\test_evidence_lane_policy.py tests\test_step67_sidecar_domain_agnosticity.py`
+  - `python scripts\experimental\step67a_build_field_lane_packets_generic.py --packets _reference_artifacts\sofja_step67_policy_context_20260428T175121Z\data\processed\step67_sidecar_packets_40\2026-04-28_161958\evidence_packets.jsonl --overlay _reference_artifacts\sofja_step67_policy_context_20260428T175121Z\data\processed\kc_drafting_input_overlay\2026-04-28_002730\candidate_sentence_overlay.jsonl --out-root data\work\cache\diagnostics\step67_generic_lane_policy_20260428`
+- exact validations passed:
+  - the new sidecar module, runner, and tests compiled successfully
+  - direct execution of both new test files returned `TEST_EVIDENCE_LANE_POLICY_OK` and `TEST_STEP67_SIDECAR_DOMAIN_AGNOSTICITY_OK`
+  - the bounded non-LLM replay emitted 40 lane packets plus `summary.json` and `lane_audit.md` under `data/work/cache/diagnostics/step67_generic_lane_policy_20260428/2026-04-28_183006/`
+  - replay summary recorded `lane_counter_all_items={quarantine_lane: 217, definition_lane: 16, context_lane: 69, scope_lane: 15, sibling_contrast_lane: 3}` with `packet_count=40`
+- exact validations failed:
+  - `python -m pytest tests\test_evidence_lane_policy.py tests\test_step67_sidecar_domain_agnosticity.py` failed because `pytest` is not installed in this interpreter (`No module named pytest`)
+- current risks:
+  - this is still a sidecar diagnostic surface and is not integrated into active Step 6.7 orchestration
+  - the generic replay is intentionally not V8-parity-seeking and abstains or contextualizes some rows that the historical diagnostic promoted
+  - no authoritative Sofja rerun has been performed, so production behavior remains unproven
+  - the patch tool wrote initially to a sandbox-local root, so the validated files were copied into the live `repo_source` tree before validation
+- next action:
+  - sync the new sidecar module, runner, tests, and note to Sofja and rerun the bounded non-LLM lane replay there before considering any production-path import point
+- explicit resume point:
+  - resume from `data/work/cache/diagnostics/step67_generic_lane_policy_20260428/2026-04-28_183006/` and compare the generic lane packets against the historical diagnostic only at the principle level, not at exact-count parity
+
+## 2026-04-27 Update: Step 5.4 Semantic-Role Eligibility V2
+
+- current objective:
+  - tighten Step 5.4 so candidates must be both target-bound and role-appropriate before they enter positive drafting support
+- exact files changed:
+  - `src/kc_l/retrieval_gate/evidence_pack_composition.py`
+  - `tests/test_step54_evidence_pack_composition.py`
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_gate\evidence_pack_composition.py tests\test_step54_evidence_pack_composition.py`
+  - direct callable execution of every `test_*` function in `tests/test_step54_evidence_pack_composition.py`
+  - read-only local replay over `R:\Thesis Project\kc_l_v2_seedless_rework_sync\_reference_artifacts\sofja_step54_target_binding_203748_20260427_143248\data\processed\kc_evidence_recalibrated\2026-04-26_195746\kc_evidence_candidates_recalibrated.jsonl`
+- exact validations passed:
+  - `py_compile` passed on the touched Step 5.4 source and test file
+  - direct callable fixture execution returned `STEP54_DIRECT_TESTS_OK`
+  - read-only replay removed the known bad positive markers from `KC_CLF_NB_011`, `KC_CLU_DBS_003`, `KC_EVAL_SAMP_003`, `KC_CLU_CORE_002`, `KC_CLU_EVAL_001`, and `KC_DE_PREP_003`, and `ordered_pack_for_drafting` no longer included `sibling_contrast`
+- exact validations failed:
+  - `python -m pytest tests\test_step54_evidence_pack_composition.py` still fails in this interpreter because `pytest` is not installed (`No module named pytest`)
+- current risks:
+  - the read-only replay is a local reconstruction using canonical names plus topic metadata from the saved Step 5.4 pack rows, not an authoritative rerun with the full Sofja environment
+  - `KC_CLU_DBS_001` is cleaner than before but still lands in `escalated_evidence_rescue` with only weak positive support, so that KC remains a real upstream-recall / evidence-quality watch item
+- next action:
+  - sync the patch to Sofja, rerun only the Step 5.4 and Step 6.6 regression slice, and inspect slot text before any new Step 6.7 job
+- explicit resume point:
+  - resume from the Sofja Step 5.4 regression rerun and verify whether `KC_CLF_NB_011`, `KC_CLU_DBS_001`, `KC_CLU_DBS_003`, `KC_EVAL_SAMP_003`, `KC_CLU_CORE_002`, `KC_CLU_EVAL_001`, and `KC_DE_PREP_003` match the cleaner local replay behavior
+
+## 2026-04-27 Kickoff
+
+- New bounded objective:
+  - add a deterministic Step 5.4 evidence-pack composition stage between Step 5.3 and Step 6.6 so the live drafting path receives role-aware, source-ordered, auditable support packs instead of only flat evidence rows
+- Exact planned edit surface:
+  - `src/kc_l/retrieval_gate/evidence_pack_composition.py`
+  - `steps/step_05_4_evidence_pack_composition/scripts/run_step5_4_evidence_pack_composition.py`
+  - `steps/step_05_4_evidence_pack_composition/resources/step5_4.default.yaml`
+  - `steps/step_05_4_evidence_pack_composition/resources/step5_4.sofja.actual_corpus.yaml`
+  - `steps/step_05_4_evidence_pack_composition/resources/step5_4.regression_gemma_slice10.yaml`
+  - `src/kc_l/kc/drafting_input_overlay.py`
+  - `steps/step_06_6_kc_drafting_input_overlay/scripts/run_step6_6_kc_drafting_input_overlay.py`
+  - `src/kc_l/runtime/current_step_artifacts.py`
+  - `scripts/maintenance/refresh_current_step_artifacts.py`
+  - focused tests under `tests/`
+  - `CHANGELOG.md`
+  - this durable state note
+- Truth boundary for this patch:
+  - live Repo A source wins
+  - local current-step alias payloads exist, but the underlying `data/processed/kc_evidence_recalibrated`, `kc_drafting_input_overlay`, and most Step 6.7 processed families are missing in this mirror
+  - Repo B is available only for read-only artifact inspection and currently exposes the preserved `2026-04-19_012531` Step 6.7 family, not the upstream Step 5.3 or Step 6.6 families needed for direct local replay
+- Rollback boundary:
+  - this remains a synced mirror without Git rollback at the repo root
+  - rollback means restoring the explicitly listed touched files after this session; do not perform destructive resets
+
+## 2026-04-26 Update
+
+- A real Gemma-backed Step 6.7 regression slice has now verified the earlier support-pack patch on the live path: `resolved_generation_model_alias=gemma4:31b`, `definition_generation_mode=packet_multicandidate_v1`, `definition_packet_family_recoveries=5`, `definition_support_pack_auditor_recoveries=0`, `verifier_abstained_definition_kcs=3`, and `authoritative_definition_status_breakdown={direct_grounded: 7, insufficient_support: 3}` on the bounded slice. That proof moves the primary bottleneck upstream: packet-family succeeds when a good anchor exists, while the remaining failures cluster in rescue-path weak support (`formula_only_definition_risk`, `review_queue_weak_coverage`, thin composite support).
+- The active local patch now targets that upstream bottleneck without reopening the Step 6.7 architecture. `steps/step_05_3_evidence_recalibrated/scripts/run_step5_3.py` and `src/kc_l/retrieval_gate/role_scoring.py` now emit generic per-candidate `support_profile` metadata and per-KC `support_pack_summary` outputs so the recalibrated evidence layer can explicitly prioritize definitional anchors, explanatory/context-completion rows, and formula support only as auxiliary evidence. The selector is still bounded to the existing Step 5.3 row contract, but it is no longer only a flat top-k row sort.
+- `src/kc_l/kc/drafting_input_overlay.py` now preserves those Step 5.3 support-profile hints into the Step 6.6 overlay, and `src/kc_l/kc_drafting/heuristic_core.py` now reads them conservatively to boost clean definitional anchors, carry context-completion readiness, and demote compact formula-only surfaces in support-pack ranking. Downstream Step 6.7, Step 6.75, and Step 6.8 external semantics remain unchanged.
+- Local validation for this upstream pass is still bounded and source-level only: `python -m py_compile` passed on the touched Step 5.3 / Step 6.6 / heuristic files plus the new deterministic test file, direct fixture execution of `tests/test_step53_support_composition.py` returned `STEP53_SUPPORT_TESTS_OK`, and a grep over the touched upstream files found no `seed_definition` or `seed_floor` matches. No full rerun and no authoritative rerun were performed in this mirror.
+- The active Step 6.7 bottleneck is now treated as a control-path problem after evidence preservation, not as simple evidence disappearance. Historical attached artifacts still show `Step 5.3 = 18 candidates per KC`, `Step 6.6 = 18 overlay rows per KC`, and the strongest visible baseline `2026-04-19_012531` still at `direct_grounded=74`, `normalized_grounded=37`, `seed_floor_fallback=33`, with verifier/control rejection as the dominant weak-draft locus.
+- The live runtime miswire was confirmed in source: `src/kc_l/kc_drafting/backend.py` previously ignored `Step67DraftingPolicy.definition_generation_mode` and `max_llm_calls_per_kc`, while older packet configs still placed `definition_generation_mode` under `selection`. The new bounded patch normalizes that mode into the drafting-policy surface in `src/kc_l/kc_drafting/config.py`, threads it into the backend policy in `src/kc_l/kc_drafting/backend.py`, and preserves the source field in normalized config metadata so packet/support-pack mode can no longer silently fall back to legacy.
+- The active Step 6.7 definition path is now genuinely support-pack-first when configured. `src/kc_l/utils/kc_step67_model_drafting.py` still allows deterministic packet-family selection first, but if that selector abstains it now runs a new role-aware support-pack definition draft plus conservative claim-evidence audit before any legacy row-first preservation/rescue fallback. The support-pack audit allows supported paraphrase, trims unsupported gloss, keeps contamination / sibling rows as guardrails only, rejects orphan formula-only definitions without natural-language anchoring, and records the effective phase in bundle diagnostics.
+- Active Step 6 mode surfaces were tightened so the new lane is explicit and replayable: `steps/step_06_7_kc_draft_generation/resources/step6_7.012531.packet_multicandidate_full.yaml` now declares `definition_generation_mode` and `max_llm_calls_per_kc` under `drafting_policy`; `steps/step_06_main_quest_execution/resources/step6_main_quest_v1.base.yaml` now pins the same Step 6.7 drafting-mode fields; `step6_main_quest_v1.local_gpu.yaml` now resolves `generation_model`; and `step6_main_quest_v1.hpc_gpu.yaml` was deduplicated for `resolved_model_alias`.
+- Local validation is still bounded. `python -m py_compile` passed on all touched Python files and focused tests, `python scripts/hpc/render_main_quest_config.py --mode local_gpu` and `--mode hpc_gpu` still pass on the operator-shell surface, direct normalization smoke confirms both retained Step 6 main-quest overlays now resolve `definition_generation_mode=packet_multicandidate_v1` with `max_llm_calls_per_kc=8`, and a direct callable Step 6.7 smoke confirms the active phase order `definition_support_pack_draft -> definition_support_pack_audit` with final `selection_reason=definition_full_candidate_support_pack_audited`. Formal `pytest` remains unavailable in this mirror because the active interpreter has no `pytest` module and no `.venv` is present.
+
+## Recovered State Summary
+
+1. Exact editable repo root:
+   - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+2. Exact reference repo root:
+   - `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+3. Editable repo checkout status:
+   - this repo root is a synced mirror, not a live Git checkout
+4. Exact active objective:
+   - remove `seed_definition` and seed-derived fallback semantics from the active Step 6.6 to Step 6.8 architecture without widening into a full-project redesign
+5. Exact truth boundary:
+   - live editable-repo source and locally present manifests outrank chat memory; some current-step aliases and upstream manifest targets point to missing or remote artifacts, so local source plus present manifests are the only reliable local truth
+6. Likely active files:
+   - `AGENTS.md`
+   - `CHANGELOG.md`
+   - `src/kc_l/hierarchy/loader.py`
+   - `src/kc_l/hierarchy/normalize.py`
+   - `src/kc_l/hierarchy/validators.py`
+   - `src/kc_l/retrieval_gate/semantic.py`
+   - `src/kc_l/kc/drafting_input_overlay.py`
+   - `src/kc_l/kc_drafting/contracts.py`
+   - `src/kc_l/kc_drafting/heuristic_core.py`
+   - `src/kc_l/utils/kc_step67_model_drafting.py`
+   - `src/kc_l/kc_drafting/packetization.py`
+   - `src/kc_l/kc/curriculum_kc_coverage.py`
+   - `src/kc_l/kc/schemas/review_packet.schema.json`
+   - targeted tests under `tests/`
+7. Likely seed-definition dependency surfaces:
+   - source-of-truth hierarchy leaf inputs and normalized Step 1 registry rows
+   - Step 5.3 query construction, scoring, and emitted recalibrated evidence rows
+   - Step 6.6 overlay query-term and descriptor assembly
+   - Step 6.7 target and sibling descriptors
+   - Step 6.7 verification prompts and source-faithful normalization comparisons
+   - Step 6.7 survival and trust-state emission
+   - Step 6.8 packet fallback derivation, recommendation softening, and schema enums
+   - coverage manifests and reviewer-facing notes
+   - historical Step 6.7B and Step 6.7C audit lanes as dead compatibility lineage
+8. Rollback plan:
+   - no destructive reset is available or appropriate in this synced mirror; rollback means manually restoring touched files from this repo’s existing state or by comparing against the editable mirror before this session
+9. Stop boundary for this task:
+   - stop after the active source contracts, docs, and tests are seedless and locally validated; do not perform a full rerun and do not redesign unrelated stages
+
+## Artifact Precedence
+
+Use this exact order:
+
+1. live source files in the editable seedless repo
+2. durable artifacts and manifests in the editable seedless repo
+3. operator notes and changelog in the editable seedless repo
+4. seed reference repo for historical comparison
+5. stale aliases only if their targets actually exist
+
+If chat memory conflicts with repo evidence, repo evidence wins.
+
+## Direct Repo Evidence Collected
+
+- `AGENTS.md` exists in both repos; the editable repo copy needed rewriting for the seedless stage.
+- `data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json` resolves to `2026-04-08_105028_step6_6_kc_drafting_input_overlay_set` and that manifest points upstream to `2026-04-07_203250_step5_3_kc_evidence_recalibrated_set.json`.
+- `data/work/cache/current_step_artifacts/step6_7_set_manifest.current.json` resolves to `2026-04-19_121917_step6_7_kc_drafts_set.json`, while the current Step 6.75 alias resolves to `2026-04-19_162253_step6_75_kc_draft_canonicalization_set.json` whose upstream Step 6.7 set is `2026-04-19_012531_step6_7_kc_drafts_set.json`.
+- `src/kc_l/hierarchy/loader.py`, `src/kc_l/retrieval_gate/semantic.py`, `src/kc_l/kc/drafting_input_overlay.py`, `src/kc_l/kc_drafting/heuristic_core.py`, `src/kc_l/utils/kc_step67_model_drafting.py`, and `src/kc_l/kc_drafting/packetization.py` all still contain live seed-based semantics on the active production path.
+- Some older artifact targets referenced by current manifests are missing locally or point to external paths, so local manifest metadata is usable but those targets are not all inspectable in this mirror.
+
+## Dependency Audit Snapshot
+
+Active seed-dependent surfaces classified from live source:
+
+- input contract dependency:
+  - `src/kc_l/hierarchy/loader.py`
+  - `src/kc_l/hierarchy/normalize.py`
+  - `src/kc_l/hierarchy/validators.py`
+  - `src/kc_l/kc/drafting_input_overlay.py`
+- retrieval / evidence-selection dependency:
+  - `src/kc_l/retrieval_gate/semantic.py`
+  - `src/kc_l/kc_drafting/heuristic_core.py`
+- runtime descriptor dependency:
+  - `src/kc_l/utils/kc_step67_model_drafting.py`
+- drafting prompt dependency:
+  - `src/kc_l/utils/kc_step67_model_drafting.py`
+- fallback / survival dependency:
+  - `src/kc_l/kc_drafting/contracts.py`
+  - `src/kc_l/utils/kc_step67_model_drafting.py`
+- packetization dependency:
+  - `src/kc_l/kc_drafting/packetization.py`
+- review packet dependency:
+  - `src/kc_l/kc/schemas/review_packet.schema.json`
+  - `src/kc_l/kc/curriculum_kc_coverage.py`
+- stats / reporting dependency:
+  - `src/kc_l/utils/kc_step67_model_drafting.py`
+  - `src/kc_l/kc_drafting/packetization.py`
+- dead compatibility dependency:
+  - `src/kc_l/kc_drafting/seed_floor_triage.py`
+  - `src/kc_l/kc_drafting/step67c_recoverability.py`
+  - related validation-only scripts and tests
+
+## Closeout Packs
+
+### Pack 1: Recovery And Control Setup
+
+- current objective:
+  - establish durable seedless operating control and freeze the exact recovery state before production edits
+- exact files changed:
+  - `AGENTS.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+- exact validations run:
+  - source inspection only
+  - manifest inspection only
+  - reference-repo `AGENTS.md` inspection only
+- exact validations passed:
+  - editable repo root confirmed
+  - reference repo root confirmed
+  - editable repo confirmed to be a synced mirror, not a Git checkout
+  - active seed dependencies confirmed on live source files
+- exact validations failed:
+  - none yet; no code validation run in this recovery subphase
+- current risks:
+  - current-step aliases and some upstream manifest targets are incomplete or remote in this local mirror
+  - Step 6.7 current alias and Step 6.75 current alias disagree on the latest Step 6.7 source set
+  - historical Step 6.7B and Step 6.7C seed-rescue lineage still exists in repo and must be treated as compatibility-only
+- next action:
+  - patch the active Step 6.6, Step 6.7, and Step 6.8 contracts to replace seed-based semantics with explicit coverage and support semantics
+- explicit resume point:
+  - resume at the active source seam beginning with `src/kc_l/hierarchy/`, `src/kc_l/retrieval_gate/semantic.py`, `src/kc_l/kc/drafting_input_overlay.py`, and the Step 6.7 or Step 6.8 semantic contracts
+
+### Pack 2: Seedless Contract Refactor Closeout
+
+- current objective:
+  - finish the bounded active-path seedless refactor and freeze the minimum authoritative rerun boundary
+- exact files changed:
+  - `AGENTS.md`
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/hierarchy/loader.py`
+  - `src/kc_l/hierarchy/normalize.py`
+  - `src/kc_l/hierarchy/validators.py`
+  - `src/kc_l/retrieval_gate/semantic.py`
+  - `src/kc_l/kc/drafting_input_overlay.py`
+  - `src/kc_l/kc_drafting/contracts.py`
+  - `src/kc_l/kc_drafting/heuristic_core.py`
+  - `src/kc_l/utils/kc_step67_model_drafting.py`
+  - `src/kc_l/kc_drafting/packetization.py`
+  - `src/kc_l/kc/curriculum_kc_coverage.py`
+  - `src/kc_l/kc/schemas/review_packet.schema.json`
+  - `tests/test_kc_drafting_packetization.py`
+- exact validations run:
+  - `python -m py_compile src\\kc_l\\hierarchy\\loader.py src\\kc_l\\hierarchy\\normalize.py src\\kc_l\\hierarchy\\validators.py src\\kc_l\\retrieval_gate\\semantic.py src\\kc_l\\kc\\drafting_input_overlay.py src\\kc_l\\kc_drafting\\contracts.py src\\kc_l\\kc_drafting\\heuristic_core.py src\\kc_l\\utils\\kc_step67_model_drafting.py src\\kc_l\\kc_drafting\\packetization.py src\\kc_l\\kc\\curriculum_kc_coverage.py tests\\test_kc_drafting_packetization.py`
+  - `python -c "import json, pathlib; json.loads(pathlib.Path('src/kc_l/kc/schemas/review_packet.schema.json').read_text(encoding='utf-8')); print('schema json ok')"`
+  - `python -m pytest tests\\test_kc_drafting_packetization.py`
+  - deterministic smoke under `PYTHONPATH=src` covering:
+    - hierarchy loading plus registry normalization without `seed_definition`
+    - seedless retrieval query and hierarchy-context terms
+    - focused Step 6.7 helper checks for `_kc_descriptor(...)`, `_kc_prompt_payload(...)`, `_coverage_state(...)`, and `_authoritative_definition_status(...)`
+    - direct callable execution of focused packetization tests in `tests/test_kc_drafting_packetization.py`
+- exact validations passed:
+  - all touched Python files compiled successfully
+  - review-packet schema JSON parsed successfully
+  - hierarchy and query contract smoke passed
+  - Step 6.7 helper seedless smoke passed
+  - focused packetization callable smoke passed
+- exact validations failed:
+  - `python -m pytest tests\\test_kc_drafting_packetization.py` failed because `pytest` is not installed in this local interpreter (`No module named pytest`)
+- current risks:
+  - broad historical Step 6.7B and Step 6.7C seed-rescue lineage still exists in repo as compatibility and audit code, including legacy `seed_floor_triage` handling in orchestration and packetization compatibility branches
+  - broader historical architecture tests still encode seed-floor semantics and were not rewritten in this bounded pass
+  - no authoritative rerun was performed, so artifact-level status counts remain unproven until rerun
+  - current aliases still disagree on the latest Step 6.7 source set, and some manifest targets remain missing or remote in this mirror
+- next action:
+  - perform the minimum authoritative rerun starting at Step 5.3, then regenerate Step 6.6, Step 6.7, Step 6.75, and Step 6.8 artifacts under the new seedless contract before trusting downstream review packets
+- explicit resume point:
+  - resume by rendering the active config, rerunning Step 5.3 forward, and then auditing the new Step 6.7 and Step 6.8 artifacts for `coverage_state`, `insufficient_support`, and absence of active `seed_definition` fields
+
+### Pack 3: Source-Of-Truth Seedless Sanitation Closeout
+
+- current objective:
+  - remove seed text from the hierarchy input itself and from the active Step 5.3 runtime so the accepted Step 5.3 rerun boundary is honestly seedless before authoritative regeneration
+- exact files changed:
+  - `AGENTS.md`
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `data/input/hierarchy/data_mining_kc_hierarchy_revised_.json`
+  - `steps/step_05_3_evidence_recalibrated/scripts/run_step5_3.py`
+  - `steps/step_05_3_evidence_recalibrated/resources/step5_3.default.yaml`
+  - `steps/step_05_3_evidence_recalibrated/resources/step5_3.sofja.actual_corpus.yaml`
+- exact validations run:
+  - `python -m py_compile steps\\step_05_3_evidence_recalibrated\\scripts\\run_step5_3.py`
+  - `python -c "import json, pathlib; json.loads(pathlib.Path('data/input/hierarchy/data_mining_kc_hierarchy_revised_.json').read_text(encoding='utf-8')); print('hierarchy json ok')"`
+  - `rg -n "\"definition\":|seed_definition|seed_keyword|strong_seed_overlap_min" data\\input\\hierarchy\\data_mining_kc_hierarchy_revised_.json steps\\step_05_3_evidence_recalibrated\\scripts\\run_step5_3.py steps\\step_05_3_evidence_recalibrated\\resources\\step5_3.default.yaml steps\\step_05_3_evidence_recalibrated\\resources\\step5_3.sofja.actual_corpus.yaml`
+  - `rg -n "context_keyword|strong_context_overlap_min" steps\\step_05_3_evidence_recalibrated\\scripts\\run_step5_3.py steps\\step_05_3_evidence_recalibrated\\resources\\step5_3.default.yaml steps\\step_05_3_evidence_recalibrated\\resources\\step5_3.sofja.actual_corpus.yaml`
+  - `python -c "import importlib.util, pathlib, sys; path = pathlib.Path('steps/step_05_3_evidence_recalibrated/scripts/run_step5_3.py'); spec = importlib.util.spec_from_file_location('step5_3_runtime', path); mod = importlib.util.module_from_spec(spec); sys.modules[spec.name] = mod; spec.loader.exec_module(mod); profile = mod.build_kc_profiles([{'kc_id':'KC_TEST','canonical_name':'Learning Phase','aliases':['classification learning'], 'kc_path':['Classification','Classification Underpinnings','Learning Phase']}], 1)['KC_TEST']; print(profile.query_text); print(profile.name_terms['context_keywords'])"`
+  - `$text = Get-Content 'data\\input\\hierarchy\\data_mining_kc_hierarchy_revised_.json' -Raw; Write-Output ('kc_ids ' + ([regex]::Matches($text, '\"kc_id\"\\s*:').Count)); Write-Output ('descriptions ' + ([regex]::Matches($text, '\"description\"\\s*:').Count)); Write-Output ('definitions ' + ([regex]::Matches($text, '\"definition\"\\s*:').Count))`
+- exact validations passed:
+  - `run_step5_3.py` compiled successfully
+  - hierarchy JSON parsed successfully
+  - bounded grep returned no active hits for `"definition":`, `seed_definition`, `seed_keyword`, or `strong_seed_overlap_min` in the sanitized hierarchy input, live Step 5.3 runtime, or live Step 5.3 configs
+  - bounded grep confirmed `context_keyword` and `strong_context_overlap_min` are now present in the live Step 5.3 runtime and configs
+  - direct callable smoke confirmed `build_kc_profiles(...)` now produces hierarchy-context query text (`Learning Phase | classification learning | Classification ; Classification Underpinnings`) and context keywords (`['underpinnings']`) without any `seed_definition`
+  - hierarchy count check confirmed `kc_ids 144`, `descriptions 27`, and `definitions 0`
+- exact validations failed:
+  - an initial inline module-loading smoke failed because the temporary module was not inserted into `sys.modules` before `exec_module(...)`; the rerun with `sys.modules[spec.name] = mod` passed
+- current risks:
+  - this packaged mirror still lacks the upstream processed artifacts needed for a full Step 1, Step 1.5, and Step 5.3 to Step 6.8 authoritative rerun
+  - current-step aliases still point to stale seed-bearing Step 1 and Step 5.3 artifacts until authoritative regeneration refreshes them
+  - Step 6.75 current alias still points to the older `2026-04-19_012531` Step 6.7 set and must not be trusted until rerun refreshes it
+- next action:
+  - transfer these exact file edits into the authoritative synced environment, then rerun Step 1, Step 1.5, refresh aliases, and rerun Step 5.3 forward
+- explicit resume point:
+  - resume by copying the seven edited files into the authoritative repo before Step 1 regeneration, then execute the authoritative Step 1 to Step 6.8 rerun chain
+
+### Pack 4: Active Step 6.6 To Step 6.8 Runtime Seedless Cleanup
+
+- current objective:
+  - remove the remaining active-path seed architecture residue from the live Step 6.6 to Step 6.8 runtime without reopening upstream Step 1 or Step 5.3 work
+- exact files changed:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/retrieval_gate/__init__.py`
+  - `src/kc_l/retrieval_gate/semantic.py`
+  - `src/kc_l/utils/kc_step67_model_drafting.py`
+  - `src/kc_l/kc_drafting/packetization.py`
+- exact validations run:
+  - `python -m py_compile src\\kc_l\\retrieval_gate\\__init__.py src\\kc_l\\retrieval_gate\\semantic.py src\\kc_l\\utils\\kc_step67_model_drafting.py src\\kc_l\\kc_drafting\\packetization.py`
+  - `python -c "import sys; sys.path.insert(0, 'src'); import kc_l.retrieval_gate as rg; print('build_name_context_terms', hasattr(rg, 'build_name_context_terms')); print('build_name_seed_terms', hasattr(rg, 'build_name_seed_terms'))"`
+  - `python -c "import sys; sys.path.insert(0, 'src'); from kc_l.kc_drafting.packetization import build_restarted_review_packet, validate_restarted_review_packet; from kc_l.utils.kc_step67_model_drafting import build_kc_draft_bundles_llm; print('packetization_import_ok', callable(build_restarted_review_packet), callable(validate_restarted_review_packet)); print('step67_model_import_ok', callable(build_kc_draft_bundles_llm))"`
+  - `rg -n "seed_definition|build_name_seed_terms|seed_keyword_hits|SEED_DEFINITION_FLOOR_ACTIVE_FLAG|SURVIVAL_FLOOR_|_bundle_seed_floor_triage|seed_floor_primary_bucket" src\\kc_l\\kc\\drafting_input_overlay.py src\\kc_l\\retrieval_gate\\__init__.py src\\kc_l\\retrieval_gate\\semantic.py src\\kc_l\\kc_drafting\\heuristic_core.py src\\kc_l\\utils\\kc_step67_model_drafting.py src\\kc_l\\kc_drafting\\packetization.py`
+  - `rg -n "COVERAGE_ONLY_ACTIVE_FLAG|COVERAGE_ONLY_RECOMMENDATION|build_name_context_terms|coverage_only_keep_and_edit" src\\kc_l\\retrieval_gate\\__init__.py src\\kc_l\\retrieval_gate\\semantic.py src\\kc_l\\utils\\kc_step67_model_drafting.py src\\kc_l\\kc_drafting\\packetization.py`
+- exact validations passed:
+  - all touched Python files compiled successfully
+  - `kc_l.retrieval_gate` now exports `build_name_context_terms` and no longer exports `build_name_seed_terms`
+  - `kc_l.kc_drafting.packetization` and `kc_l.utils.kc_step67_model_drafting` import successfully after the bounded runtime cleanup
+  - active Step 6.7 model-drafting code no longer contains `SEED_DEFINITION_FLOOR_ACTIVE_FLAG` or any live `seed_definition` use
+  - active Step 6.8 packetization code no longer contains `SURVIVAL_FLOOR_*`, `_bundle_seed_floor_triage(...)`, or `seed_floor_primary_bucket`
+  - `src/kc_l/retrieval_gate/__init__.py` now exposes the seedless helper surface used by the live Step 6.6 path
+- exact validations failed:
+  - none in this bounded pass
+- current risks:
+  - `src/kc_l/kc/drafting_input_overlay.py` still strips the historical `seed_keyword_hits` key from incoming `alignment_breakdown` payloads so stale upstream artifacts cannot re-emit it; this is compatibility-only residue inside an active file, not active computation
+  - `src/kc_l/retrieval_gate/semantic.py` still contains the archived compatibility helper `build_name_seed_terms(...)`; it is no longer exported through `kc_l.retrieval_gate`
+  - `src/kc_l/kc_drafting/packetization.py` still reads legacy `seed_floor_triage` only when replaying older bundles; fresh seedless Step 6.7 bundles should not populate that field
+  - broader historical `seed_floor_triage.py`, Step 6.7B, Step 6.7C, and related tests remain in repo as compatibility and audit residue outside this bounded runtime pass
+- next action:
+  - on Sofja, rerun from Step 6.6 forward against the already seedless Step 1, Step 1.5, and Step 5.3 upstream artifacts
+- explicit resume point:
+  - resume with the authoritative Sofja Step 6.6 rerun, then regenerate Step 6.7, Step 6.75, and Step 6.8 and audit the resulting bundles and packets for `coverage_state`, `insufficient_support`, `coverage_only`, and absence of active `seed_definition` leakage
+
+### Pack 5: Step 5.4 Evidence-Pack Composition Closeout
+
+- current objective:
+  - add a deterministic Step 5.4 evidence-pack composition stage after Step 5.3 and propagate that richer evidence object through Step 6.6 and Step 6.7 diagnostics without reopening the broader drafting architecture
+- exact files changed:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/retrieval_gate/evidence_pack_composition.py`
+  - `src/kc_l/kc/drafting_input_overlay.py`
+  - `src/kc_l/kc_drafting/heuristic_core.py`
+  - `src/kc_l/utils/kc_step67_model_drafting.py`
+  - `src/kc_l/runtime/current_step_artifacts.py`
+  - `scripts/maintenance/refresh_current_step_artifacts.py`
+  - `steps/step_05_4_evidence_pack_composition/scripts/run_step5_4_evidence_pack_composition.py`
+  - `steps/step_05_4_evidence_pack_composition/resources/step5_4.default.yaml`
+  - `steps/step_05_4_evidence_pack_composition/resources/step5_4.sofja.actual_corpus.yaml`
+  - `steps/step_05_4_evidence_pack_composition/resources/step5_4.regression_gemma_slice10.yaml`
+  - `steps/step_06_6_kc_drafting_input_overlay/scripts/run_step6_6_kc_drafting_input_overlay.py`
+  - `tests/test_current_step_artifacts.py`
+  - `tests/test_step54_evidence_pack_composition.py`
+- exact validations run:
+  - `python -m py_compile src\\kc_l\\retrieval_gate\\evidence_pack_composition.py src\\kc_l\\kc\\drafting_input_overlay.py src\\kc_l\\kc_drafting\\heuristic_core.py src\\kc_l\\utils\\kc_step67_model_drafting.py src\\kc_l\\runtime\\current_step_artifacts.py scripts\\maintenance\\refresh_current_step_artifacts.py steps\\step_05_4_evidence_pack_composition\\scripts\\run_step5_4_evidence_pack_composition.py steps\\step_06_6_kc_drafting_input_overlay\\scripts\\run_step6_6_kc_drafting_input_overlay.py tests\\test_current_step_artifacts.py tests\\test_step54_evidence_pack_composition.py`
+  - `python -m pytest tests\\test_step54_evidence_pack_composition.py tests\\test_current_step_artifacts.py`
+  - direct callable harness under `PYTHONPATH=src` executing every focused test function in `tests/test_step54_evidence_pack_composition.py` and `tests/test_current_step_artifacts.py`
+  - bounded synthetic runner smoke:
+    - `python steps\\step_05_4_evidence_pack_composition\\scripts\\run_step5_4_evidence_pack_composition.py --step5-3-set-manifest <repo-local synthetic manifest> --exact-kc-ids KC_CLF_UND_001 --limit-kcs 1 --output-root <repo-local synthetic output root> --run-id smoke001`
+- exact validations passed:
+  - all touched Python files compiled successfully
+  - direct callable focused tests passed (`STEP54_DIRECT_TESTS_OK`)
+  - current-artifact discovery now materializes `step5_4_set_manifest.current.json`
+  - the synthetic one-KC Step 5.4 runner smoke completed successfully and emitted a real set manifest plus pack stats under:
+    - `.codex_tmp_step54_smoke_20260427_144453/output/smoke001/`
+    - `data/runs/smoke001_step5_4/`
+- exact validations failed:
+  - `python -m pytest tests\\test_step54_evidence_pack_composition.py tests\\test_current_step_artifacts.py` still fails in this interpreter because `pytest` is not installed (`No module named pytest`)
+- current risks:
+  - this local mirror still lacks the real Step 5.3 / Step 6.6 processed families behind the copied current-step alias payloads, so only source-level validation and a synthetic runner smoke were possible locally
+  - Step 5.4 was not run on the real 10-KC regression slice or the real corpus inside this mirror, so route breakdowns and pack-quality lifts on authoritative artifacts remain unproven
+  - the synthetic runner smoke created bounded validation artifacts under `.codex_tmp_step54_smoke_20260427_144453/` and `data/runs/smoke001_step5_4/`
+- next action:
+  - transfer the touched files to Sofja, refresh current-step aliases there, run Step 5.4 on the real regression slice, inspect the pack metrics, and only then decide whether another Step 6.7 rerun is justified
+- explicit resume point:
+  - resume from the new Step 5.4 set manifest on Sofja, inspect `route_breakdown`, `formula_dominance_risk_breakdown`, `sibling_contamination_risk_breakdown`, and natural-language definition-anchor counts before allowing any new Step 6.7 Gemma run
+
+### Pack 6: Step 5.4 Target-Binding Safety Patch
+
+- current objective:
+  - patch the live Step 5.4 evidence-pack selector so off-target rows cannot enter positive support slots merely because Step 5.3 retrieved them, scored them highly, or labeled them as strong anchors
+- exact files changed:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/retrieval_gate/evidence_pack_composition.py`
+  - `tests/test_step54_evidence_pack_composition.py`
+- concrete recovery evidence used:
+  - Repo A live Step 5.4 source
+  - no local Repo A Step 5.4 processed artifacts were present
+  - read-only Sofja diagnostic bundle:
+    - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\_reference_artifacts\sofja_step54_regression_203724_20260427_132112`
+  - that bundle confirmed:
+    - `average_coverage_score = 1.0`
+    - `average_density_score = 0.945889`
+    - `context_completion_used_count = 10`
+    - `sibling_contamination_risk_breakdown = {'medium': 10}`
+    - repeated unrelated microarray/imputation/formula rows across many KCs
+- exact implementation outcome:
+  - Step 5.4 now creates a structured per-candidate `target_binding` object (`is_target_bound`, `binding_strength`, `binding_reasons`, `offtarget_reasons`) from lexical target cues, heading/path cues, fragment-aware source-block recovery, and generic recurrence control instead of trusting retrieval assignment alone
+  - positive slots now require direct target binding or bounded same-region auxiliary linkage to an already selected target-bound anchor; explanatory rows no longer become definitions just because they mention the target phrase, and sibling contrast now requires a real sibling/contrast signal
+  - context completion is selective and diagnostic (`context_completion_attempted`, `context_completion_used`, `context_completion_rejected_reasons`) instead of firing on every pack
+  - coverage and density now reflect target-bound support rather than filled-slot count, so thin/off-target packs can route honestly as partial or insufficient
+- exact validations run:
+  - `python -m py_compile src\\kc_l\\retrieval_gate\\evidence_pack_composition.py tests\\test_step54_evidence_pack_composition.py`
+  - direct callable harness under `PYTHONPATH=src` executing every focused test function in `tests/test_step54_evidence_pack_composition.py`
+  - bounded runner smoke:
+    - `python steps\\step_05_4_evidence_pack_composition\\scripts\\run_step5_4_evidence_pack_composition.py --step5-3-set-manifest .codex_tmp_step54_gate_smoke\\input\\synthetic_step5_3_set.json --exact-kc-ids KC_CLU_CORE_002 --limit-kcs 1 --output-root .codex_tmp_step54_gate_smoke\\output --run-id smoke_target_binding`
+  - optional pytest probe:
+    - `python -m pytest tests\\test_step54_evidence_pack_composition.py`
+- exact validations passed:
+  - touched Step 5.4 source and the focused Step 5.4 tests compiled successfully
+  - direct callable focused tests passed (`STEP54_DIRECT_TESTS_OK`)
+  - the synthetic runner smoke emitted a real Step 5.4 artifact set under:
+    - `.codex_tmp_step54_gate_smoke/output/smoke_target_binding/`
+    - `data/runs/smoke_target_binding_step5_4/`
+  - that smoke selected the target-bound intra-cluster-distance row into `definition_kernel` and dropped the fraud-precision row with drop reason `candidate_pool_membership_only`
+- exact validations failed:
+  - `python -m pytest tests\\test_step54_evidence_pack_composition.py` still fails in this interpreter because `pytest` is not installed (`No module named pytest`)
+- current risks:
+  - no authoritative rerun against the real Sofja regression slice has been executed from this patched source state yet
+  - Step 6.6 and Step 6.7 downstream behavior remains unproven until a new Step 5.4 plus Step 6.6 regression replay is run on Sofja
+- next action:
+  - upload only the touched Step 5.4 patch files to Sofja, rerun the bounded Step 5.4 regression slice plus Step 6.6 overlay replay with the explicit new Step 5.4 manifest, and inspect per-KC positive slot texts before allowing any Step 6.7 rerun
+- explicit resume point:
+  - resume from the next Sofja Step 5.4 regression artifact and verify that the known bad fraud/hyperparameter/covariance rows no longer enter positive support slots
+
+### Pack 7: Step 5x Clean-Slate Candidate-Bank Mode
+
+- current objective:
+  - let Step 5x candidate-bank run from seedless registry plus Step 4.5 sentence overlay with optional Step 5p profile guidance, without requiring Step 5.3 in the clean-slate path and without touching downstream drafting stages
+- exact files changed:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - `steps/step_05_x_evidence_stage_v3/scripts/run_step5x_v3_candidate_bank.py`
+  - `steps/step_05_x_evidence_stage_v3/resources/step5x_v3_candidate_bank.default.yaml`
+  - `tests/test_step5x_clean_slate_candidate_bank.py`
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_gate\profile_guidance.py src\kc_l\retrieval_gate\evidence_stage_v3_candidate_bank.py steps\step_05_x_evidence_stage_v3\scripts\run_step5x_v3_candidate_bank.py tests\test_step5x_clean_slate_candidate_bank.py tests\test_step5x_profile_guidance.py tests\test_step5x_profile_guided_candidate_bank.py tests\test_step5x_v3_candidate_bank.py tests\test_step5x_shared_windowing_boundary.py tests\test_step5x_v3_scored_candidates.py tests\test_step5x_v3_pack_composition.py tests\test_step5p_kc_retrieval_profile.py`
+  - `python tests\test_step5x_clean_slate_candidate_bank.py`
+  - `python tests\test_step5x_profile_guided_candidate_bank.py`
+  - `python tests\test_step5x_v3_candidate_bank.py`
+  - `python tests\test_step5x_shared_windowing_boundary.py`
+  - `python tests\test_step5x_v3_scored_candidates.py` with `PYTHONPATH=src`
+  - `python tests\test_step5p_kc_retrieval_profile.py`
+  - unsandboxed reruns required by Windows temp-directory sandbox limits:
+    - `python tests\test_step5x_profile_guidance.py`
+    - `python tests\test_step5x_v3_pack_composition.py` with `PYTHONPATH=src`
+  - bounded real-data proof:
+    - `python steps\step_05_x_evidence_stage_v3\scripts\run_step5x_v3_candidate_bank.py --registry-jsonl data\processed\hierarchy_seedless_registry\local_seedless_registry_strict_tree_smoke\kc_registry_seedless.jsonl --source-overlay-jsonl data\processed\retrieval_sentence_overlay\2026-05-01_224745\sentence_corpus.jsonl --profile-jsonl data\processed\kc_retrieval_profiles\local_step5p_llm_profile_hardened_4kc_20260502T130236Z\kc_retrieval_profiles.jsonl --exact-kc-ids KC_CLF_UND_001 KC_CLF_NB_007 KC_EVAL_BASIC_006 KC_CLU_CORE_001 --run-id local_step5x_clean_slate_profile_guided_4kc_20260502T153614Z --output-root data\processed\kc_evidence_stage_v3_candidate_bank --set-manifest-root data\processed\kc_evidence_stage_v3_candidate_bank\_sets`
+- exact validations passed:
+  - the new direct clean-slate regression passed (`TEST_STEP5X_CLEAN_SLATE_CANDIDATE_BANK_OK`)
+  - existing Step 5x profile-guidance, profile-guided candidate-bank, v3 candidate-bank, shared-windowing-boundary, v3 scored-candidates, v3 pack-composition, and Step 5p profile regressions passed
+  - the bounded real-data clean-slate proof completed at `data/processed/kc_evidence_stage_v3_candidate_bank/local_step5x_clean_slate_profile_guided_4kc_20260502T153614Z/`
+  - clean-slate proof stats reported `input_mode=clean_slate_registry_sentence_overlay`, `total_candidate_rows_emitted=27`, and per-KC candidate counts `KC_CLF_UND_001=8`, `KC_CLF_NB_007=8`, `KC_EVAL_BASIC_006=3`, `KC_CLU_CORE_001=8`
+  - the clean-slate proof consumed Step 5p profile guidance as retrieval-control metadata only, preserved `profile_guidance_controls.json`, and the audit probe did not detect seed-field leakage or profile-window leakage into candidate rows
+  - no ACTIVE pointers were updated
+- exact validations failed:
+  - none after the two temp-directory-blocked test scripts were rerun unsandboxed
+- current risks:
+  - clean-slate manifests still record absolute input paths for `registry_jsonl`, `source_overlay_jsonl`, and `profile_jsonl`; artifact output paths remain repo-relative, but input-path portability is not fully normalized yet
+  - the bounded proof covers only four KCs and does not prove full-corpus candidate quality
+  - Step 5p semantic queries remain recorded as controls only because no semantic retrieval channel exists in this local clean-slate Step 5x path
+- next action:
+  - decide whether to normalize manifest input paths to repo-relative form, then expand the bounded clean-slate proof to a slightly larger KC slice before any downstream Step 6.6 or Step 6.7 work
+- explicit resume point:
+  - resume from `data/processed/kc_evidence_stage_v3_candidate_bank/local_step5x_clean_slate_profile_guided_4kc_20260502T153614Z/` and `local_audits/implement_step5x_clean_slate_candidate_bank_20260502T152122Z/CLEAN_SLATE_CANDIDATE_BANK_PROBE.md` if continuing Step 5x clean-slate validation
+
+### Pack 8: Step 5x Structural Neighbor Recall And Definition Compatibility
+
+- current objective:
+  - repair the clean-slate Step 5x candidate-bank and scored-candidate seam for formula/metric and definition-like KCs without touching Step 5p generation, Step 6.6, Step 6.7, ACTIVE pointers, models, or embeddings
+- exact files changed:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_scored_candidates.py`
+  - `tests/test_step5x_clean_slate_candidate_bank.py`
+  - `tests/test_step5x_v3_scored_candidates.py`
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_gate\profile_guidance.py src\kc_l\retrieval_gate\evidence_stage_v3_candidate_bank.py src\kc_l\retrieval_gate\evidence_stage_v3_scored_candidates.py steps\step_05_x_evidence_stage_v3\scripts\run_step5x_v3_candidate_bank.py tests\test_step5x_clean_slate_candidate_bank.py tests\test_step5x_profile_guidance.py tests\test_step5x_profile_guided_candidate_bank.py tests\test_step5x_v3_candidate_bank.py tests\test_step5x_shared_windowing_boundary.py tests\test_step5x_v3_scored_candidates.py tests\test_step5x_v3_pack_composition.py tests\test_step5p_kc_retrieval_profile.py`
+  - `python tests\test_step5x_clean_slate_candidate_bank.py`
+  - `python tests\test_step5x_v3_scored_candidates.py`
+  - `python tests\test_step5x_profile_guidance.py` (unsandboxed rerun required because sandbox temp-directory writes were blocked)
+  - `python tests\test_step5x_profile_guided_candidate_bank.py`
+  - `python tests\test_step5x_v3_candidate_bank.py`
+  - `python tests\test_step5x_shared_windowing_boundary.py`
+  - `python tests\test_step5x_v3_pack_composition.py` with `PYTHONPATH=src` (unsandboxed rerun required because sandbox temp-directory writes were blocked)
+  - `python tests\test_step5p_kc_retrieval_profile.py`
+  - bounded real-data reruns:
+    - `python steps\step_05_x_evidence_stage_v3\scripts\run_step5x_v3_candidate_bank.py --registry-jsonl data\processed\hierarchy_seedless_registry\local_seedless_registry_strict_tree_smoke\kc_registry_seedless.jsonl --source-overlay-jsonl data\processed\retrieval_sentence_overlay\2026-05-01_224745\sentence_corpus.jsonl --profile-jsonl data\processed\kc_retrieval_profiles\local_step5p_llm_profile_hardened_4kc_20260502T130236Z\kc_retrieval_profiles.jsonl --exact-kc-ids KC_CLF_UND_001 KC_CLF_NB_007 KC_EVAL_BASIC_006 KC_CLU_CORE_001 --output-root data\processed\kc_evidence_stage_v3_candidate_bank --set-manifest-root data\processed\kc_evidence_stage_v3_candidate_bank\_sets --run-id local_step5x_clean_slate_profile_guided_4kc_20260502T162244Z`
+    - `python steps\step_05_x_evidence_stage_v3\scripts\run_step5x_v3_scored_candidates.py --step5x-v3-set-manifest data\processed\kc_evidence_stage_v3_candidate_bank\_sets\local_step5x_clean_slate_profile_guided_4kc_20260502T162244Z_step5x_v3_candidate_bank_set.json --exact-kc-ids KC_CLF_UND_001 KC_CLF_NB_007 KC_EVAL_BASIC_006 KC_CLU_CORE_001 --output-root data\processed\kc_evidence_stage_v3_scored_candidates --set-manifest-root data\processed\kc_evidence_stage_v3_scored_candidates\_sets --run-id local_step5x_clean_slate_scored_4kc_20260502T162244Z`
+    - `python steps\step_05_x_evidence_stage_v3\scripts\run_step5x_v3_pack_composition.py --step5x-v3-scored-set-manifest data\processed\kc_evidence_stage_v3_scored_candidates\_sets\local_step5x_clean_slate_scored_4kc_20260502T162244Z_step5x_v3_scored_candidates_set.json --exact-kc-ids KC_CLF_UND_001 KC_CLF_NB_007 KC_EVAL_BASIC_006 KC_CLU_CORE_001 --output-root data\processed\kc_evidence_stage_v3_pack_composition --set-manifest-root data\processed\kc_evidence_stage_v3_pack_composition\_sets --run-id local_step5x_clean_slate_packs_4kc_20260502T162244Z`
+- exact validations passed:
+  - the new structural-neighbor clean-slate regression passed (`TEST_STEP5X_CLEAN_SLATE_CANDIDATE_BANK_OK`)
+  - the scored-candidate regression suite passed after adding a direct-runnable `sys.path` bootstrap to `tests/test_step5x_v3_scored_candidates.py` (`TEST_STEP5X_V3_SCORED_CANDIDATES_OK`)
+  - surrounding Step 5x / Step 5p regressions passed (`TEST_STEP5X_PROFILE_GUIDANCE_OK`, `TEST_STEP5X_PROFILE_GUIDED_CANDIDATE_BANK_OK`, `TEST_STEP5X_V3_CANDIDATE_BANK_OK`, `TEST_STEP5X_SHARED_WINDOWING_BOUNDARY_OK`, `TEST_STEP5X_V3_PACK_COMPOSITION_OK`, `TEST_STEP5P_KC_RETRIEVAL_PROFILE_OK`)
+  - the bounded rerun completed at:
+    - `data/processed/kc_evidence_stage_v3_candidate_bank/local_step5x_clean_slate_profile_guided_4kc_20260502T162244Z/`
+    - `data/processed/kc_evidence_stage_v3_scored_candidates/local_step5x_clean_slate_scored_4kc_20260502T162244Z/`
+    - `data/processed/kc_evidence_stage_v3_pack_composition/local_step5x_clean_slate_packs_4kc_20260502T162244Z/`
+  - rerun outcome highlights:
+    - total clean-slate candidates increased from `27` to `59`
+    - `KC_CLU_CORE_001` now has `definition_kernel=2` and `ordered_pack_for_drafting=5`
+    - `KC_CLF_UND_001` and `KC_CLF_NB_007` retained non-empty packs while picking up additional clean-slate structural candidates
+    - Step 5p window text did not leak into candidate, scored, or pack outputs
+    - `seed_definition` and `seed_floor` did not leak into candidate, scored, or pack outputs
+    - no ACTIVE pointers were created or updated for the candidate-bank, scored-candidate, or pack-composition stages
+- exact validations failed:
+  - none in code logic; the only failures were sandbox temp-directory permission errors, resolved by unsandboxed reruns for two existing direct tests
+- current risks:
+  - `KC_EVAL_BASIC_006` remains pack-empty after the repair because the rerun still did not recover a true formula-notation row for F-measure; this is now a recall/content gap, not a schema, pack-composition, or missing-top-level-score bug
+  - the new structural-neighbor expansion is bounded and local to clean-slate candidate-bank mode, but it is still proven only on the current four-KC slice
+  - real-data manifests still capture some absolute input paths from prior clean-slate work; output artifact paths remain repo-relative
+- next action:
+  - inspect the actual Step 4.5 overlay rows around the known F-measure formula surface and decide whether a further generic anchor-variant rule is justified, or whether the remaining F-measure miss should be documented as a bounded recall limitation
+- explicit resume point:
+  - resume from `local_audits/repair_step5x_formula_definition_clean_slate_20260502T160454Z/CLEAN_SLATE_CANDIDATE_BANK_PROBE.md` and the rerun artifact trio ending in `20260502T162244Z` if continuing this Step 5x repair line
+
+### Pack 9: Step 5p Composite Cue-Type Contract Hardening
+
+- current objective:
+  - repair exactly one Step 5p contract-hardening seam so model-emitted composite `cue_type` strings are normalized before strict profile validation without weakening source grounding, provenance checks, or the Step 5x consumer contract
+- exact files changed:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/retrieval_profile/builder.py`
+  - `tests/test_step5p_kc_retrieval_profile.py`
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_profile\builder.py tests\test_step5p_kc_retrieval_profile.py`
+  - `python tests\test_step5p_kc_retrieval_profile.py`
+  - `python tests\test_step5x_profile_guided_candidate_bank.py`
+  - `python tests\test_step5x_clean_slate_candidate_bank.py`
+  - `python tests\test_step5x_v3_candidate_bank.py`
+  - `python tests\test_step5x_v3_scored_candidates.py`
+  - `python tests\test_step5x_profile_guidance.py` (unsandboxed rerun required because the Windows temp-directory sandbox blocked temp-file writes)
+  - `python tests\test_step5x_v3_pack_composition.py` with `PYTHONPATH=src` (unsandboxed rerun required because the Windows temp-directory sandbox blocked temp artifact directories)
+  - attempted bounded medium rerun:
+    - `python steps\step_05_p_kc_retrieval_profile\scripts\run_step5p_kc_retrieval_profile.py --config steps\step_05_p_kc_retrieval_profile\resources\step5p.local.qwen3_14b.yaml --registry-jsonl data\processed\hierarchy_seedless_registry\local_seedless_registry_strict_tree_smoke\kc_registry_seedless.jsonl --source-overlay-jsonl data\processed\retrieval_sentence_overlay\2026-05-01_224745\sentence_corpus.jsonl --run-id local_medium_step5p_llm_20260502T175406Z --use-model --max-snippets-per-kc 16 --min-snippet-score 4.0 --exact-kc-ids KC_CLF_NB_001 KC_CLF_NB_007 KC_CLF_UND_001 KC_CLF_UND_002 KC_CLU_CORE_001 KC_EVAL_BASIC_006 KC_CLU_EVAL_006 KC_CLU_EVAL_007 KC_CLF_DT_001 KC_CLF_DT_002 KC_CLF_DT_003 KC_CLF_DT_004 KC_CLF_DT_005 KC_CLF_DT_006 KC_CLF_DT_007 KC_CLF_DT_008`
+- exact validations passed:
+  - the new focused Step 5p regression passed (`TEST_STEP5P_KC_RETRIEVAL_PROFILE_OK`)
+  - the patched Step 5p path now normalizes composite cue types such as `definition_phrase|metric_relation` and `process_phrase|mechanism_description` into a single canonical active cue type while preserving `cue_type_raw` and `secondary_cue_types`
+  - unsupported-only cue-type splits are quarantined with `unsupported_cue_type_after_normalization` instead of surviving as invalid active cues
+  - required downstream Step 5x regressions still passed unchanged (`TEST_STEP5X_PROFILE_GUIDANCE_OK`, `TEST_STEP5X_PROFILE_GUIDED_CANDIDATE_BANK_OK`, `TEST_STEP5X_CLEAN_SLATE_CANDIDATE_BANK_OK`, `TEST_STEP5X_V3_CANDIDATE_BANK_OK`, `TEST_STEP5X_V3_SCORED_CANDIDATES_OK`, `TEST_STEP5X_V3_PACK_COMPOSITION_OK`)
+  - no Step 5p windows were reclassified as evidence and no ACTIVE pointers were updated
+- exact validations failed:
+  - the single required medium Step 5p rerun attempt timed out after 30 minutes with no emitted run directory and no set manifest for `local_medium_step5p_llm_20260502T175406Z`
+- current risks:
+  - the code/test repair is proven, but the model-backed 16-KC medium rerun is still unproven because the one allowed local attempt timed out before materializing artifacts
+  - because the Step 5p rerun did not finish, no new Step 5x 16-KC candidate/scored/pack proof exists for the normalized profile format beyond the direct downstream regressions
+  - the current best evidence that the contract seam is fixed is the focused Step 5p normalization regression plus the unchanged Step 5x consumer regressions, not a completed medium model run
+- minimum authoritative rerun boundary:
+  - rerun the same 16-KC Step 5p medium profile build in an environment that can finish the local Ollama call sequence, confirm `collection_validation.ok=true` on the emitted stats, then and only then run the matching clean-slate Step 5x candidate-bank, scored-candidate, and pack-composition stages for that same 16-KC slice
+- next action:
+  - rerun `local_medium_step5p_llm_20260502T175406Z` or a fresh equivalent run id in a session/environment with enough time for the model call to finish, then inspect the resulting `kc_retrieval_profile_stats.json` for normalized cue types before deciding whether to proceed to the 16-KC Step 5x proof
+- explicit resume point:
+  - resume from `local_audits/repair_step5p_composite_cue_type_20260502T174525Z/` and do not start Step 5x for the 16-KC slice unless the Step 5p rerun first completes with `collection_validation.ok=true`
+
+## 2026-05-05T01:51:38Z - Step 5x Source-Observed Rehydration And Route-Block Repair
+
+- current objective:
+  - complete the bounded Step 5p/Step 5x repair for exact source-observed profile-provenance rehydration and independent Step 5x evidence route-block bypass, without Step 6 drafting, 36KC/full 144 replay, ACTIVE pointer mutation, seed semantics, or domain-specific control logic.
+- exact files changed:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_scored_candidates.py`
+  - `src/kc_l/retrieval_gate/evidence_stage_v3_pack_composition.py`
+  - `tests/test_step5x_profile_provenance_rehydration.py`
+  - `tests/test_step5x_route_block_independent_evidence.py`
+  - `tests/test_step5x_v3_pack_composition.py`
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_gate\evidence_stage_v3_candidate_bank.py src\kc_l\retrieval_gate\evidence_stage_v3_scored_candidates.py src\kc_l\retrieval_gate\evidence_stage_v3_pack_composition.py tests\test_step5x_profile_provenance_rehydration.py tests\test_step5x_route_block_independent_evidence.py tests\test_step5x_v3_pack_composition.py`
+  - three direct-execution rounds with `PYTHONPATH=src` over `tests\test_step5x_profile_provenance_rehydration.py`, `tests\test_step5x_route_block_independent_evidence.py`, `tests\test_step5x_positive_support_guard.py`, `tests\test_step5x_retrieval_policy.py`, `tests\test_step5x_profile_guidance.py`, `tests\test_step5x_source_surface_fallback.py`, `tests\test_step5x_clean_slate_candidate_bank.py`, `tests\test_step5x_v3_candidate_bank.py`, `tests\test_step5x_v3_scored_candidates.py`, `tests\test_step5x_v3_pack_composition.py`, `tests\test_step5p_kc_retrieval_profile.py`, `tests\test_step5p_v3_timeout_fallback.py`, and `tests\test_step5p_step5x_feedback_loop.py`
+  - bounded 9KC candidate replay from strict seedless registry, `2026-05-01_224745` sentence overlay, and latest local 9KC V3E2 Step 5p profiles: `local_step5x_rehydration_routeblock_9kc_20260505T011939Z_candidate_r2`
+  - bounded 9KC scored replay: `local_step5x_rehydration_routeblock_9kc_20260505T011939Z_scored_r2`
+  - bounded 9KC pack replay after embedded gap sidecar patch: `local_step5x_rehydration_routeblock_9kc_20260505T011939Z_packs_r3`
+  - grep checks over changed source/tests for forbidden domain-specific control terms and over bounded candidate/scored/pack artifacts for `seed_definition` / `seed_floor`
+- exact validations passed:
+  - `py_compile` passed after the final patch.
+  - all listed direct tests passed all three rounds after the final patch.
+  - bounded 9KC replay emitted `217` candidate rows, `217` scored rows, `9` pack rows, and `1` retrieval gap request.
+  - `KC_CLF_NB_007` emitted `11` exact `profile_provenance_rehydration` candidates with no missing source provenance IDs.
+  - `KC_CLU_CORE_001` had `7` direct target statements in scored candidates, `6` independent-evidence route bypasses, and `ordered_pack_for_drafting=2`.
+  - `KC_EVAL_BASIC_006` remained honestly insufficient with `ordered_pack_for_drafting=0`, `near_miss_review_items=6`, embedded `retrieval_gap_requests=1`, and no unsafe positive support.
+  - no guarded blocked, review-only, context-only, reference-like, or bibliography-like row appeared in any `ordered_pack_for_drafting` item in the bounded audit.
+  - no seed fields leaked into the bounded candidate, scored, or pack artifacts.
+  - no ACTIVE pointers were created or updated.
+- exact validations failed:
+  - the first post-interruption candidate attempt emitted `425` rows because broad Step 5p source-window IDs were treated as exact provenance. This was diagnosed as candidate-expansion risk, narrowed to route/query/hint/payload provenance only, and replaced by the passing r2 replay with `217` rows.
+- current risks:
+  - local mirror has no `.git`, so changed-file tracking is manual in `local_audits/codex_step5x_rehydration_routeblock_20260505T011939Z/FILES_CHANGED.txt`.
+  - local validation does not prove authoritative Sofja/full-corpus behavior.
+  - structural formula support remains an allowed independent Step 5x basis per the requested contract and should be watched in the next diagnostic slice for off-target formula drift.
+  - `KC_EVAL_BASIC_006` still lacks draftable positive support in the bounded replay; its insufficient packet is informative but a broader slice should check whether valid source-local metric/gloss evidence exists elsewhere.
+- next action:
+  - wait for user review of `local_audits/codex_step5x_rehydration_routeblock_20260505T011939Z/9KC_REPLAY_AUDIT.txt`; if approved, run a 24-36 KC diagnostic slice using `NEXT_COMMANDS.txt`. Do not run full 144 yet.
+- explicit resume point:
+  - resume from `local_audits/codex_step5x_rehydration_routeblock_20260505T011939Z/COMPACTION_HANDOFF_PROMPT.md` and the final replay artifacts ending in `_candidate_r2`, `_scored_r2`, and `_packs_r3`.
+## 2026-05-04T18:58:00Z - Step 5x Retrieval Policy Redesign Recovery
+
+- current objective: implement a domain-agnostic, seedless, source-grounded Step 5x retrieval-policy layer between Step 5p guidance and candidate-bank generation, then validate with focused tests and bounded smoke if local artifacts permit.
+- exact editable repo root: `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+- exact reference repo root: `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+- editable repo classification: synced mirror, not a live Git checkout at root; `.git` is absent.
+- exact truth boundary: live editable source plus generated audit artifacts in this task outrank stale aliases and chat memory; local tests prove code behavior only, not authoritative external runtime success.
+- likely active files: `src/kc_l/retrieval_gate/profile_guidance.py`, `src/kc_l/retrieval_gate/evidence_stage_v3_candidate_bank.py`, `src/kc_l/retrieval_windowing/source_surface_fallback.py`, `src/kc_l/retrieval_gate/evidence_stage_v3_scored_candidates.py`, `src/kc_l/retrieval_gate/evidence_stage_v3_pack_composition.py`, `src/kc_l/kc_drafting/evidence_lane_policy.py`, and focused Step 5p/5x tests.
+- likely seed-definition dependency surfaces: stale `data/work/cache/current_step_artifacts/step1_kc_registry.current.jsonl` still contains `seed_definition`, so this task must use the strict seedless registry under `data/processed/hierarchy_seedless_registry/local_seedless_registry_strict_tree_smoke/` for typed registry evidence; Step 5p metadata remains route/control only and Step 5x must verify all evidence against sentence-overlay/source rows.
+- recovered hierarchy evidence: strict seedless registry set `local_seedless_registry_strict_tree_smoke` has `171` knowledge units, `144` KCs, `27` topics, `170` edges, `0` issues, and `0` warnings; topic and KC nodes are typed separately.
+- rollback plan: no Git reset is available at this mirror root; rollback is file-scoped through the changed-file inventory, audit package, and external synced copies if required. Do not use destructive commands and do not update ACTIVE pointers.
+- stop boundary for this task: stop if implementation would require Data Mining-specific runtime terms, seed semantics, a wrapper-only source-surface patch, uncontrolled feedback loops, full 144 replay, or repeated test failures without a targeted diagnosis.
+- validations run so far: environment and source inspection only (`python --version`, `.git`/source-surface existence checks, manifest/source/test/audit reads).
+- validations passed so far: Python `3.12.10`, no `.git`, shared source-surface implementation exists, strict seedless registry counts confirmed.
+- validations failed so far: no validation failure yet; bounded 9KC replay availability remains unproven for this session.
+- current risks: local mirror lacks Git metadata; current-step Step 1 alias is seed-bearing; 9KC smoke command must be rerun only after unit tests pass; local success will not prove authoritative Sofja/full replay success.
+- next action: patch retrieval-policy contracts and metadata, then run py_compile and focused direct tests before any bounded replay.
+- explicit resume point: resume from `local_audits/codex_step5x_policy_redesign_20260504T184445Z/IMPLEMENTATION_PLAN.md`.
+
+## 2026-05-06T14:12:23Z - Shape-Aware Shadow Safety Correction
+
+- current objective:
+  - apply only the bounded safety correction to the already-implemented Step 5x shape-aware shadow layer so the synced Sofja 144-KC diagnostic can be evaluated without obvious false-positive promotion.
+- exact editable repo root:
+  - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+- exact reference repo root:
+  - `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+- editable repo classification:
+  - synced mirror, not a live Git checkout at root; `.git` is absent.
+- exact truth boundary:
+  - the authoritative comparison source for this task is the synced inbound Sofja snapshot `_sofja_inbound/shapeaware_surgery_20260506T123113Z/extracted/`, specifically job `204794` profile/scored/pack artifacts. No local full144 run exists.
+- exact files changed:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/retrieval_gate/shapeaware_shadow.py`
+  - `scripts/diagnostics/shapeaware_shadow_pack_comparison.py`
+  - `tests/test_step5x_shapeaware_shadow.py`
+  - `local_audits/shapeaware_shadow_pack_comparison_20260506T141223Z/RECOVERY_NOTE.md`
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_gate\shapeaware_shadow.py scripts\diagnostics\shapeaware_shadow_pack_comparison.py tests\test_step5x_shapeaware_shadow.py`
+  - `python tests\test_step5x_shapeaware_shadow.py`
+  - `python scripts\diagnostics\shapeaware_shadow_pack_comparison.py`
+- exact validations passed:
+  - `py_compile` passed on all touched Python files.
+  - `tests\test_step5x_shapeaware_shadow.py` passed (`TEST_STEP5X_SHAPEAWARE_SHADOW_OK`).
+  - the fresh comparison bundle `local_audits/shapeaware_shadow_pack_comparison_20260506T141223Z/` was generated successfully from the synced Sofja `204794` extracted artifacts.
+  - the five requested blocker outcomes hold in the new report:
+    - `Rand Index` no longer routes to `standard_metric_formula_packet`; it now lands in `context_only_review_packet`.
+    - `DBSCAN Parameters (eps, minPts)` no longer routes to `standard_parameter_packet`; it now lands in `sibling_overlap_review_packet`.
+    - `K-Means Algorithm` remains recoverable as `standard_procedure_packet`.
+    - `F-Measure` remains recoverable as `standard_metric_formula_packet`.
+    - `suspected_false_positive_drafting_packs` is now `0` under drafting-core-only risk accounting.
+- exact validations failed:
+  - none in the final patch state.
+- current risks:
+  - the shadow layer is still conservative overall: `85` baseline `standard_drafting` KCs demote out of `standard_*` routes in the new comparison, so this is still an evaluation artifact, not a promotion-ready baseline.
+  - `K-Means Algorithm` remains recoverable but still carries `definition_subject_mismatch` in `drafting_core_risk_flags`, which means procedure rescue is working but not yet clean enough for blind promotion.
+  - `NB Learning Phase`, `External Index: F-Measure`, `Directly Density-Reachable`, and `Density-Reachable` remain review/gap cases under generic mechanisms.
+- comparison outcomes:
+  - shape-aware route distribution:
+    - `context_only_review_packet=17`
+    - `partial_grounded_packet=106`
+    - `sibling_overlap_review_packet=1`
+    - `standard_definition_packet=3`
+    - `standard_formal_relation_packet=2`
+    - `standard_metric_formula_packet=6`
+    - `standard_phase_process_packet=3`
+    - `standard_procedure_packet=5`
+    - `suspected_false_positive_review_packet=1`
+  - corrected counts:
+    - `rescued_insufficient_support_kcs=17`
+    - `demoted_risky_standard_kcs=85`
+    - `unchanged_clean_kcs=9`
+    - `suspected_false_positive_drafting_packs=0`
+- new shadow fields/routes used in this correction:
+  - new fields:
+    - `drafting_core_risk_flags`
+    - `auxiliary_risk_flags`
+    - `review_needed_risk_flags`
+    - `rejected_false_positive_risk_flags`
+    - `pack_level_risk_flags`
+  - compatibility field retained:
+    - `review_risk_flags`
+  - watched shadow routes confirmed in this pass:
+    - `standard_procedure_packet`
+    - `standard_metric_formula_packet`
+    - `sibling_overlap_review_packet`
+    - `context_only_review_packet`
+    - `suspected_false_positive_review_packet`
+- minimum authoritative rerun boundary:
+  - no model rerun is justified yet. The next authoritative boundary is review of `local_audits/shapeaware_shadow_pack_comparison_20260506T141223Z/shapeaware_shadow_pack_comparison.txt` and its JSON pair; only after accepting or revising this shadow delta should another bounded non-model Step 5x comparison or watched-KC slice be attempted.
+- next action:
+  - inspect the `85` demoted baseline-standard KCs and the `17` rescued insufficient-support KCs in the new comparison bundle to decide whether one more equally surgical shadow correction is warranted before any promotion discussion.
+- explicit resume point:
+  - resume from `local_audits/shapeaware_shadow_pack_comparison_20260506T141223Z/RECOVERY_NOTE.md` and the paired `shapeaware_shadow_pack_comparison.json` / `.txt` outputs in that same directory.
+
+## 2026-05-06T21:47:57Z - Deterministic-First Step 5p Edge Policy
+
+- current objective:
+  - make Step 5p deterministic-first and LLM-edge-only without diluting Step 5x evidence authority, without mutating ACTIVE pointers, and without claiming any local full144 replay.
+- exact editable repo root:
+  - `R:\Thesis Project\kc_l_v2_seedless_rework_sync\20260423_214049_kc_l_v2_seedless_rework_sync\unpacked\repo_source`
+- exact reference repo root:
+  - `R:\Thesis Project\kc_l_v2_clean_sofja_authoritative_sync\20260421_220803_kc_l_v2_sync\unpacked\repo_source`
+- editable repo classification:
+  - synced mirror, not a live Git checkout at root; `.git` is absent.
+- exact truth boundary:
+  - authoritative recent full144 context still comes only from `_sofja_inbound/edge_gated_5p_context_20260506_225838/extracted/edge_gated_5p_codex_context_20260506T205509Z/baseline_204794/`; no new local full144 Step 5p/5x run was performed in this task.
+- exact files changed:
+  - `CHANGELOG.md`
+  - `docs/operator_notes/CODEX_ACTIVE_STEP6_REFACTOR_STATE.md`
+  - `src/kc_l/retrieval_profile/deterministic.py`
+  - `src/kc_l/retrieval_profile/builder.py`
+  - `src/kc_l/retrieval_profile/output_hardening.py`
+  - `src/kc_l/retrieval_gate/profile_guidance.py`
+  - `steps/step_05_p_kc_retrieval_profile/scripts/run_step5p_kc_retrieval_profile.py`
+  - `steps/step_05_p_kc_retrieval_profile/resources/step5p.default.yaml`
+  - `scripts/diagnostics/edge_gated_5p_context_comparison.py`
+  - `tests/test_step5p_kc_retrieval_profile.py`
+  - `tests/test_step5x_profile_guidance.py`
+  - `local_audits/edge_gated_5p_context_comparison_20260506T214757Z/RECOVERY_NOTE.md`
+- exact behavior changes:
+  - Step 5p now emits a deterministic preprofile before any model decision, including deterministic surface forms, morphology/punctuation variants, derived-initialism profile-only variants, descriptor/topic/sibling terms, evidence-shape priors, deterministic query routes, deterministic strength, edge-trigger reasons, and `llm_recommended`.
+  - Step 5p now supports an explicit LLM policy seam: `always`, `edge`, or `never`.
+  - Edge gating now calls the LLM only when deterministic guidance is weak enough to recommend enrichment; derived initialisms alone no longer force an edge call when the deterministic profile is otherwise strong.
+  - Model suggestions are now bucketed into `source_observed`, `source_supported_near_target`, `model_suggested_unverified`, and `rejected`.
+  - Step 5x consumes only validated direct guidance through hardened query roles and route controls; unverified model suggestions remain profile-only and auditable.
+- exact validations run:
+  - `python -m py_compile src\kc_l\retrieval_profile\deterministic.py src\kc_l\retrieval_profile\builder.py src\kc_l\retrieval_profile\output_hardening.py src\kc_l\retrieval_gate\profile_guidance.py steps\step_05_p_kc_retrieval_profile\scripts\run_step5p_kc_retrieval_profile.py scripts\diagnostics\edge_gated_5p_context_comparison.py tests\test_step5p_kc_retrieval_profile.py tests\test_step5x_profile_guidance.py tests\test_step5x_retrieval_policy.py tests\test_step5x_v3_scored_candidates.py tests\test_step5x_v3_pack_composition.py tests\test_step5x_shapeaware_shadow.py`
+  - `python tests\test_step5p_kc_retrieval_profile.py`
+  - `python tests\test_step5x_profile_guidance.py`
+  - `python tests\test_step5x_retrieval_policy.py`
+  - `python tests\test_step5x_v3_scored_candidates.py`
+  - `python tests\test_step5x_v3_pack_composition.py`
+  - `python tests\test_step5x_shapeaware_shadow.py`
+  - `python scripts\diagnostics\edge_gated_5p_context_comparison.py`
+  - production leakage scan over touched production files:
+    - `rg -n "K-Means|DBSCAN|Rand Index|F-Measure|Naive Bayes|Directly Density-Reachable|Density-Reachable|204794|data mining|Data Mining" src\kc_l\retrieval_profile\deterministic.py src\kc_l\retrieval_profile\builder.py src\kc_l\retrieval_profile\output_hardening.py src\kc_l\retrieval_gate\profile_guidance.py steps\step_05_p_kc_retrieval_profile\scripts\run_step5p_kc_retrieval_profile.py`
+- exact validations passed:
+  - all listed `py_compile` runs passed.
+  - all listed direct Step 5p / Step 5x tests passed.
+  - the production leakage scan returned no matches.
+  - `scripts/diagnostics/edge_gated_5p_context_comparison.py` completed in `baseline_self_compare_smoke` mode, loaded the synced inbound 144-profile baseline successfully, and wrote a fresh audit bundle under `local_audits/edge_gated_5p_context_comparison_20260506T214757Z/`.
+- exact validations failed:
+  - none in the final patch state.
+- current risks:
+  - no new local edge-gated Step 5p / Step 5x full144 artifact set exists yet, so the new comparison script has only been smoke-tested against the baseline snapshot.
+  - local passing tests do not prove authoritative Sofja behavior or model-runtime performance.
+  - the stale current-step alias `data/work/cache/current_step_artifacts/step1_kc_registry.current.jsonl` still contains `seed_definition`; it remains outside this bounded Step 5p/5x patch and must not be treated as truth for future seedless claims.
+- comparison / audit artifacts:
+  - `local_audits/edge_gated_5p_context_comparison_20260506T214757Z/edge_gated_5p_context_comparison.json`
+  - `local_audits/edge_gated_5p_context_comparison_20260506T214757Z/edge_gated_5p_context_comparison.txt`
+  - `local_audits/edge_gated_5p_context_comparison_20260506T214757Z/RECOVERY_NOTE.md`
+- minimum authoritative rerun boundary:
+  - package the touched code back to Sofja and run a bounded Step 5p edge-gated replay plus its paired Step 5x candidate/scored/pack slice there; only then is a real baseline-vs-new comparison meaningful.
+- next action:
+  - use the new deterministic-edge code on Sofja for a bounded replay, then rerun `scripts/diagnostics/edge_gated_5p_context_comparison.py` with the new artifact paths against baseline `204794`.
+- explicit resume point:
+  - resume from `local_audits/edge_gated_5p_context_comparison_20260506T214757Z/RECOVERY_NOTE.md` and the paired JSON/TXT comparison outputs in that directory.

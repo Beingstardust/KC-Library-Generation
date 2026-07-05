@@ -1,0 +1,20 @@
+{
+  "stage": "step67_make_lane_positive20_from_v8_40",
+  "source_lanes_path": "data/processed/step67_sidecar_lane_packets_v8_40/2026-04-28_171241/lane_packets.jsonl",
+  "out_dir": "data/processed/step67_sidecar_lane_packets_v8_40_lanepositive20/2026-04-28_171714",
+  "lane_packets_path": "data/processed/step67_sidecar_lane_packets_v8_40_lanepositive20/2026-04-28_171714/lane_packets.jsonl",
+  "source_row_count": 40,
+  "lane_positive_available_count": 20,
+  "selected_count": 20,
+  "pattern_counter": {
+    "d1_s1_c1": 4,
+    "d1_s0_c1": 3,
+    "d1_s1_c0": 1,
+    "d0_s1_c1": 3,
+    "d1_s0_c0": 3,
+    "d0_s1_c0": 1,
+    "d0_s0_c1": 5
+  },
+  "selection_policy": "prefer usable non-quarantine lane coverage, then definition/scope/context density, then fewer quarantine items",
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

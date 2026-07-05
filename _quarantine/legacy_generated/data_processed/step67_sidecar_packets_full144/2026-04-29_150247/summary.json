@@ -1,0 +1,19 @@
+{
+  "stage": "step67_build_full144_evidence_packets_from_overlay",
+  "created_utc": "2026-04-29T15:02:50.793169+00:00",
+  "overlay_path": "data/processed/kc_drafting_input_overlay/2026-04-28_002730/candidate_sentence_overlay.jsonl",
+  "out_dir": "data/processed/step67_sidecar_packets_full144/2026-04-29_150247",
+  "evidence_packets_path": "data/processed/step67_sidecar_packets_full144/2026-04-29_150247/evidence_packets.jsonl",
+  "overlay_row_count": 2592,
+  "packet_count": 144,
+  "row_count_distribution_per_kc": {
+    "18": 144
+  },
+  "evidence_count_distribution": {
+    "8": 144
+  },
+  "max_evidence_per_kc": 8,
+  "missing_text_items": 0,
+  "contract_policy": "deterministic_full144_overlay_to_evidence_packets_no_model_no_active_pointer",
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}

@@ -1,0 +1,27 @@
+{
+  "schema_profile_version": "kc_library.extension_schema.v1",
+  "locked_core_version": "kc_library.locked_core.v1",
+  "profile_name": "textbook_first_run_example",
+  "description": "Example bounded extension profile for a future textbook-scale run.",
+  "extension_fields": [
+    {
+      "field_id": "textbook_chapter_ref",
+      "type": "string",
+      "status": "optional",
+      "description": "Optional chapter or section identifier.",
+      "default": ""
+    },
+    {
+      "field_id": "worked_example_anchor",
+      "type": "markdown",
+      "status": "optional",
+      "description": "Optional worked-example anchor text when the source materials support it.",
+      "default": ""
+    }
+  ],
+  "notes": [
+    "This is an example only.",
+    "The operator must still keep the locked core unchanged.",
+    "The final chosen profile must be recorded in the run manifest."
+  ]
+}

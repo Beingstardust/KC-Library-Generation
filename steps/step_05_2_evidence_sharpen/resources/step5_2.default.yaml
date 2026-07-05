@@ -1,0 +1,83 @@
+# Clean-start default for the operator repo.
+# Refresh current artifact aliases with: python scripts/maintenance/refresh_current_step_artifacts.py
+project:
+  timezone: Europe/Berlin
+
+inputs:
+  kc_registry_path: data/work/cache/current_step_artifacts/step1_seedless_hierarchy_registry.current.jsonl
+  step4_active_set_pointer: data/processed/retrieval_index/_sets/ACTIVE_STEP4_SET.txt
+  baseline_step5_active_set_pointer: data/processed/kc_evidence/_sets/ACTIVE_STEP5_EVIDENCE_SET.txt
+
+retrieval:
+  per_kc:
+    max_queries_per_kc: 3
+    top_patches_per_doc: 40
+    top_blocks_per_doc: 80
+    max_blocks_per_kc: 18
+    max_blocks_per_doc: 6
+    max_blocks_per_page: 3
+  dedupe:
+    dedupe_key: doc_id+block_id
+    dedupe_by_text_fingerprint_within_reveal_group: true
+  scoring:
+    source: reuse_step5_fetch_scores
+
+alignment:
+  definitional_cues:
+    - is
+    - defined as
+    - we call
+    - denote
+    - criterion
+    - measure
+    - entropy
+    - gini
+    - information gain
+    - likelihood
+    - mutual information
+    - silhouette
+  weights:
+    exact_name_phrase: 7.5
+    exact_alias_phrase: 5.0
+    canonical_token: 2.5
+    alias_token: 2.0
+    seed_keyword: 1.0
+    definitional_cue_sentence: 1.25
+    definition_plus_name_sentence: 1.75
+    heading_phrase: 0.75
+    heading_token: 0.4
+    retrieval_combined: 0.4
+    layer_priority: 0.4
+    canonical_reveal_bonus: 0.5
+    noncanonical_reveal_penalty: 0.35
+    short_block_penalty: 2.5
+    generic_block_penalty: 1.5
+  thresholds:
+    short_block_chars: 32
+    short_block_tokens: 4
+    generic_unique_content_tokens: 3
+  snippet_chars: 220
+
+outputs:
+  processed_root: data/processed/kc_evidence_sharp
+  sets_dir: data/processed/kc_evidence_sharp/_sets
+
+audit:
+  runs_dir: data/runs
+
+runtime:
+  seed_definition_max_chars: 240
+  keyword_query_max_terms: 8
+  query_embed_batch_size: 32
+  review_queue_min_token_hit_candidates: 6
+  review_examples_per_kc: 5
+  sample_kcs: 12
+
+acceptance:
+  n_kcs_total: 128
+  max_candidates_per_kc: 18
+  median_candidates_per_kc_min: 12
+  median_token_hit_fraction_min: 0.40
+  min_kcs_with_8_token_hits: 90
+
+

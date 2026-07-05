@@ -1,0 +1,45 @@
+# Python + local tooling noise
+.venv/
+__pycache__/
+*.pyc
+.pytest_tmp/
+.pytest_cache/
+test_tmp_pytest/
+src/*.egg-info/
+
+# Legacy research-era runtime surfaces removed from the clean operator repo
+archive/
+logs/
+manual_backups/
+PROJECT_STATE/
+data/cache/
+data/processed/
+data/raw/
+data/review_inputs/
+data/reranker_models/
+_tmp_mineru_test/
+
+# Clean operator runtime roots
+data/input/course_materials/*
+!data/input/course_materials/.gitkeep
+data/input/hierarchy/*
+!data/input/hierarchy/.gitkeep
+
+data/work/cache/*
+!data/work/cache/.gitkeep
+data/work/cache/generated_configs/
+data/work/staging/*
+!data/work/staging/.gitkeep
+
+data/runs/*
+!data/runs/.gitkeep
+
+data/library/active/*
+!data/library/active/knowledge_library_release_pointer.json
+data/library/frozen/*
+!data/library/frozen/.gitkeep
+
+data/exports/*
+!data/exports/.gitkeep
+
+

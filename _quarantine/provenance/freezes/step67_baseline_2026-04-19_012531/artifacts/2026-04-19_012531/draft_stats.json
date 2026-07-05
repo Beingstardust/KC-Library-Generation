@@ -1,0 +1,124 @@
+{
+  "authoritative_definition_status_breakdown": {
+    "direct_grounded": 74,
+    "normalized_grounded": 37,
+    "seed_floor_fallback": 33
+  },
+  "contamination_flag_breakdown": {
+    "formula_only_definition_risk": 33,
+    "heading_only_definition_risk": 4,
+    "high_contamination_candidates_present": 2,
+    "provenance_repairs_present": 1,
+    "review_queue_weak_coverage": 20
+  },
+  "context_fallback_count": 1,
+  "context_layer_status_breakdown": {
+    "fallback_context": 1,
+    "grounded": 143
+  },
+  "definition_context_completion_recoveries": 0,
+  "definition_draft_supported_single_span_fallback_recoveries": 64,
+  "definition_redraft_recoveries": 0,
+  "definition_single_span_fallback_recoveries": 0,
+  "definition_source_faithful_normalization_recoveries": 37,
+  "draft_contract_version": "1.0",
+  "draft_status_breakdown": {
+    "draft_ready": 30,
+    "draft_ready_with_holds": 114
+  },
+  "drafting_mode": "llm_multispan_grounded_v1",
+  "drafting_runtime": {
+    "availability_checked": true,
+    "availability_error": "",
+    "builder_function": "build_kc_draft_bundles_llm",
+    "config_kind": "main_quest_rendered",
+    "config_path": "data/work/cache/generated_configs/main_quest.hpc_gpu.yaml",
+    "contract_version": "step6_7_authoritative_runtime_v1",
+    "domain_policy_field": "step6_7.drafting_policy.domain_policy",
+    "domain_policy_name": "model_evaluation_background_v1",
+    "execution_mode": "llm",
+    "execution_profile": "hpc_gpu",
+    "fail_closed_when_llm_unavailable": true,
+    "heuristic_mode_name": "heuristic_extract_grounded_v1",
+    "llm_calls": 998,
+    "llm_mode_selected": true,
+    "llm_path_invoked": true,
+    "llm_required": true,
+    "mode_selection_field": "step6_7.execution_mode",
+    "provider": "ollama",
+    "resolved_gate_model_alias": "qwen3:30b",
+    "resolved_gate_model_field": "models.gate_llm.resolved_model_alias",
+    "resolved_generation_base_url": "http://127.0.0.1:11567",
+    "resolved_generation_base_url_field": "models.generation.base_url",
+    "resolved_generation_model_alias": "qwen3:30b",
+    "resolved_generation_model_field": "models.generation.resolved_model_alias",
+    "status": "completed",
+    "step6_6_set_manifest": "data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json",
+    "step6_6_set_manifest_field": "step6_7.inputs.step6_6_set_manifest"
+  },
+  "evidence_bundle_size_distribution": {
+    "1": 3,
+    "2": 4,
+    "3": 5,
+    "4": 7,
+    "5": 18,
+    "6": 105,
+    "7": 2
+  },
+  "extractive_definition_rejection_breakdown": {
+    "ambiguous_retrieval": 1026,
+    "formula_dense_fragment": 192,
+    "generic_background": 9,
+    "generic_context_lead_in": 21,
+    "not_definition_candidate_pool": 1025,
+    "question_like": 66,
+    "surface_gate_rejected": 1318,
+    "weak_target_alignment": 1022
+  },
+  "kcs_held_for_insufficient_support": 33,
+  "kcs_with_abstained_definitions": 33,
+  "kcs_with_completion_context_candidates": 38,
+  "kcs_with_contamination_flags": 42,
+  "kcs_with_definition_candidates": 111,
+  "kcs_with_family_context_candidates": 137,
+  "kcs_with_grounded_scopes": 43,
+  "kcs_with_llm_budget_exhaustion": 0,
+  "llm_call_budget_per_kc_max": 8,
+  "llm_runtime": {
+    "definition_redraft_calls": 134,
+    "definition_verify_calls": 134,
+    "draft_calls": 281,
+    "llm_calls": 998,
+    "scope_redraft_calls": 84,
+    "scope_verify_calls": 84,
+    "verify_calls": 281,
+    "verify_runtime_failures": 2
+  },
+  "model_name": "qwen3:30b",
+  "reference_definition_preservations": 0,
+  "reference_scope_preservations": 0,
+  "review_readiness_breakdown": {
+    "low_trust": 33,
+    "needs_attention": 81,
+    "ready": 30
+  },
+  "scope_redraft_recoveries": 15,
+  "seed_floor_active_count": 33,
+  "semantic_contract_version": "step6_7_survival_semantics_v1",
+  "sibling_definition_rejections": 0,
+  "support_state_breakdown": {
+    "formula_only_support": 4,
+    "grounded_single_quote": 1,
+    "insufficient_support": 29,
+    "strict_leaf_support": 110
+  },
+  "total_kcs": 144,
+  "trust_state_breakdown": {
+    "fallback_seed_floor": 32,
+    "fallback_seed_floor_with_risks": 1,
+    "grounded": 30,
+    "grounded_with_gaps": 81
+  },
+  "verifier_abstained_definition_kcs": 33,
+  "verifier_abstained_scope_kcs": 101
+}

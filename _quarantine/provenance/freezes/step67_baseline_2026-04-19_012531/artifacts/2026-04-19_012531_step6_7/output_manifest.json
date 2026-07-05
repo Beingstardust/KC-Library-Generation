@@ -1,0 +1,49 @@
+{
+  "audit_outputs": [
+    {
+      "relpath": "config_snapshot.yaml",
+      "sha256": "a0f94b827a0269216649b2e0c57f208d08f982f93a45fd21e79f310f9d12b46e",
+      "stat": {
+        "mtime": 1776561931.0,
+        "size": 6719
+      }
+    },
+    {
+      "relpath": "input_manifest.json",
+      "sha256": "4da926c9e9cc2bdd4a2ecc6224e75ffde72360dae7b36ff23d4ff6dd9bbeef6b",
+      "stat": {
+        "mtime": 1776565838.0,
+        "size": 1267
+      }
+    },
+    {
+      "relpath": "summary.json",
+      "sha256": "34352d81443285b9be7935f88f952de6af18f20a9b3364105eb04ee402a3334d",
+      "stat": {
+        "mtime": 1776565838.0,
+        "size": 9925
+      }
+    }
+  ],
+  "processed_outputs": [
+    {
+      "relpath": "draft_stats.json",
+      "sha256": "226582b2799aaa13133230e349683b5feca897bf3ce91662192e2cf7b8238946",
+      "stat": {
+        "mtime": 1776565838.0,
+        "size": 4236
+      }
+    },
+    {
+      "relpath": "kc_draft_bundles.jsonl",
+      "sha256": "621fe6a79f490495c32faf5d313146851655363d00049cc569c90131d9d02d88",
+      "stat": {
+        "mtime": 1776565838.0,
+        "size": 9957104
+      }
+    }
+  ],
+  "set_manifest": {
+    "path": "data/processed/kc_drafts/_sets/2026-04-19_012531_step6_7_kc_drafts_set.json"
+  }
+}

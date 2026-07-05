@@ -1,0 +1,105 @@
+{
+  "project": {
+    "timezone": "Europe/Berlin"
+  },
+  "inputs": {
+    "active_step6_set_pointer": "data/processed/kc_library/_sets/ACTIVE_STEP6_KC_LIBRARY_SET.txt",
+    "schema_path": "schema.json"
+  },
+  "model_selection": {
+    "preferred_model": "qwen3.5:9b",
+    "fallback_models": [
+      "qwen3:latest",
+      "gemma2:9b-instruct"
+    ],
+    "auto_pull_preferred_model": true
+  },
+  "role_labeling": {
+    "ollama_base_url": "http://127.0.0.1:11434",
+    "temperature": 0,
+    "top_p": 1,
+    "num_ctx": 8192,
+    "repeat_penalty": 1.05,
+    "timeout_seconds": 120,
+    "max_retries": 2,
+    "allow_think_fallback": true,
+    "role_labels": [
+      "definition",
+      "equation",
+      "procedure",
+      "example",
+      "warning",
+      "other"
+    ]
+  },
+  "enrichment": {
+    "definition_full_max_quotes": 3,
+    "max_evidence_minimal": 6,
+    "definition_cues": [
+      " is a ",
+      " is an ",
+      " is the ",
+      " defined as ",
+      " refers to ",
+      " we call ",
+      " denote",
+      " denotes",
+      " called ",
+      " means "
+    ],
+    "procedure_cues": [
+      "algorithm",
+      "procedure",
+      "repeat",
+      "until",
+      "for each",
+      "compute",
+      "split",
+      "pick",
+      "step",
+      "first",
+      "second",
+      "third"
+    ],
+    "warning_cues": [
+      "warning",
+      "pitfall",
+      "mistake",
+      "wrong",
+      "incorrect",
+      "confus",
+      "misconception",
+      "problem"
+    ],
+    "example_cues": [
+      "for example",
+      "example",
+      "e.g."
+    ],
+    "discriminator_cues": [
+      " vs ",
+      " versus ",
+      " unlike ",
+      " compared ",
+      " rather than "
+    ],
+    "sample_trace_kcs": 16,
+    "progress_every": 10
+  },
+  "outputs": {
+    "processed_root": "data/processed/kc_library",
+    "sets_dir": "data/processed/kc_library/_sets"
+  },
+  "audit": {
+    "runs_dir": "data/runs"
+  },
+  "acceptance": {
+    "n_kcs_total": 128,
+    "required_tier1_count": 128,
+    "max_verified_quote_mismatches": 0,
+    "max_thinking_used_frac": 0.1,
+    "min_tier2_count": 80,
+    "min_definition_full_count": 80,
+    "min_role_success_count": 118
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "stage": "step67c_validate_onepass_drafts",
+  "run_id": "2026-04-28_151408",
+  "created_utc": "2026-04-28T15:14:08.083539+00:00",
+  "packets_path": "data/processed/step67_sidecar_packets/2026-04-28_130527/evidence_packets.jsonl",
+  "drafts_path": "data/processed/step67_sidecar_onepass_drafts/2026-04-28_150801/onepass_drafts.jsonl",
+  "out_dir": "data/processed/step67_sidecar_validated/2026-04-28_151408",
+  "packet_count": 10,
+  "draft_row_count": 10,
+  "valid_row_count": 6,
+  "error_row_count": 4,
+  "warning_row_count": 0,
+  "status_counter": {
+    "definition::grounded": 1,
+    "scope::abstained": 5,
+    "definition::": 4,
+    "scope::": 4,
+    "definition::abstained": 5,
+    "scope::grounded": 1
+  },
+  "issue_counter": {
+    "ERROR::model_call_failed: empty visible model content": 4,
+    "ERROR::parsed_output_missing_or_not_object": 4,
+    "ERROR::kc_id_mismatch parsed=None expected='KC_CLU_EVAL_002'": 1,
+    "ERROR::definition: field is not an object": 4,
+    "ERROR::scope: field is not an object": 4,
+    "ERROR::kc_id_mismatch parsed=None expected='KC_EVAL_SAMP_003'": 1,
+    "ERROR::kc_id_mismatch parsed=None expected='KC_CLU_DBS_003'": 1,
+    "ERROR::kc_id_mismatch parsed=None expected='KC_CLU_CORE_002'": 1
+  },
+  "active_pointer_policy": "do_not_update_current_alias_or_active_pointer"
+}
