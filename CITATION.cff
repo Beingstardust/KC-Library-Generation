@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: >-
+  This repository accompanies a paper currently under double-blind review.
+  Author information and the final citation will be added once review
+  concludes; please check back or contact the venue for a citable reference
+  in the meantime.
+title: "Constructing a Source-Grounded Knowledge Component Library from Course Materials"
+type: software
+authors:
+  - name: "Anonymous Author(s)"
+preferred-citation:
+  type: conference-paper
+  title: "Constructing a Source-Grounded Knowledge Component Library from Course Materials"
+  authors:
+    - name: "Anonymous Author(s)"
+  conference:
+    name: "The 42nd ACM/SIGAPP Symposium on Applied Computing (SAC 2027)"
+  year: 2027
