@@ -1,0 +1,18 @@
+{
+  "Test Subject": {
+    "children": {
+      "Topic A": {
+        "children": {
+          "Good Leaf One": {"kc_id": "KC_TEST_001"},
+          "Good Leaf Two": {"kc_id": "KC_TEST_002"}
+        }
+      },
+      "Topic B": {
+        "children": {
+          "Broken Leaf Missing KC Id": {"definition": "This leaf has no kc_id or id field at all."},
+          "Good Leaf Three": {"kc_id": "KC_TEST_003"}
+        }
+      }
+    }
+  }
+}
