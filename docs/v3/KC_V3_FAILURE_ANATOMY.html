@@ -1,0 +1,328 @@
+<title>Failure Anatomy</title>
+<style>
+  :root{
+    --ground:#f7f9fb; --panel:#ffffff; --panel-2:#eef2f6;
+    --ink:#101720; --ink-2:#3c4a59; --ink-3:#66788a;
+    --rule:#d7dee6; --rule-soft:#e7edf3;
+    --accent:#0e7c86; --accent-soft:#e0f2f4;
+    --crit:#a3282f; --crit-bg:#fbe9ea;
+    --warn:#8a5d10; --warn-bg:#faf0dd;
+    --ok:#256b45; --ok-bg:#e4f2ea;
+    --dead:#5b5f6b; --dead-bg:#eceef1;
+    --measure:74ch;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0b1119; --panel:#121b25; --panel-2:#182430;
+      --ink:#e8eef4; --ink-2:#b3c2d0; --ink-3:#8195a6;
+      --rule:#26333f; --rule-soft:#1c2731;
+      --accent:#4ad3de; --accent-soft:#10333a;
+      --crit:#f08a90; --crit-bg:#331416;
+      --warn:#e0b45f; --warn-bg:#2e2410;
+      --ok:#6fd39b; --ok-bg:#12301f;
+      --dead:#9aa2b1; --dead-bg:#1b2029;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0b1119; --panel:#121b25; --panel-2:#182430;
+    --ink:#e8eef4; --ink-2:#b3c2d0; --ink-3:#8195a6;
+    --rule:#26333f; --rule-soft:#1c2731;
+    --accent:#4ad3de; --accent-soft:#10333a;
+    --crit:#f08a90; --crit-bg:#331416;
+    --warn:#e0b45f; --warn-bg:#2e2410;
+    --ok:#6fd39b; --ok-bg:#12301f;
+    --dead:#9aa2b1; --dead-bg:#1b2029;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:16px; line-height:1.62; padding:0 20px 100px;
+  }
+  .wrap{max-width:1000px; margin:0 auto;}
+
+  header.mast{padding:64px 0 26px; border-bottom:2px solid var(--ink); margin-bottom:8px;}
+  .eyebrow{
+    font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:18px;
+  }
+  h1{
+    font-family:Georgia,"Iowan Old Style",serif; font-weight:600;
+    font-size:clamp(32px,5vw,50px); line-height:1.08; letter-spacing:-.015em;
+    margin:0 0 16px; text-wrap:balance;
+  }
+  .standfirst{font-size:19px; color:var(--ink-2); max-width:var(--measure); margin:0;}
+
+  h2{
+    font-family:Georgia,"Iowan Old Style",serif; font-weight:600;
+    font-size:25px; line-height:1.2; margin:54px 0 12px; text-wrap:balance;
+  }
+  h3{font-size:15.5px; font-weight:650; margin:28px 0 8px;}
+  p{max-width:var(--measure); margin:0 0 13px;}
+  a{color:var(--accent);}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.87em;
+    background:var(--panel-2); padding:.12em .38em; border-radius:3px;
+  }
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+
+  .cluster{
+    background:var(--panel); border:1px solid var(--rule); border-radius:8px;
+    padding:20px 24px; margin:22px 0;
+  }
+  .cluster-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:10px 14px; margin-bottom:6px;}
+  .cluster-head h3{margin:0; font-family:Georgia,serif; font-size:20px; font-weight:600;}
+  .count{
+    font:600 12px/1.7 ui-monospace,monospace; padding:0 9px; border-radius:4px;
+    letter-spacing:.04em;
+  }
+  .c-crit{background:var(--crit-bg); color:var(--crit);}
+  .c-warn{background:var(--warn-bg); color:var(--warn);}
+  .c-ok{background:var(--ok-bg); color:var(--ok);}
+  .c-dead{background:var(--dead-bg); color:var(--dead);}
+
+  .quote{
+    background:var(--panel-2); border-left:3px solid var(--rule);
+    padding:11px 15px; margin:12px 0; border-radius:0 5px 5px 0;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px;
+    line-height:1.55; overflow-x:auto; white-space:pre-wrap; word-break:break-word;
+    max-width:none; color:var(--ink-2);
+  }
+  .fixbox{
+    margin-top:14px; padding-top:12px; border-top:1px dashed var(--rule);
+    font-size:14.5px; color:var(--ink-2); max-width:none;
+  }
+  .fixbox b{
+    display:block; font:600 10.5px/1.6 ui-monospace,monospace; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--ink-3); margin-bottom:5px;
+  }
+  .rows{
+    font-family:ui-monospace,monospace; font-size:12px; color:var(--ink-3);
+    margin-top:10px; max-width:none;
+  }
+
+  .tbl-wrap{overflow-x:auto; margin:18px 0;}
+  table{border-collapse:collapse; width:100%; min-width:580px; font-size:14px;}
+  th,td{text-align:left; padding:9px 14px 9px 0; border-bottom:1px solid var(--rule-soft); vertical-align:top;}
+  th{
+    font:600 11px/1.4 ui-monospace,monospace; text-transform:uppercase;
+    letter-spacing:.09em; color:var(--ink-3); border-bottom:1px solid var(--rule);
+  }
+  td.num{font-family:ui-monospace,monospace; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .bar{display:inline-block; height:9px; border-radius:2px; background:var(--accent); vertical-align:middle;}
+
+  ul{max-width:var(--measure); padding-left:20px; margin:0 0 13px;}
+  li{margin-bottom:6px;}
+  hr{border:0; border-top:1px solid var(--rule); margin:50px 0;}
+  .note{
+    background:var(--accent-soft); border-left:3px solid var(--accent);
+    padding:14px 18px; margin:20px 0; border-radius:0 6px 6px 0;
+  }
+  .note p{margin:0; max-width:none; font-size:14.5px;}
+  .note p + p{margin-top:9px;}
+  .foot{color:var(--ink-3); font-size:13.5px;}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">KC Library v3 · Failure Analysis</div>
+  <h1>Failure Anatomy</h1>
+  <p class="standfirst">Every one of the 51 defective outputs in the current Data Mining library, traced to where the needed content actually was — in the corpus, in the evidence pack, or in neither — and grouped into the six mechanisms that produced them.</p>
+</header>
+
+<div class="note">
+  <p><b>Why this document exists.</b> The previous cycle fixed a real contamination bug and the library got <em>worse</em>: 75.5% → 67.9% overall. That happened because the fix was designed against one diagnosed mechanism while several others went unexamined. This register exists so the next cycle is aimed at measured causes rather than the most recently noticed symptom.</p>
+  <p>Register and tooling: <code>v3/evaluation/failure_register.jsonl</code>, commit <code>8b3e5c7</code>.</p>
+</div>
+
+<h2>Where the two runs stand</h2>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Run</th><th>Acceptable attempted</th><th>Overall successful</th><th>Grounded precision</th><th>Mean evidence</th></tr></thead>
+  <tbody>
+    <tr><td>Pre-v22 (backup)</td><td class="num">114/149 &nbsp;76.5%</td><td class="num">120/159 &nbsp;75.5%</td><td class="num">87.9%</td><td class="num">4,943 ch</td></tr>
+    <tr><td>v23 (current)</td><td class="num">102/150 &nbsp;68.0%</td><td class="num">108/159 &nbsp;67.9%</td><td class="num">84.1%</td><td class="num">1,983 ch</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The v22/v23 fix did what it was built to do — the RIPPER hypothesis-test splice, the Random Forest contamination in Binary Decision Tree, the SNN fusion in Border Point are all gone, and four rows moved from defective to acceptable. It also cut mean evidence by 60%, and that cut removed content the drafter needed. Both effects are real; the second outweighed the first.</p>
+
+<h2>How each failure was diagnosed</h2>
+
+<p>Each of the 51 register entries carries probe terms describing what the source actually supports. Those probes are checked at three levels — the full sentence corpus, the unit's admitted evidence, and the produced draft — and the root cause falls out of where the content stops appearing. A failure whose content is in the corpus but not the evidence is a retrieval problem; one whose content is in the evidence but not the draft is a drafting problem; one whose content is nowhere is a corpus limit, where abstention would have been correct.</p>
+
+<div class="note">
+  <p><b>The first version of this harness was wrong, and the error is instructive.</b> It reported "content present" whenever a probe term appeared anywhere in the evidence — which counts a prose lead-in as a definition. Sample Mean and Variance admitted <em>"then the sample mean is"</em> and <em>"and the sample variance is"</em> and no formula at all; a probe for <code>sample mean</code> matched the lead-in and scored the packet as fine. The second pass added dangling-lead-in, formula-shape and shattered-math detection to tell <em>naming</em> a concept apart from <em>defining</em> it. Ten failures moved category as a result.</p>
+</div>
+
+<h2>The six mechanisms</h2>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>1 · Wrong-sense admission</h3><span class="count c-crit">9 failures · 8 of them "grounded"</span></div>
+  <p>A sibling concept or algorithm variant is admitted <em>above</em> the canonical sense of the unit, and the drafter uses it faithfully. This is the largest single source of confidently-wrong output: of the 18 failures the pipeline marked <code>grounded</code> — its strongest trust status — eight are this.</p>
+  <p>Core Point's evidence opens with the SNN-density variant, twice, before the standard DBSCAN definition appears third:</p>
+  <div class="quote">A point is a core point if the number of points within a given neighborhood around the point, <b>as determined by SNN similarity</b> and a supplied parameter Eps exceeds a certain threshold MinPts…
+
+[3rd position] A point is a core point if there are at least MinPts within a distance of Eps, where MinPts and Eps are user-specified parameters.</div>
+  <p>The reranker is answering "is this passage about core points?" — to which the SNN variant is a perfectly good yes. Nothing in the scoring asks which <em>sense</em> the unit denotes, so the wrong one wins on prominence.</p>
+  <div class="fixbox"><b>Fix · contrastive sibling scoring</b>
+  Score each candidate against this unit's query <em>and</em> against its sibling units' queries, then demote or reject any candidate a sibling claims more strongly. The data is already in place: <code>sibling_kc_names</code> is populated on all 159 packets since the registry fix. Cost is one extra reranker pass per unit over an already-small candidate set. This is the highest-value change available and needs its own isolated probe before any full build.</div>
+  <div class="rows">rows 5 · 42 · 45 · 98 · 102 · 105 · 108 · 118 · 145</div>
+</div>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>2 · Formula payload dropped</h3><span class="count c-crit">10 failures</span></div>
+  <p>The sentence that <em>introduces</em> a formula is admitted; the formula itself is not. Pearson shows it twice over, once per extractor variant, with no formula following either:</p>
+  <div class="quote">The most well-known correlation coefficient is the Pearson's product moment coefficient, <b>given by:</b>
+The most well-known correlation coefﬁcient is the Pearson's product moment coefﬁcient, <b>given by:</b></div>
+  <p>…while the corpus carries a readable <code>corr(x, y)=covariance(x, y)/(σx × σy)</code>. Three mechanisms combine here. A bare formula scores low against a name-shaped query because it contains no prose. The defining-equation floor that exists to rescue exactly this case only matches <code>&lt;unit name&gt; = …</code>, so it misses formulas written in symbols — <code>σ²ⱼ = s² = …</code> never mentions "sample variance". And v22 member verification strips a formula sitting as a non-seed member of an admitted block, which is precisely where formulas live relative to their lead-in.</p>
+  <div class="fixbox"><b>Fix · pointer-payload binding</b>
+  When an admitted sentence ends in a formula-introducing construction ("is:", "given by", "as follows"), admit the formula-shaped sentence that follows it in the same block regardless of that sentence's own score, and exempt it from member verification. The pointer has already been judged relevant; its payload inherits that judgement. This is narrow, and it does not reopen the splice hole, because the RIPPER contaminant was a complete standalone sentence on another topic, not a payload following a pointer.</div>
+  <div class="rows">rows 1 · 9 · 16 · 17 · 30 · 64 · 75 · 79 · 143 · 147</div>
+</div>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>3 · Drafting omission</h3><span class="count c-warn">16 failures</span></div>
+  <p>The content is present in the evidence, in usable form, and the draft does not state it. K-Means has the assign/recompute/repeat cycle available and describes the objective instead; Spearman has the ranking construction and gives only the use case; Bayes' Theorem talks around a formula that is in the pack.</p>
+  <p>This is the one cluster where drafting capability is genuinely implicated rather than retrieval. It is also the cluster most likely to shrink on its own once clusters 1 and 2 stop feeding the model contaminated and truncated packets — a drafter that hedges because half its evidence is fragments will hedge less when the fragments are whole.</p>
+  <div class="fixbox"><b>Fix · defer, then re-measure</b>
+  Do not tune the prompt against this cluster yet. Fix the input-side clusters first and re-measure, because part of this count is a symptom of them rather than an independent defect. Whatever remains afterwards is the honest drafting-quality number, and that is the point at which a stronger model or a stricter "state the mechanism" instruction is worth testing.</div>
+  <div class="rows">rows 10 · 15 · 25 · 33 · 34 · 60 · 74 · 88 · 101 · 112 · 113 · 116 · 117 · 149 · 152 · 153</div>
+</div>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>4 · Under-retrieval, pre-existing</h3><span class="count c-warn">12 failures</span></div>
+  <p>The content is in the corpus and was never retrieved — and was not retrieved before v22 either, so this predates the last cycle and is not a regression. External Index: Purity, Recall and Precision all sit here, as do the three unjustified abstentions: the model correctly declined to invent what it had not been given.</p>
+  <p>These units share a shape. Their names are compositional (<code>External Index: Recall</code>) while the corpus expresses them relationally, defining recall <em>for a cluster-class pair</em> without ever using the unit's compound name. Lexical retrieval matches the wrong half of the name and dense retrieval lands in the classification neighbourhood.</p>
+  <div class="fixbox"><b>Fix · treat as a query-formulation problem, measure before changing</b>
+  The existing machinery already has the right lever: candidate query formulations selected by realised retrieval outcome. What it lacks is a formulation that decomposes a compound name into its qualifier and its head, so <code>External Index: Recall</code> can be sought as recall <em>in the external-index sense</em>. Worth a probe on these 12 units specifically before touching the general path.</div>
+  <div class="rows">rows 2 · 19 · 29 · 36 · 59 · 61 · 69 · 84 · 91 · 119 · 121 · 122</div>
+</div>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>5 · Math extraction shattered</h3><span class="count c-dead">2 confirmed · not fixable downstream</span></div>
+  <p>PDF extraction destroyed the expression before retrieval ever saw it. The corpus stores Split Information — the one thing Gain Ratio needs — as loose fragments: summation rendered as a bare letter <code>X</code>, big parentheses as control characters, no fraction bar, no logarithm.</p>
+  <div class="quote">'6.1 Split Information'
+'If attribute A creates p child nodes, Split Information is:'
+'|Dj|'
+'\x12|Dj|'
+'p X'
+'\x13 .'</div>
+  <p>Gain Ratio was never winnable from this corpus. Worse, the only readable-looking alternative — the textbook's <code>Gain ratio=ΔinfoSplit Info=Entropy(Parent)−∑…</code> — has lost its fraction bar, so numerator and denominator run together and the text <em>invites</em> exactly the error the model made. Euclidean Distance loses its radical the same way (<code>Euclidean distance = √</code>, radicand gone).</p>
+  <div class="fixbox"><b>Fix · variant selection, then abstention</b>
+  Extractors fail differently and the corpus keeps all three renderings. <span class="mono">mineru</span> sometimes emits intact LaTeX with <code>\frac</code> and <code>\sum</code> preserved where <span class="mono">pymupdf</span> truncates at the radical; on Pearson the reverse holds. Deduplication currently collapses the three to one and can pick the destroyed rendering over the intact one — so score variants on mathematical integrity and prefer the survivor. Where every rendering is shattered, mark the formula slot unavailable so the unit abstains from the formula instead of synthesising a plausible wrong one. Presenting a confidently wrong equation is the worst outcome available here.</div>
+  <div class="rows">rows 82 · 114 &nbsp;— under-counted; several cluster-3 math rows share this cause beneath a recoverable surface</div>
+</div>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>6 · v22 over-stripping regression</h3><span class="count c-ok">2 failures · self-inflicted</span></div>
+  <p>Content that was admitted before the last cycle and is now gone. Bidirectional Generation is the clean example: BG is <em>defined</em> as SFG and SBG run in parallel, so the sentences that explain it describe its siblings and never say "BG". Scored individually, they look irrelevant; removed, the definition loses its content. Evidence fell from 2,537 to 287 characters.</p>
+  <div class="fixbox"><b>Fix · folded into cluster 2</b>
+  The pointer-payload binding rule covers the mechanism, and a relational-definition allowance — keep block members that name a sibling of the unit when the unit's own definition is compositional — covers the rest. Small, and directly measurable against these two units.</div>
+  <div class="rows">rows 80 · 141</div>
+</div>
+
+<h2>What was changed, and what it reaches</h2>
+
+<p>Four fixes were built against these clusters. Three shipped; one was measured, found harmful, and deleted. Each was verified both on the units it claims to fix <em>and</em> on units the review accepted, because verifying only the first half is what turned the previous cycle into a regression.</p>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>The corpus was not the problem — our reading of it was</h3><span class="count c-ok">shipped · v24</span></div>
+  <p>Before changing anything downstream, the extraction stack was audited to see whether re-running it was the real answer. It is not:</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Extractor</th><th>Share of corpus</th><th>LaTeX structure kept</th><th>Mathematics damaged</th></tr></thead>
+    <tbody>
+      <tr><td>pymupdf</td><td class="num">56%</td><td class="num">0.0%</td><td class="num">4.4%</td></tr>
+      <tr><td>mineru</td><td class="num">23%</td><td class="num">17.9%</td><td class="num">0.2%</td></tr>
+      <tr><td>docling</td><td class="num">21%</td><td class="num">0.0% (Unicode)</td><td class="num">0.0%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>pymupdf supplies most of the corpus and is the only extractor destroying equations, substituting control characters for operators it cannot map. Crucially, <b>no passage was found damaged in every rendering</b> — an intact version nearly always exists. Deduplication simply had to keep it, and did not, because <code>garbled_math_penalty</code> scored control characters at <code>0.000</code> and the math test looked only for <code>$</code> and <code>\</code>, so clean Unicode operators counted as prose and raw length decided instead. On a real passage the damaged rendering scored <code>0.000</code> and the intact one <code>0.080</code> — the corruption was kept and the correct text discarded. Re-extraction would have been a large project invalidating every prior measurement; the actual defect was fifteen lines of our own scoring.</p>
+</div>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>Promised formulas are now admitted with their promise</h3><span class="count c-ok">shipped · v25</span></div>
+  <p>The corpus stores equations as their own blocks, so a pointer and its payload are separate retrieval units and only the pointer scores against a name-shaped query. A passage ending in "is:", "given by" or "as follows" is a promise about the next block; that successor is now admitted on the pointer's relevance when it is formula-shaped, compact and undamaged, and is exempt from member verification. Verified against the real corpus, it recovers the formula even when the member verifier is made deliberately hostile.</p>
+</div>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>Evidence another unit claims is refused</h3><span class="count c-ok">shipped · v26</span></div>
+  <p>Admitted passages are scored against rival units — those sharing a content word in their name — and dropped when a rival wins decisively. On the real packets, External Index: Precision drops from 11 passages to 4, shedding exactly the classification <code>TP/(TP+FP)</code> material; Bisecting-K-Means content leaves K-Means; the Gain Ratio formula leaves Information Gain. Units the review accepted retain <b>98%</b> of their evidence. Every decision is recorded on the packet rather than applied invisibly.</p>
+</div>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>A fix that was built, measured, and thrown away</h3><span class="count c-dead">rejected · v27</span></div>
+  <p>A foreign-method guard targeted the cases where the competing concept is not a library unit at all — complete linkage identified as CLIQUE, DBSCAN core points defined via SNN similarity, Jarvis-Patrick's complexity given as hierarchical clustering's. It caught three of them. Library-wide it also removed 2.9% of evidence, concentrated on units the review <em>accepted</em>: Sequential Forward Generation −50%, Zero-Frequency Problem −42%, ID3 −50%. The signal it keys on appears identically in real misattribution and in ordinary comparative evidence ("The methods presented are SFG, SBG, BG, and RG"), and no string-level refinement separated them. Section headings were checked first as an alternative and are unusable — populated on 51% of evidence and often unrelated to it. The code was deleted rather than left dormant, because this project has repeatedly been bitten by code that exists, looks active, and does nothing.</p>
+</div>
+
+<div class="cluster">
+  <div class="cluster-head"><h3>No formula the source does not actually give</h3><span class="count c-ok">shipped · v28</span></div>
+  <p>The drafting contract asked for a formula to be reproduced "and each symbol defined", directly beside an instruction to prefer completeness. Against a rendering that has lost its fraction bar, "reproduce" becomes "reconstruct" — which is exactly how Gain Ratio acquired a Split Information defined as <code>Entropy(Parent) − Σ p log p</code>. The model completed a pattern rather than reporting it unusable.</p>
+  <p>Both sides are now closed. Corrupted renderings are withheld from evidence entirely, so there is nothing to reconstruct from: measured at 5 items out of 2,789 (0.18%), touching 5 of 158 units, two of which are precisely the shattered-math failures. And the contract now requires formulas to be copied exactly or omitted, a partial rendering to be reported as incomplete <em>with no equation given</em>, symbols defined only where the passages define them, and states plainly that an incomplete draft is acceptable while an invented one is not — nothing may be added to make an account look finished.</p>
+  <p>Where every rendering of an equation is damaged, the unit now carries no formula. That is the intended outcome: no formula beats a plausible wrong one.</p>
+</div>
+
+<h3>Honest coverage</h3>
+
+<p>Documented and diagnosed: all 51. <em>Reached</em> by a shipped fix: far fewer. The distinction matters more than the headline.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Cluster</th><th>Failures</th><th>Reached</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td>Wrong-sense admission</td><td class="num">9</td><td class="num">7</td><td>rival exists; only some lose their bad passages at the current margin</td></tr>
+    <tr><td>Formula payload dropped</td><td class="num">10</td><td class="num">~4</td><td>v25; the rest lack a formula-shaped successor</td></tr>
+    <tr><td>Math shattered</td><td class="num">2</td><td class="num">2</td><td>clean renderings available for both</td></tr>
+    <tr><td>Drafting omission</td><td class="num">16</td><td class="num">0</td><td>deferred by design — partly symptomatic, re-measure first</td></tr>
+    <tr><td>Under-retrieval</td><td class="num">12</td><td class="num">0</td><td>deferred — needs its own probe</td></tr>
+    <tr><td>v22 regression</td><td class="num">2</td><td class="num">0</td><td>relational definitions, not payload cases</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note">
+  <p><b>Two caveats kept on the record rather than buried.</b> "A rival exists" only means the precondition holds — a reranker test showed only External Index: Precision actually shed its wrong-sense passages, while Entropy, F-Measure and Complete Linkage kept theirs because no rival won by the required margin. And the coverage script under-reports v25, because it matches assembled passages against raw corpus blocks by exact equality, which usually fails.</p>
+  <p>Three failures look unreachable at the retrieval layer entirely, and are being left alone rather than chased. Mutually Exclusive Classes and Density-Connected have no library unit to lose their contamination to. Pearson's formula block is <em>absent from the corpus</em> at that location — the readable rendering exists only in a different document, making it an under-retrieval problem rather than a payload one.</p>
+</div>
+
+<h2>What this implies for the next cycle</h2>
+
+<p>Two clusters account for 19 of the 51 failures and both are input-side, mechanical, and testable in isolation: wrong-sense admission and formula payload loss. Together they also account for 11 of the 18 falsely-<code>grounded</code> outputs, which are the failures that matter most, because they are the ones a reviewer is least likely to catch.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Cluster</th><th>Count</th><th></th><th>Fixable now</th><th>Verification available</th></tr></thead>
+  <tbody>
+    <tr><td>Wrong-sense admission</td><td class="num">9</td><td><span class="bar" style="width:76px"></span></td><td>Yes — contrastive sibling scoring</td><td>9 named units</td></tr>
+    <tr><td>Formula payload dropped</td><td class="num">10</td><td><span class="bar" style="width:85px"></span></td><td>Yes — pointer-payload binding</td><td>10 named units</td></tr>
+    <tr><td>Drafting omission</td><td class="num">16</td><td><span class="bar" style="width:136px"></span></td><td>Defer — partly symptomatic</td><td>re-measure after 1 &amp; 2</td></tr>
+    <tr><td>Under-retrieval</td><td class="num">12</td><td><span class="bar" style="width:102px"></span></td><td>Probe first</td><td>12 named units</td></tr>
+    <tr><td>Math shattered</td><td class="num">2+</td><td><span class="bar" style="width:17px"></span></td><td>Partly — variant choice, else abstain</td><td>corpus-level</td></tr>
+    <tr><td>v22 regression</td><td class="num">2</td><td><span class="bar" style="width:17px"></span></td><td>Yes — folded into cluster 2</td><td>2 named units</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The sequencing matters more than the individual fixes. Both target clusters have a named unit list to verify against, so each change can be probed on the exact units it claims to fix before it touches the library — the discipline that was missing last cycle, when a fix verified on eight contamination cases was shipped without checking what it removed elsewhere.</p>
+
+<div class="note">
+  <p><b>Meanwhile, the deliverable should be the pre-v22 run.</b> It scores 75.5% against the current run's 67.9%, both are backed up intact, and there is no reason to hand reviewers the weaker library while the next cycle is in progress.</p>
+</div>
+
+<hr>
+
+<h2>For the paper</h2>
+
+<p>This comparison is a result, not an embarrassment. Two full runs over identical units, independently reviewed by a human against the source, isolate a precision/recall trade-off in evidence admission and put a number on it: filtering that removed genuine contamination cost more in decontextualised formulas and relational definitions than it gained, for a net −7.6 points. The finding that <em>aggressive evidence filtering can reduce grounded-generation quality by stripping the context that makes retrieved evidence usable</em> is worth stating plainly, and the mechanism — pointers admitted without payloads, relational definitions whose evidence never names the unit — is specific enough to be actionable by anyone building a similar pipeline.</p>
+
+<p>The extraction finding stands on its own. A measurable share of mathematical failures in a retrieval-augmented pipeline over PDF sources are not model failures at all: the equation was destroyed before retrieval began, and the surviving text is misleading rather than merely absent. Any evaluation that attributes these to the generator is measuring the wrong component.</p>
+
+<p class="foot">51 failures · 6 mechanisms · register at <span class="mono">v3/evaluation/failure_register.jsonl</span> · diagnosis reproducible via <span class="mono">v3/evaluation/diagnose_v2.py</span></p>
+
+</div>

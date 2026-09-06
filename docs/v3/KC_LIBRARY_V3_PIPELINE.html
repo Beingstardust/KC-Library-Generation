@@ -1,0 +1,324 @@
+<title>KC Library v3 Pipeline</title>
+<style>
+  :root{
+    --ground:#f7f9fb; --panel:#ffffff; --panel-2:#eef2f6;
+    --ink:#101720; --ink-2:#3c4a59; --ink-3:#66788a;
+    --rule:#d7dee6; --rule-soft:#e7edf3;
+    --accent:#0e7c86; --accent-soft:#e0f2f4;
+    --pass:#256b45; --fail:#a52f26; --caution:#8a5d10;
+    --pass-bg:#e4f2ea; --fail-bg:#fbe8e6; --caution-bg:#faf0dd;
+    --measure:70ch;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0b1119; --panel:#121b25; --panel-2:#182430;
+      --ink:#e8eef4; --ink-2:#b3c2d0; --ink-3:#8195a6;
+      --rule:#26333f; --rule-soft:#1c2731;
+      --accent:#4ad3de; --accent-soft:#10333a;
+      --pass:#6fd39b; --fail:#f08b80; --caution:#e0b45f;
+      --pass-bg:#12301f; --fail-bg:#331815; --caution-bg:#2e2410;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0b1119; --panel:#121b25; --panel-2:#182430;
+    --ink:#e8eef4; --ink-2:#b3c2d0; --ink-3:#8195a6;
+    --rule:#26333f; --rule-soft:#1c2731;
+    --accent:#4ad3de; --accent-soft:#10333a;
+    --pass:#6fd39b; --fail:#f08b80; --caution:#e0b45f;
+    --pass-bg:#12301f; --fail-bg:#331815; --caution-bg:#2e2410;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:16px; line-height:1.62; padding:0 20px 100px;
+  }
+  .wrap{max-width:940px; margin:0 auto;}
+
+  header.mast{padding:64px 0 28px; border-bottom:2px solid var(--ink); margin-bottom:8px;}
+  .eyebrow{
+    font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:18px;
+  }
+  h1{
+    font-family:Georgia,"Iowan Old Style",serif; font-weight:600;
+    font-size:clamp(34px,5.2vw,52px); line-height:1.08; letter-spacing:-.015em;
+    margin:0 0 16px; text-wrap:balance;
+  }
+  .standfirst{font-size:19px; color:var(--ink-2); max-width:var(--measure); margin:0;}
+  .meta{
+    display:flex; flex-wrap:wrap; gap:8px 28px; margin-top:26px;
+    font:500 12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--ink-3);
+  }
+  .meta b{color:var(--ink-2); font-weight:600;}
+
+  h2{
+    font-family:Georgia,"Iowan Old Style",serif; font-weight:600;
+    font-size:26px; line-height:1.2; letter-spacing:-.01em;
+    margin:56px 0 14px; text-wrap:balance;
+  }
+  h3{font-size:15px; font-weight:650; margin:26px 0 8px; letter-spacing:.005em;}
+  p{max-width:var(--measure); margin:0 0 14px;}
+  a{color:var(--accent);}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.9em;}
+  code{background:var(--panel-2); padding:.12em .38em; border-radius:3px; color:var(--ink);}
+
+  .panel{
+    background:var(--panel); border:1px solid var(--rule); border-radius:8px;
+    padding:22px 24px; margin:22px 0;
+  }
+  .panel h3:first-child{margin-top:0;}
+
+  /* stage rail — numbering encodes a real 0→7 data sequence */
+  .stage{
+    display:grid; grid-template-columns:58px 1fr; gap:22px;
+    padding:26px 0; border-top:1px solid var(--rule-soft);
+  }
+  .stage:first-of-type{border-top:1px solid var(--rule);}
+  .stage-n{
+    font:650 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+    color:var(--accent); padding-top:5px; letter-spacing:.04em;
+  }
+  .stage-body h3{margin-top:0; font-size:18px; font-family:Georgia,serif; font-weight:600;}
+  .stage-body p{margin-bottom:10px;}
+  .io{
+    display:flex; flex-wrap:wrap; gap:6px 10px; margin-top:12px;
+    font:500 11.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .io span{
+    background:var(--panel-2); color:var(--ink-2);
+    border:1px solid var(--rule-soft); border-radius:999px; padding:2px 10px;
+  }
+  .io span b{color:var(--ink-3); font-weight:600;}
+
+  .tbl-wrap{overflow-x:auto; margin:16px 0;}
+  table{border-collapse:collapse; width:100%; min-width:520px; font-size:14px;}
+  th,td{text-align:left; padding:9px 14px 9px 0; border-bottom:1px solid var(--rule-soft); vertical-align:top;}
+  th{
+    font:600 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;
+    text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3);
+    border-bottom:1px solid var(--rule);
+  }
+  td.num{font-family:ui-monospace,monospace; font-variant-numeric:tabular-nums; white-space:nowrap;}
+
+  .tag{
+    display:inline-block; font:600 11px/1.6 ui-monospace,monospace;
+    padding:1px 8px; border-radius:4px; white-space:nowrap;
+  }
+  .t-pass{background:var(--pass-bg); color:var(--pass);}
+  .t-fail{background:var(--fail-bg); color:var(--fail);}
+  .t-caution{background:var(--caution-bg); color:var(--caution);}
+
+  ul{max-width:var(--measure); padding-left:20px; margin:0 0 14px;}
+  li{margin-bottom:7px;}
+  .lede{font-size:17px; color:var(--ink-2);}
+  hr{border:0; border-top:1px solid var(--rule); margin:52px 0;}
+  .foot{color:var(--ink-3); font-size:13.5px; max-width:var(--measure);}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">Pipeline Architecture · Mirror <span class="mono">kc_l_v2_mirror_20260810</span></div>
+  <h1>KC Library v3 Pipeline</h1>
+  <p class="standfirst">A corpus-grounded knowledge-component drafting pipeline. Retrieval reads the source corpus and the KC registry — and nothing else. No profiling model sits anywhere on the path.</p>
+  <div class="meta">
+    <span><b>Branch</b> mirror-baseline-20260810</span>
+    <span><b>Head</b> 944db97</span>
+    <span><b>Units</b> 159 KC + 22 topic</span>
+    <span><b>Fix checks</b> 21 / 21 passing</span>
+  </div>
+</header>
+
+<h2>What the pipeline is allowed to read</h2>
+<p>The defining property of v3 is negative: what it <em>cannot</em> see. Every input was traced to its origin rather than assumed.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Input</th><th>Origin</th><th>Contains model output?</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>sentence_corpus.jsonl</code></td>
+      <td>Extraction + sentence overlay over the source PDFs</td>
+      <td><span class="tag t-pass">NO</span> — extracted text and structural flags</td>
+    </tr>
+    <tr>
+      <td><code>hierarchy_overlay.jsonl</code></td>
+      <td>The KC registry (labels, ids, parentage)</td>
+      <td><span class="tag t-pass">NO</span> — <code>definition_full</code>, <code>definition_short</code>, <code>hierarchy_description_raw</code> and <code>evidence_refs</code> are empty on every node; all populated fields are structural</td>
+    </tr>
+    <tr>
+      <td>Cross-encoder <span class="mono">bge-reranker-v2-m3</span></td>
+      <td>Fixed pretrained weights, local</td>
+      <td><span class="tag t-caution">SCORER</span> — ranks candidates, generates nothing</td>
+    </tr>
+    <tr>
+      <td>Embedder <span class="mono">all-mpnet-base-v2</span></td>
+      <td>Fixed pretrained weights, local</td>
+      <td><span class="tag t-caution">SCORER</span> — similarity only, generates nothing</td>
+    </tr>
+    <tr>
+      <td>Drafting model <span class="mono">gemma4:31b</span></td>
+      <td>Local Ollama</td>
+      <td><span class="tag t-caution">WRITES DRAFTS</span> — the one generative step, at the end</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="panel">
+  <h3>The Step 5p dependency, and how it was removed</h3>
+  <p>Until <code>944db97</code> the data-mining runs read profile rows from a Step 5p output file. Only registry-derived fields were consumed, but the file itself was a profiling artifact — so the independence claim was not literally true for that domain. Profiles are now derived from the hierarchy alone.</p>
+  <p>Verified field-by-field rather than asserted: of the six fields retrieval reads, <b>five are byte-identical</b> between the old and new source. The sixth, <code>parent_topic_label</code>, differed on all 159 units — and the 5p file was <em>wrong</em>, recording each KC's parent as itself.</p>
+  <p>That error had a silent cost. Sibling grouping keys off the parent label, so <code>sibling_kc_names</code> was empty on <b>159 / 159</b> packets, disabling three anti-contamination instructions in the drafting prompt. Correct parents produce 23 sibling groups, mean size 6.9, none empty.</p>
+</div>
+
+<h2>Stages</h2>
+<p class="lede">Data flows in one direction. Each stage below states what it does, and how.</p>
+
+<div class="stage">
+  <div class="stage-n">00</div>
+  <div class="stage-body">
+    <h3>Profile derivation</h3>
+    <p><b>What.</b> Turns the KC registry into one profile row per knowledge unit.</p>
+    <p><b>How.</b> Walks <code>hierarchy_overlay.jsonl</code>; every node carrying a <code>kc_id</code> becomes a unit. Five fields are copied verbatim (id, type, label, parent label, path); the sixth, <code>deterministic_label_variants</code>, is a pure string function — hyphen and slash normalisation, parenthetical stripping, generic-suffix stripping. No model is invoked, and none ever has been for this file.</p>
+    <div class="io"><span><b>in</b> hierarchy_overlay.jsonl</span><span><b>out</b> kc_retrieval_profiles.jsonl</span><span><b>code</b> overlay_to_profiles.py</span></div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-n">01</div>
+  <div class="stage-body">
+    <h3>Query formulation</h3>
+    <p><b>What.</b> Produces the candidate query forms that will be tried for a unit.</p>
+    <p><b>How.</b> Two forms at most, and both denote <em>only</em> the unit: its canonical name, and the same name with an acronym expanded against an ancestor label whose initials match it (<code>NB Learning Phase</code> → <code>Naive Bayes Learning Phase</code>). An ancestor label is never appended as free context — measured on real data, <code>Unit (Category)</code> made the reranker score passages about the <em>category</em> at 0.70+, which is how a unit gained 15 passages while losing its definition and its formula.</p>
+    <div class="io"><span><b>fn</b> candidate_query_texts</span><span><b>fn</b> expand_acronyms</span></div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-n">02</div>
+  <div class="stage-body">
+    <h3>Recall — three channels</h3>
+    <p><b>What.</b> Gathers a wide candidate pool from the corpus.</p>
+    <p><b>How.</b> <b>BM25</b> over all sentences, built from scratch on sparse matrices. <b>Pseudo-relevance feedback</b> takes the top-ranked sentences for the base query and pulls their most distinctive terms back into it, so the corpus supplies its own vocabulary bridge — this replaced the LLM-authored aliases. <b>Dense retrieval</b> adds semantic neighbours a lexical method cannot reach; its embedding matrix is cached on disk, keyed by corpus path, size, mtime and model, so a changed corpus misses rather than silently reusing stale vectors.</p>
+    <div class="io"><span><b>cls</b> BM25Index</span><span><b>fn</b> expand_query_tokens</span><span><b>cls</b> DenseIndex</span><span><b>pool</b> 400 + 50</span></div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-n">03</div>
+  <div class="stage-body">
+    <h3>Precision — cross-encoder ranking</h3>
+    <p><b>What.</b> Scores every candidate against the unit's own query text.</p>
+    <p><b>How.</b> A local cross-encoder scores each (query, sentence) pair; the logit passes through a sigmoid so <code>0.5</code> is its own relevant / not-relevant boundary. This is the sole admission authority — a candidate's channel of origin buys it nothing.</p>
+    <div class="io"><span><b>cls</b> CrossEncoderReranker</span><span><b>model</b> bge-reranker-v2-m3</span></div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-n">04</div>
+  <div class="stage-body">
+    <h3>Admission and assembly</h3>
+    <p><b>What.</b> Decides what enters the packet, and assembles sentences into coherent passages.</p>
+    <p><b>How.</b> A sentence must clear the floors below and survive the structural filters. Surviving seeds are expanded to their whole source block, deduplicated across extractor variants, then the <em>assembled</em> text is re-scored — because what reaches the drafting model is the block, not the sentence that matched it.</p>
+    <div class="io"><span><b>fn</b> assemble_passages</span><span><b>caps</b> 40 passages / 14 000 chars</span></div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-n">05</div>
+  <div class="stage-body">
+    <h3>Query selection</h3>
+    <p><b>What.</b> Chooses which query form the unit is actually best expressed by.</p>
+    <p><b>How.</b> Every candidate form is run through the <em>same full retrieval</em> it would receive, and the winner's work is kept — no cheap probe, because selecting on a smaller sample than the decision governs proved unsound (it ranked one unit's forms backwards and cost it 35 passages). Forms are ranked by definition/formula/procedure coverage first, then mean relevance, then volume — so a vague query cannot win by admitting more merely-acceptable material.</p>
+    <div class="io"><span><b>metric</b> core shapes → mean relevance → count</span></div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-n">06</div>
+  <div class="stage-body">
+    <h3>Packet emission</h3>
+    <p><b>What.</b> Writes one drafting packet per KC, and one per topic.</p>
+    <p><b>How.</b> A KC packet carries its evidence, shape coverage, sibling names, hierarchy path and the query-selection record. Topic packets are built from <em>the same evidence that grounds their child units</em> — not from the children's finished drafts, as the original pipeline did. That removes a sequential dependency and, more importantly, stops errors in a child draft propagating upward unchecked. Passages are taken round-robin across children so one verbose child cannot crowd out its siblings.</p>
+    <div class="io"><span><b>out</b> step67_comprehensive_packets.jsonl</span><span><b>out</b> step67_topic_packets.jsonl</span></div>
+  </div>
+</div>
+
+<div class="stage">
+  <div class="stage-n">07</div>
+  <div class="stage-body">
+    <h3>Drafting</h3>
+    <p><b>What.</b> Writes the KC and topic drafts as structured JSON.</p>
+    <p><b>How.</b> The one generative step. Before serialisation the packet is copied and source-document pointers are neutralised — <code>Figure 3.7</code> becomes <code>the figure</code>, bracket citations are dropped — so the model cannot copy a number it never sees. The stored packet keeps verbatim text, so provenance and downstream grounding checks are unaffected. All four prompt paths neutralise, including both repair prompts.</p>
+    <div class="io"><span><b>fn</b> prompt_safe_packet</span><span><b>ctx</b> 32 768</span><span><b>temp</b> 0</span></div>
+  </div>
+</div>
+
+<h2>Admission gates</h2>
+<p>Every threshold, and what each exists to stop.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Gate</th><th>Value</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>Absolute floor</td><td class="num">0.55</td><td>Above the cross-encoder's own neutral point, so nothing it judges irrelevant is admitted</td></tr>
+    <tr><td>Relative floor</td><td class="num">0.85 × top</td><td>Keeps weak, plausibly-wrong-domain prose out when strong same-unit evidence exists. Computed over <em>non-junk</em> candidates only — a junk fragment scoring high must not set the bar that excludes real content</td></tr>
+    <tr><td>Formula exemption</td><td class="num">absolute only</td><td>The cross-encoder under-scores terse symbolic text; a formula is self-checking in a way prose is not</td></tr>
+    <tr><td>Defining-equation floor</td><td class="num">0.45, max 3</td><td>Admits <code>&lt;unit name&gt; = …</code>, preferring symbolic right-hand sides over worked numbers, so the budget buys the definition rather than arithmetic</td></tr>
+    <tr><td>Assembled-passage check</td><td class="num">re-scored</td><td>Catches blocks that splice in unrelated content behind a legitimate seed sentence</td></tr>
+    <tr><td>Minimum length</td><td class="num">25 / 8 chars</td><td>25 for prose; 8 for formula-shaped text carrying an operator, because defining equations are terse — <code>Recall = TP TP + FN</code> is 19 characters</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Structural filters</h3>
+<ul>
+  <li><b>Citation density</b> — two or more bracket citations is a survey listing; a single citation attached to substantive text is ordinary academic writing and is kept. The narrower rule was measured: the strict version discarded 2 025 sentences, including 162 definitions and 21 formulas.</li>
+  <li><b>Bibliography entries</b> — venue, page-range or volume markers co-occurring with a year. Flags 0.70 % of the corpus, zero of it formula-shaped.</li>
+  <li><b>Document-structure noise</b> — table-of-contents rows and pointer-only text. A cross-reference <em>inside</em> real content is kept; only text that says nothing once its markers are removed is dropped.</li>
+  <li><b>Garbled-math penalty</b> — de-prioritises OCR corruption so a clean rendering of the same equation wins.</li>
+  <li><b>Boilerplate override</b> — a <code>is_nav_boilerplate</code> / <code>is_meta</code> flag does not outrank visible equation form. The overlay mislabels some formulas as navigation; of 3 960 flagged sentences only 92 are equations, and those are real.</li>
+</ul>
+
+<h2>Why the fix-liveness harness exists</h2>
+<p>Four fixes in this project were present, committed, and doing nothing. Each was found by accident, not by test:</p>
+<ul>
+  <li>A regex lost its word boundary passing through a shell heredoc and matched <em>nothing</em>, while the tests it fed still reported progress.</li>
+  <li><code>admission_basis</code> was computed but never stored, so every lookup depending on it saw <code>None</code>.</li>
+  <li>A defining-equation floor could never fire, because a length filter discarded the passages before any floor applied.</li>
+  <li><code>sibling_kc_names</code> was empty on all 159 packets — silently disabling three anti-contamination instructions — while a source comment asserted it was populated.</li>
+</ul>
+<p><code>verify_pipeline_fixes.py</code> runs 21 checks, each executing the real code path and asserting on observed behaviour rather than the presence of source text. A fix that exists but does nothing fails. It runs before every build, and it immediately caught a fifth: pointer neutralisation had been applied to the two drafting prompts but not to either repair prompt — so any draft that failed validation was retried against a packet still containing <code>Table 4.4</code> and <code>[79]</code>.</p>
+
+<h2>Domain portability</h2>
+<p>Nothing in the pipeline encodes subject matter. Verified two ways rather than claimed: the project's own domain-agnosticity test passes, and the same code was run end-to-end on a sociology corpus and hierarchy it had never seen — 24 005 sentences, 97 units, profiles built from the hierarchy with no profiling model in the path.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Sociology transfer</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td>Units with evidence</td><td class="num">96 / 97</td></tr>
+    <tr><td>Drafts grounded</td><td class="num">92 (94.8 %)</td></tr>
+    <tr><td>Hard failures</td><td class="num">0</td></tr>
+    <tr><td>Metadata leaks across all drafts</td><td class="num">0</td></tr>
+  </tbody>
+</table>
+</div>
+<p>The acronym expander handled an unseen label correctly on first contact — <code>COPD Diagnosis</code> → <code>Chronic Obstructive Pulmonary Disease Diagnosis</code>, from initials alone — and PRF pulled genuine clinical vocabulary out of that corpus. No code path required a change.</p>
+
+<hr>
+
+<h2>Known limits</h2>
+<ul>
+  <li><b>Corpus gaps are real.</b> McNemar, Nemenyi and Friedman have no definitional content in the source; Friedman's 13 mentions are bibliography citations. Abstention there is correct behaviour, not a defect.</li>
+  <li><b>Registry vocabulary must match the corpus.</b> One KC was renamed <code>Intrinsic Information</code> → <code>Split Information</code> after the corpus was found to use the latter 50 times and the former never; the unit went from 0 to 27 passages. Other registries will carry similar mismatches, and the <code>query_formulation</code> record in each packet makes them diagnosable rather than mysterious.</li>
+  <li><b>Parent topics are out of scope.</b> The 22 topics are nodes whose children are all knowledge units. <code>Decision Trees</code>, which mixes 12 KCs with a child topic, is excluded — matching the original library exactly.</li>
+  <li><b>The sociology run is a transfer demonstration, not a head-to-head.</b> Its hierarchy shares zero ids with the one used in the earlier sociology ablation, so the two are not comparable.</li>
+</ul>
+
+<p class="foot">Mirror repository only. Production <code>kc_l_v2_clean</code> is never written to; a checksum canary over four production files is verified before each commit.</p>
+
+</div>

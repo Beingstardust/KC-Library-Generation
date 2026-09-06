@@ -1,0 +1,373 @@
+<title>KC v3 Methods and References</title>
+<style>
+  :root{
+    --ground:#f7f9fb; --panel:#ffffff; --panel-2:#eef2f6;
+    --ink:#101720; --ink-2:#3c4a59; --ink-3:#66788a;
+    --rule:#d7dee6; --rule-soft:#e7edf3;
+    --accent:#0e7c86; --accent-soft:#e0f2f4;
+    --std:#256b45; --adapt:#8a5d10; --novel:#7a3ea8;
+    --std-bg:#e4f2ea; --adapt-bg:#faf0dd; --novel-bg:#f0e8f8;
+    --measure:72ch;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0b1119; --panel:#121b25; --panel-2:#182430;
+      --ink:#e8eef4; --ink-2:#b3c2d0; --ink-3:#8195a6;
+      --rule:#26333f; --rule-soft:#1c2731;
+      --accent:#4ad3de; --accent-soft:#10333a;
+      --std:#6fd39b; --adapt:#e0b45f; --novel:#c79ae8;
+      --std-bg:#12301f; --adapt-bg:#2e2410; --novel-bg:#241a30;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0b1119; --panel:#121b25; --panel-2:#182430;
+    --ink:#e8eef4; --ink-2:#b3c2d0; --ink-3:#8195a6;
+    --rule:#26333f; --rule-soft:#1c2731;
+    --accent:#4ad3de; --accent-soft:#10333a;
+    --std:#6fd39b; --adapt:#e0b45f; --novel:#c79ae8;
+    --std-bg:#12301f; --adapt-bg:#2e2410; --novel-bg:#241a30;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:16px; line-height:1.62; padding:0 20px 100px;
+  }
+  .wrap{max-width:960px; margin:0 auto;}
+
+  header.mast{padding:64px 0 26px; border-bottom:2px solid var(--ink); margin-bottom:8px;}
+  .eyebrow{
+    font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:18px;
+  }
+  h1{
+    font-family:Georgia,"Iowan Old Style",serif; font-weight:600;
+    font-size:clamp(32px,5vw,50px); line-height:1.08; letter-spacing:-.015em;
+    margin:0 0 16px; text-wrap:balance;
+  }
+  .standfirst{font-size:19px; color:var(--ink-2); max-width:var(--measure); margin:0;}
+
+  h2{
+    font-family:Georgia,"Iowan Old Style",serif; font-weight:600;
+    font-size:25px; line-height:1.2; margin:54px 0 12px; text-wrap:balance;
+  }
+  h3{font-size:15.5px; font-weight:650; margin:28px 0 8px;}
+  p{max-width:var(--measure); margin:0 0 13px;}
+  a{color:var(--accent);}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.89em;
+    background:var(--panel-2); padding:.12em .38em; border-radius:3px;
+  }
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+
+  .cmp{
+    background:var(--panel); border:1px solid var(--rule); border-radius:8px;
+    padding:20px 24px; margin:20px 0;
+  }
+  .cmp-head{
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:10px 14px; margin-bottom:10px;
+  }
+  .cmp-head h3{margin:0; font-family:Georgia,serif; font-size:19px; font-weight:600;}
+  .cmp-head .fn{
+    font:500 12px/1.6 ui-monospace,monospace; color:var(--ink-3);
+  }
+  .badge{
+    display:inline-block; font:600 10.5px/1.7 ui-monospace,monospace;
+    padding:0 8px; border-radius:4px; letter-spacing:.05em; text-transform:uppercase;
+  }
+  .b-std{background:var(--std-bg); color:var(--std);}
+  .b-adapt{background:var(--adapt-bg); color:var(--adapt);}
+  .b-novel{background:var(--novel-bg); color:var(--novel);}
+  .cite{
+    margin-top:12px; padding-top:11px; border-top:1px dashed var(--rule);
+    font-size:13.5px; color:var(--ink-2); max-width:none;
+  }
+  .cite b{
+    display:block; font:600 10.5px/1.6 ui-monospace,monospace; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--ink-3); margin-bottom:5px;
+  }
+  .cite ul{margin:0; padding-left:18px; max-width:none;}
+  .cite li{margin-bottom:4px;}
+
+  .tbl-wrap{overflow-x:auto; margin:18px 0;}
+  table{border-collapse:collapse; width:100%; min-width:560px; font-size:14px;}
+  th,td{text-align:left; padding:9px 14px 9px 0; border-bottom:1px solid var(--rule-soft); vertical-align:top;}
+  th{
+    font:600 11px/1.4 ui-monospace,monospace; text-transform:uppercase;
+    letter-spacing:.09em; color:var(--ink-3); border-bottom:1px solid var(--rule);
+  }
+  td.num{font-family:ui-monospace,monospace; font-variant-numeric:tabular-nums; white-space:nowrap;}
+
+  ul{max-width:var(--measure); padding-left:20px; margin:0 0 13px;}
+  li{margin-bottom:6px;}
+  ol.refs{max-width:none; padding-left:26px; font-size:14px; color:var(--ink-2);}
+  ol.refs li{margin-bottom:9px;}
+  ol.refs i{color:var(--ink);}
+  hr{border:0; border-top:1px solid var(--rule); margin:50px 0;}
+  .note{
+    background:var(--accent-soft); border-left:3px solid var(--accent);
+    padding:14px 18px; margin:20px 0; border-radius:0 6px 6px 0;
+  }
+  .note p{margin:0; max-width:none; font-size:14.5px;}
+  .foot{color:var(--ink-3); font-size:13.5px;}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">Methods &amp; References · Paper Support</div>
+  <h1>KC v3 Methods and References</h1>
+  <p class="standfirst">Every algorithmic component of the KC Library v3 pipeline, what it does, and the literature it comes from — with standard methods separated from project-specific adaptations.</p>
+</header>
+
+<div class="note">
+  <p><b>How to read the badges.</b> <span class="badge b-std">standard</span> is a published method used as specified. <span class="badge b-adapt">adapted</span> is a published method with a documented modification. <span class="badge b-novel">project</span> has no direct antecedent and should be described as this work's own choice — these are the ones a reviewer will ask about, and the ones to justify empirically rather than by citation.</p>
+</div>
+
+<h2>1 · Framing</h2>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Retrieval-augmented generation</h3><span class="badge b-std">standard</span></div>
+  <p>The pipeline retrieves passages from a fixed corpus and conditions a generator on them, rather than relying on parametric knowledge. Every substantive claim in a draft must map to retrieved evidence, and the generator is instructed to abstain rather than fill gaps.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Lewis et al. (2020), <i>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</i>, NeurIPS.</li>
+    <li>Guu et al. (2020), <i>REALM: Retrieval-Augmented Language Model Pre-Training</i>, ICML.</li>
+    <li>Gao et al. (2024), <i>Retrieval-Augmented Generation for Large Language Models: A Survey</i>, arXiv:2312.10997.</li>
+  </ul></div>
+</div>
+
+<h2>2 · Unit identity</h2>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Deterministic label variants</h3><span class="badge b-adapt">adapted</span><span class="fn">deterministic_label_variants()</span></div>
+  <p>Each knowledge unit's surface forms are generated from its registry label by pure string transformation — hyphen and slash normalisation, parenthetical stripping, generic-suffix stripping. This is classical morphological/orthographic query normalisation, restricted here to operations that are provably reversible and model-free so the pipeline carries no generated vocabulary.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Manning, Raghavan &amp; Schütze (2008), <i>Introduction to Information Retrieval</i>, CUP — ch. 2 on normalisation and equivalence classing.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Structural acronym expansion</h3><span class="badge b-novel">project</span><span class="fn">expand_acronyms()</span></div>
+  <p>A 2–5 character all-caps token in a unit's name is replaced by an ancestor label whose word initials match it (<code>NB Learning Phase</code> → <code>Naive Bayes Learning Phase</code>). Acronym expansion is a long-standing IR concern, but the usual approach mines definitions from text or a lexicon; here the expansion is constrained to the unit's <em>own hierarchy ancestors</em>, which makes it deterministic and domain-free. Related in spirit to acronym–expansion identification, not to those systems' methods.</p>
+  <div class="cite"><b>Related work</b><ul>
+    <li>Schwartz &amp; Hearst (2003), <i>A Simple Algorithm for Identifying Abbreviation Definitions in Biomedical Text</i>, PSB.</li>
+    <li>Park &amp; Byrd (2001), <i>Hybrid Text Mining for Finding Abbreviations and Their Definitions</i>, EMNLP.</li>
+  </ul></div>
+</div>
+
+<h2>3 · Retrieval</h2>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>BM25 sparse retrieval</h3><span class="badge b-std">standard</span><span class="fn">BM25Index</span></div>
+  <p>Probabilistic term weighting over the sentence collection, implemented directly on sparse matrices with <code>k1 = 1.5</code>, <code>b = 0.75</code>. Supplies the recall pool that everything downstream filters.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Robertson &amp; Sparck Jones (1976), <i>Relevance Weighting of Search Terms</i>, JASIS 27(3).</li>
+    <li>Robertson &amp; Zaragoza (2009), <i>The Probabilistic Relevance Framework: BM25 and Beyond</i>, Foundations and Trends in IR 3(4).</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Pseudo-relevance feedback</h3><span class="badge b-std">standard</span><span class="fn">expand_query_tokens()</span></div>
+  <p>The base query is run, its top-ranked sentences are treated as relevant without human judgement, and their most distinctive terms — ranked by the collection's own BM25 weighting — are added back to the query. This is the mechanism that replaced LLM-authored aliases: the corpus supplies its own vocabulary bridge, so a unit whose registry name shares no tokens with how the corpus phrases it can still be reached. Rocchio's formulation is the origin; the term-selection step here follows the relevance-model family rather than Rocchio's vector centroid.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Rocchio (1971), <i>Relevance Feedback in Information Retrieval</i>, in <i>The SMART Retrieval System</i>, Prentice-Hall.</li>
+    <li>Lavrenko &amp; Croft (2001), <i>Relevance-Based Language Models</i>, SIGIR — RM1/RM3 family.</li>
+    <li>Abdul-Jaleel et al. (2004), <i>UMass at TREC 2004: Novelty and HARD</i>, TREC — the RM3 formulation.</li>
+    <li>Zhai &amp; Lafferty (2001), <i>Model-Based Feedback in the Language Modeling Approach</i>, CIKM.</li>
+    <li>Cao et al. (2008), <i>Selecting Good Expansion Terms for Pseudo-Relevance Feedback</i>, SIGIR — on expansion-term quality, the failure mode this design guards against.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Dense bi-encoder retrieval</h3><span class="badge b-std">standard</span><span class="fn">DenseIndex</span></div>
+  <p>Sentences and queries are embedded into a shared space and ranked by cosine similarity, recovering semantic matches that share no vocabulary with the query. The encoder is a fixed pretrained sentence transformer used purely as a scorer; the embedding matrix is cached and keyed by corpus identity and model name.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Reimers &amp; Gurevych (2019), <i>Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks</i>, EMNLP-IJCNLP.</li>
+    <li>Song et al. (2020), <i>MPNet: Masked and Permuted Pre-training for Language Understanding</i>, NeurIPS — the <span class="mono">all-mpnet-base-v2</span> backbone.</li>
+    <li>Karpukhin et al. (2020), <i>Dense Passage Retrieval for Open-Domain Question Answering</i>, EMNLP.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Hybrid sparse–dense candidate pooling</h3><span class="badge b-adapt">adapted</span></div>
+  <p>Lexical and dense candidates are merged into one pool before reranking, rather than fused by score. Because a single cross-encoder rescores the union, no score normalisation or rank-fusion weighting is needed — the standard difficulty in hybrid retrieval is avoided rather than solved. Rank fusion is the usual alternative and is cited for contrast.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Cormack, Clarke &amp; Buettcher (2009), <i>Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods</i>, SIGIR.</li>
+    <li>Bruch et al. (2023), <i>An Analysis of Fusion Functions for Hybrid Retrieval</i>, ACM TOIS.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Cross-encoder reranking</h3><span class="badge b-std">standard</span><span class="fn">CrossEncoderReranker</span></div>
+  <p>Each (query, sentence) pair is jointly encoded and scored; the logit passes through a sigmoid, making <code>0.5</code> the model's own relevant/not-relevant boundary. This is the sole admission authority in the pipeline — a candidate's retrieval channel grants it nothing.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Nogueira &amp; Cho (2019), <i>Passage Re-ranking with BERT</i>, arXiv:1901.04085.</li>
+    <li>Xiao et al. (2023), <i>C-Pack: Packed Resources for General Chinese Embeddings</i>, arXiv:2309.07597 — BGE family.</li>
+    <li>Chen et al. (2024), <i>BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings</i>, arXiv:2402.03216 — the <span class="mono">bge-reranker-v2-m3</span> model.</li>
+  </ul></div>
+</div>
+
+<h2>4 · Query formulation and selection</h2>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Candidate query formulations, selected by outcome</h3><span class="badge b-adapt">adapted</span><span class="fn">candidate_query_texts()</span></div>
+  <p>Each unit yields up to two query forms; every form is run through the <em>full</em> retrieval it would receive, and the form whose result set is best is kept. Selection ranks by definition/formula/procedure coverage, then mean relevance, then volume. This is query performance prediction used <em>post hoc</em> — the pipeline observes each formulation's actual retrieval rather than predicting its difficulty in advance, which is affordable because the candidate set is tiny.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Cronen-Townsend, Zhou &amp; Croft (2002), <i>Predicting Query Performance</i>, SIGIR.</li>
+    <li>Carmel &amp; Yom-Tov (2010), <i>Estimating the Query Difficulty for Information Retrieval</i>, Morgan &amp; Claypool.</li>
+    <li>Zhao, Scholer &amp; Tsegay (2008), <i>Effective Pre-retrieval Query Performance Prediction</i>, ECIR.</li>
+  </ul></div>
+</div>
+
+<div class="note">
+  <p><b>Negative result worth reporting.</b> Appending an ancestor category label to the reranker's query text (<code>Unit (Category)</code>) was measured and rejected: the cross-encoder then scored passages about the <em>category</em> at 0.70+, and one unit gained 15 passages while losing both its definition and its formula. Ancestor labels remain in the lexical recall channel, where they widen the pool without influencing the relevance judgement. This is a concrete instance of query drift.</p>
+</div>
+
+<h2>5 · Evidence admission</h2>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Absolute and relative score thresholds</h3><span class="badge b-adapt">adapted</span></div>
+  <p>A passage must clear the reranker's own decision boundary (0.55) and sit within 0.85 of the best evidence found for that unit. The relative floor is score-normalised per query, a standard response to cross-encoder scores not being comparable across queries. It is computed over non-junk candidates only, so a high-scoring artefact cannot raise the bar that excludes real content.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Arampatzis &amp; Kamps (2009), <i>The Score-Distributional Threshold Optimization for Adaptive Binary Classification Tasks</i>, SIGIR.</li>
+    <li>Manning, Raghavan &amp; Schütze (2008), <i>Introduction to Information Retrieval</i>, CUP — score normalisation and cutoff selection.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Shape-conditioned admission for formulas</h3><span class="badge b-novel">project</span></div>
+  <p>Formula-shaped passages are exempt from the relative floor, and a passage matching <code>&lt;unit name&gt; = …</code> is admitted at a lower floor (0.45, at most three per unit, symbolic right-hand sides preferred over worked numbers). The motivation is empirical: cross-encoders trained on prose systematically under-score terse symbolic text, so a unit's defining equation loses to descriptive prose about the same topic. No published method covers this; it is justified by the measured recovery of defining formulas that were otherwise absent.</p>
+  <div class="cite"><b>Context</b><ul>
+    <li>Mansouri et al. (2019), <i>Tangent-CFT: An Embedding Model for Mathematical Formulas</i>, ICTIR — on formula retrieval requiring different treatment from prose.</li>
+    <li>Zanibbi &amp; Blostein (2012), <i>Recognition and Retrieval of Mathematical Expressions</i>, IJDAR.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Selective prediction / abstention</h3><span class="badge b-std">standard</span></div>
+  <p>When admitted evidence is insufficient, the generator abstains rather than producing an unsupported definition. Abstention is recorded as a distinct outcome and is not counted as failure, following the classical reject-option framing.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Chow (1970), <i>On Optimum Recognition Error and Reject Tradeoff</i>, IEEE Trans. Information Theory 16(1).</li>
+    <li>El-Yaniv &amp; Wiener (2010), <i>On the Foundations of Noise-Free Selective Classification</i>, JMLR 11.</li>
+    <li>Geifman &amp; El-Yaniv (2017), <i>Selective Classification for Deep Neural Networks</i>, NeurIPS.</li>
+  </ul></div>
+</div>
+
+<h2>6 · Passage construction</h2>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Block-level expansion of matched sentences</h3><span class="badge b-adapt">adapted</span><span class="fn">assemble_passages()</span></div>
+  <p>A matched sentence is expanded to its whole source block before use, so the generator sees a coherent unit of discourse rather than an isolated line. This is the retrieval-granularity trade-off: sentences rank precisely, passages read usefully.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Callan (1994), <i>Passage-Level Evidence in Document Retrieval</i>, SIGIR.</li>
+    <li>Liu &amp; Croft (2002), <i>Passage Retrieval Based on Language Models</i>, CIKM.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Extractor-variant deduplication</h3><span class="badge b-adapt">adapted</span><span class="fn">content_signature()</span></div>
+  <p>The same paragraph appears three times in the corpus, once per PDF extractor, with different math rendering. A normalised content signature collapses these to the richest variant, so the evidence budget buys distinct content rather than three renderings of one paragraph. Near-duplicate detection by canonical signature.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Broder (1997), <i>On the Resemblance and Containment of Documents</i>, SEQUENCES.</li>
+    <li>Charikar (2002), <i>Similarity Estimation Techniques from Rounding Algorithms</i>, STOC — SimHash.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Assembled-passage re-verification</h3><span class="badge b-novel">project</span></div>
+  <p>After assembly, each passage's <em>actual text</em> is rescored against the query and dropped if it no longer clears the floor. This catches extraction blocks that splice unrelated content behind a legitimate seed sentence — a passage entering on a sentence's score while delivering something else. The check exists because the artefact handed to the generator had never itself been scored.</p>
+  <div class="cite"><b>Context</b><ul>
+    <li>No direct antecedent located. Closest in motivation to retrieval-result verification in RAG pipelines, e.g. Asai et al. (2024), <i>Self-RAG: Learning to Retrieve, Generate and Critique through Self-Reflection</i>, ICLR.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Per-member evidence verification</h3><span class="badge b-novel">project</span><span class="fn">assemble_passages(member_verifier=&#8230;)</span></div>
+  <p>Whole-passage re-verification (above) catches a block whose average score falls below the floor; it does not catch a block containing one strong on-topic sentence and one strong off-topic sentence, since either can carry the joined average past the floor regardless of the other. Confirmed on a real packet: a rule-induction unit's evidence read &ldquo;&#8230;a widely-used rule induction algorithm called RIPPER. For a one-sided hypothesis test at a 95% confidence level, the critical value&#8230;&rdquo; &mdash; two unrelated sentences, joined only because an OCR/segmentation defect placed them in the same source block. Every non-seed member of a matched block is now scored individually against the unit's own query, batched in one reranker call per unit, and dropped if it does not itself clear the floor; the seed sentence is exempt, since it was already verified in the original ranking pass. Measured across the full 159-unit library: evidence volume fell to roughly 40% of its prior size on average (4,943 to 1,983 mean characters per unit), with two units gaining evidence where none had cleared the floor before and none losing all evidence outright. The cost is asymmetric: a small number of units whose definition is inherently relational &mdash; a method defined as combining two sibling methods described in the same source paragraph &mdash; retain a terser evidence set, since a sentence describing the sibling does not itself name the unit being defined.</p>
+  <div class="cite"><b>Context</b><ul>
+    <li>No direct antecedent located. Same motivation as the whole-passage check above, applied at finer grain; related to fine-grained relevance filtering in Asai et al. (2024), <i>Self-RAG</i>, ICLR, and to sentence-level evidence selection in Yang, Sun &amp; Wan (2023), <i>Chain-of-Note: Enhancing Robustness in Retrieval-Augmented Language Models</i>, arXiv:2311.09210.</li>
+  </ul></div>
+</div>
+
+<h2>7 · Corpus hygiene</h2>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Boilerplate, citation and structure filtering</h3><span class="badge b-adapt">adapted</span></div>
+  <p>Five structural filters remove content that is not evidence about anything: reference-list entries (venue/page/volume markers with a year), citation-dense survey prose (two or more bracket citations), table-of-contents rows, pointer-only cross-references, and OCR-garbled mathematics. Each was calibrated against the corpus and measured for false rejections — the citation rule, for instance, was loosened from "any citation" after the strict version was found to discard 2,025 sentences including 162 definitions and 21 formulas.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Kohlschütter, Fankhauser &amp; Nejdl (2010), <i>Boilerplate Detection using Shallow Text Features</i>, WSDM.</li>
+    <li>Finn, Kushmerick &amp; Smyth (2001), <i>Fact or Fiction: Content Classification for Digital Libraries</i>, DELOS.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Overriding upstream misclassification</h3><span class="badge b-novel">project</span></div>
+  <p>An overlay flag marking a sentence as navigation boilerplate or metadata does not outrank visible equation form. The extraction stage mislabels some formulas; of 3,960 flagged sentences only 92 are equations, and inspection showed those to be genuine. Reported because it is a data-quality intervention, not a retrieval method, and a reviewer should see it stated rather than buried.</p>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Sentence-identity collision in the source corpus</h3><span class="badge b-novel">project</span></div>
+  <p>Per-member verification (&sect;6) tells a block's seed sentence apart from its other members by identifier. The corpus has at least one case &mdash; an OCR/segmentation defect in one source block &mdash; where two unrelated sentences were assigned the identical sentence identifier; identity by id alone let both sentences exempt themselves from verification, so the defect it was built to catch survived it once. Identity now requires the sentence text to match as well as the id: a genuine duplicate (same id, same text) still qualifies, a colliding pair (same id, different text) no longer does. Reported because it is a data-quality intervention, not a retrieval method, and because it was found only by direct inspection of one flagged case rather than by any general scan.</p>
+</div>
+
+<h2>8 · Generation</h2>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Grounded drafting with structured output</h3><span class="badge b-std">standard</span></div>
+  <p>The generator runs at temperature 0 against a fixed schema, and every substantive claim must be linked to evidence identifiers. Faithfulness to retrieved context — rather than fluency — is the target property.</p>
+  <div class="cite"><b>References</b><ul>
+    <li>Ji et al. (2023), <i>Survey of Hallucination in Natural Language Generation</i>, ACM Computing Surveys 55(12).</li>
+    <li>Maynez et al. (2020), <i>On Faithfulness and Factuality in Abstractive Summarization</i>, ACL.</li>
+    <li>Es et al. (2024), <i>RAGAS: Automated Evaluation of Retrieval Augmented Generation</i>, EACL demo.</li>
+  </ul></div>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Source-pointer neutralisation</h3><span class="badge b-novel">project</span></div>
+  <p>Before the packet is serialised into the prompt, a copy has its source-document references rewritten — <code>Figure 3.7</code> becomes <code>the figure</code>, bracket citations are removed — so the generator cannot reproduce a pointer the reader cannot follow. The stored packet keeps verbatim text, so provenance and grounding checks are unaffected. A prompt instruction alone proved insufficient; this makes it a property of the input rather than a request.</p>
+</div>
+
+<div class="cmp">
+  <div class="cmp-head"><h3>Topic synthesis from child evidence</h3><span class="badge b-novel">project</span></div>
+  <p>A topic unit is drafted from the evidence grounding its child units, not from those children's finished drafts. This removes a sequential dependency and, more importantly, prevents errors in a child draft propagating into its parent with nothing to check them against — the hierarchical analogue of error accumulation in cascaded generation.</p>
+  <div class="cite"><b>Context</b><ul>
+    <li>Wu et al. (2021), <i>Recursively Summarizing Books with Human Feedback</i>, arXiv:2109.10862 — hierarchical synthesis and its error-propagation behaviour.</li>
+  </ul></div>
+</div>
+
+<h2>9 · Reproducibility</h2>
+
+<p>Determinism is a design property, not an accident. Given fixed model weights, the pipeline produces identical output for identical input: retrieval is deterministic, generation runs at temperature 0 with a fixed seed, and no stage consults a model to author vocabulary. Every input traces to the source corpus or the knowledge registry.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Property</th><th>How it is enforced</th></tr></thead>
+  <tbody>
+    <tr><td>No generated vocabulary</td><td>Retrieval reads six registry fields; five are copied verbatim, one is a pure string function</td></tr>
+    <tr><td>Deterministic retrieval</td><td>BM25, PRF and dense similarity are all functions of the corpus; scorers have fixed weights</td></tr>
+    <tr><td>Deterministic generation</td><td>Temperature 0, fixed seed, fixed context length</td></tr>
+    <tr><td>Domain independence</td><td>Verified by transfer to an unseen corpus and hierarchy with no code change</td></tr>
+    <tr><td>Component liveness</td><td>26 behavioural assertions run before every build; a fix that exists but does nothing fails</td></tr>
+  </tbody>
+</table>
+</div>
+
+<hr>
+
+<h2>Components with no citation, listed plainly</h2>
+<p>These are this work's own choices. Each was adopted after a measured failure and should be defended empirically rather than by reference.</p>
+<ul>
+  <li><b>Structural acronym expansion</b> against the unit's own hierarchy ancestors.</li>
+  <li><b>Shape-conditioned formula admission</b> — the relative-floor exemption and the defining-equation floor with symbolic preference.</li>
+  <li><b>Assembled-passage re-verification</b> — scoring the artefact actually handed to the generator.</li>
+  <li><b>Per-member evidence verification</b> — scoring each non-seed sentence in a matched block individually, not just the block as a whole.</li>
+  <li><b>Upstream flag override</b> for visibly equation-shaped text.</li>
+  <li><b>Source-pointer neutralisation</b> at prompt-construction time.</li>
+  <li><b>Topic synthesis from child evidence</b> rather than child drafts.</li>
+  <li><b>Formulation selection by realised retrieval outcome</b> rather than predicted query difficulty.</li>
+</ul>
+
+<p class="foot">Citations give author, year, title and venue. Verify page numbers and DOIs against the publisher record before submission — they are not reproduced here.</p>
+
+</div>
