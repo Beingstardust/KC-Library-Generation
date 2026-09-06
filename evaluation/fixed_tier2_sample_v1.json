@@ -1,0 +1,32 @@
+{
+  "schema_version": "tier2_fixed_sample_v1",
+  "created_utc": "2026-07-30T00:00:00Z",
+  "purpose": "Permanent, reproducible Tier 2 (manual) comparison set for all future ablation studies. Manually read and judged during the final content audit of the baseline run below. Future briefs should reference this file by name rather than re-specifying the sample.",
+  "baseline_run_id": "20260728T134658Z_9e856df6",
+  "known_discrepancy": "The task brief that requested this file described it as an '18-unit sample' but named only 17 distinct units across the three categories (12 strong + 2 thin + 3 weak = 17). This file contains exactly the 17 units named. If an 18th unit was intended, it needs to be supplied and appended.",
+  "unit_count": 17,
+  "units": [
+    {"canonical_name": "Hunt's Algorithm", "unit_id": "KC_CLF_DT_001", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "Precision", "unit_id": "KC_EVAL_BASIC_003", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "Core Point", "unit_id": "KC_CLU_DBS_001", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "ROC Curve", "unit_id": "KC_EVAL_ROC_001", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "Ward's Method", "unit_id": "KC_CLU_HIER_007", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "Inconsistent Values", "unit_id": "KC_DE_PREP_004", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "Test Statistic", "unit_id": "KC_FSEL_STAT_002", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "Oversampling (SMOTE)", "unit_id": "KC_EVAL_IMBAL_002", "unit_type": "kc", "category": "strong", "note": "Brief referred to this unit as 'SMOTE'; this run's actual canonical_name is 'Oversampling (SMOTE)'."},
+    {"canonical_name": "Zero-Frequency Problem", "unit_id": "KC_CLF_NB_007", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "External Index: Purity", "unit_id": "KC_CLU_EVAL_009", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "One-sided vs. Two-sided Tests", "unit_id": "KC_FSEL_STAT_004", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "Density-Reachable", "unit_id": "KC_CLU_DBS_006", "unit_type": "kc", "category": "strong"},
+    {"canonical_name": "Bidirectional Generation (BG)", "unit_id": "KC_FSEL_GEN_003", "unit_type": "kc", "category": "thin_generic"},
+    {"canonical_name": "Cosine Similarity", "unit_id": "KC_CLU_SIM_005", "unit_type": "kc", "category": "thin_generic"},
+    {"canonical_name": "Separation", "unit_id": "KC_CLU_EVAL_004", "unit_type": "kc", "category": "weak_misleading"},
+    {"canonical_name": "Mutually Exclusive Classes", "unit_id": "KC_CLF_UND_005", "unit_type": "kc", "category": "weak_misleading"},
+    {"canonical_name": "Shannon Entropy (Uncertainty Measure)", "unit_id": "KC_FSEL_GOOD_006", "unit_type": "kc", "category": "weak_misleading", "note": "Brief referred to this unit as 'Shannon Entropy'; this run's actual canonical_name is 'Shannon Entropy (Uncertainty Measure)'."}
+  ],
+  "category_definitions": {
+    "strong": "Specific, distinguishing, testable - directly usable for downstream tutor evaluation as-is.",
+    "thin_generic": "Technically correct but thin/generic - accurate but lacks the specificity needed for strong downstream discrimination.",
+    "weak_misleading": "Weak or misleading for downstream use - accuracy or framing issues that would need repair before use."
+  }
+}

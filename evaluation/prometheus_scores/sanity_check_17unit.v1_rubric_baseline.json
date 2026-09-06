@@ -1,0 +1,365 @@
+{
+  "fixab_resume_20260729": [
+    {
+      "unit_id": "KC_CLF_DT_001",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response is largely consistent with the evidence provided. It correctly identifies Hunt's algorithm as a generic procedure for growing decision trees in a greedy and recursive fashion. It also acknowledges the simplifying assumptions made by the algorithm and the potential for empty child nodes. However, the response introduces a specific solution to the problem of empty child nodes by suggesting that these nodes can be handled by designating them as leaf nodes with a class label based on the most frequent label among the training instances of their parent nodes. This is a reasonable elaboration, but it goes beyond the literal evidence text and introduces a specific, unsupported fact. This is a minor deviation from the score rubric's requirement for a faithful synthesis of the evidence without introducing any specific unsupported fact. Therefore, the response is not entirely grounded in the evidence, and it does not fully adhere to the score rubric's criteria for a score of 5."
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_003",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response provided is largely consistent with the evidence given. It correctly identifies precision as the positive predicted value (PPV) and explains its relevance in evaluating classifiers, particularly in the context of skewed test sets. The response also correctly relates precision to the false discovery rate (FDR), which is a well-established concept in the field of statistics.\n\nHowever, the response includes a vague elaboration by stating that precision is \"particularly useful for highly skewed test sets,\" which is not explicitly supported by the evidence. This statement, while not contradicting the evidence, goes beyond the literal evidence text and introduces a generalized claim that is not directly inferred from the provided evidence.\n\nDespite this, the response does not conflate the evidence's actual subject with a different concept, nor does it assert any specific factual detail that is not supported by the evidence. The response is also free of invented specifics, which aligns with the score rubric's criteria for a score of 4.\n\nIn conclusion, the response is a faithful synthesis of the evidence, with only minor, low-stakes elaboration that does not introduce any specific unsupported fact and does not conflate the subject with a different concept. Therefore, the response is a good example of a score 4 response according to the score rubric."
+    },
+    {
+      "unit_id": "KC_CLU_DBS_001",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately captures the essence of the evidence provided, focusing on the core point in density-based clustering and its role in expanding dense regions. It correctly identifies the conditions for a point to be classified as a core point, referencing the user-specified parameters MinPts and Eps. However, the response could have been more explicit in stating that a border point is not a core point but is within a specified distance of at least one core point. This additional detail would have made the response more comprehensive and closely aligned with the evidence. Despite this, the response does not introduce any specific unsupported fact or conflate the subject with a different concept, thus adhering to the score rubric's criteria for a score of 4. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_EVAL_ROC_001",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 5,
+      "prometheus_feedback": "The response accurately describes the ROC curve and its components, TPR and FPR, in relation to the score thresholds of a classifier. It correctly identifies the axes on which these rates are plotted and the significance of each point on the curve. The response is consistent with the evidence provided, and it does not introduce any specific unsupported fact or conflate the subject with a different concept. It also avoids asserting any specific factual detail that is not supported by the evidence. The response is a faithful synthesis of the evidence, and it adheres to the score rubric by not lowering the score. Therefore, the response is well-grounded in the evidence and meets the criteria for a score of 5."
+    },
+    {
+      "unit_id": "KC_CLU_HIER_007",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately summarizes the key aspects of Ward's method, as described in the evidence. It correctly identifies the method as a greedy bottom-up hierarchical clustering approach that uses the K-means SSE objective, and it correctly states that the method attempts to minimize the sum of the squared distances of points from their cluster centroids. The response also correctly describes the process of building a hierarchy by merging clusters that result in the smallest increase in the total SSE.\n\nHowever, the response could have been more cautious in its language, as it does not explicitly acknowledge the evidence's limitations or the potential for uncertainty in the method's application. While the response does not introduce any specific unsupported fact or conflate the subject with a different concept, it could have been more explicit in its acknowledgment of the evidence's scope and the potential for variation in the method's application.\n\nIn conclusion, the response is largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. It could have been more explicit in acknowledging the evidence's limitations, but it does not lower the score due to its overall accuracy and adherence to the evidence. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_DE_PREP_004",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 3,
+      "prometheus_feedback": "The response provided is largely consistent with the evidence given. It correctly identifies inconsistent values as data points that conflict with one another and provides examples of such inconsistencies, such as mismatched address fields. The response also correctly notes that these inconsistencies can be caused by human error or by recording two objects that represent a single real-world object as separate entries. However, the response includes a vague, unverifiable elaboration by stating that it is essential to detect and correct these problems to ensure data quality. This statement goes beyond what the evidence supports and introduces a generalized assertion that is not explicitly supported by the evidence. While the response does not conflate the evidence's actual subject with a different concept, it does not fully adhere to the score rubric's requirement for a faithful synthesis of the evidence without introducing any specific unsupported fact. Therefore, the response is not as grounded in the evidence as it could be. So the overall score is 3."
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_002",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 3,
+      "prometheus_feedback": "The response is largely consistent with the evidence provided, with a clear focus on the use of a cluster validity measure as a test statistic in the context of cluster analysis. It correctly identifies the null distribution and the framework of hypothesis testing, which are central to the understanding of the evidence. However, the response includes a vague elaboration by mentioning specific indices such as the silhouette coefficient, SSE, purity, and entropy without providing a clear connection to the evidence or explaining how these indices relate to the null distribution and hypothesis testing. This additional information, while not contradicting the evidence, is not necessary for a faithful synthesis of the provided evidence and could potentially introduce confusion. The response also does not explicitly acknowledge the gap between the evidence and the additional information provided. Therefore, the response is not as grounded as it could be, and it does not fully adhere to the score rubric's requirement for a faithful synthesis of the evidence without introducing specific unsupported facts or conflating the subject with a different concept. So the overall score is 3."
+    },
+    {
+      "unit_id": "KC_EVAL_IMBAL_002",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately describes the Synthetic Minority Oversampling Technique (SMOTE) and its process of generating synthetic positive instances. It correctly identifies the limitations of SMOTE, specifically that it can only generate new instances within the convex hull of the existing positive class. However, the response includes a vague elaboration by stating that the procedure is repeated until the desired number of positive instances is reached, which is not explicitly supported by the evidence. This additional detail, while not contradicting the evidence, goes beyond what the evidence supports and introduces a minor, unverifiable elaboration. Therefore, the response is largely consistent with the evidence but includes one vague, unverifiable elaboration. This is why the response does not receive a score of 5, as it does not fully adhere to the score rubric's requirement for a faithful synthesis of the evidence without introducing any specific unsupported fact."
+    },
+    {
+      "unit_id": "KC_CLF_NB_007",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately captures the essence of the Zero-Frequency Problem in Naive Bayes classification, as well as the solution through Laplace smoothing. It correctly identifies the conditions under which the problem arises, such as a small number of training instances and a large number of possible attribute values. The response also correctly explains the mechanics of Naive Bayes and how the zero conditional probability affects the class-conditional probability.\n\nHowever, the response could have been more cautious in its elaboration. While it does not assert any specific factual details that are not supported by the evidence, it does not explicitly acknowledge the limitations of the evidence or the potential for uncertainty in the explanation. This could be seen as a slight deviation from the ideal of a faithful synthesis of the evidence, as it does not fully embrace the uncertainty inherent in the evidence.\n\nDespite this, the response remains largely consistent with the evidence and does not conflate the subject with a different concept. It also avoids asserting any specific unsupported fact, which is in line with the score rubric's criteria for a score of 4.\n\nIn conclusion, the response is a close track of the evidence with only minor, low-stakes elaboration, and it does not introduce any specific unsupported fact or conflate the subject with a different concept. Therefore, it meets the criteria for a score of 4."
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_009",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately summarizes the evidence provided, correctly identifying purity as an intuitive external index for evaluating clustering results and explaining the process of calculating purity. It also correctly notes that a high purity score does not always indicate a good clustering, as it can reward over-fragmentation. However, the response could have been more precise in its explanation of the relationship between purity and over-fragmentation, as it does not explicitly state that purity can reward over-fragmentation by assigning a majority class to a cluster. Additionally, the response could have been more explicit in stating that purity is a maximum class fraction, which is a key detail in the evidence. Despite these minor shortcomings, the response is largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. Therefore, the response is a faithful synthesis of the evidence, with only minor, low-stakes elaboration that does not introduce any specific unsupported fact and does not conflate the subject with a different concept. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_004",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 3,
+      "prometheus_feedback": "The response does a good job of summarizing the concept of statistical testing and the different types of tests. It correctly identifies the one-sided tests and the two-sided test, and it also correctly states the need to estimate the distribution of the test statistic under the null hypothesis of no association among the items. However, the response includes a vague and unverifiable elaboration by stating that a result is considered extreme if it falls outside a specified interval, without providing any specific details or examples. This elaboration goes beyond what the evidence supports and introduces a concept that is not explicitly mentioned in the evidence. Therefore, the response does not fully adhere to the score rubric's requirement of avoiding specific factual details that are not supported by the evidence. It also does not conflate the evidence's actual subject with a distinct related concept, but it does include an unsupported elaboration. So the overall score is 3."
+    },
+    {
+      "unit_id": "KC_CLU_DBS_006",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 5,
+      "prometheus_feedback": "The response accurately captures the essence of the evidence provided, focusing on the concept of density-reachability and the conditions under which a point is considered directly density-reachable from another. It refrains from introducing any specific unsupported fact or conflating the subject with a different concept. The response is consistent with the evidence and provides a clear and concise explanation of the concepts involved. It also appropriately hedges around the evidence gap by not asserting any specific details that are not explicitly supported by the evidence. Therefore, the response is a faithful synthesis of the evidence, aligning well with the score rubric's criteria for a score of 5."
+    },
+    {
+      "unit_id": "KC_FSEL_GEN_003",
+      "category": "thin_generic",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response is largely consistent with the evidence provided. It correctly identifies Bidirectional Generation (BG) as a random scheme and acknowledges the application of bidirectional approaches for small and medium scale data sets. However, it does not explicitly mention the three evaluation measures of information, dependency and distance, which are grouped into the category Probability. This omission is a minor deviation from the evidence, but it does not introduce any specific unsupported fact or conflate the subject with a different concept. The response also does not assert any specific factual detail with full confidence that has no basis in the evidence. Therefore, the response is a faithful synthesis of the evidence, with only minor, low-stakes elaboration that does not introduce any specific unsupported fact and does not conflate the subject with a different concept. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_CLU_SIM_005",
+      "category": "thin_generic",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately describes the concept of cosine similarity and its relationship to distance metrics like Manhattan and Euclidean distance. It correctly states that a larger cosine similarity score indicates greater similarity between data objects, which aligns with the evidence provided. However, the response does not explicitly mention the mathematical formulas for Manhattan and Euclidean distance, which are present in the evidence. This omission is a minor deviation from the evidence, but it does not introduce any specific unsupported fact or conflate the subject with a different concept. The response is largely consistent with the evidence and includes only minor, low-stakes elaboration. Therefore, based on the score rubric, the response is a faithful synthesis of the evidence, with no invented specifics and no conflation with a different concept."
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_004",
+      "category": "weak_misleading",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response does a good job of summarizing the evidence and providing a reasonable explanation of the concept of separation in the context of cluster evaluation. It correctly identifies that separation is a measure of how distinct clusters are from one another, which is a reasonable interpretation of the evidence. However, the response could have been more precise in its explanation, as it does not explicitly state that separation is a property where elements are positioned near the interior of a cluster. This slight deviation from the evidence is what makes the response a bit less grounded than it could be. Additionally, the response could have been more explicit in stating that the evidence does not provide a full formal definition of separation, which would have been a more accurate reflection of the evidence. Despite these minor shortcomings, the response is largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_CLF_UND_005",
+      "category": "weak_misleading",
+      "draft_status": "grounded",
+      "prometheus_score": 5,
+      "prometheus_feedback": "The response accurately reflects the evidence provided, focusing on the concept of a rule set being mutually exclusive and the use of a ranking system to avoid conflicting predictions. It does not introduce any specific unsupported fact or conflate the subject with a different concept. The response is consistent with the evidence and provides a clear explanation of the concepts involved. It also appropriately hedges around the evidence gap by not asserting any specific details that are not explicitly supported by the evidence. Therefore, the response is a faithful synthesis of the evidence, and it meets the criteria set out in the score rubric."
+    },
+    {
+      "unit_id": "KC_FSEL_GOOD_006",
+      "category": "weak_misleading",
+      "draft_status": "partial",
+      "prometheus_score": 5,
+      "prometheus_feedback": "The response accurately reflects the evidence provided, demonstrating a clear understanding of the concept of Shannon Entropy and its application in the context of class distribution. It correctly explains the calculation of entropy for a single cluster and the total entropy for a set of clusters, using the appropriate formulae. The response avoids asserting specific factual details that are not supported by the evidence, such as precise numbers or named relationships, and it does not conflate the evidence's actual subject with a distinct related concept. Instead, it provides a reasonable, well-established general-domain elaboration that is consistent with the evidence. Therefore, the response is a faithful synthesis of the provided evidence, and it meets the criteria outlined in the score rubric."
+    }
+  ],
+  "ablation_02_step5p_gemma4_12b_AND_step6_7_qwen3_6_27b": [
+    {
+      "unit_id": "KC_CLF_DT_001",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately captures the essence of Hunt's algorithm, its recursive nature, and the concept of empty child nodes. It also correctly identifies the simplifying assumptions made by the algorithm. However, the response includes a minor elaboration by stating that nodes become pure and become leaves when they share the same class label. This additional detail, while not incorrect, is not explicitly supported by the evidence and could be seen as a slight deviation from the strict grounding required by the score rubric. The response does not conflate the evidence with a different concept, nor does it assert any specific factual details that are not supported by the evidence. Therefore, the response is largely consistent with the evidence, with only a minor, low-stakes elaboration that does not introduce any specific unsupported fact. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_003",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response provided a detailed explanation of precision, which is consistent with the evidence given. It correctly identified precision as the positive predicted value and explained its significance in classifier evaluation, particularly for skewed test sets. The response also correctly related precision to the false discovery rate, which is a well-established concept in the field of machine learning. However, the response included a minor elaboration by stating that precision minimizes false positives, which, while true, is not explicitly supported by the evidence. This slight deviation from the evidence does not significantly detract from the overall quality of the response. The response did not introduce any specific unsupported fact or conflate the subject with a different concept, which aligns with the score rubric's criteria for a score of 4. Therefore, the response is a close track of the evidence with only minor, low-stakes elaboration."
+    },
+    {
+      "unit_id": "KC_CLU_DBS_001",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 5,
+      "prometheus_feedback": "The response accurately captures the essence of the evidence provided, focusing on the core point definition and its distinction from border and noise points. It correctly interprets the MinPts and Eps parameters, and it does not introduce any specific unsupported fact or conflate the subject with a different concept. The response is consistent with the evidence and provides a clear and concise explanation of the core point concept in the context of density-based clustering. It also appropriately hedges around the evidence gap by not asserting any specific factual detail that is not supported by the evidence. Therefore, the response is a faithful synthesis of the evidence, and it meets the criteria set out in the score rubric."
+    },
+    {
+      "unit_id": "KC_EVAL_ROC_001",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately describes the ROC curve and its components, such as the TPR and FPR, and correctly identifies the AUC as a performance metric for machine learning algorithms. It also correctly states that the AUC provides a scalar summary of the classifier's ability to distinguish between classes. However, the response includes a vague elaboration by stating that \"each point on the curve represents a specific classification model generated by applying a distinct threshold to the test scores produced by the classifier.\" This statement, while not contradicting the evidence, is not explicitly supported by the evidence and introduces a slight ambiguity. The response could have been more precise by stating that each point on the curve represents a specific classification model at a specific score threshold. Despite this minor issue, the response is largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_CLU_HIER_007",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately captures the essence of Ward's method, its objective function, and its role in initializing K-means clustering. It correctly identifies the method's focus on minimizing the sum of squared distances of points from their cluster centroids, and it acknowledges the method's use as a robust initialization strategy for K-means clustering. However, the response includes a vague statement about the method's local optimizations not guaranteeing global minima or cluster stability, which is not explicitly supported by the evidence. This statement, while not contradicting the evidence, introduces an unverifiable elaboration that goes beyond what the evidence supports. Therefore, the response is largely consistent with the evidence but includes one vague, unverifiable elaboration that does not introduce any specific unsupported fact and does not conflate the subject with a different concept. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_DE_PREP_004",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response provided is largely consistent with the evidence given. It correctly identifies inconsistent values as data entries containing conflicting or logically impossible information. The response also accurately describes the scenario of duplicate objects representing a single entity with different attribute values, which is a key point in the evidence. However, the response includes a vague elaboration by mentioning the primary objective in data preparation, which is to detect and correct these inconsistencies. This additional information, while not contradicting the evidence, is not explicitly supported by the evidence and could be seen as a minor, unverifiable elaboration. The response does not introduce any specific unsupported fact or conflate the subject with a different concept, which aligns with the score rubric's criteria for a score of 4. Therefore, the response is a close track of the evidence with only minor, low-stakes elaboration."
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_002",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately describes the role of a test statistic in statistical hypothesis testing, specifically in the context of cluster analysis. It correctly identifies the test statistic as a measure of clustering and explains the process of comparing the observed test statistic against its expected distribution under the null hypothesis. However, the response does not explicitly mention the null distribution, which is a critical component of the hypothesis testing framework. It also does not provide examples of test statistics, which could have added clarity to the explanation. Despite these omissions, the response remains consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. Therefore, the response is largely consistent with the evidence and does not lower the score."
+    },
+    {
+      "unit_id": "KC_EVAL_IMBAL_002",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 2,
+      "prometheus_feedback": "The response accurately describes the Synthetic Minority Oversampling Technique (SMOTE) and its purpose in addressing class imbalance. It correctly outlines the process of identifying k-nearest neighbors and creating synthetic data points at intermediate locations along the line segments connecting an instance to its randomly selected neighbors. However, the response introduces a limitation of SMOTE, stating that it can only generate instances within the convex hull of the existing positive class. This assertion is not explicitly supported by the evidence provided, and it introduces a specific factual detail that is not grounded in the evidence. The response also fails to acknowledge the gap in the evidence regarding the limitations of SMOTE. Therefore, the response does not fully adhere to the score rubric's criteria for a faithful synthesis of the evidence, as it includes an unsupported specific detail and does not appropriately hedge around the evidence gap. So the overall score is 2."
+    },
+    {
+      "unit_id": "KC_CLF_NB_007",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately describes the Zero-Frequency Problem and its resolution through smoothing techniques like Laplace smoothing. It correctly situates the problem within the context of Naive Bayes classification algorithms and their reliance on conditional probabilities. However, the response could be improved by providing a more explicit connection to the evidence provided, such as referencing the specific Bayes\u2019 theorem medical-test question or the mechanics of Naive Bayes. Additionally, the response could be more cautious in its elaboration, as it does not explicitly acknowledge the limitations of the evidence or the potential for uncertainty in the application of Naive Bayes. Despite these minor shortcomings, the response is largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_009",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 3,
+      "prometheus_feedback": "The response accurately describes the concept of purity in clustering, its calculation, and its limitations. It correctly identifies purity as an external index and explains how it is used to evaluate the quality of clustering. The response also correctly contrasts purity with other indices like the Rand Index or Jaccard similarity, noting that purity assigns a majority class to each cluster. However, the response includes a vague elaboration by stating that purity can reward over-fragmentation without providing a clear explanation of what over-fragmentation entails or how it affects the purity score. This elaboration goes beyond what the evidence supports and introduces a concept that is not explicitly mentioned in the evidence. Additionally, the response does not acknowledge the gap in the evidence regarding the specific limitations of purity. Therefore, while the response is largely consistent with the evidence, it includes one vague, unverifiable elaboration that goes beyond what the evidence supports without being flatly contradicted by it. So the overall score is 3."
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_004",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 3,
+      "prometheus_feedback": "The response provided a detailed explanation of the concept of one-sided and two-sided tests in statistical testing. It correctly identified the conditions under which a test is classified as one-sided or two-sided, and it also accurately described the extremity of an observed test statistic. However, the response included a vague and unverifiable elaboration by stating that a two-sided test is defined when the observed statistic is considered extreme if it falls outside a specified interval. This statement, while not contradicting the evidence, does not provide a clear and specific definition of a two-sided test, which is a key aspect of the evidence. The response also did not include any hedging or acknowledgment of the gap in the evidence, which is a crucial aspect of the score rubric. Therefore, the response is largely consistent with the evidence but includes one vague elaboration that goes beyond what the evidence supports without being flatly contradicted by it. So the overall score is 3."
+    },
+    {
+      "unit_id": "KC_CLU_DBS_006",
+      "category": "strong",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response does a good job of summarizing the concept of Density-Reachable and its relationship to border points in DBSCAN. It correctly identifies that a border point is not a core point but is within the epsilon neighborhood of at least one core point. However, the response slightly oversteps the evidence by suggesting that the exact formal definition of the reachability chain is not fully detailed in the available evidence. This is a minor deviation from the evidence, which only mentions the relationship between border points and core points. The response could have been more cautious in its elaboration, avoiding any assertion that goes beyond what the evidence supports. Despite this, the response remains largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_FSEL_GEN_003",
+      "category": "thin_generic",
+      "draft_status": "partial",
+      "prometheus_score": 3,
+      "prometheus_feedback": "The response does a good job of summarizing the evidence provided, focusing on the bidirectional search direction and its classification as a random scheme. It also touches on the evaluation measures and their connection to probability-based metrics. However, the response could have been more precise in its description of the bidirectional search direction and its relationship with the evaluation measures. It also introduces the concept of search strategies without providing a clear connection to the evidence. While the response is largely consistent with the evidence, it includes a vague elaboration on search strategies that goes beyond what the evidence supports. This could potentially lead to confusion or misinterpretation of the evidence. Therefore, the response could have been more focused and specific in its elaboration, ensuring that it does not introduce any specific unsupported fact or conflate the subject with a different concept. So the overall score is 3."
+    },
+    {
+      "unit_id": "KC_CLU_SIM_005",
+      "category": "thin_generic",
+      "draft_status": "partial",
+      "prometheus_score": 3,
+      "prometheus_feedback": "The response does a good job of explaining the concept of cosine similarity and its distinction from distance metrics. It correctly identifies the scale of cosine similarity and its focus on the orientation between vectors. However, the response includes a vague statement about the lack of detailed numerical bounds or formulaic definitions in the current synthesis packet. This statement, while not contradicting the evidence, goes beyond what the evidence supports and introduces an unverifiable elaboration. The response could have been more grounded by sticking to the information provided in the evidence and refraining from making assumptions about the completeness of the synthesis packet. Therefore, the response is largely consistent with the evidence but includes one vague, unverifiable elaboration that goes beyond what the evidence supports without being flatly contradicted by it. So the overall score is 3."
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_004",
+      "category": "weak_misleading",
+      "draft_status": "partial",
+      "prometheus_score": 3,
+      "prometheus_feedback": "The response does a good job of explaining the concepts of cohesion and separation in the context of clustering algorithms. It correctly identifies that separation measures the distinctness between different clusters, and it acknowledges the relationship between cohesion and separation. However, the response does not explicitly state that the evidence is about the interior quality and boundary distinctness of clusters, which is a key aspect of the evidence provided. Instead, it provides a general explanation of the concepts without directly connecting them to the evidence. This lack of explicit connection to the evidence is what makes the response less grounded than it could be. The response also includes some additional information about the desirability of high separation in clustering results, which, while relevant, is not directly supported by the evidence. Therefore, the response is largely consistent with the evidence but includes one or two vague, unverifiable elaborations that go beyond what the evidence supports without being flatly contradicted by it. So the overall score is 3."
+    },
+    {
+      "unit_id": "KC_CLF_UND_005",
+      "category": "weak_misleading",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately captures the essence of the evidence provided, focusing on the concept of mutually exclusive rule sets and their implications for rule-based classification systems. It correctly identifies the core constraint of non-overlapping rule triggers and the prevention of conflicting classifications. However, the response falls short in fully exploring the procedural implications for handling non-exclusive sets, such as rule ordering or voting mechanisms, which are only briefly mentioned in the evidence. This omission results in a less comprehensive understanding of the topic, which is why the response does not achieve the highest score. The response does not introduce any specific unsupported fact or conflate the subject with a different concept, which aligns with the score rubric's criteria for a score of 4. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_FSEL_GOOD_006",
+      "category": "weak_misleading",
+      "draft_status": "partial",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately captures the essence of the evidence provided, focusing on the role of Shannon Entropy as a splitting criterion in decision tree algorithms like ID3 and C4.5. It correctly identifies the optimal value of entropy as zero, which is in line with the evidence. The response also appropriately connects the concept of entropy to the Sum of Squared Errors (SSE), indicating a clear understanding of the relationship between these two measures.\n\nHowever, the response slightly deviates from the evidence by introducing the concept of information gain, which, while related, is not explicitly mentioned in the evidence. This additional detail, although reasonable, is not strictly necessary to fully understand the role of entropy in decision tree algorithms.\n\nDespite this minor deviation, the response remains largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. The elaboration provided is standard, well-established domain knowledge that does not contradict the evidence.\n\nIn conclusion, the response is a faithful synthesis of the evidence, with only a minor, low-stakes elaboration that does not introduce any specific unsupported fact. It avoids conflating the subject with a different concept and maintains a high level of accuracy and consistency with the evidence. Therefore, the response meets the criteria for a score of 4."
+    }
+  ],
+  "ablation_03_step5p_gemma4_12b_AND_step6_7_command_r_35b": [
+    {
+      "unit_id": "KC_CLF_DT_001",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately summarizes the key points of Hunt's algorithm, including its recursive nature, the potential for empty child nodes, and the simplifying assumptions it makes. It also correctly notes that these empty nodes can be labeled with the most frequent class label among their parent's training instances. However, the response includes a minor elaboration by stating that these empty nodes can be declared as leaf nodes, which is not explicitly mentioned in the evidence. This additional detail, while not contradicting the evidence, is not necessary for a faithful synthesis of the provided evidence. Therefore, the response is largely consistent with the evidence but includes a slight over-elaboration. This minor deviation from the evidence does not significantly detract from the overall quality of the response, but it does not fully meet the criteria for a score of 5. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_003",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response provided is largely consistent with the evidence given. It correctly identifies precision as the positive predicted value (PPV) and relates it to the false discovery rate (FDR). However, the response includes a vague, unverifiable elaboration by stating that precision is closely related to the FDR, without providing a clear explanation of how this relationship works or why it is important. This additional information, while not contradicting the evidence, does not add significant value to the understanding of the concept of precision. The response also does not conflate the subject with a different concept, which is a positive aspect. Therefore, the response is a reasonable synthesis of the evidence, but it could be improved by providing a more detailed and accurate explanation of the relationship between precision and the FDR. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_CLU_DBS_001",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately describes the concept of a core point in the context of DBSCAN, which is consistent with the evidence provided. It correctly identifies the parameters MinPts and Eps as defining a core point and explains their role in density-based clustering algorithms. However, the response does not explicitly mention the concept of a border point, which is a key element in the evidence. While the response does not introduce any specific unsupported fact or conflate the subject with a different concept, it could have been more comprehensive by including the definition of a border point. This omission results in a response that is largely consistent with the evidence but lacks the full depth of the evidence's subject matter. Therefore, the response is not as faithful a synthesis of the evidence as it could be. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_EVAL_ROC_001",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately describes the ROC curve and its components, TPR and FPR, and correctly identifies AUC as a performance metric for machine learning algorithms. It does not introduce any specific unsupported fact or conflate the subject with a different concept. However, it could have been more explicit in stating that the AUC is a metric for evaluating the performance of a classifier, rather than just mentioning it as a performance metric. This slight lack of specificity in the elaboration is what differentiates it from a score of 5. The response is largely consistent with the evidence, but it could have been more precise in its elaboration. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_CLU_HIER_007",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately summarizes the key aspects of Ward's method, such as its use in initializing K-means clustering and its sensitivity to outliers. However, it includes a vague statement about the method's connection to a global 'minimize squared error' objective function, which is not explicitly supported by the evidence. This statement could be seen as an unverifiable elaboration that goes beyond what the evidence supports. Additionally, the response does not include any specific unsupported fact or conflate the subject with a different concept, which aligns with the score rubric's criteria for a score of 4. Therefore, while the response is largely consistent with the evidence, it could be improved by avoiding the vague statement about the global objective function."
+    },
+    {
+      "unit_id": "KC_DE_PREP_004",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response provided is largely consistent with the evidence given. It correctly identifies the issue of inconsistent values and provides a plausible explanation for their occurrence, such as human error during data entry. However, the response includes a vague elaboration by mentioning the potential for misreading digits when scanning information from a handwritten form. This additional detail, while not contradicting the evidence, is not explicitly supported by the evidence and therefore represents a minor deviation from the evidence. The response also appropriately hedges around the evidence's actual subject by not asserting any specific factual details that are not supported by the evidence. Therefore, the response is a faithful synthesis of the evidence with only minor, low-stakes elaboration that does not introduce any specific unsupported fact and does not conflate the subject with a different concept. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_002",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response does a good job of summarizing the concept of a test statistic in the context of cluster analysis. It correctly identifies the test statistic as a measure used in statistical testing and mentions the null hypothesis and the null distribution. However, the response could have been more precise in its explanation of the test statistic's role in determining the significance of a discovered clustering. It also could have avoided the use of the term \"external index\" without providing a clear definition or context for its use.\n\nThe response does not introduce any specific unsupported fact or conflate the subject with a different concept, which is in line with the score rubric. However, it does not fully capture the nuances of the evidence provided, such as the distinction between internal and external clustering validity indices.\n\nIn conclusion, the response is largely consistent with the evidence but includes one or two vague, unverifiable elaborations that go beyond what the evidence supports without being flatly contradicted by it. Therefore, the response is a reasonable synthesis of the evidence, but it could have been more precise and detailed in its explanation."
+    },
+    {
+      "unit_id": "KC_EVAL_IMBAL_002",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 3,
+      "prometheus_feedback": "The response accurately describes the Synthetic Minority Oversampling Technique (SMOTE) and its process of generating synthetic positive instances. It correctly identifies the k-nearest positive neighbors and the creation of a synthetic positive instance at an intermediate point along the line segment joining one of its randomly chosen k-nearest neighbors. However, the response introduces a limitation of SMOTE, stating that it can only generate new positive instances within the convex hull of the existing positive class. This is a vague and unverifiable elaboration that goes beyond what the evidence supports. The response does not conflate the subject with a different concept, but it does not fully adhere to the score rubric's requirement of avoiding specific factual details that are not supported by the evidence. Therefore, the response is largely consistent with the evidence but includes one vague, unverifiable elaboration that goes beyond what the evidence supports without being flatly contradicted by it. So the overall score is 3."
+    },
+    {
+      "unit_id": "KC_CLF_NB_007",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately identifies the zero-frequency problem in Naive Bayes classification and correctly suggests the use of Laplace smoothing as a solution. It does not introduce any specific unsupported fact or conflate the subject with a different concept. However, it lacks the depth and detail found in the reference response, which provides a more comprehensive explanation of the zero-frequency problem and the mechanics of Naive Bayes. The response also does not include any additional, well-established domain knowledge that would enhance the understanding of the topic. Therefore, while the response is largely consistent with the evidence, it does not fully exploit the potential for elaboration that is present in the evidence. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_009",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response is largely consistent with the evidence provided. It correctly identifies purity as an external index for clustering evaluation and explains its calculation and potential pitfalls. However, it includes a vague, unverifiable elaboration by stating that students should be aware of the potential pitfall of purity rewarding over-fragmentation. This statement, while not contradicting the evidence, goes beyond what the evidence supports and introduces an unsupported fact about the behavior of students. The response does not conflate the subject with a different concept, but it could have been more precise in its elaboration. Therefore, the response is not a perfect synthesis of the evidence, but it is close to being so. It is important to note that the response does not assert any specific factual detail with full confidence that has no basis in the evidence, which is a key criterion in the score rubric. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_004",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response does a good job of explaining the concepts of one-sided and two-sided tests, which are central to the evidence provided. It correctly identifies the nature of the tests and their implications under the null hypothesis. However, the response does not explicitly state that the evidence provided refers to the specific cases of Robs RH RL, which could potentially lead to a slight misunderstanding of the context. Additionally, the response could have been more precise in its explanation of the extreme values considered in each type of test. While the response is largely consistent with the evidence, it does not fully acknowledge the specificity of the evidence, which is crucial for a faithful synthesis. Therefore, the response is not as grounded in the evidence as it could be. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_CLU_DBS_006",
+      "category": "strong",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response provided is largely consistent with the evidence given. It correctly identifies the concept of Density-Reachable points in DBSCAN and their relationship to core points. However, it does not explicitly acknowledge the evidence's focus on border points, which is a subtle but important distinction. The response also includes a minor elaboration by stating that the concept helps define the cluster's core and border points, which is a reasonable inference from the evidence but does not introduce any specific unsupported fact. The response does not conflate the subject with a different concept, and it avoids asserting specific factual details that are not supported by the evidence. Therefore, the response is a faithful synthesis of the evidence, with only minor, low-stakes elaboration that does not introduce any specific unsupported fact and does not conflate the subject with a different concept. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_FSEL_GEN_003",
+      "category": "thin_generic",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately reflects the evidence provided, maintaining a clear focus on the bidirectional search direction and the three evaluation measures. It correctly identifies these measures as being grouped into the category of probability and notes that they can be computed using prior probabilities from data. However, the response could have been more explicit in stating that the bidirectional search direction is a random scheme, which is a key detail from the evidence. Additionally, the response could have been more precise in describing the three evaluation measures, as it does not explicitly mention that they are used to evaluate the quality of a feature selection method. Despite these minor shortcomings, the response remains largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. Therefore, the response is a faithful synthesis of the evidence, with only minor, low-stakes elaboration that does not introduce any specific unsupported fact. So the overall score is 4."
+    },
+    {
+      "unit_id": "KC_CLU_SIM_005",
+      "category": "thin_generic",
+      "draft_status": "grounded",
+      "prometheus_score": 1,
+      "prometheus_feedback": "The response provided does not align with the score rubric's criteria for groundedness. It confidently defines cosine similarity as a measure of the angle between two vectors, which is a specific factual detail not supported by the evidence. The response also incorrectly states that a value of 0 indicates perpendicular vectors, which is a misinterpretation of the evidence. The response does not acknowledge the gap between the evidence and the assertions made, nor does it provide a reasonable, well-established general-domain elaboration that does not contradict the evidence. Instead, it presents a distinct related concept as if it were the one the evidence is actually about. This is a clear violation of the score rubric's requirements for a faithful synthesis of the evidence. Therefore, the response is not grounded in the evidence provided and does not meet the criteria for a score of 5."
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_004",
+      "category": "weak_misleading",
+      "draft_status": "partial",
+      "prometheus_score": 1,
+      "prometheus_feedback": "The response provided does not align with the evidence given. It confidently defines separation in a data mining context, which is not explicitly supported by the evidence. The evidence only mentions that separation and cohesion are near the \"interior\" of the cluster, which does not provide enough information to confidently define separation. The response also fails to acknowledge the gap in the evidence, which is a crucial aspect of the score rubric. It does not include any hedging or acknowledgment of the gap, which is necessary to avoid asserting specific factual details that are not supported by the evidence. Therefore, the response does not meet the criteria for a faithful synthesis of the evidence and is not grounded in the evidence provided. So the overall score is 1."
+    },
+    {
+      "unit_id": "KC_CLF_UND_005",
+      "category": "weak_misleading",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately reflects the evidence provided, stating that the rules in a rule set R are mutually exclusive if no two rules in R are triggered by the same instance. It also correctly identifies an example of a mutually exclusive and exhaustive rule set, which is a decision tree. However, the response could have been more explicit in stating that the example provided is a decision tree, which would have made the connection between the evidence and the response clearer. Additionally, the response could have been more precise in explaining the concept of a decision tree, as it is not explicitly mentioned in the evidence. Despite these minor shortcomings, the response is largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. Therefore, the response is a faithful synthesis of the evidence, and it meets the criteria set out in the score rubric."
+    },
+    {
+      "unit_id": "KC_FSEL_GOOD_006",
+      "category": "weak_misleading",
+      "draft_status": "grounded",
+      "prometheus_score": 4,
+      "prometheus_feedback": "The response accurately summarizes the evidence provided, correctly identifying the Shannon entropy as a measure of uncertainty and its role as a splitting function in algorithms like ID3 and C4.5. It also correctly states that an entropy of 0 is considered good, indicating a clear and certain outcome. However, the response could have been more precise in its elaboration, as it does not explicitly mention that the entropy measure is used by both ID3 and C4.5, which is a key detail from the evidence. Additionally, the response could have been more cautious in its language, as it does not acknowledge the potential for uncertainty or the possibility of different interpretations of the evidence. Despite these minor shortcomings, the response is largely consistent with the evidence and does not introduce any specific unsupported fact or conflate the subject with a different concept. Therefore, the response is a faithful synthesis of the evidence, with only minor, low-stakes elaboration that does not introduce any specific unsupported fact and does not conflate the subject with a different concept. So the overall score is 4."
+    }
+  ]
+}

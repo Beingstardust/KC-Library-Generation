@@ -1,0 +1,1296 @@
+{
+  "run_id": "ablation_01_step5p_gemma4_12b",
+  "total_rows": 181,
+  "scored_count": 138,
+  "skipped_count": 43,
+  "skipped_unit_ids": [
+    "KC_CLF_DT_012",
+    "KC_CLF_NB_008",
+    "KC_CLF_UND_007",
+    "KC_CLU_CORE_002",
+    "KC_CLU_EVAL_006",
+    "KC_CLU_EVAL_007",
+    "KC_CLU_KM_001",
+    "KC_CLU_KM_002",
+    "KC_CLU_SIM_001",
+    "KC_DE_PREP_006",
+    "KC_EVAL_BASIC_007",
+    "KC_EVAL_COMP_001",
+    "KC_EVAL_COMP_004",
+    "KC_EVAL_COMP_005",
+    "KC_EVAL_COMP_008",
+    "KC_EVAL_ROC_006",
+    "KC_FSEL_FUND_002",
+    "KC_FSEL_FUND_004",
+    "KC_FSEL_FW_002",
+    "KC_FSEL_FW_004",
+    "KC_FSEL_GEN_007",
+    "hier::path::d6aee71739336e9ffe7329b33c8771df437ea378efb0f4c95fae3e26b268ab11",
+    "hier::path::bcb55387d492284359e0400d9ceddc96dd69996b62cb8a5c0200ed2e8af2012a",
+    "hier::path::334a619c231633f761526b4b4f005312fccece42b3582bad0d8eed0405ac047e",
+    "hier::path::1936e1b8bfd8b07818b8c8cd5619481c81411a27c6a17f5578688476ed78f57d",
+    "hier::path::7b5f8f92823b6a880be2e5771324d10f5a6698413edecde44ef50acd151b8629",
+    "hier::path::ced010e00070cda65953fc4b8db21b0edf5b7848e7c42cabf2f725a897f3a64c",
+    "hier::path::f84c2c9d232b2a6791c8343e20312d6d6a526c1a6cb39c9ef921b90ff498c117",
+    "hier::path::b274991a4067898d76f6ab20b50ed04cdac42852ae87e38eeb9b0adb5a0af66c",
+    "hier::path::f7c0080d1d9af398da49396fe052f819d377d35580e4ead0e58e80efd877bb34",
+    "hier::path::b7f4fde0b1b0eb93b95e3356af0021a71271ab2e3677d4b10527afaafe91f940",
+    "hier::path::dd2588440d4e81c91780fd426256221278508f38c261da86bcb7a062fd97bc4f",
+    "hier::path::b1d533edd6d78fd3530b916ec6884c4224d1fb4c770bffd6998f94dc0c65e910",
+    "hier::path::817d3fa2a9812fc806c9f66980c925855cfb69cd0cc1d6cef147a81c403d9388",
+    "hier::path::de0dea5be9576113156720481c3388df93a7f24938db178ef9665d8a41b3f4c2",
+    "hier::path::7d6281d80f255047c2b1712c2523fbea7fc385fe387f40e06192d57cd3277204",
+    "hier::path::0eedd9325642c0966460fc7eb360da94e825b3a7c4ee7877c685e21a437136de",
+    "hier::path::ee39e453658b9ad62153f2b6ad41d9bd2e99101c049c54f592a9fd13d6e6842a",
+    "hier::path::26354fa32e90dff579a2f9a58e4e2e8cc904e9558acf8f7471f040e28233bc58",
+    "hier::path::e6e15032c84dd697427b024c347fd78c2f63d3cdff4469204e8c7c423477bd35",
+    "hier::path::8bad37dca3b1ea89a3fd8479d72164d42903f6dd7b200ded3254904c26400613",
+    "hier::path::258f91b16de6018dd763dbecea772c8cea2d1b02ef559b2437fd7320ee007237",
+    "hier::path::cad3bf57bc988cef520d6818b94911fbf2565a7ece33c18955bba08816213a19"
+  ],
+  "mean_hhem_score": 0.4830899935863588,
+  "results": [
+    {
+      "unit_id": "KC_CLF_DT_001",
+      "canonical_name": "Hunt's Algorithm",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 605,
+      "evidence_chars": 376,
+      "hhem_score": 0.04309576377272606
+    },
+    {
+      "unit_id": "KC_CLF_DT_002",
+      "canonical_name": "Node Impurity",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 554,
+      "evidence_chars": 803,
+      "hhem_score": 0.9282748103141785
+    },
+    {
+      "unit_id": "KC_CLF_DT_003",
+      "canonical_name": "Misclassification Rate",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 350,
+      "evidence_chars": 298,
+      "hhem_score": 0.6464677453041077
+    },
+    {
+      "unit_id": "KC_CLF_DT_004",
+      "canonical_name": "Gini Index",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 471,
+      "evidence_chars": 691,
+      "hhem_score": 0.08047128468751907
+    },
+    {
+      "unit_id": "KC_CLF_DT_005",
+      "canonical_name": "Entropy (Node)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 311,
+      "evidence_chars": 174,
+      "hhem_score": 0.9600160717964172
+    },
+    {
+      "unit_id": "KC_CLF_DT_006",
+      "canonical_name": "Information Gain",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 566,
+      "evidence_chars": 678,
+      "hhem_score": 0.957861602306366
+    },
+    {
+      "unit_id": "KC_CLF_DT_007",
+      "canonical_name": "Intrinsic Information",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 284,
+      "evidence_chars": 217,
+      "hhem_score": 0.7131742238998413
+    },
+    {
+      "unit_id": "KC_CLF_DT_008",
+      "canonical_name": "Gain Ratio",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 542,
+      "evidence_chars": 660,
+      "hhem_score": 0.9442722797393799
+    },
+    {
+      "unit_id": "KC_CLF_DT_009",
+      "canonical_name": "ID3 Algorithm",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 438,
+      "evidence_chars": 187,
+      "hhem_score": 0.8744741082191467
+    },
+    {
+      "unit_id": "KC_CLF_DT_010",
+      "canonical_name": "Bushy Decision Tree (Multi-split)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 537,
+      "evidence_chars": 460,
+      "hhem_score": 0.8294782638549805
+    },
+    {
+      "unit_id": "KC_CLF_DT_011",
+      "canonical_name": "Binary Decision Tree",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 519,
+      "evidence_chars": 271,
+      "hhem_score": 0.19314421713352203
+    },
+    {
+      "unit_id": "KC_CLF_NB_001",
+      "canonical_name": "Bayes' Theorem",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 395,
+      "evidence_chars": 465,
+      "hhem_score": 0.9141288995742798
+    },
+    {
+      "unit_id": "KC_CLF_NB_002",
+      "canonical_name": "Prior Probability",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 558,
+      "evidence_chars": 615,
+      "hhem_score": 0.9533478617668152
+    },
+    {
+      "unit_id": "KC_CLF_NB_003",
+      "canonical_name": "Conditional Probability (Likelihood)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 328,
+      "evidence_chars": 128,
+      "hhem_score": 0.12823732197284698
+    },
+    {
+      "unit_id": "KC_CLF_NB_004",
+      "canonical_name": "Naive Independence Assumption",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 643,
+      "evidence_chars": 913,
+      "hhem_score": 0.0703250914812088
+    },
+    {
+      "unit_id": "KC_CLF_NB_005",
+      "canonical_name": "NB Learning Phase",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 587,
+      "evidence_chars": 462,
+      "hhem_score": 0.1003170907497406
+    },
+    {
+      "unit_id": "KC_CLF_NB_006",
+      "canonical_name": "NB Classification Phase",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 407,
+      "evidence_chars": 234,
+      "hhem_score": 0.2706161439418793
+    },
+    {
+      "unit_id": "KC_CLF_NB_007",
+      "canonical_name": "Zero-Frequency Problem",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 363,
+      "evidence_chars": 264,
+      "hhem_score": 0.7814057469367981
+    },
+    {
+      "unit_id": "KC_CLF_NB_009",
+      "canonical_name": "NB for Numerical Attributes (Gaussian NB)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 334,
+      "evidence_chars": 317,
+      "hhem_score": 0.8948986530303955
+    },
+    {
+      "unit_id": "KC_CLF_NB_010",
+      "canonical_name": "Sample Mean and Variance",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 400,
+      "evidence_chars": 219,
+      "hhem_score": 0.5197399258613586
+    },
+    {
+      "unit_id": "KC_CLF_NB_011",
+      "canonical_name": "Handling Missing Values in NB",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 481,
+      "evidence_chars": 906,
+      "hhem_score": 0.6684175133705139
+    },
+    {
+      "unit_id": "KC_CLF_PRUNE_001",
+      "canonical_name": "Overfitting",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 481,
+      "evidence_chars": 502,
+      "hhem_score": 0.6970034241676331
+    },
+    {
+      "unit_id": "KC_CLF_PRUNE_002",
+      "canonical_name": "Optimistic Error Estimate",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 366,
+      "evidence_chars": 1078,
+      "hhem_score": 0.9735345244407654
+    },
+    {
+      "unit_id": "KC_CLF_PRUNE_003",
+      "canonical_name": "Pessimistic Error Estimate",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 609,
+      "evidence_chars": 1998,
+      "hhem_score": 0.9849658012390137
+    },
+    {
+      "unit_id": "KC_CLF_PRUNE_004",
+      "canonical_name": "Reduced Error Pruning",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 428,
+      "evidence_chars": 679,
+      "hhem_score": 0.0580533966422081
+    },
+    {
+      "unit_id": "KC_CLF_PRUNE_005",
+      "canonical_name": "Generalization Error",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 525,
+      "evidence_chars": 823,
+      "hhem_score": 0.5565217733383179
+    },
+    {
+      "unit_id": "KC_CLF_UND_001",
+      "canonical_name": "Learning Phase",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 599,
+      "evidence_chars": 414,
+      "hhem_score": 0.23125413060188293
+    },
+    {
+      "unit_id": "KC_CLF_UND_002",
+      "canonical_name": "Querying Phase",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 470,
+      "evidence_chars": 280,
+      "hhem_score": 0.187996968626976
+    },
+    {
+      "unit_id": "KC_CLF_UND_003",
+      "canonical_name": "Training Set vs. Test Set Split",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 484,
+      "evidence_chars": 391,
+      "hhem_score": 0.5935112237930298
+    },
+    {
+      "unit_id": "KC_CLF_UND_004",
+      "canonical_name": "Representative Training Sample",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 694,
+      "evidence_chars": 330,
+      "hhem_score": 0.3376193344593048
+    },
+    {
+      "unit_id": "KC_CLF_UND_005",
+      "canonical_name": "Mutually Exclusive Classes",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 461,
+      "evidence_chars": 373,
+      "hhem_score": 0.6120317578315735
+    },
+    {
+      "unit_id": "KC_CLF_UND_006",
+      "canonical_name": "Target Attribute",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 677,
+      "evidence_chars": 569,
+      "hhem_score": 0.09712493419647217
+    },
+    {
+      "unit_id": "KC_CLU_CORE_001",
+      "canonical_name": "Cluster Definition",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 805,
+      "evidence_chars": 1245,
+      "hhem_score": 0.9690779447555542
+    },
+    {
+      "unit_id": "KC_CLU_CORE_003",
+      "canonical_name": "Inter-cluster Distance",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 254,
+      "evidence_chars": 107,
+      "hhem_score": 0.6330179572105408
+    },
+    {
+      "unit_id": "KC_CLU_CORE_004",
+      "canonical_name": "Classification vs. Clustering (Distinction)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 390,
+      "evidence_chars": 1113,
+      "hhem_score": 0.9692226052284241
+    },
+    {
+      "unit_id": "KC_CLU_DBS_001",
+      "canonical_name": "Core Point",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 476,
+      "evidence_chars": 483,
+      "hhem_score": 0.6289852857589722
+    },
+    {
+      "unit_id": "KC_CLU_DBS_002",
+      "canonical_name": "Border Point",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 425,
+      "evidence_chars": 269,
+      "hhem_score": 0.9522773027420044
+    },
+    {
+      "unit_id": "KC_CLU_DBS_003",
+      "canonical_name": "Noise Point",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 440,
+      "evidence_chars": 644,
+      "hhem_score": 0.8380440473556519
+    },
+    {
+      "unit_id": "KC_CLU_DBS_004",
+      "canonical_name": "DBSCAN Parameters (eps, minPts)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 532,
+      "evidence_chars": 710,
+      "hhem_score": 0.8704923987388611
+    },
+    {
+      "unit_id": "KC_CLU_DBS_005",
+      "canonical_name": "Directly Density-Reachable",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 533,
+      "evidence_chars": 156,
+      "hhem_score": 0.2724316418170929
+    },
+    {
+      "unit_id": "KC_CLU_DBS_006",
+      "canonical_name": "Density-Reachable",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 298,
+      "evidence_chars": 76,
+      "hhem_score": 0.23962734639644623
+    },
+    {
+      "unit_id": "KC_CLU_DBS_007",
+      "canonical_name": "Density-Connected",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 279,
+      "evidence_chars": 111,
+      "hhem_score": 0.8438851237297058
+    },
+    {
+      "unit_id": "KC_CLU_DBS_008",
+      "canonical_name": "DBSCAN Cluster Definition",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 590,
+      "evidence_chars": 788,
+      "hhem_score": 0.2339613437652588
+    },
+    {
+      "unit_id": "KC_CLU_DBS_009",
+      "canonical_name": "DBSCAN Advantages and Limitations",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 393,
+      "evidence_chars": 249,
+      "hhem_score": 0.5385543704032898
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_001",
+      "canonical_name": "Internal Indices Overview",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 551,
+      "evidence_chars": 320,
+      "hhem_score": 0.04369976744055748
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_002",
+      "canonical_name": "SSE (Cluster Quality)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 490,
+      "evidence_chars": 271,
+      "hhem_score": 0.12037573754787445
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_003",
+      "canonical_name": "Cohesion",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 508,
+      "evidence_chars": 314,
+      "hhem_score": 0.7088475823402405
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_004",
+      "canonical_name": "Separation",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 302,
+      "evidence_chars": 75,
+      "hhem_score": 0.28449544310569763
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_005",
+      "canonical_name": "Silhouette Coefficient",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 529,
+      "evidence_chars": 282,
+      "hhem_score": 0.08086339384317398
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_008",
+      "canonical_name": "External Index: Entropy",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 282,
+      "evidence_chars": 235,
+      "hhem_score": 0.36957523226737976
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_009",
+      "canonical_name": "External Index: Purity",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 441,
+      "evidence_chars": 293,
+      "hhem_score": 0.7690420746803284
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_010",
+      "canonical_name": "External Index: Rand Index / Jaccard",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 646,
+      "evidence_chars": 563,
+      "hhem_score": 0.8828707337379456
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_011",
+      "canonical_name": "External Index: Precision",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 377,
+      "evidence_chars": 70,
+      "hhem_score": 0.0607997290790081
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_012",
+      "canonical_name": "External Index: Recall",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 435,
+      "evidence_chars": 195,
+      "hhem_score": 0.1988581269979477
+    },
+    {
+      "unit_id": "KC_CLU_EVAL_013",
+      "canonical_name": "External Index: F-Measure",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 286,
+      "evidence_chars": 186,
+      "hhem_score": 0.055763911455869675
+    },
+    {
+      "unit_id": "KC_CLU_HIER_001",
+      "canonical_name": "Dendrogram",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 472,
+      "evidence_chars": 493,
+      "hhem_score": 0.9115633368492126
+    },
+    {
+      "unit_id": "KC_CLU_HIER_002",
+      "canonical_name": "Agglomerative (Bottom-Up) Clustering",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 389,
+      "evidence_chars": 912,
+      "hhem_score": 0.04875839129090309
+    },
+    {
+      "unit_id": "KC_CLU_HIER_003",
+      "canonical_name": "Divisive (Top-Down) Clustering",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 328,
+      "evidence_chars": 217,
+      "hhem_score": 0.7620750069618225
+    },
+    {
+      "unit_id": "KC_CLU_HIER_004",
+      "canonical_name": "MIN (Single Linkage)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 522,
+      "evidence_chars": 245,
+      "hhem_score": 0.09942509233951569
+    },
+    {
+      "unit_id": "KC_CLU_HIER_005",
+      "canonical_name": "MAX (Complete Linkage)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 369,
+      "evidence_chars": 375,
+      "hhem_score": 0.9340261220932007
+    },
+    {
+      "unit_id": "KC_CLU_HIER_006",
+      "canonical_name": "Group Average Linkage",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 660,
+      "evidence_chars": 531,
+      "hhem_score": 0.02991124987602234
+    },
+    {
+      "unit_id": "KC_CLU_HIER_007",
+      "canonical_name": "Ward's Method",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 656,
+      "evidence_chars": 1014,
+      "hhem_score": 0.7776357531547546
+    },
+    {
+      "unit_id": "KC_CLU_HIER_008",
+      "canonical_name": "Hierarchical Clustering Complexity",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 616,
+      "evidence_chars": 641,
+      "hhem_score": 0.1359402984380722
+    },
+    {
+      "unit_id": "KC_CLU_KM_003",
+      "canonical_name": "K-Means Complexity",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 291,
+      "evidence_chars": 132,
+      "hhem_score": 0.499551922082901
+    },
+    {
+      "unit_id": "KC_CLU_KM_004",
+      "canonical_name": "Centroid Initialization Sensitivity",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 505,
+      "evidence_chars": 1038,
+      "hhem_score": 0.9381182193756104
+    },
+    {
+      "unit_id": "KC_CLU_KM_005",
+      "canonical_name": "K-Means Limitations",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 307,
+      "evidence_chars": 98,
+      "hhem_score": 0.7359530925750732
+    },
+    {
+      "unit_id": "KC_CLU_KM_006",
+      "canonical_name": "Bisecting K-Means",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 338,
+      "evidence_chars": 260,
+      "hhem_score": 0.9200751781463623
+    },
+    {
+      "unit_id": "KC_CLU_SIM_002",
+      "canonical_name": "Properties of a Similarity Function",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 466,
+      "evidence_chars": 387,
+      "hhem_score": 0.9307113289833069
+    },
+    {
+      "unit_id": "KC_CLU_SIM_003",
+      "canonical_name": "Euclidean Distance",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 277,
+      "evidence_chars": 206,
+      "hhem_score": 0.39567631483078003
+    },
+    {
+      "unit_id": "KC_CLU_SIM_004",
+      "canonical_name": "Manhattan Distance",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 414,
+      "evidence_chars": 424,
+      "hhem_score": 0.7145226001739502
+    },
+    {
+      "unit_id": "KC_CLU_SIM_005",
+      "canonical_name": "Cosine Similarity",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 258,
+      "evidence_chars": 40,
+      "hhem_score": 0.20935684442520142
+    },
+    {
+      "unit_id": "KC_CLU_SIM_006",
+      "canonical_name": "Rand Index",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 375,
+      "evidence_chars": 300,
+      "hhem_score": 0.5012111663818359
+    },
+    {
+      "unit_id": "KC_CLU_SIM_007",
+      "canonical_name": "Jaccard Coefficient",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 582,
+      "evidence_chars": 258,
+      "hhem_score": 0.5601632595062256
+    },
+    {
+      "unit_id": "KC_CLU_SIM_008",
+      "canonical_name": "Similarity Matrix",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 661,
+      "evidence_chars": 492,
+      "hhem_score": 0.6699196696281433
+    },
+    {
+      "unit_id": "KC_DE_MISS_001",
+      "canonical_name": "Missing Value",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 525,
+      "evidence_chars": 200,
+      "hhem_score": 0.27304989099502563
+    },
+    {
+      "unit_id": "KC_DE_MISS_002",
+      "canonical_name": "Missingness Mechanism",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 401,
+      "evidence_chars": 152,
+      "hhem_score": 0.6303503513336182
+    },
+    {
+      "unit_id": "KC_DE_MISS_003",
+      "canonical_name": "Deletion Strategy",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 260,
+      "evidence_chars": 75,
+      "hhem_score": 0.01454588957130909
+    },
+    {
+      "unit_id": "KC_DE_MISS_004",
+      "canonical_name": "Imputation",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 589,
+      "evidence_chars": 142,
+      "hhem_score": 0.5595749616622925
+    },
+    {
+      "unit_id": "KC_DE_MISS_005",
+      "canonical_name": "Informative Missingness",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 623,
+      "evidence_chars": 784,
+      "hhem_score": 0.8997584581375122
+    },
+    {
+      "unit_id": "KC_DE_PREP_001",
+      "canonical_name": "Data Integration",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 647,
+      "evidence_chars": 77,
+      "hhem_score": 0.11678671091794968
+    },
+    {
+      "unit_id": "KC_DE_PREP_002",
+      "canonical_name": "Redundant Attributes",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 711,
+      "evidence_chars": 1524,
+      "hhem_score": 0.9092506170272827
+    },
+    {
+      "unit_id": "KC_DE_PREP_003",
+      "canonical_name": "Duplicate Tuples",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 399,
+      "evidence_chars": 155,
+      "hhem_score": 0.4070914685726166
+    },
+    {
+      "unit_id": "KC_DE_PREP_004",
+      "canonical_name": "Inconsistent Values",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 597,
+      "evidence_chars": 378,
+      "hhem_score": 0.10966722667217255
+    },
+    {
+      "unit_id": "KC_DE_PREP_005",
+      "canonical_name": "Data Cleaning",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 493,
+      "evidence_chars": 203,
+      "hhem_score": 0.49602580070495605
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_001",
+      "canonical_name": "Confusion Matrix",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 521,
+      "evidence_chars": 1331,
+      "hhem_score": 0.8632667064666748
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_002",
+      "canonical_name": "Accuracy",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 615,
+      "evidence_chars": 540,
+      "hhem_score": 0.2577328383922577
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_003",
+      "canonical_name": "Precision",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 400,
+      "evidence_chars": 65,
+      "hhem_score": 0.004906476475298405
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_004",
+      "canonical_name": "Recall (Sensitivity)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 305,
+      "evidence_chars": 136,
+      "hhem_score": 0.03201896697282791
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_005",
+      "canonical_name": "Specificity",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 335,
+      "evidence_chars": 140,
+      "hhem_score": 0.5775919556617737
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_006",
+      "canonical_name": "F-Measure",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 495,
+      "evidence_chars": 497,
+      "hhem_score": 0.9299815893173218
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_008",
+      "canonical_name": "MAE for Ordinal Targets",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 311,
+      "evidence_chars": 165,
+      "hhem_score": 0.5882276892662048
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_009",
+      "canonical_name": "Multi-class Confusion Matrix",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 472,
+      "evidence_chars": 1035,
+      "hhem_score": 0.7312631011009216
+    },
+    {
+      "unit_id": "KC_EVAL_BASIC_010",
+      "canonical_name": "Evaluation Workflow",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 823,
+      "evidence_chars": 1232,
+      "hhem_score": 0.9490847587585449
+    },
+    {
+      "unit_id": "KC_EVAL_COMP_002",
+      "canonical_name": "Confidence Interval for Accuracy",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 877,
+      "evidence_chars": 477,
+      "hhem_score": 0.13587845861911774
+    },
+    {
+      "unit_id": "KC_EVAL_COMP_003",
+      "canonical_name": "Comparing Two Models on Independent Test Sets",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 342,
+      "evidence_chars": 282,
+      "hhem_score": 0.4875551760196686
+    },
+    {
+      "unit_id": "KC_EVAL_COMP_006",
+      "canonical_name": "Significance Level (alpha)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 417,
+      "evidence_chars": 248,
+      "hhem_score": 0.41801658272743225
+    },
+    {
+      "unit_id": "KC_EVAL_COMP_007",
+      "canonical_name": "One-sided vs. Two-sided Tests",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 572,
+      "evidence_chars": 668,
+      "hhem_score": 0.8704314231872559
+    },
+    {
+      "unit_id": "KC_EVAL_ENS_001",
+      "canonical_name": "Ensemble Classifier",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 434,
+      "evidence_chars": 371,
+      "hhem_score": 0.9415227174758911
+    },
+    {
+      "unit_id": "KC_EVAL_ENS_002",
+      "canonical_name": "Majority Voting",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 352,
+      "evidence_chars": 81,
+      "hhem_score": 0.05350126326084137
+    },
+    {
+      "unit_id": "KC_EVAL_ENS_003",
+      "canonical_name": "Random Forest",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 645,
+      "evidence_chars": 505,
+      "hhem_score": 0.07810959219932556
+    },
+    {
+      "unit_id": "KC_EVAL_ENS_004",
+      "canonical_name": "Boosting",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 666,
+      "evidence_chars": 484,
+      "hhem_score": 0.7242252230644226
+    },
+    {
+      "unit_id": "KC_EVAL_IMBAL_001",
+      "canonical_name": "Class Imbalance Problem",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 835,
+      "evidence_chars": 876,
+      "hhem_score": 0.1763671338558197
+    },
+    {
+      "unit_id": "KC_EVAL_IMBAL_002",
+      "canonical_name": "Oversampling (SMOTE)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 795,
+      "evidence_chars": 318,
+      "hhem_score": 0.338619202375412
+    },
+    {
+      "unit_id": "KC_EVAL_IMBAL_003",
+      "canonical_name": "Undersampling",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 371,
+      "evidence_chars": 659,
+      "hhem_score": 0.8769104480743408
+    },
+    {
+      "unit_id": "KC_EVAL_IMBAL_004",
+      "canonical_name": "Cost Matrix",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 394,
+      "evidence_chars": 123,
+      "hhem_score": 0.22354403138160706
+    },
+    {
+      "unit_id": "KC_EVAL_IMBAL_005",
+      "canonical_name": "Cost-Sensitive Classification",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 453,
+      "evidence_chars": 485,
+      "hhem_score": 0.01856987364590168
+    },
+    {
+      "unit_id": "KC_EVAL_IMBAL_006",
+      "canonical_name": "RIPPER Rule Induction",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 596,
+      "evidence_chars": 801,
+      "hhem_score": 0.05295635759830475
+    },
+    {
+      "unit_id": "KC_EVAL_ROC_001",
+      "canonical_name": "ROC Curve",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 550,
+      "evidence_chars": 253,
+      "hhem_score": 0.5374114513397217
+    },
+    {
+      "unit_id": "KC_EVAL_ROC_002",
+      "canonical_name": "ROC Space (TPR vs. FPR)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 609,
+      "evidence_chars": 360,
+      "hhem_score": 0.15135444700717926
+    },
+    {
+      "unit_id": "KC_EVAL_ROC_003",
+      "canonical_name": "Area Under the ROC Curve (AUC)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 591,
+      "evidence_chars": 692,
+      "hhem_score": 0.1982734352350235
+    },
+    {
+      "unit_id": "KC_EVAL_ROC_004",
+      "canonical_name": "Classification Threshold (Cutoff)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 317,
+      "evidence_chars": 289,
+      "hhem_score": 0.74595707654953
+    },
+    {
+      "unit_id": "KC_EVAL_ROC_005",
+      "canonical_name": "Threshold Effect on Precision, Recall, F1",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 386,
+      "evidence_chars": 234,
+      "hhem_score": 0.7252835631370544
+    },
+    {
+      "unit_id": "KC_EVAL_SAMP_001",
+      "canonical_name": "Holdout Method",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 355,
+      "evidence_chars": 212,
+      "hhem_score": 0.01013402733951807
+    },
+    {
+      "unit_id": "KC_EVAL_SAMP_002",
+      "canonical_name": "Random Subsampling",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 315,
+      "evidence_chars": 166,
+      "hhem_score": 0.11239124834537506
+    },
+    {
+      "unit_id": "KC_EVAL_SAMP_003",
+      "canonical_name": "k-Fold Cross Validation",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 646,
+      "evidence_chars": 360,
+      "hhem_score": 0.3685954213142395
+    },
+    {
+      "unit_id": "KC_EVAL_SAMP_004",
+      "canonical_name": "Leave-One-Out Cross Validation",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 489,
+      "evidence_chars": 131,
+      "hhem_score": 0.016040056943893433
+    },
+    {
+      "unit_id": "KC_EVAL_SAMP_005",
+      "canonical_name": "Bootstrap Sampling",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 468,
+      "evidence_chars": 75,
+      "hhem_score": 0.11031521111726761
+    },
+    {
+      "unit_id": "KC_EVAL_SAMP_006",
+      "canonical_name": "Stratified k-Fold Cross Validation",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 503,
+      "evidence_chars": 724,
+      "hhem_score": 0.9713153839111328
+    },
+    {
+      "unit_id": "KC_FSEL_FUND_001",
+      "canonical_name": "Feature Selection Definition",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 230,
+      "evidence_chars": 122,
+      "hhem_score": 0.5548068284988403
+    },
+    {
+      "unit_id": "KC_FSEL_FUND_003",
+      "canonical_name": "Irrelevant Features",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 425,
+      "evidence_chars": 187,
+      "hhem_score": 0.10320598632097244
+    },
+    {
+      "unit_id": "KC_FSEL_FW_001",
+      "canonical_name": "Filter Approach",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 750,
+      "evidence_chars": 38,
+      "hhem_score": 0.030600454658269882
+    },
+    {
+      "unit_id": "KC_FSEL_FW_003",
+      "canonical_name": "Wrapper Approach",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 585,
+      "evidence_chars": 453,
+      "hhem_score": 0.14029955863952637
+    },
+    {
+      "unit_id": "KC_FSEL_GEN_001",
+      "canonical_name": "Sequential Forward Generation (SFG)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 386,
+      "evidence_chars": 238,
+      "hhem_score": 0.893881618976593
+    },
+    {
+      "unit_id": "KC_FSEL_GEN_002",
+      "canonical_name": "Sequential Backward Generation (SBG)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 376,
+      "evidence_chars": 238,
+      "hhem_score": 0.8625216484069824
+    },
+    {
+      "unit_id": "KC_FSEL_GEN_003",
+      "canonical_name": "Bidirectional Generation (BG)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 466,
+      "evidence_chars": 273,
+      "hhem_score": 0.6969266533851624
+    },
+    {
+      "unit_id": "KC_FSEL_GEN_004",
+      "canonical_name": "Random Generation (RG)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 436,
+      "evidence_chars": 104,
+      "hhem_score": 0.048456836491823196
+    },
+    {
+      "unit_id": "KC_FSEL_GEN_005",
+      "canonical_name": "Exhaustive Search",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 283,
+      "evidence_chars": 395,
+      "hhem_score": 0.9678149819374084
+    },
+    {
+      "unit_id": "KC_FSEL_GEN_006",
+      "canonical_name": "Heuristic Search",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 611,
+      "evidence_chars": 732,
+      "hhem_score": 0.013116221874952316
+    },
+    {
+      "unit_id": "KC_FSEL_GOOD_001",
+      "canonical_name": "Chi-Squared Test",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 373,
+      "evidence_chars": 209,
+      "hhem_score": 0.3035077154636383
+    },
+    {
+      "unit_id": "KC_FSEL_GOOD_002",
+      "canonical_name": "Pearson Product-Moment Correlation",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 414,
+      "evidence_chars": 459,
+      "hhem_score": 0.11953853815793991
+    },
+    {
+      "unit_id": "KC_FSEL_GOOD_003",
+      "canonical_name": "Covariance",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 400,
+      "evidence_chars": 293,
+      "hhem_score": 0.7148524522781372
+    },
+    {
+      "unit_id": "KC_FSEL_GOOD_004",
+      "canonical_name": "Spearman Rank Correlation",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 237,
+      "evidence_chars": 347,
+      "hhem_score": 0.6675344109535217
+    },
+    {
+      "unit_id": "KC_FSEL_GOOD_005",
+      "canonical_name": "Information Gain (Feature Goodness)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 364,
+      "evidence_chars": 53,
+      "hhem_score": 0.16638360917568207
+    },
+    {
+      "unit_id": "KC_FSEL_GOOD_006",
+      "canonical_name": "Shannon Entropy (Uncertainty Measure)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 360,
+      "evidence_chars": 309,
+      "hhem_score": 0.36247968673706055
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_001",
+      "canonical_name": "Null Hypothesis (H0)",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 521,
+      "evidence_chars": 507,
+      "hhem_score": 0.8562925457954407
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_002",
+      "canonical_name": "Test Statistic",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 770,
+      "evidence_chars": 741,
+      "hhem_score": 0.1180754154920578
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_003",
+      "canonical_name": "Significance Level and p-value",
+      "knowledge_unit_type": "kc",
+      "draft_status": "partial",
+      "claim_chars": 689,
+      "evidence_chars": 482,
+      "hhem_score": 0.013763418421149254
+    },
+    {
+      "unit_id": "KC_FSEL_STAT_004",
+      "canonical_name": "One-sided vs. Two-sided Tests",
+      "knowledge_unit_type": "kc",
+      "draft_status": "grounded",
+      "claim_chars": 500,
+      "evidence_chars": 163,
+      "hhem_score": 0.1977604329586029
+    }
+  ]
+}
