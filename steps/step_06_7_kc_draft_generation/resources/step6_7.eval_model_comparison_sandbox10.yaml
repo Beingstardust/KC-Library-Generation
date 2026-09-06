@@ -1,0 +1,22 @@
+inputs:
+  step6_6_set_manifest: data/processed/kc_drafting_input_overlay/_sets/2026-03-23_150909_step6_6_kc_drafting_input_overlay_set.json
+outputs:
+  processed_root: data/processed/kc_drafts
+  sets_root: data/processed/kc_drafts/_sets
+  runs_root: data/runs
+slice:
+  limit_kcs: 10
+  exact_kc_ids:
+  - KC_EVAL_ENS_003
+  - KC_EVAL_SAMP_001
+  - KC_EVAL_BASIC_003
+  - KC_EVAL_BASIC_007
+  - KC_EVAL_BASIC_008
+  - KC_EVAL_BASIC_009
+  - KC_EVAL_BASIC_001
+  - KC_EVAL_BASIC_004
+  - KC_EVAL_BASIC_005
+  - KC_EVAL_ENS_002
+selection:
+  max_bundle_size: 4
+  max_explanatory_candidates: 3

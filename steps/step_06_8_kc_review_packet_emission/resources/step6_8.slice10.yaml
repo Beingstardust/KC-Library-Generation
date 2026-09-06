@@ -1,0 +1,11 @@
+# Clean-start bounded template for the operator repo.
+# Refresh current artifact aliases with: python scripts/maintenance/refresh_current_step_artifacts.py
+inputs:
+  step6_7_set_manifest: data/work/cache/current_step_artifacts/step6_7_set_manifest.current.json
+
+outputs:
+  processed_root: data/processed/kc_review_packets_restarted
+  sets_root: data/processed/kc_review_packets_restarted/_sets
+  runs_root: data/runs
+
+

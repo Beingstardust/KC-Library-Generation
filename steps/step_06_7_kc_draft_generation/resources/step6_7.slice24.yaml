@@ -1,0 +1,42 @@
+# Historical bounded Step 6.7 config preserved from the pre-clean repo state.
+# It intentionally keeps a dated Step 6.6 set manifest and is not a clean-start default.
+inputs:
+  step6_6_set_manifest: data/processed/kc_drafting_input_overlay/_sets/2026-03-23_134259_step6_6_kc_drafting_input_overlay_set.json
+
+outputs:
+  processed_root: data/processed/kc_drafts
+  sets_root: data/processed/kc_drafts/_sets
+  runs_root: data/runs
+
+slice:
+  limit_kcs: 24
+  exact_kc_ids:
+    - KC_CLF_DT_008
+    - KC_CLF_DT_011
+    - KC_CLF_UND_001
+    - KC_CLF_DT_004
+    - KC_CLF_NB_001
+    - KC_CLU_EVAL_005
+    - KC_CLF_NB_004
+    - KC_CLF_DT_003
+    - KC_CLF_DT_006
+    - KC_CLF_DT_001
+    - KC_CLF_UND_002
+    - KC_CLF_UND_003
+    - KC_CLF_UND_004
+    - KC_CLF_UND_005
+    - KC_CLF_DT_002
+    - KC_CLF_DT_005
+    - KC_CLF_DT_007
+    - KC_CLF_DT_009
+    - KC_CLF_DT_010
+    - KC_CLF_DT_012
+    - KC_CLF_NB_002
+    - KC_CLF_NB_003
+    - KC_CLF_NB_005
+    - KC_CLF_NB_006
+
+selection:
+  max_bundle_size: 4
+  max_explanatory_candidates: 3
+

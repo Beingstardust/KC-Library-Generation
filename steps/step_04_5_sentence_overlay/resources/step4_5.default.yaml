@@ -1,0 +1,125 @@
+project:
+  timezone: Europe/Berlin
+
+inputs:
+  step4_active_set_pointer: data/processed/retrieval_index/_sets/ACTIVE_STEP4_SET.txt
+  active_step4_5_set_pointer: data/processed/retrieval_sentence_overlay/_sets/ACTIVE_STEP4_5_SENTENCE_SET.txt
+
+outputs:
+  processed_root: data/processed/retrieval_sentence_overlay
+  sets_dir: data/processed/retrieval_sentence_overlay/_sets
+
+audit:
+  runs_dir: data/runs
+
+sentence_split:
+  punctuation_boundaries:
+    - "."
+    - "?"
+    - "!"
+    - ";"
+    - ":"
+
+flags:
+  heading_max_tokens: 14
+  page0_heading_max_tokens: 12
+  author_name_max_tokens: 4
+  nav_keywords:
+    - agenda
+    - appendix
+    - block
+    - chapter
+    - closing
+    - contents
+    - exercise
+    - exercises
+    - next
+    - outline
+    - overview
+    - previous
+    - question
+    - questions
+    - recall
+    - recap
+    - references
+    - running example
+    - section
+    - summary
+    - thank you
+    - topic
+    - unit
+  transition_phrases:
+    - after that
+    - before we
+    - finally
+    - in the following
+    - let us
+    - next
+    - now
+    - recall
+    - remember
+    - we now
+    - we will
+  definition_phrases:
+    - " is a "
+    - " is an "
+    - " is the "
+    - " defined as "
+    - " refers to "
+    - " denotes "
+    - " we call "
+    - " called "
+    - " means "
+  procedure_phrases:
+    - algorithm
+    - compute
+    - else
+    - for each
+    - if
+    - input
+    - invoke
+    - output
+    - pick
+    - procedure
+    - repeat
+    - select
+    - set
+    - split
+    - step
+    - then
+    - until
+  example_phrases:
+    - consider
+    - e.g.
+    - example
+    - for example
+    - for instance
+    - suppose
+  affiliation_keywords:
+    - chair
+    - department
+    - faculty
+    - institute
+    - professor
+    - school
+    - university
+  course_markers:
+    - "dm i"
+    - "dm ii"
+    - "data mining"
+    - semester
+    - lecture
+
+patch_selection:
+  patch_type_rank:
+    structure_span: 0
+    window_1: 1
+    window_2: 2
+    window_3: 3
+    unknown: 4
+
+acceptance:
+  max_invalid_sentence_rows: 0
+  min_docs_with_sentences: 8
+  require_patch_metadata_if_available: true
+  require_upstream_inputs_unchanged: true

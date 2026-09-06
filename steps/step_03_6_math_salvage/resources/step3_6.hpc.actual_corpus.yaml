@@ -1,0 +1,50 @@
+project:
+  timezone: "Europe/Amsterdam"
+
+input:
+  step3_5_sets_dir: "/path/to/scratch/kc_l/data/processed/blockstore_enriched/_sets"
+  step3_5_active_set_file: "/path/to/scratch/kc_l/data/processed/blockstore_enriched/_sets/ACTIVE_STEP3_5_SET.txt"
+
+output:
+  processed_dir: "/path/to/scratch/kc_l/data/processed/blockstore_math_salvaged"
+  sets_dir: "/path/to/scratch/kc_l/data/processed/blockstore_math_salvaged/_sets"
+  runs_dir: "/path/to/scratch/kc_l/data/runs"
+
+qc:
+  enabled: true
+  min_math_token_hits: 3
+  tokens_regex:
+    - "(?i)\\bentropy\\b"
+    - "(?i)\\bgini\\b"
+    - "(?i)\\binfgain\\b"
+    - "(?i)\\blog\\b"
+    - "[=±×÷≤≥≠≈∑∏∫Δ]"
+    - "[αβγδεζηθικλμνξοπρστυφχψω]"
+
+  edge_qc:
+    enabled: true
+    min_total_edge_pixels: 800
+    outside_edge_ratio_ge: 0.55
+
+salvage:
+  enabled: true
+
+  mineru:
+    enabled: true
+    cli: "mineru"
+    backend: "hybrid-auto-engine"
+    device: "cuda"
+    method: "auto"
+    lang: "en"
+    source: "local"
+    targeted_only: true
+    page_window: 0
+    formula: true
+    table: true
+
+dedupe:
+  enabled: true
+  iou_threshold: 0.65
+
+logging:
+  verbose: true

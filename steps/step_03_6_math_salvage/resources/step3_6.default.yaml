@@ -1,0 +1,60 @@
+project:
+  timezone: "Europe/Amsterdam"
+
+input:
+  step3_5_sets_dir: "data/processed/blockstore_enriched/_sets"
+  step3_5_active_set_file: "data/processed/blockstore_enriched/_sets/ACTIVE_STEP3_5_SET.txt"
+
+output:
+  processed_dir: "data/processed/blockstore_math_salvaged"
+  sets_dir: "data/processed/blockstore_math_salvaged/_sets"
+  runs_dir: "data/runs"
+
+qc:
+  enabled: true
+
+  # A page is "math-suspect" if it has strong math indicators but no equation blocks
+  min_math_token_hits: 3
+  tokens_regex:
+    - "(?i)\\bentropy\\b"
+    - "(?i)\\bgini\\b"
+    - "(?i)\\binfgain\\b"
+    - "(?i)\\blog\\b"
+    - "[=±×÷≤≥≠≈∑∏∫Δ]"
+    - "[αβγδεζηθικλμνξοπρστυφχψω]"
+
+  # Edge-based "unaccounted ink" heuristic from page image, to catch vector-rendered math
+  edge_qc:
+    enabled: true
+    min_total_edge_pixels: 800
+    outside_edge_ratio_ge: 0.55
+
+salvage:
+  enabled: true
+
+  mineru:
+    cli: "mineru"
+
+    # Choose a higher-accuracy backend than pipeline for salvage
+    backend: "hybrid-auto-engine"
+    device: "cuda"      # change to "cpu" if needed
+    method: "auto"      # "auto" or "ocr"
+    lang: "en"
+    source: "local"
+
+    # Only rerun MinerU for suspect pages
+    targeted_only: true
+
+    # Expand page range for safety: page +- window
+    page_window: 0
+
+    # Ensure formula parsing stays on
+    formula: true
+    table: true
+
+dedupe:
+  enabled: true
+  iou_threshold: 0.65
+
+logging:
+  verbose: true

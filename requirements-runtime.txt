@@ -1,0 +1,16 @@
+# Full retained-pipeline bootstrap for the clean repo.
+# Installs kc_l editably so the preserved step tree can import kc_l.* without manual PYTHONPATH wiring.
+-e .[runtime]
+
+# On hosts that require a custom torch wheel or pinned CUDA companion packages, adjust the torch
+# install around this bootstrap rather than falling back to the operator-only requirement set.
+# See torch-cu124-deps.txt for the pinned CUDA 12.4 companion package list kept in this repo.
+
+# External non-Python runtimes still required by the preserved full pipeline:
+# - docling CLI
+# - mineru CLI
+# - ollama CLI and local HTTP service
+# - Slurm / SSH for HPC submission outside this repo
+#
+# Optional accelerator not declared as a hard requirement because the code falls back:
+# - faiss-cpu or faiss-gpu

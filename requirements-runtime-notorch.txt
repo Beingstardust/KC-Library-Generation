@@ -1,0 +1,25 @@
+# Full retained-pipeline bootstrap when torch is being managed separately.
+# Installs kc_l editably so the preserved step tree can import kc_l.* without manual PYTHONPATH wiring.
+-e .
+
+# Parsing / retrieval / math-salvage Python stack.
+numpy
+Pillow
+PyMuPDF
+opencv-python-headless
+
+# Reranker stack used by preserved step5.3 / step6.4.2 flows.
+# Install the torch build that matches the target environment separately, then use this file for
+# the remaining Python dependencies.
+transformers
+sentence-transformers
+huggingface-hub
+
+# External non-Python runtimes still required by the preserved full pipeline:
+# - docling CLI
+# - mineru CLI
+# - ollama CLI and local HTTP service
+# - Slurm / SSH for HPC submission outside this repo
+#
+# Optional accelerator not declared as a hard requirement because the code falls back:
+# - faiss-cpu or faiss-gpu

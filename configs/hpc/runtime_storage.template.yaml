@@ -1,0 +1,9 @@
+runtime_storage:
+  mode: external_runtime_storage_required
+  code_and_configs_stay_in_repo: true
+  scratch_root: REPLACE_ME_CLUSTER_SCRATCH_ROOT
+  staged_input_root: REPLACE_ME_CLUSTER_STAGED_INPUT_ROOT
+  cache_root: REPLACE_ME_CLUSTER_CACHE_ROOT
+  runs_root: REPLACE_ME_CLUSTER_RUNS_ROOT
+  exports_root: REPLACE_ME_CLUSTER_EXPORTS_ROOT
+  logs_root: REPLACE_ME_CLUSTER_LOGS_ROOT

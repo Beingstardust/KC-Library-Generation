@@ -1,0 +1,106 @@
+project:
+  timezone: "Europe/Amsterdam"
+
+doc:
+  doc_id: "DOC_EXAMPLE"
+  pdf_path: "data/input/course_materials/example.pdf"
+
+  freeze_inputs: true
+  frozen_store_dir: "/path/to/scratch/kc_l/data/raw/frozen"
+
+output:
+  processed_blockstore_dir: "/path/to/scratch/kc_l/data/processed/blockstore"
+  runs_dir: "/path/to/scratch/kc_l/data/runs"
+
+  render_page_images: true
+  render_dpi: 144
+  render_format: "png"
+
+  work_dir: "/path/to/scratch/kc_l/data/work"
+  use_work_dir_for_external_tools: true
+  keep_work_dir: false
+
+layers:
+  pymupdf:
+    enabled: true
+    extract_blocks: true
+    sort_text: true
+    write_raw_dump: true
+
+  docling:
+    enabled: true
+    cli: "/path/to/venvs/docling_cli/bin/docling"
+    to_format: "json"
+    pipeline: "standard"
+    pdf_backend: "docling_parse"
+    artifacts_path: "/path/to/scratch/kc_l/docling_hf_models"
+    # Reverted to explicit cpu: docling_cli's venv is torch 2.11.0+cu130, but this cluster's
+    # GPU node driver (550.54.14) only supports CUDA 12.4 - torch.cuda.is_available() is False
+    # there (confirmed via direct probe: "CUDA initialization: The NVIDIA driver on your system
+    # is too old (found version 12040)"). Docling's own decide_device() (docling/utils/
+    # accelerator_utils.py) silently falls back to cpu on unavailable CUDA with only a log
+    # warning, no error - so device: "cuda" was never actually routing to GPU, it was a silent
+    # no-op. Forcing "cpu" explicitly here so behavior doesn't depend on that fallback. Revisit
+    # only if docling_cli's venv is rebuilt against a cu12x torch wheel matching the driver.
+    device: "cpu"
+    ocr: false
+    tables: true
+    abort_on_error: false
+    show_layout: false
+    extra_args: []
+    chunking:
+      enabled: true
+      threshold_pages: 300
+      pages_per_chunk: 100
+
+  mineru:
+    enabled: true
+    cli: "/path/to/venvs/mineru_cli/bin/mineru"
+    backend: "pipeline"
+    # --device: confirmed inert on the currently-installed MinerU CLI (ignore_unknown_options=True
+    # silently swallows unrecognized flags) - the real device switch is the MINERU_DEVICE_MODE
+    # environment variable, set in kc_l_orchestrator.py's step_02 invocation branch (extra_env).
+    # Re-added here anyway (run_mineru_cli() emits it as a real CLI flag) for defense-in-depth,
+    # matching the historical step_03_6 GPU run (run_step3_6_actual_corpus_gpu.slurm), which
+    # passed this exact flag and produced real GPU output (returncode 0) - cheap to keep both
+    # mechanisms since the installed CLI version's flag-parsing behavior may not be stable across
+    # upgrades. (--source, also present in that historical script's pattern via
+    # mineru_salvage.py, is NOT re-added: confirmed via `mineru --help` that no such flag exists
+    # at all in the currently-installed CLI, unlike --device which is real-but-ignored.)
+    device: "cuda"
+    # --lang/--method are real, confirmed CLI options and stay.
+    extra_args:
+      - "--lang"
+      - "en"
+      - "--method"
+      - "auto"
+    # Page-range chunking via MinerU's native -s/-e flags (0-indexed, inclusive - confirmed via
+    # `mineru --help`), called sequentially against the whole original PDF - no physical file
+    # splitting needed, unlike Docling's chunking. Same threshold/chunk-size defaults as
+    # Docling's own chunking block above, per explicit direction to use that as a starting point
+    # (Step 3.6's chunking is a different shape - a small window around specific QC-flagged
+    # suspect pages, not sequential whole-document chunks - so it wasn't directly reusable here).
+    chunking:
+      enabled: true
+      threshold_pages: 300
+      pages_per_chunk: 100
+    # Confirmed via 3 independent real Cluster B runs (jobs 227591, 227869, and job 228028's
+    # chunk 11/12) that MinerU's own fast_api task-queue occasionally hangs indefinitely at the
+    # same internal point (right after "Pipeline processing window batch X/Y" is logged, before
+    # any GPU-stage progress appears) regardless of chunk size/content or invocation position in
+    # a job (job 228028's chunks 0-10 all succeeded fine, then the SMALLEST chunk, 11, hung) -
+    # an intermittent flake in the installed MinerU version's own internals, not something
+    # fixable from this side. Each attempt is killed and retried in a fresh subprocess well
+    # before MinerU's own hardcoded 3600s internal timeout (mineru/cli/api_client.py's
+    # TASK_RESULT_TIMEOUT_SECONDS - not configurable via env var or CLI flag).
+    retry:
+      max_attempts: 3
+      attempt_timeout_seconds: 1200
+
+validation:
+  min_pages: 1
+  min_total_blocks: 20
+  require_each_enabled_layer_nonempty: true
+
+logging:
+  verbose: true

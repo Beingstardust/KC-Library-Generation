@@ -1,0 +1,2599 @@
+from __future__ import annotations
+
+import json
+import re
+from collections import Counter
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
+
+from .deterministic import (
+    allowed_text_from_row,
+    build_dynamic_broad_tokens,
+    deterministic_label_variants,
+    doc_page_for_row,
+    evidence_shape_for_text,
+    infer_expected_evidence_shapes,
+    normalize_text,
+    row_is_unsafe,
+    score_snippet_for_kc,
+    sibling_labels_for,
+    snippet_id_for_row,
+)
+from .model_client import SYSTEM_PROMPT, build_user_prompt, ollama_chat_json
+from .schema import ACTIVE_CUE_TYPES, PROFILE_CONTRACT_VERSION, validate_profile, validate_profile_collection
+from .role_target_contract import build_role_target_contract, normalize_knowledge_unit_fields
+from .output_hardening import build_expected_evidence_shape_hints, harden_profile_output
+from kc_l.retrieval_windowing.source_window_kernel import collect_profile_windows_with_source_surface_kernel
+from kc_l.retrieval_gate.feedback_loop import merge_profile_feedback
+from kc_l.retrieval_gate.shapeaware_shadow import build_shapeaware_guidance
+from kc_l.retrieval_gate.branch_scoping import load_page_branch_map
+
+# Rescue scout for surface-retrieval starvation (2026-07-23). See
+# EVIDENCE_QUALITY_METHODOLOGY.md "Mechanism A/B retrieval gaps" for the empirical measurement
+# behind this window: for the 3 confirmed real retrieval-miss cases it exists to fix
+# (KC_CLF_UND_002, KC_CLF_DT_009, KC_FSEL_FW_004), the KC's own correct page sat within 0-25
+# pages of a sibling KC's own confirmed evidence page in the same document - the widest
+# observed case (Precision/Recall/F-Measure siblings under "External Index: ...") needed 25.
+SIBLING_ANCHOR_WINDOW = 25
+_PAGE_BRANCH_MAP_PATH = Path(__file__).resolve().parents[3] / "data/processed/branch_scoping/page_branch_map.json"
+_PAGE_BRANCH_MAP_CACHE: Optional[Dict[str, Any]] = None
+
+# Narrower than DEFINITION_CUE (deterministic.py) on purpose: DEFINITION_CUE also matches bare
+# "is"/"are", which is true of nearly every sentence and gives no real discrimination for
+# tie-breaking within a single anchor page (confirmed 2026-07-23: 34/34 candidate sentences on
+# one real anchor page all matched it). This keeps only the phrasings that specifically
+# introduce/name a term - still a generic linguistic pattern, not any KC's own vocabulary.
+_NAMING_CUE = re.compile(
+    r"\b(known as|referred to as|defined as|denotes|termed|is called|are called)\b",
+    re.I,
+)
+
+
+def _get_page_branch_map() -> Dict[str, Any]:
+    global _PAGE_BRANCH_MAP_CACHE
+    if _PAGE_BRANCH_MAP_CACHE is None:
+        try:
+            _PAGE_BRANCH_MAP_CACHE = load_page_branch_map(_PAGE_BRANCH_MAP_PATH)
+        except FileNotFoundError:
+            _PAGE_BRANCH_MAP_CACHE = {}
+    return _PAGE_BRANCH_MAP_CACHE
+
+_CUE_TYPE_SPLIT_RE = re.compile(r"\s*(?:\||/|,|;|\band\b)\s*", re.I)
+_CUE_TYPE_TOKEN_RE = re.compile(r"[^a-z0-9]+")
+_CUE_TYPE_PRIORITY_ORDER = [
+    cue_type
+    for cue_type in (
+        "source_observed_equivalent",
+        "definition_phrase",
+        "mechanism_description",
+        "process_phrase",
+        "formula_relation",
+        "metric_relation",
+        "context_phrase",
+    )
+    if cue_type in ACTIVE_CUE_TYPES
+]
+for _cue_type in sorted(ACTIVE_CUE_TYPES):
+    if _cue_type not in _CUE_TYPE_PRIORITY_ORDER:
+        _CUE_TYPE_PRIORITY_ORDER.append(_cue_type)
+_CUE_TYPE_PRIORITY = {cue_type: idx for idx, cue_type in enumerate(_CUE_TYPE_PRIORITY_ORDER)}
+
+
+def utc_stamp() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+
+def read_jsonl(path: Path) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
+    if not path.exists():
+        raise FileNotFoundError(path)
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if not line.strip():
+            continue
+        rows.append(json.loads(line))
+    return rows
+
+
+def write_json(path: Path, obj: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(obj, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def write_jsonl(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+
+
+def _registry_unit_id(row: Mapping[str, Any]) -> str:
+    return str(
+        row.get("knowledge_unit_id")
+        or row.get("kc_id")
+        or row.get("hier_node_id")
+        or row.get("node_id")
+        or row.get("id")
+        or ""
+    ).strip()
+
+
+def _registry_unit_type(row: Mapping[str, Any]) -> str:
+    raw = str(row.get("knowledge_unit_type") or row.get("node_type") or row.get("type") or row.get("kind") or "").lower()
+    if raw in {"topic", "internal_topic", "curriculum_topic"}:
+        return "topic"
+    if raw in {"kc", "leaf", "knowledge_component", "atomic_kc"}:
+        return "kc"
+    unit_id = _registry_unit_id(row)
+    if unit_id.startswith("KC_"):
+        return "kc"
+    if unit_id.startswith("hier::"):
+        return "topic"
+    return raw or "unknown"
+
+
+def extract_knowledge_unit_rows(
+    registry_rows: Sequence[Mapping[str, Any]],
+    *,
+    include_topics: bool = False,
+) -> List[Dict[str, Any]]:
+    """Extract normalized knowledge-unit rows from the strict registry.
+
+    Default Step 5p behavior remains KC-only. Topic rows are included only when
+    a caller explicitly opts in, normally for bounded exact-ID probes or later
+    topic-library drafting work.
+    """
+    out: List[Dict[str, Any]] = []
+    for row in registry_rows:
+        unit_id = _registry_unit_id(row)
+        unit_type = _registry_unit_type(row)
+        name = row.get("canonical_name") or row.get("label") or row.get("name")
+
+        if not unit_id or not name:
+            continue
+        if unit_type == "topic" and not include_topics:
+            continue
+        if unit_type not in {"kc", "topic"}:
+            continue
+
+        aliases = row.get("aliases") or []
+        if not isinstance(aliases, list):
+            aliases = []
+
+        topic_path_labels = (
+            row.get("topic_path_labels")
+            or row.get("ancestor_topic_labels")
+            or row.get("hierarchy_path_labels")
+            or row.get("path_labels")
+            or row.get("source_hierarchy_path")
+            or []
+        )
+        if not isinstance(topic_path_labels, list):
+            topic_path_labels = []
+
+        sibling_labels = row.get("sibling_labels") or []
+        if not isinstance(sibling_labels, list):
+            sibling_labels = []
+
+        parent_topic_id = (
+            row.get("parent_topic_id")
+            or row.get("parent_id")
+            or row.get("parent_node_id")
+            or ""
+        )
+        parent_topic_label = (
+            row.get("parent_topic_label")
+            or row.get("parent_label")
+            or (topic_path_labels[-1] if topic_path_labels else "")
+            or ""
+        )
+
+        out.append({
+            **dict(row),
+            "kc_id": unit_id,
+            "knowledge_unit_id": unit_id,
+            "knowledge_unit_type": unit_type,
+            "canonical_name": str(name),
+            "aliases": [str(a) for a in aliases if str(a).strip()],
+            "topic_path_labels": [str(x) for x in topic_path_labels if str(x).strip()],
+            "sibling_labels": [str(x) for x in sibling_labels if str(x).strip()],
+            "parent_topic_id": str(parent_topic_id),
+            "parent_topic_label": str(parent_topic_label),
+        })
+    return out
+
+
+def extract_kc_rows(registry_rows: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
+    """Backward-compatible KC-only extraction for legacy callers."""
+    return extract_knowledge_unit_rows(registry_rows, include_topics=False)
+
+
+def select_kcs(kc_rows: Sequence[Mapping[str, Any]], exact_kc_ids: Sequence[str] | None, limit_kcs: int | None) -> List[Dict[str, Any]]:
+    rows = [dict(r) for r in kc_rows]
+    if exact_kc_ids:
+        wanted = {str(x) for x in exact_kc_ids}
+        rows = [
+            r for r in rows
+            if str(r.get("kc_id") or "") in wanted
+            or str(r.get("knowledge_unit_id") or "") in wanted
+            or str(r.get("node_id") or "") in wanted
+            or str(r.get("id") or "") in wanted
+            or str(r.get("hier_node_id") or "") in wanted
+        ]
+    if limit_kcs is not None:
+        rows = rows[: int(limit_kcs)]
+    return rows
+
+
+def _snippet_lane(score: Mapping[str, Any], min_score: float) -> str:
+    """Classify a pre-profiling source window.
+
+    This is not final evidence selection. It only separates stronger profiler
+    inputs from exploratory windows so the LLM can inspect weak context without
+    treating it as accepted evidence.
+    """
+    reasons = set(str(r) for r in score.get("reasons") or [])
+    exact_terms = score.get("exact_terms") or []
+    stripped_terms = score.get("stripped_terms") or []
+    target_overlap = score.get("target_overlap") or []
+    numeric_score = float(score.get("score") or 0.0)
+
+    has_surface = bool(exact_terms or stripped_terms)
+    has_target_binding = has_surface or len(target_overlap) >= 2
+    has_shape = bool(reasons.intersection({
+        "definition_shape",
+        "formula_shape",
+        "process_shape",
+        "mechanism_shape",
+    }))
+
+    if numeric_score >= min_score and has_target_binding:
+        return "strict_source_window"
+
+    if numeric_score > 0 and (has_target_binding or has_shape):
+        return "exploratory_profile_window"
+
+    return "discard"
+
+
+def collect_profile_windows(
+    *,
+    kc_row: Mapping[str, Any],
+    all_kc_rows: Sequence[Mapping[str, Any]],
+    source_rows: Sequence[Mapping[str, Any]],
+    dynamic_broad_tokens: Set[str],
+    max_snippets_per_kc: int,
+    min_score: float,
+    max_exploratory_windows: int | None = None,
+) -> Dict[str, List[Dict[str, Any]]]:
+    variants = deterministic_label_variants(
+        str(kc_row.get("canonical_name") or ""),
+        kc_row.get("aliases") or [],
+    )
+    siblings = sibling_labels_for(kc_row, all_kc_rows)
+    topic_path_labels = kc_row.get("topic_path_labels") or []
+
+    strict: List[Dict[str, Any]] = []
+    exploratory: List[Dict[str, Any]] = []
+    max_exploratory = max_exploratory_windows or max_snippets_per_kc
+
+    for idx, row in enumerate(source_rows):
+        text, field_path, has_primary_evidence = allowed_text_from_row(row)
+        unsafe, reason = row_is_unsafe(row, text, field_path, has_primary_evidence)
+        if unsafe:
+            continue
+
+        score = score_snippet_for_kc(
+            text=text,
+            variants=variants,
+            topic_path_labels=topic_path_labels,
+            sibling_labels=siblings,
+            dynamic_broad_tokens=dynamic_broad_tokens,
+        )
+
+        lane = _snippet_lane(score, min_score=min_score)
+        if lane == "discard":
+            continue
+
+        meta = doc_page_for_row(row)
+        item = {
+            "snippet_id": snippet_id_for_row(row, idx),
+            "text": text[:1600],
+            "field_path": field_path or "text",
+            "doc_id": meta.get("doc_id"),
+            "page_index": meta.get("page_index"),
+            "patch_id": meta.get("patch_id"),
+            "block_id": meta.get("block_id"),
+            "score": score["score"],
+            "score_reasons": score["reasons"],
+            "exact_terms": score["exact_terms"],
+            "stripped_terms": score["stripped_terms"],
+            "target_overlap": score["target_overlap"],
+            "branch_overlap": score["branch_overlap"],
+            "sibling_hits": score["sibling_hits"],
+            "evidence_shapes": score["evidence_shapes"],
+            "profile_window_lane": lane,
+            "profile_window_role": "profiler_input_only_not_evidence",
+        }
+
+        if lane == "strict_source_window":
+            strict.append(item)
+        elif lane == "exploratory_profile_window":
+            exploratory.append(item)
+
+    strict.sort(key=lambda x: float(x.get("score") or 0), reverse=True)
+    exploratory.sort(key=lambda x: float(x.get("score") or 0), reverse=True)
+
+    return {
+        "strict_source_windows": strict[:max_snippets_per_kc],
+        "exploratory_profile_windows": exploratory[:max_exploratory],
+    }
+
+
+def collect_candidate_snippets(
+    *,
+    kc_row: Mapping[str, Any],
+    all_kc_rows: Sequence[Mapping[str, Any]],
+    source_rows: Sequence[Mapping[str, Any]],
+    dynamic_broad_tokens: Set[str],
+    max_snippets_per_kc: int,
+    min_score: float,
+) -> List[Dict[str, Any]]:
+    """Backward-compatible wrapper returning strict windows first.
+
+    Historical audit output used audit.candidate_snippets. Keep it populated,
+    but the meaningful two-lane output is now strict_source_windows plus
+    exploratory_profile_windows.
+    """
+    windows = collect_profile_windows(
+        kc_row=kc_row,
+        all_kc_rows=all_kc_rows,
+        source_rows=source_rows,
+        dynamic_broad_tokens=dynamic_broad_tokens,
+        max_snippets_per_kc=max_snippets_per_kc,
+        min_score=min_score,
+    )
+    return (windows["strict_source_windows"] + windows["exploratory_profile_windows"])[:max_snippets_per_kc]
+
+
+
+_TOPIC_LOCAL_CONTENT_TOKEN_RE = re.compile(r"[A-Za-z][A-Za-z0-9]+")
+_TOPIC_LOCAL_GENERIC_TOKENS = {
+    "basic", "basics", "chapter", "section", "overview", "introduction",
+    "concept", "concepts", "method", "methods", "approach", "approaches",
+    "problem", "problems", "phase", "phases", "model", "models",
+    "value", "values", "type", "types", "general", "core", "example",
+    "examples", "exercise", "exercises", "appendix",
+    # High-frequency academic/curriculum words.  These are generic stop tokens
+    # for profiler-window anchoring only; they are not domain terms and do not
+    # remove the phrases themselves from model input.
+    "data", "dataset", "datasets", "attribute", "attributes", "class", "classes",
+    "measure", "measures", "metric", "metrics", "quality", "validity",
+    "information", "criterion", "criteria", "algorithm", "algorithms",
+    "underpinning", "underpin", "underpins",
+    # 2026-07-28 fix: these generic suffix words were already filtered out of
+    # deterministic.py's GENERIC_SUFFIX_TOKENS (the main Step 5p gate) but were
+    # missing here, so e.g. "McNemar Test"/"Nemenyi Test" tokenized to
+    # ["mcnemar","test"] and every corpus block containing the common word
+    # "test" registered as a false label_token_hit, masking these KCs as
+    # "label-anchored" (target_overlap=["test"]) when the real distinguishing
+    # token ("mcnemar") never appears in the corpus at all. Aligning this list
+    # with GENERIC_SUFFIX_TOKENS makes the label_anchored_window_count signal
+    # (used to gate both sibling_anchor_scout and the widened scout below)
+    # reflect genuine distinctive-token anchoring instead of suffix leakage.
+    "test", "tests", "index", "indices", "score", "scores",
+    "procedure", "procedures", "technique", "techniques",
+}
+_TOPIC_LOCAL_BAD_HEADING_RE = re.compile(
+    r"\b(bibliography|references|contents|index|appendix|author|doi|isbn)\b",
+    re.I,
+)
+_TOPIC_LOCAL_BAD_SECTION_START_RE = re.compile(
+    r"^\s*(bibliography|references|contents|index|appendix)\b",
+    re.I,
+)
+_TOPIC_LOCAL_PROMPT_RE = re.compile(
+    r"^\s*(calculate|compute|explain|describe|compare|discuss|show|prove|what|why|how)\b",
+    re.I,
+)
+
+
+def _topic_local_primary_text(row: Mapping[str, Any]) -> tuple[str, str]:
+    for key in (
+        "sentence_text",
+        "text",
+        "quote_surface",
+        "original_quote_surface",
+        "source_block_text",
+        "original_source_block_text",
+    ):
+        value = row.get(key)
+        if isinstance(value, str) and value.strip():
+            return normalize_text(value), key
+    return "", ""
+
+
+def _topic_local_heading(row: Mapping[str, Any]) -> str:
+    parts: List[str] = []
+    for key in ("patch_heading", "page_heading_norm", "heading", "section_title"):
+        value = row.get(key)
+        if isinstance(value, str) and value.strip():
+            parts.append(value)
+    return normalize_text(" ".join(parts))
+
+
+def _topic_local_tokens(
+    text: Any,
+    *,
+    min_len: int = 4,
+    extra_stop_tokens: Set[str] | None = None,
+) -> List[str]:
+    tokens: List[str] = []
+    seen: Set[str] = set()
+    stop = set(_TOPIC_LOCAL_GENERIC_TOKENS)
+    if extra_stop_tokens:
+        stop.update(str(x).lower() for x in extra_stop_tokens if str(x).strip())
+    for raw in _TOPIC_LOCAL_CONTENT_TOKEN_RE.findall(str(text or "")):
+        token = raw.lower()
+        if len(token) < min_len:
+            continue
+        if token in stop:
+            continue
+        if token in seen:
+            continue
+        seen.add(token)
+        tokens.append(token)
+    return tokens
+
+
+def _topic_local_topic_terms(
+    kc_row: Mapping[str, Any],
+    *,
+    dynamic_broad_tokens: Set[str] | None = None,
+) -> Dict[str, List[str]]:
+    raw_labels: List[str] = []
+    parent = normalize_text(kc_row.get("parent_topic_label") or "")
+    if parent:
+        raw_labels.append(parent)
+    topic_path = [normalize_text(x) for x in (kc_row.get("topic_path_labels") or []) if normalize_text(x)]
+    if topic_path:
+        raw_labels.extend(topic_path[1:] if len(topic_path) > 1 else topic_path)
+
+    phrases: List[str] = []
+    phrase_seen: Set[str] = set()
+    tokens: List[str] = []
+    token_seen: Set[str] = set()
+
+    for label in raw_labels:
+        label_norm = normalize_text(label)
+        if not label_norm:
+            continue
+        label_tokens = _topic_local_tokens(label_norm, min_len=4, extra_stop_tokens=dynamic_broad_tokens)
+        if len(label_tokens) >= 2:
+            key = label_norm.lower()
+            if key not in phrase_seen:
+                phrase_seen.add(key)
+                phrases.append(label_norm)
+        for token in label_tokens:
+            if token not in token_seen:
+                token_seen.add(token)
+                tokens.append(token)
+
+    return {
+        "phrases": phrases,
+        "tokens": tokens,
+    }
+
+
+def _topic_local_label_terms(
+    kc_row: Mapping[str, Any],
+    variants: Sequence[Mapping[str, Any]],
+    *,
+    dynamic_broad_tokens: Set[str] | None = None,
+) -> List[str]:
+    terms: List[str] = []
+    seen: Set[str] = set()
+    for raw in [kc_row.get("canonical_name"), *(kc_row.get("aliases") or [])]:
+        for token in _topic_local_tokens(raw, min_len=4, extra_stop_tokens=dynamic_broad_tokens):
+            if token not in seen:
+                seen.add(token)
+                terms.append(token)
+    for variant in variants:
+        for token in _topic_local_tokens(variant.get("term"), min_len=4, extra_stop_tokens=dynamic_broad_tokens):
+            if token not in seen:
+                seen.add(token)
+                terms.append(token)
+    return terms
+
+
+def _topic_local_branch_context_terms(
+    kc_row: Mapping[str, Any],
+    *,
+    dynamic_broad_tokens: Set[str] | None = None,
+) -> List[str]:
+    """Return branch-neighborhood terms for finding source context, not evidence.
+
+    These terms widen the profiler packet only.  They are intentionally kept out
+    of accepted cues unless the LLM later verifies source-observed target
+    relevance.  This helps label-mismatch cases where the source describes the
+    target under a nearby section/criterion name rather than the hierarchy label.
+    """
+    raw_labels: List[str] = []
+    for key in ("parent_topic_label",):
+        value = normalize_text(kc_row.get(key) or "")
+        if value:
+            raw_labels.append(value)
+    for value in kc_row.get("topic_path_labels") or []:
+        value_norm = normalize_text(value)
+        if value_norm:
+            raw_labels.append(value_norm)
+    for value in kc_row.get("sibling_labels") or []:
+        value_norm = normalize_text(value)
+        if value_norm:
+            raw_labels.append(value_norm)
+
+    out: List[str] = []
+    seen: Set[str] = set()
+    for label in raw_labels:
+        for token in _topic_local_tokens(label, min_len=4, extra_stop_tokens=dynamic_broad_tokens):
+            if token not in seen:
+                seen.add(token)
+                out.append(token)
+    return out
+
+
+def _topic_local_context_keys(row: Mapping[str, Any]) -> Set[str]:
+    keys: Set[str] = set()
+    doc_id = normalize_text(row.get("doc_id") or "")
+    if not doc_id:
+        return keys
+    for key_name in ("patch_id", "reveal_group_id", "block_id"):
+        value = normalize_text(row.get(key_name) or "")
+        if value:
+            keys.add(f"{key_name}:{doc_id}:{value}")
+    page_index = normalize_text(row.get("page_index") or "")
+    if page_index:
+        keys.add(f"page:{doc_id}:{page_index}")
+    heading = normalize_text(_topic_local_heading(row)).lower()
+    if heading and not _TOPIC_LOCAL_BAD_HEADING_RE.search(heading):
+        keys.add(f"heading:{doc_id}:{heading[:160]}")
+    return keys
+
+
+def _topic_local_looks_heading_only(text: str, heading: str, row: Mapping[str, Any]) -> bool:
+    cleaned = normalize_text(text)
+    if not cleaned:
+        return True
+
+    lowered = cleaned.lower()
+    words = _TOPIC_LOCAL_CONTENT_TOKEN_RE.findall(cleaned)
+
+    if row.get("is_meta") is True or row.get("is_nav_boilerplate") is True or row.get("is_author_affiliation") is True:
+        return True
+
+    # Do not reject ordinary content such as "reference points" just because
+    # it contains a word that can also be a non-content section heading.
+    # Section filters are applied to headings directly, and to content only when
+    # the content itself starts like a bibliography/reference section.
+    if _TOPIC_LOCAL_BAD_HEADING_RE.search(str(heading or "")) or _TOPIC_LOCAL_BAD_SECTION_START_RE.search(lowered):
+        return True
+
+    if _TOPIC_LOCAL_PROMPT_RE.search(cleaned):
+        return True
+
+    if " heading" in lowered or lowered.endswith("heading"):
+        return True
+
+    if len(cleaned) < 80:
+        return True
+
+    if row.get("is_heading_like") is True and not (
+        row.get("is_definition_like") or row.get("is_formula_like") or row.get("is_procedure_like") or row.get("is_example_like")
+    ):
+        return True
+
+    if len(words) <= 8 and not any(ch in cleaned for ch in ".;:,="):
+        return True
+
+    heading_norm = normalize_text(heading).lower()
+    if heading_norm and lowered == heading_norm:
+        return True
+
+    return False
+
+
+def _topic_local_content_scout_windows(
+    *,
+    kc_row: Mapping[str, Any],
+    source_rows: Sequence[Mapping[str, Any]],
+    variants: Sequence[Mapping[str, Any]],
+    max_snippets_per_kc: int,
+    dynamic_broad_tokens: Set[str] | None = None,
+    widen_unanchored: bool = False,
+) -> List[Dict[str, Any]]:
+    """Return hierarchy-local, content-bearing profiler windows after surface retrieval starvation.
+
+    This is a Step 5p scout only. It is not evidence retrieval and it must not emit
+    heading-only, unsafe, bibliographic, prompt-like, or short rows. Topic context
+    is used to bound where the LLM can look, while accepted source cues still have
+    to be produced by the model and pass source-observed provenance validation.
+
+    widen_unanchored (2026-07-28, structural retrieval-cascade fix): when True, the
+    topic/label/branch anchor requirement below is dropped for admission - instead a
+    row is admitted if it clears every existing safety filter (not heading-only, not
+    unsafe/bibliographic/prompt-like/short) AND carries at least one recognized
+    structural evidence shape (definition/mechanism/formula/process, from the same
+    domain-agnostic evidence_shape_for_text() used everywhere else in this module).
+    This is a content-quality bar, not a topic-specific token anchor. Callers must
+    only set this when the narrow (anchored) pass has already been run and shown to
+    produce label_anchored_window_count <= 1 - i.e. the KC's own canonical name and
+    aliases contribute no genuine distinctive corpus vocabulary, so anchor-based
+    filtering has nothing real left to filter FOR and is only producing generic
+    branch/topic filler. The LLM cue-acceptance step downstream is unchanged and
+    remains the final arbiter of whether any given widened window is real evidence.
+    """
+    topic_terms = _topic_local_topic_terms(kc_row, dynamic_broad_tokens=dynamic_broad_tokens)
+    topic_phrases = [p.lower() for p in topic_terms["phrases"]]
+    topic_tokens = topic_terms["tokens"]
+    label_tokens = _topic_local_label_terms(kc_row, variants, dynamic_broad_tokens=dynamic_broad_tokens)
+    branch_context_tokens = _topic_local_branch_context_terms(kc_row, dynamic_broad_tokens=dynamic_broad_tokens)
+    expected_shapes = set(infer_expected_evidence_shapes(str(kc_row.get("canonical_name") or ""), variants))
+
+    if not widen_unanchored and not topic_phrases and not topic_tokens and not label_tokens and not branch_context_tokens:
+        return []
+
+    windows: List[Dict[str, Any]] = []
+    rejected_counts: Counter = Counter()
+
+    # First pass: short or heading-like source rows can still be valuable
+    # structural anchors.  We do not pass them directly as evidence-like text,
+    # but we use their page/patch/reveal context to pull nearby content-bearing
+    # rows into the LLM profiler packet.  This fixes the generic failure shape
+    # where the only target wording appears in a section heading or a short
+    # transitional sentence, while the usable explanation is nearby.
+    anchor_context_keys: Set[str] = set()
+    anchor_terms_by_key: Dict[str, List[str]] = {}
+    anchor_preview_by_key: Dict[str, str] = {}
+
+    for idx, row in enumerate(source_rows):
+        primary_text, field_path = _topic_local_primary_text(row)
+        heading = _topic_local_heading(row)
+        haystack = normalize_text(f"{heading} {primary_text}").lower()
+        if not haystack:
+            continue
+        if _TOPIC_LOCAL_BAD_HEADING_RE.search(str(heading or "")) or _TOPIC_LOCAL_BAD_SECTION_START_RE.search(normalize_text(primary_text).lower()):
+            continue
+        row_keys = _topic_local_context_keys(row)
+        if not row_keys:
+            continue
+        label_hits = [token for token in label_tokens if re.search(r"\b" + re.escape(token) + r"\b", haystack)]
+        branch_hits = [token for token in branch_context_tokens if re.search(r"\b" + re.escape(token) + r"\b", haystack)]
+        topic_hits = [token for token in topic_tokens if re.search(r"\b" + re.escape(token) + r"\b", haystack)]
+
+        # Label hits are strongest. Branch-context hits are weaker and only used
+        # to diversify the packet when exact label wording is absent from source.
+        # They remain profiler context, not positive support.
+        if not label_hits and len(branch_hits + topic_hits) < 2:
+            continue
+
+        for key in row_keys:
+            anchor_context_keys.add(key)
+            terms = anchor_terms_by_key.setdefault(key, [])
+            for term in label_hits + branch_hits + topic_hits:
+                if term not in terms:
+                    terms.append(term)
+            if key not in anchor_preview_by_key:
+                anchor_preview_by_key[key] = normalize_text(primary_text or heading)[:240]
+
+    for idx, row in enumerate(source_rows):
+        primary_text, field_path = _topic_local_primary_text(row)
+        heading = _topic_local_heading(row)
+
+        if _topic_local_looks_heading_only(primary_text, heading, row):
+            rejected_counts["heading_only_or_short_or_unsafe"] += 1
+            continue
+
+        unsafe, reason = row_is_unsafe(row, primary_text, field_path or "sentence_text", True)
+        if unsafe:
+            rejected_counts[f"row_is_unsafe:{reason}"] += 1
+            continue
+
+        haystack = normalize_text(f"{heading} {primary_text}").lower()
+        heading_l = heading.lower()
+        text_l = primary_text.lower()
+        row_context_keys = _topic_local_context_keys(row)
+        matching_anchor_keys = sorted(row_context_keys & anchor_context_keys)
+        anchor_terms = sorted({term for key in matching_anchor_keys for term in anchor_terms_by_key.get(key, [])})
+        anchor_target_terms = sorted({term for term in anchor_terms if term in set(label_tokens)})
+
+        phrase_hits = [phrase for phrase in topic_phrases if phrase and phrase in haystack]
+        heading_token_hits = [token for token in topic_tokens if re.search(r"\b" + re.escape(token) + r"\b", heading_l)]
+        text_token_hits = [token for token in topic_tokens if re.search(r"\b" + re.escape(token) + r"\b", text_l)]
+        label_token_hits = [token for token in label_tokens if re.search(r"\b" + re.escape(token) + r"\b", haystack)]
+        branch_context_hits = [token for token in branch_context_tokens if re.search(r"\b" + re.escape(token) + r"\b", haystack)]
+
+        # The scout exists for exactly the hard cases where the source may not
+        # use the KC label verbatim.  Earlier versions made topic anchoring a
+        # hard admission gate and only used label hits as a score boost.  That
+        # is backwards: for a source-observed distinctive label token, the row
+        # should be allowed into the LLM profiler packet even when the parent
+        # topic phrase is absent from that sentence.  Example shape, not a
+        # hardcoded term: a KC label contains a distinctive word, while the
+        # relevant source section uses that word under a nearby subsection
+        # rather than repeating the parent topic label.
+        has_topic_anchor = bool(phrase_hits or heading_token_hits or len(text_token_hits) >= 2)
+        has_label_anchor = bool(label_token_hits)
+        has_anchor_expansion = bool(matching_anchor_keys)
+        has_branch_context = bool(branch_context_hits)
+
+        shapes = set(evidence_shape_for_text(primary_text))
+        shape_overlap = sorted(shapes & expected_shapes)
+        has_any_shape = bool(shapes)
+
+        if not has_topic_anchor and not has_label_anchor and not has_anchor_expansion and not has_branch_context:
+            if not (widen_unanchored and has_any_shape):
+                rejected_counts["no_topic_label_or_source_neighborhood_anchor"] += 1
+                continue
+
+        topic_score = 0.0
+        topic_score += 4.0 * len(phrase_hits)
+        topic_score += 2.0 * len(heading_token_hits)
+        topic_score += 0.75 * len(text_token_hits)
+
+        label_score = 3.25 * len(label_token_hits)
+        shape_score = 0.0
+        if shape_overlap:
+            shape_score += 2.0
+        elif has_any_shape:
+            shape_score += 1.0
+
+        anchor_expansion_score = 2.75 if has_anchor_expansion else 0.0
+        # Generic guard against sibling-section swamping: when a structural
+        # neighborhood anchor carries a distinctive target-label token, it is
+        # more valuable to the profiler than a sibling section that merely
+        # matches many branch/topic tokens.  This is not positive evidence; it
+        # only makes sure the model sees the target-neighborhood window first.
+        anchor_target_score = 18.0 if anchor_target_terms else 0.0
+        branch_context_score = min(6.0, 1.25 * len(branch_context_hits))
+
+        if not has_label_anchor and not has_anchor_expansion and topic_score < 2.0 and branch_context_score < 2.0:
+            if not (widen_unanchored and has_any_shape):
+                rejected_counts["weak_topic_anchor_without_label_or_neighborhood_anchor"] += 1
+                continue
+
+        if shape_score <= 0.0 and label_score <= 0.0 and anchor_expansion_score <= 0.0 and topic_score < 4.0 and branch_context_score < 2.0:
+            if not (widen_unanchored and has_any_shape):
+                rejected_counts["topic_only_without_content_signal"] += 1
+                continue
+
+        meta = doc_page_for_row(row)
+        score = topic_score + label_score + shape_score + anchor_expansion_score + anchor_target_score + branch_context_score
+        if has_anchor_expansion and anchor_target_terms and not has_label_anchor:
+            anchor_reason = "source_neighborhood_anchor_expansion"
+        elif has_label_anchor and not has_topic_anchor:
+            anchor_reason = "target_label_anchor"
+        elif has_branch_context and not has_label_anchor:
+            anchor_reason = "sibling_context_scout"
+        elif has_anchor_expansion and not has_label_anchor:
+            anchor_reason = "source_neighborhood_anchor_expansion"
+        elif has_branch_context and not has_topic_anchor:
+            anchor_reason = "branch_context_anchor"
+        elif widen_unanchored:
+            anchor_reason = "widened_unanchored_content_scout"
+        else:
+            anchor_reason = "topic_local_content_scout"
+
+        windows.append({
+            "snippet_id": snippet_id_for_row(row, idx),
+            "text": primary_text[:1600],
+            "field_path": field_path or "sentence_text",
+            "doc_id": meta.get("doc_id"),
+            "page_index": meta.get("page_index"),
+            "patch_id": meta.get("patch_id"),
+            "block_id": meta.get("block_id"),
+            "patch_heading": heading,
+            "score": round(float(score), 6),
+            "score_reasons": [anchor_reason],
+            "widened_unanchored_pass": bool(widen_unanchored),
+            "exact_terms": [],
+            "stripped_terms": [],
+            "target_overlap": sorted(set(label_token_hits)),
+            "branch_overlap": sorted(set(phrase_hits + heading_token_hits + text_token_hits + branch_context_hits + anchor_terms)),
+            "sibling_hits": sorted(set(branch_context_hits)),
+            "source_neighborhood_anchor_terms": anchor_terms,
+            "source_neighborhood_target_anchor_terms": anchor_target_terms,
+            "target_source_neighborhood_anchor_terms": anchor_target_terms,
+            "target_source_neighborhood_anchor_count": len(anchor_target_terms),
+            "source_neighborhood_anchor_count": len(matching_anchor_keys),
+            "source_neighborhood_anchor_previews": [anchor_preview_by_key.get(key, "") for key in matching_anchor_keys[:3]],
+            "evidence_shapes": sorted(shapes),
+            "profile_window_lane": "topic_local_content_scout",
+            "profile_window_role": "profiler_input_only_not_evidence",
+            "window_supplier": "step5p_topic_local_content_scout",
+            "topic_local_policy": "content_bearing_topic_or_target_label_context_only_not_evidence",
+            "topic_local_anchor_reason": anchor_reason,
+        })
+
+    windows.sort(
+        key=lambda item: (
+            -int(bool(item.get("source_neighborhood_target_anchor_terms"))),
+            -float(item.get("score") or 0.0),
+            str(item.get("doc_id") or ""),
+            int(item.get("page_index") or 0),
+            str(item.get("snippet_id") or ""),
+        )
+    )
+
+    # Do not let one early patch monopolize the whole LLM profile packet.  The
+    # model cannot discover better route terms if all supplied windows come
+    # from the same local subsection.  This is still deterministic and
+    # domain-agnostic: first admit at most a few windows from each structural
+    # patch, then fill remaining capacity by score.
+    limit = int(max_snippets_per_kc)
+    per_patch_cap = max(2, min(4, limit // 4 or 2))
+    selected: List[Dict[str, Any]] = []
+    selected_keys: Set[str] = set()
+    per_patch_counter: Counter = Counter()
+
+    def _window_key(item: Mapping[str, Any]) -> str:
+        return "|".join([
+            normalize_text(item.get("snippet_id") or ""),
+            normalize_text(item.get("doc_id") or ""),
+            normalize_text(item.get("text") or "")[:240],
+        ])
+
+    for item in windows:
+        patch_key = normalize_text(item.get("patch_id") or item.get("patch_heading") or item.get("page_index") or "")
+        key = _window_key(item)
+        if key in selected_keys:
+            continue
+        if per_patch_counter[patch_key] >= per_patch_cap:
+            continue
+        selected.append(item)
+        selected_keys.add(key)
+        per_patch_counter[patch_key] += 1
+        if len(selected) >= limit:
+            return selected
+
+    for item in windows:
+        key = _window_key(item)
+        if key in selected_keys:
+            continue
+        selected.append(item)
+        selected_keys.add(key)
+        if len(selected) >= limit:
+            break
+
+    return selected
+
+
+def _term_is_source_observed(term: str, provenance: Sequence[Mapping[str, Any]], snippet_lookup: Mapping[str, Mapping[str, Any]]) -> bool:
+    term_low = term.lower().strip()
+    if not term_low:
+        return False
+    for prov in provenance:
+        sid = str(prov.get("snippet_id") or prov.get("sentence_id") or prov.get("source_id") or "")
+        snippet = snippet_lookup.get(sid)
+        if not snippet:
+            continue
+        if term_low in str(snippet.get("text") or "").lower():
+            return True
+    return False
+
+
+def _route_term_tokens(text: Any, *, min_len: int = 3) -> List[str]:
+    tokens: List[str] = []
+    seen: Set[str] = set()
+    for raw in re.findall(r"[A-Za-z][A-Za-z0-9]+", str(text or "").lower()):
+        if len(raw) < min_len:
+            continue
+        if raw in _TOPIC_LOCAL_GENERIC_TOKENS:
+            continue
+        if raw in seen:
+            continue
+        seen.add(raw)
+        tokens.append(raw)
+    return tokens
+
+
+def _source_ids_from_provenance(provenance: Sequence[Mapping[str, Any]]) -> List[str]:
+    out: List[str] = []
+    for prov in provenance:
+        sid = normalize_text(prov.get("snippet_id") or prov.get("sentence_id") or prov.get("source_id") or "")
+        if sid and sid not in out:
+            out.append(sid)
+    return out
+
+
+def _cue_source_ids(cue: Mapping[str, Any]) -> List[str]:
+    provenance = cue.get("provenance") or []
+    if not isinstance(provenance, list):
+        return []
+    return _source_ids_from_provenance([p for p in provenance if isinstance(p, Mapping)])
+
+
+def _target_distinctive_tokens(kc_row: Mapping[str, Any]) -> Set[str]:
+    raw = " ".join(
+        [
+            normalize_text(kc_row.get("canonical_name") or ""),
+            *[normalize_text(a) for a in (kc_row.get("aliases") or [])],
+        ]
+    )
+    return {t for t in _route_term_tokens(raw, min_len=3) if t not in _TOPIC_LOCAL_GENERIC_TOKENS}
+
+
+def _route_support_terms_for_cue(cue: Mapping[str, Any], accepted: Sequence[Mapping[str, Any]]) -> List[str]:
+    term = normalize_text(cue.get("term") or "")
+    source_ids = set(_cue_source_ids(cue))
+    if not source_ids:
+        return []
+
+    out: List[str] = []
+    for other in accepted:
+        if other is cue:
+            continue
+        other_term = normalize_text(other.get("term") or "")
+        if not other_term or other_term.lower() == term.lower():
+            continue
+        if not source_ids.intersection(_cue_source_ids(other)):
+            continue
+        # Prefer longer source-observed phrases as route support for short or ambiguous cues.
+        if len(_route_term_tokens(other_term, min_len=3)) < 2 and len(other_term) < 24:
+            continue
+        if other_term.lower() not in {x.lower() for x in out}:
+            out.append(other_term)
+    return out[:4]
+
+
+def _build_route_from_accepted_cue(
+    *,
+    kc_row: Mapping[str, Any],
+    cue: Mapping[str, Any],
+    accepted: Sequence[Mapping[str, Any]],
+    index: int,
+) -> Dict[str, Any]:
+    term = normalize_text(cue.get("term") or "")
+    cue_type = normalize_text(cue.get("cue_type") or "context_phrase") or "context_phrase"
+    term_tokens = set(_route_term_tokens(term, min_len=3))
+    target_tokens = _target_distinctive_tokens(kc_row)
+    topic_tokens = set(_route_term_tokens(" ".join([
+        normalize_text(kc_row.get("parent_topic_label") or ""),
+        *[normalize_text(x) for x in (kc_row.get("topic_path_labels") or [])],
+    ]), min_len=3))
+    target_overlap = sorted(term_tokens & target_tokens)
+    topic_overlap = sorted(term_tokens & topic_tokens)
+    support_terms = _route_support_terms_for_cue(cue, accepted)
+
+    context_only = bool(cue_type == "context_phrase")
+    # Source-observed definition phrases that do not overlap the KC surface at all
+    # are valuable for locating the parent region, but too broad to become leaf-KC
+    # support by themselves. This is generic and route-local, not domain-specific.
+    if cue_type == "definition_phrase" and not target_overlap and topic_overlap and len(term_tokens) <= 4:
+        context_only = True
+
+    if cue_type in {"formula_relation", "metric_relation"}:
+        route_type = "formula_or_metric"
+    elif context_only:
+        route_type = "context_locator"
+    elif support_terms:
+        route_type = "cooccurrence_constrained"
+    else:
+        route_type = "anchored_phrase"
+
+    activation = "context_only" if context_only else "active"
+    route_strength = "weak" if context_only else "strong"
+    support_requirement = "none"
+    if support_terms:
+        # Short cues can be good route triggers, but should not become positive
+        # support without their source-observed local support phrase. This gates
+        # only this route; it does not globally reject other valid evidence.
+        if len(term_tokens) <= 2 or len(term) <= 24:
+            support_requirement = "required_for_positive_support_on_this_route"
+        else:
+            support_requirement = "boost_only"
+    elif not context_only:
+        support_requirement = "boost_only"
+
+    provenance = cue.get("provenance") if isinstance(cue.get("provenance"), list) else []
+    source_ids = _source_ids_from_provenance([p for p in provenance if isinstance(p, Mapping)])
+
+    return {
+        "route_id": f"accepted_cue_route_{index:03d}",
+        "route_type": route_type,
+        "activation": activation,
+        "route_strength": route_strength,
+        "verification_status": "source_observed_same_window" if source_ids else "model_suggested_unverified",
+        "primary_terms_any": [term] if term else [],
+        "support_terms_any": support_terms,
+        "support_terms_all": [],
+        "negative_terms_any": [],
+        "local_window_scope": "same_sentence_or_patch",
+        "support_requirement": support_requirement,
+        "can_create_candidates": not context_only,
+        "can_create_positive_support": not context_only,
+        "broad_context_only": context_only,
+        "support_authority": "candidate_hint_step5x_must_verify",
+        "step5x_verification_required": True,
+        "route_trust": "source_observed_guidance",
+        "profile_output_role": "retrieval_control_metadata_not_evidence",
+        "source_provenance_ids": source_ids,
+        "provenance": provenance,
+        "source": "accepted_source_cue",
+        "cue_type": cue_type,
+        "target_token_overlap": target_overlap,
+        "topic_token_overlap": topic_overlap,
+    }
+
+
+def _build_retrieval_routes_from_profile(
+    *,
+    kc_row: Mapping[str, Any],
+    accepted: Sequence[Mapping[str, Any]],
+    model_obj: Mapping[str, Any],
+    snippets: Sequence[Mapping[str, Any]],
+) -> List[Dict[str, Any]]:
+    routes: List[Dict[str, Any]] = []
+    seen: Set[tuple[str, str]] = set()
+
+    for idx, cue in enumerate(accepted, start=1):
+        if not isinstance(cue, Mapping):
+            continue
+        route = _build_route_from_accepted_cue(kc_row=kc_row, cue=cue, accepted=accepted, index=idx)
+        key = (route.get("route_type") or "", "|".join(str(x).lower() for x in route.get("primary_terms_any") or []))
+        if key in seen:
+            continue
+        seen.add(key)
+        routes.append(route)
+
+    snippet_lookup = {str(s.get("snippet_id")): s for s in snippets}
+    for raw_idx, raw in enumerate(model_obj.get("retrieval_routes") or [], start=1):
+        if not isinstance(raw, Mapping):
+            continue
+        primary_terms = [normalize_text(x) for x in (raw.get("primary_terms_any") or []) if normalize_text(x)]
+        if not primary_terms:
+            continue
+        provenance = raw.get("provenance") if isinstance(raw.get("provenance"), list) else []
+        source_ids = _source_ids_from_provenance([p for p in provenance if isinstance(p, Mapping)])
+        source_verified = bool(source_ids and all(sid in snippet_lookup for sid in source_ids))
+        activation = normalize_text(raw.get("activation") or "active")
+        if activation not in {"active", "context_only", "quarantine"}:
+            activation = "quarantine"
+        support_requirement = normalize_text(raw.get("support_requirement") or "boost_only")
+        if support_requirement not in {
+            "none",
+            "boost_only",
+            "required_for_this_route",
+            "required_for_positive_support_on_this_route",
+        }:
+            support_requirement = "boost_only"
+        broad_context_only = bool(raw.get("broad_context_only") is True or activation == "context_only")
+        route = {
+            "route_id": normalize_text(raw.get("route_id") or f"model_route_{raw_idx:03d}"),
+            "route_type": normalize_text(raw.get("route_type") or "anchored_phrase"),
+            "activation": activation,
+            "route_strength": normalize_text(raw.get("route_strength") or ("strong" if source_verified else "weak")),
+            "verification_status": "source_observed_same_window" if source_verified else "model_suggested_unverified",
+            "primary_terms_any": primary_terms,
+            "support_terms_any": [normalize_text(x) for x in (raw.get("support_terms_any") or []) if normalize_text(x)],
+            "support_terms_all": [normalize_text(x) for x in (raw.get("support_terms_all") or []) if normalize_text(x)],
+            "negative_terms_any": [normalize_text(x) for x in (raw.get("negative_terms_any") or []) if normalize_text(x)],
+            "local_window_scope": normalize_text(raw.get("local_window_scope") or "same_sentence_or_patch"),
+            "support_requirement": support_requirement,
+            "can_create_candidates": bool(raw.get("can_create_candidates", True)) and activation != "quarantine" and not broad_context_only,
+            "can_create_positive_support": bool(raw.get("can_create_positive_support", True)) and activation == "active" and not broad_context_only,
+            "broad_context_only": broad_context_only,
+            "support_authority": "candidate_hint_step5x_must_verify",
+            "step5x_verification_required": True,
+            "route_trust": "model_route_guidance",
+            "profile_output_role": "retrieval_control_metadata_not_evidence",
+            "source_provenance_ids": source_ids,
+            "provenance": provenance,
+            "source": "model_retrieval_route",
+        }
+        key = (route.get("route_type") or "", "|".join(str(x).lower() for x in route.get("primary_terms_any") or []))
+        if key in seen:
+            continue
+        seen.add(key)
+        routes.append(route)
+
+    return routes
+
+
+def _route_can_create_positive_support(route: Mapping[str, Any]) -> bool:
+    if not isinstance(route, Mapping):
+        return False
+    if normalize_text(route.get("activation") or "") != "active":
+        return False
+    if route.get("broad_context_only") is True:
+        return False
+    if route.get("can_create_candidates") is not True:
+        return False
+    if route.get("can_create_positive_support") is not True:
+        return False
+    return True
+
+
+def _positive_step5x_route_count(routes: Sequence[Mapping[str, Any]]) -> int:
+    return sum(1 for route in (routes or []) if _route_can_create_positive_support(route))
+
+
+def _non_positive_retrieval_route_count(routes: Sequence[Mapping[str, Any]]) -> int:
+    return sum(
+        1
+        for route in (routes or [])
+        if isinstance(route, Mapping) and not _route_can_create_positive_support(route)
+    )
+
+
+def _build_shapeaware_profile_fields(
+    kc_row: Mapping[str, Any],
+    *,
+    query_variants: Sequence[Mapping[str, Any]],
+    retrieval_routes: Sequence[Mapping[str, Any]],
+    expected_evidence_shape_hints: Sequence[Mapping[str, Any]],
+    negative_terms: Sequence[str],
+) -> Dict[str, Any]:
+    return build_shapeaware_guidance(
+        kc_row,
+        query_variants=query_variants,
+        retrieval_routes=retrieval_routes,
+        expected_evidence_shape_hints=expected_evidence_shape_hints,
+        negative_terms=negative_terms,
+    )
+
+def _dedupe_profile_windows(windows: Sequence[Mapping[str, Any]], *, limit: int) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    seen: Set[str] = set()
+    for raw in windows:
+        if not isinstance(raw, Mapping):
+            continue
+        item = dict(raw)
+        key = "|".join([
+            normalize_text(item.get("snippet_id") or ""),
+            normalize_text(item.get("doc_id") or ""),
+            normalize_text(item.get("patch_id") or item.get("block_id") or ""),
+            normalize_text(item.get("text") or item.get("sentence_text") or item.get("source_block_text") or "")[:240],
+        ])
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(item)
+        if len(out) >= max(0, int(limit)):
+            break
+    return out
+
+
+def _enforce_profile_window_budget(
+    strict_source_windows: Sequence[Mapping[str, Any]],
+    exploratory_profile_windows: Sequence[Mapping[str, Any]],
+    *,
+    max_snippets_per_kc: int,
+) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]], Dict[str, Any]]:
+    """Enforce the profiler input budget before the LLM prompt is built.
+
+    Step 5p can have multiple source-window suppliers.  The model prompt must not
+    silently exceed the configured budget because prompt bloat caused the v2
+    timeout regressions.  Strict windows keep priority, exploratory windows fill
+    remaining capacity, and duplicates are removed deterministically.
+    """
+    limit = max(0, int(max_snippets_per_kc))
+    original_strict = len(strict_source_windows or [])
+    original_exploratory = len(exploratory_profile_windows or [])
+
+    strict = _dedupe_profile_windows(strict_source_windows or [], limit=limit)
+    remaining = max(0, limit - len(strict))
+    exploratory = _dedupe_profile_windows(exploratory_profile_windows or [], limit=remaining)
+
+    audit = {
+        "window_budget": limit,
+        "original_strict_source_window_count": original_strict,
+        "original_exploratory_profile_window_count": original_exploratory,
+        "kept_strict_source_window_count": len(strict),
+        "kept_exploratory_profile_window_count": len(exploratory),
+        "trimmed_window_count": max(0, original_strict + original_exploratory - len(strict) - len(exploratory)),
+        "budget_enforced": True,
+    }
+    return strict, exploratory, audit
+
+
+def _snippet_text_for_fallback(snippet: Mapping[str, Any]) -> str:
+    for key in ("text", "sentence_text", "source_block_text", "preview", "quote_surface"):
+        value = snippet.get(key)
+        if isinstance(value, str) and value.strip():
+            return normalize_text(value)
+    return ""
+
+
+def _snippet_source_id(snippet: Mapping[str, Any]) -> str:
+    return normalize_text(snippet.get("snippet_id") or snippet.get("sentence_id") or snippet.get("source_id") or "")
+
+
+def _source_phrase_from_snippet(text: str) -> str:
+    """Choose a compact source-observed phrase without inventing terminology."""
+    cleaned = normalize_text(text)
+    if not cleaned:
+        return ""
+
+    # Prefer the sentence containing generic definition/process markers when the
+    # window includes multiple sentences.  These markers are linguistic, not
+    # domain vocabulary.
+    pieces = [normalize_text(x) for x in re.split(r"(?<=[.!?])\s+", cleaned) if normalize_text(x)]
+    markers = re.compile(
+        r"\b(is|are|was|were|known as|defined as|called|described as|computed as|calculated as|given by|obtained by|used to|attempts to|provides)\b",
+        re.I,
+    )
+    for piece in pieces:
+        if 24 <= len(piece) <= 260 and markers.search(piece):
+            return piece
+    for piece in pieces:
+        if 24 <= len(piece) <= 220:
+            return piece
+    return cleaned[:220]
+
+
+def _fallback_support_terms(snippet: Mapping[str, Any], primary_phrase: str) -> List[str]:
+    raw_terms: List[str] = []
+    for key in (
+        "source_neighborhood_anchor_terms",
+        "branch_overlap",
+        "target_overlap",
+        "exact_terms",
+        "stripped_terms",
+    ):
+        value = snippet.get(key)
+        if isinstance(value, list):
+            raw_terms.extend(normalize_text(x) for x in value if normalize_text(x))
+
+    out: List[str] = []
+    seen: Set[str] = set()
+    primary_low = primary_phrase.lower()
+    for term in raw_terms:
+        term_low = term.lower()
+        if len(term_low) < 4:
+            continue
+        if term_low in seen:
+            continue
+        if term_low in _TOPIC_LOCAL_GENERIC_TOKENS:
+            continue
+        if term_low in primary_low:
+            continue
+        seen.add(term_low)
+        out.append(term)
+        if len(out) >= 4:
+            break
+    return out
+
+
+def _snippet_is_high_confidence_for_fallback(snippet: Mapping[str, Any]) -> bool:
+    text = _snippet_text_for_fallback(snippet)
+    if len(text) < 40:
+        return False
+
+    reasons = {normalize_text(x).lower() for x in (snippet.get("score_reasons") or snippet.get("reasons") or [])}
+    shapes = {normalize_text(x).lower() for x in (snippet.get("evidence_shapes") or [])}
+    exact_terms = [normalize_text(x) for x in (snippet.get("exact_terms") or []) if normalize_text(x)]
+    stripped_terms = [normalize_text(x) for x in (snippet.get("stripped_terms") or []) if normalize_text(x)]
+    target_overlap = [normalize_text(x) for x in (snippet.get("target_overlap") or []) if normalize_text(x)]
+    branch_overlap = [normalize_text(x) for x in (snippet.get("branch_overlap") or []) if normalize_text(x)]
+    anchor_terms = [normalize_text(x) for x in (snippet.get("source_neighborhood_anchor_terms") or []) if normalize_text(x)]
+
+    relation_or_shape = bool(
+        reasons.intersection({
+            "strong_relation_or_definition",
+            "definition_shape",
+            "formula_shape",
+            "process_shape",
+            "mechanism_shape",
+            "target_label_anchor",
+            "source_neighborhood_anchor_expansion",
+            "sibling_context_scout",
+        })
+        or shapes.intersection({
+            "definition",
+            "definition_shape",
+            "formula",
+            "formula_shape",
+            "process",
+            "process_shape",
+            "mechanism",
+            "mechanism_shape",
+            "metric",
+            "metric_relation",
+        })
+    )
+    source_bound = bool(exact_terms or stripped_terms or target_overlap or anchor_terms)
+    context_bound = bool(branch_overlap or anchor_terms)
+
+    # The fallback is only used after an LLM failure.  It should rescue KCs whose
+    # windows are already source-observed and content-bearing, not fabricate a
+    # profile from generic context.
+    return bool(relation_or_shape and (source_bound or context_bound))
+
+
+
+def _fallback_reference_like(text: str) -> bool:
+    """Generic source-attribution/reference detector for timeout fallback routes.
+
+    These passages can help locate a source region, but they should not become
+    positive-support candidate hints by themselves.
+    """
+    low = str(text or "").lower()
+    if re.search(r"\b(original\s+)?source of\b", low):
+        return True
+    if re.search(r"\b(paper|article|work|study)\s+by\b", low):
+        return True
+    if re.search(r"\bwas\s+introduced\s+by\b", low):
+        return True
+    if re.search(r"\bcontains\s+a\s+discussion\s+of\b", low):
+        return True
+    if re.search(r"\[[0-9]{2,4}\]", low):
+        return True
+    if re.search(r"\bet\s+al\.?\b", low):
+        return True
+    return False
+
+
+def _deterministic_fallback_cue_type(snippet: Mapping[str, Any], text: str) -> str:
+    shapes = {normalize_text(x).lower() for x in (snippet.get("evidence_shapes") or [])}
+    low = text.lower()
+    if shapes.intersection({"formula", "formula_shape", "metric", "metric_relation"}) or "=" in text:
+        return "formula_relation"
+    if shapes.intersection({"process", "process_shape", "mechanism", "mechanism_shape"}) or re.search(r"\b(process|procedure|step|used to|attempts to)\b", low):
+        return "process_phrase"
+    if shapes.intersection({"definition", "definition_shape"}) or re.search(
+        r"\b(defined as|known as|called|refers to|consists of)\b|\b(?:is|are)\s+(?:a|an|the)\s+[a-z][a-z0-9-]+",
+        low,
+    ):
+        return "definition_phrase"
+    return "context_phrase"
+
+
+def _build_deterministic_timeout_fallback_profile_parts(
+    *,
+    kc_row: Mapping[str, Any],
+    snippets: Sequence[Mapping[str, Any]],
+    max_routes: int = 4,
+) -> Dict[str, List[Dict[str, Any]]]:
+    """Build conservative source-observed routes when the LLM times out.
+
+    This is not a replacement for the model-backed Step 5p pass.  It is a
+    reliability guard: when the model call fails but the scout already found
+    strong source windows, the KC should not collapse to weak/no-routes.
+    """
+    accepted: List[Dict[str, Any]] = []
+    routes: List[Dict[str, Any]] = []
+    seen_phrases: Set[str] = set()
+
+    ranked = sorted(
+        [dict(s) for s in snippets if isinstance(s, Mapping) and _snippet_is_high_confidence_for_fallback(s)],
+        key=lambda s: (
+            -float(s.get("score") or 0.0),
+            normalize_text(s.get("snippet_id") or ""),
+        ),
+    )
+
+    for idx, snippet in enumerate(ranked, start=1):
+        if len(routes) >= max_routes:
+            break
+        text = _snippet_text_for_fallback(snippet)
+        phrase = _source_phrase_from_snippet(text)
+        if not phrase:
+            continue
+        phrase_key = phrase.lower()
+        if phrase_key in seen_phrases:
+            continue
+        seen_phrases.add(phrase_key)
+
+        sid = _snippet_source_id(snippet)
+        provenance = [{"snippet_id": sid, "field_path": str(snippet.get("field_path") or "text")}] if sid else []
+        cue_type = _deterministic_fallback_cue_type(snippet, phrase)
+        support_terms = _fallback_support_terms(snippet, phrase)
+        reference_like = _fallback_reference_like(phrase)
+        context_only = bool(reference_like or cue_type == "context_phrase")
+        route_type = "context_locator" if context_only else ("formula_or_metric" if cue_type in {"formula_relation", "metric_relation"} else ("cooccurrence_constrained" if support_terms else "anchored_phrase"))
+
+        accepted.append({
+            "term": phrase,
+            "cue_type": cue_type,
+            "cue_role": "retrieval_control_cue",
+            "profile_output_role": "retrieval_control_metadata_not_evidence",
+            "active": True,
+            "provenance": provenance,
+            "recommended_retrieval_channels": ["phrase", "lexical"],
+            "recommended_retrieval_role": "lexical_query",
+            "risk_flags": ["deterministic_model_timeout_fallback", "source_observed_not_llm_authored"],
+            "why_target_relevant": "Deterministic fallback from a high-confidence source window after the Step 5p model call failed.",
+        })
+
+        routes.append({
+            "route_id": f"deterministic_timeout_fallback_route_{idx:03d}",
+            "route_type": route_type,
+            "activation": "context_only" if context_only else "active",
+            "route_strength": "medium",
+            "verification_status": "source_observed_timeout_fallback",
+            "primary_terms_any": [phrase],
+            "support_terms_any": support_terms,
+            "support_terms_all": [],
+            "negative_terms_any": [],
+            "local_window_scope": "same_sentence_or_patch",
+            "support_requirement": "boost_only" if (context_only or not support_terms) else "required_for_positive_support_on_this_route",
+            "can_create_candidates": True,
+            "can_create_positive_support": bool(not context_only),
+            "broad_context_only": context_only,
+            "support_authority": "candidate_hint_step5x_must_verify",
+            "step5x_verification_required": True,
+            "route_trust": "timeout_fallback_guidance",
+            "profile_output_role": "retrieval_control_metadata_not_evidence",
+            "source_provenance_ids": [sid] if sid else [],
+            "provenance": provenance,
+            "source": "deterministic_model_timeout_fallback",
+            "cue_type": cue_type,
+            "fallback_reason": "model_call_failed_but_high_confidence_source_windows_present",
+            "fallback_reference_like": reference_like,
+        })
+
+    return {"accepted_source_cues": accepted, "retrieval_routes": routes}
+
+
+def _detect_source_sparse_label_mismatch(
+    *,
+    kc_row: Mapping[str, Any],
+    snippets: Sequence[Mapping[str, Any]],
+    accepted: Sequence[Mapping[str, Any]],
+    retrieval_routes: Sequence[Mapping[str, Any]],
+) -> Dict[str, Any]:
+    label_tokens = _target_distinctive_tokens(kc_row)
+    direct_label_hits = 0
+    neighborhood_hits = 0
+    context_previews: List[str] = []
+
+    for snippet in snippets:
+        text = _snippet_text_for_fallback(snippet).lower()
+        if not text:
+            continue
+        if any(re.search(r"\b" + re.escape(tok) + r"\b", text) for tok in label_tokens):
+            direct_label_hits += 1
+        if snippet.get("branch_overlap") or snippet.get("source_neighborhood_anchor_terms"):
+            neighborhood_hits += 1
+            if len(context_previews) < 5:
+                context_previews.append(_snippet_text_for_fallback(snippet)[:240])
+
+    has_positive_route = any(bool(r.get("can_create_positive_support")) and r.get("activation") == "active" for r in retrieval_routes)
+    has_accepted = bool(accepted)
+    mismatch = bool(not direct_label_hits and neighborhood_hits and not has_accepted and not has_positive_route)
+    return {
+        "source_sparse_label_mismatch": mismatch,
+        "direct_label_hit_window_count": direct_label_hits,
+        "neighbor_context_window_count": neighborhood_hits,
+        "context_previews": context_previews,
+        "policy": "context_only_review_required_when_label_surface_absent_but_neighbor_context_exists",
+    }
+
+
+def _canonicalize_cue_type_token(value: Any) -> str:
+    token = normalize_text(value).lower()
+    if not token:
+        return ""
+    token = _CUE_TYPE_TOKEN_RE.sub("_", token)
+    return token.strip("_")
+
+
+def _normalize_model_cue_type(raw_value: Any) -> Dict[str, Any]:
+    raw_text = normalize_text(raw_value)
+    if not raw_text:
+        raw_text = "context_phrase"
+
+    parts = [part for part in _CUE_TYPE_SPLIT_RE.split(raw_text) if normalize_text(part)]
+    if not parts:
+        parts = [raw_text]
+
+    valid: List[str] = []
+    invalid: List[str] = []
+    for part in parts:
+        canonical = _canonicalize_cue_type_token(part)
+        if canonical in ACTIVE_CUE_TYPES:
+            if canonical not in valid:
+                valid.append(canonical)
+        else:
+            cleaned = normalize_text(part)
+            if cleaned and cleaned not in invalid:
+                invalid.append(cleaned)
+
+    if not valid:
+        return {
+            "ok": False,
+            "raw": raw_text,
+            "primary": "",
+            "secondary": [],
+            "invalid": invalid,
+        }
+
+    ordered_valid = sorted(valid, key=lambda item: (_CUE_TYPE_PRIORITY.get(item, 999), item))
+    primary = ordered_valid[0]
+    secondary = [item for item in ordered_valid[1:] if item != primary]
+
+    return {
+        "ok": True,
+        "raw": raw_text,
+        "primary": primary,
+        "secondary": secondary,
+        "invalid": invalid,
+    }
+
+
+def post_validate_model_output(
+    *,
+    kc_row: Mapping[str, Any],
+    model_obj: Mapping[str, Any],
+    snippets: Sequence[Mapping[str, Any]],
+    deterministic_variants: Sequence[Mapping[str, Any]],
+) -> Dict[str, Any]:
+    snippet_lookup = {str(s.get("snippet_id")): s for s in snippets}
+    accepted = []
+    quarantined = []
+    rejected = []
+
+    sibling_labels = [str(x) for x in sibling_labels_for(kc_row, [])]
+    sibling_labels.extend([str(x) for x in kc_row.get("sibling_labels") or []])
+    sibling_keys = {x.lower() for x in sibling_labels if x}
+
+    for cue in model_obj.get("accepted_source_cues") or []:
+        if not isinstance(cue, Mapping):
+            continue
+
+        term = normalize_text(cue.get("term"))
+        provenance = cue.get("provenance") or []
+        cue_type = cue.get("cue_type") or "context_phrase"
+
+        if not term or not isinstance(provenance, list) or not provenance:
+            quarantined.append({
+                "term": term,
+                "reason": "model_accepted_cue_missing_term_or_provenance",
+                "related_snippet_ids": [],
+            })
+            continue
+
+        safe_prov = []
+        unsafe = False
+        for prov in provenance:
+            sid = str(prov.get("snippet_id") or prov.get("sentence_id") or prov.get("source_id") or "")
+            field_path = str(prov.get("field_path") or "")
+            if sid not in snippet_lookup:
+                unsafe = True
+            if not field_path:
+                field_path = str(snippet_lookup.get(sid, {}).get("field_path") or "")
+            safe_prov.append({"snippet_id": sid, "field_path": field_path})
+
+        if unsafe:
+            quarantined.append({
+                "term": term,
+                "reason": "model_cue_provenance_does_not_match_supplied_snippets",
+                "related_snippet_ids": [p.get("snippet_id") for p in safe_prov],
+            })
+            continue
+
+        if term.lower() in sibling_keys:
+            rejected.append({
+                "term": term,
+                "reason": "exact_sibling_label_not_allowed_as_target_cue",
+                "related_snippet_ids": [p.get("snippet_id") for p in safe_prov],
+            })
+            continue
+
+        if not _term_is_source_observed(term, safe_prov, snippet_lookup):
+            quarantined.append({
+                "term": term,
+                "reason": "model_term_not_verbatim_source_observed",
+                "related_snippet_ids": [p.get("snippet_id") for p in safe_prov],
+            })
+            continue
+
+        cue_type_info = _normalize_model_cue_type(cue_type)
+        if not cue_type_info["ok"]:
+            quarantined.append({
+                "term": term,
+                "reason": "unsupported_cue_type_after_normalization",
+                "related_snippet_ids": [p.get("snippet_id") for p in safe_prov],
+                "active": False,
+                "cue_type_raw": cue_type_info["raw"],
+                "unsupported_cue_type_parts": cue_type_info["invalid"],
+            })
+            continue
+
+        accepted_cue = {
+            "term": term,
+            "cue_type": cue_type_info["primary"],
+            "active": True,
+            "why_target_relevant": normalize_text(cue.get("why_target_relevant")),
+            "provenance": safe_prov,
+        }
+        if cue_type_info["raw"] != cue_type_info["primary"]:
+            accepted_cue["cue_type_raw"] = cue_type_info["raw"]
+        if cue_type_info["secondary"]:
+            accepted_cue["secondary_cue_types"] = cue_type_info["secondary"]
+        if cue_type_info["invalid"]:
+            accepted_cue["unsupported_cue_type_parts"] = cue_type_info["invalid"]
+        accepted.append(accepted_cue)
+
+    for item in model_obj.get("quarantined_terms") or []:
+        if isinstance(item, Mapping):
+            quarantined.append({
+                "term": normalize_text(item.get("term")),
+                "reason": normalize_text(item.get("reason")) or "model_quarantined",
+                "related_snippet_ids": item.get("related_snippet_ids") or [],
+                "active": False,
+            })
+
+    for item in model_obj.get("rejected_terms") or []:
+        if isinstance(item, Mapping):
+            rejected.append({
+                "term": normalize_text(item.get("term")),
+                "reason": normalize_text(item.get("reason")) or "model_rejected",
+                "related_snippet_ids": item.get("related_snippet_ids") or [],
+            })
+
+    sibling_checks = []
+    for item in model_obj.get("sibling_constraint_checks") or []:
+        if isinstance(item, Mapping):
+            sibling_checks.append({
+                "sibling_label": normalize_text(item.get("sibling_label")),
+                "status": normalize_text(item.get("status")) or "unknown",
+                "reason": normalize_text(item.get("reason")),
+                "related_snippet_ids": item.get("related_snippet_ids") or [],
+            })
+
+    retrieval_routes = _build_retrieval_routes_from_profile(
+        kc_row=kc_row,
+        accepted=accepted,
+        model_obj=model_obj,
+        snippets=snippets,
+    )
+
+    return {
+        "accepted_source_cues": accepted,
+        "quarantined_terms": quarantined,
+        "rejected_candidates": rejected,
+        "sibling_constraint_checks": sibling_checks,
+        "retrieval_routes": retrieval_routes,
+    }
+
+
+def _sibling_confirmed_anchor_scout_windows(
+    *,
+    kc_row: Mapping[str, Any],
+    source_rows: Sequence[Mapping[str, Any]],
+    max_snippets_per_kc: int,
+    window: int = SIBLING_ANCHOR_WINDOW,
+) -> List[Dict[str, Any]]:
+    """Rescue scout for exactly the failure _topic_local_content_scout_windows cannot fix:
+    when neither the KC's own label/topic vocabulary nor generic branch-token overlap finds
+    anything real (confirmed root cause, 2026-07-22/23: the KC's own canonical-name vocabulary
+    genuinely does not match the corpus - e.g. "Querying Phase" vs. the textbook's own
+    "deduction", or a compound name like "External Index: Precision" where the shared
+    "External Index" fragment pulls candidates toward a different, wrong subsection).
+
+    Domain-agnostic by construction: this never guesses alternate vocabulary. It reuses the
+    one structural fact already known for certain - the empirical page_branch_map built for
+    cross-branch scoping (branch_scoping.py), which records which pages OTHER KCs in this
+    exact branch (full topic_path_labels, no depth constant, same convention as branch-scoping)
+    already have confirmed evidence on. A KC with zero real search hits searches near those
+    confirmed sibling pages instead of falling back to undifferentiated sibling-branch filler.
+
+    Self-leaf stripping (2026-07-23 fix, confirmed via real-execution testing): the hierarchy
+    has since been refined to one dedicated leaf node per KC, whose label is the KC's own
+    canonical_name (confirmed for all 6 originally-scoped Mechanism-A/B KCs). Read raw, this
+    makes every KC's own branch key a singleton - page_branch_map, built from step5x's already
+    self-leaf-stripped topic_path_labels, then never has a sibling to find, and this scout
+    silently no-ops for the entire 159-KC registry (confirmed directly: zero KCs share an exact
+    raw branch key). This reuses the exact same stripping convention already validated in
+    evidence_stage_v3_candidate_bank.py's _topic_path_labels() - drop the last path segment
+    only when it equals the KC's own canonical_name - so this scout's branch key lines up with
+    the one page_branch_map was actually built from, rather than inventing a parallel scheme.
+    """
+    kc_id = str(kc_row.get("kc_id") or kc_row.get("knowledge_unit_id") or "")
+    topic_path_labels = [str(x) for x in (kc_row.get("topic_path_labels") or []) if str(x).strip()]
+    canonical_name = str(kc_row.get("canonical_name") or "")
+    if (
+        topic_path_labels
+        and canonical_name
+        and normalize_text(topic_path_labels[-1]) == normalize_text(canonical_name)
+    ):
+        topic_path_labels = topic_path_labels[:-1]
+    if not kc_id or not topic_path_labels:
+        return []
+    target_branch_key = "|".join(topic_path_labels)
+
+    page_branch_map = _get_page_branch_map()
+    if not page_branch_map:
+        return []
+
+    anchor_pages: Set[Tuple[str, int]] = set()
+    for key, entry in page_branch_map.items():
+        kc_ids = entry.get(target_branch_key) if isinstance(entry, Mapping) else None
+        if not kc_ids or all(str(x) == kc_id for x in kc_ids):
+            continue
+        doc_id, _, page_str = str(key).rpartition("::")
+        if not doc_id:
+            continue
+        try:
+            anchor_pages.add((doc_id, int(page_str)))
+        except (TypeError, ValueError):
+            continue
+    if not anchor_pages:
+        return []
+
+    anchor_pages_by_doc: Dict[str, List[int]] = {}
+    for doc_id, page in anchor_pages:
+        anchor_pages_by_doc.setdefault(doc_id, []).append(page)
+
+    windows: List[Dict[str, Any]] = []
+    for idx, row in enumerate(source_rows):
+        meta = doc_page_for_row(row)
+        doc_id = meta.get("doc_id")
+        page_index = meta.get("page_index")
+        if not doc_id or page_index is None or doc_id not in anchor_pages_by_doc:
+            continue
+        try:
+            page_int = int(page_index)
+        except (TypeError, ValueError):
+            continue
+        nearest_anchor_page = min(anchor_pages_by_doc[doc_id], key=lambda p: abs(page_int - p))
+        distance = abs(page_int - nearest_anchor_page)
+        if distance > window:
+            continue
+
+        primary_text, field_path = _topic_local_primary_text(row)
+        heading = _topic_local_heading(row)
+        if _topic_local_looks_heading_only(primary_text, heading, row):
+            continue
+        unsafe, _reason = row_is_unsafe(row, primary_text, field_path or "sentence_text", True)
+        if unsafe:
+            continue
+
+        shapes = set(evidence_shape_for_text(primary_text))
+        # Closer to a confirmed sibling anchor scores higher - a plain, generic distance decay,
+        # not a term match (there may be no term overlap at all, by design: that is exactly the
+        # case this scout exists for).
+        score = 10.0 - (float(distance) / max(1, window)) * 4.0
+
+        windows.append({
+            "snippet_id": snippet_id_for_row(row, idx),
+            "text": primary_text[:1600],
+            "field_path": field_path or "sentence_text",
+            "doc_id": doc_id,
+            "page_index": page_index,
+            "patch_id": meta.get("patch_id"),
+            "block_id": meta.get("block_id"),
+            "patch_heading": heading,
+            "score": round(float(score), 6),
+            "score_reasons": ["sibling_confirmed_branch_anchor"],
+            "exact_terms": [],
+            "stripped_terms": [],
+            "target_overlap": [],
+            "branch_overlap": [target_branch_key],
+            "sibling_hits": [],
+            "evidence_shapes": sorted(shapes),
+            "profile_window_lane": "sibling_confirmed_branch_anchor_scout",
+            "profile_window_role": "profiler_input_only_not_evidence",
+            "window_supplier": "step5p_sibling_confirmed_branch_anchor_scout",
+            "topic_local_policy": "confirmed_sibling_branch_page_proximity_after_label_search_starvation",
+            "topic_local_anchor_reason": "sibling_confirmed_branch_anchor",
+            "sibling_anchor_distance_pages": distance,
+            "sibling_anchor_page": f"{doc_id}::{nearest_anchor_page}",
+        })
+
+    # Tie-break within the same (distance, score) group by a term-naming signal, not file order
+    # (2026-07-23 fix, confirmed via real-execution testing): score is purely distance-derived
+    # by design (no term matching - see above), so every sentence on the same anchor page ties
+    # exactly. Without a further tie-break, whichever sentence happens to appear first in the
+    # corpus wins the per_anchor_cap slots below - confirmed directly for KC_CLF_UND_002: page
+    # 144 has both a generic "Classification is the task of..." sentence and the actually-
+    # grounding "...is known as deduction" sentence, and file order picked the generic one,
+    # leaving the KC abstained even though the right page was found.
+    #
+    # The existing evidence_shape_for_text() DEFINITION_CUE (used above for evidence_shapes) was
+    # tried first and rejected: it also matches bare "is"/"are", which is true of nearly every
+    # English sentence (confirmed: 34/34 page-144 candidate sentences all carried
+    # "definition_phrase"), so it provides no real discrimination. _NAMING_CUE below is a
+    # narrower subset of that same regex family - only the phrasings that specifically introduce
+    # or name a term ("known as", "referred to as", "defined as", "denotes", "termed", "is/are
+    # called") - confirmed narrower directly: only 8/34 page-144 sentences match, and the
+    # "deduction" sentence is among them. Still fully domain-agnostic (a generic linguistic
+    # term-introduction pattern, not this KC's own vocabulary).
+    naming_matched = [bool(_NAMING_CUE.search(str(item.get("text") or ""))) for item in windows]
+    for item, matched in zip(windows, naming_matched):
+        item["sibling_anchor_naming_cue_match"] = matched
+    windows.sort(key=lambda item: (
+        item.get("sibling_anchor_distance_pages", window + 1),
+        -float(item.get("score") or 0.0),
+        0 if item.get("sibling_anchor_naming_cue_match") else 1,
+    ))
+
+    # A branch with many sibling KCs has many anchor pages, and file-scan order otherwise lets
+    # whichever anchor's page happens to sort first in the corpus monopolize the whole budget -
+    # confirmed directly: without this cap, KC_CLF_UND_002's real page (144, anchored by its
+    # closest sibling KC_CLF_UND_001) was silently squeezed out entirely by two unrelated
+    # siblings' pages that merely came first in file order. Same diversification principle as
+    # _topic_local_content_scout_windows' per_patch_cap, applied per distinct anchor page instead
+    # of per patch.
+    #
+    # Naming-cue matches get their own separate per-anchor budget (2026-07-23 fix), rather than
+    # sharing the generic cap with non-naming filler from the same page: confirmed page 144 alone
+    # has 8 naming-cue sentences, more than the generic per_anchor_cap (3) could ever hold even
+    # after the sort above, so without a dedicated budget the deduction sentence (4th in file
+    # order among those 8) would still be squeezed out by earlier-appearing naming matches on the
+    # same page.
+    limit = int(max_snippets_per_kc)
+    per_anchor_cap = max(1, min(3, limit // 4 or 1))
+    selected: List[Dict[str, Any]] = []
+    per_anchor_counter: Counter = Counter()
+    per_anchor_naming_counter: Counter = Counter()
+    overflow: List[Dict[str, Any]] = []
+    for item in windows:
+        anchor_key = item.get("sibling_anchor_page")
+        if item.get("sibling_anchor_naming_cue_match"):
+            if per_anchor_naming_counter[anchor_key] < per_anchor_cap:
+                selected.append(item)
+                per_anchor_naming_counter[anchor_key] += 1
+            else:
+                overflow.append(item)
+        elif per_anchor_counter[anchor_key] < per_anchor_cap:
+            selected.append(item)
+            per_anchor_counter[anchor_key] += 1
+        else:
+            overflow.append(item)
+        if len(selected) >= limit:
+            break
+    if len(selected) < limit:
+        selected.extend(overflow[: limit - len(selected)])
+    return selected[:limit]
+
+
+def build_profile_for_kc(
+    *,
+    kc_row: Mapping[str, Any],
+    all_kc_rows: Sequence[Mapping[str, Any]],
+    source_rows: Sequence[Mapping[str, Any]],
+    dynamic_broad_tokens: Set[str],
+    max_snippets_per_kc: int,
+    min_snippet_score: float,
+    use_model: bool,
+    model_config: Mapping[str, Any],
+    llm_policy: str | None = None,
+    base_profile: Mapping[str, Any] | None = None,
+    feedback_gap_request: Mapping[str, Any] | None = None,
+    feedback_round: int | None = None,
+    embedding_index_root: Path | None = None,
+) -> Dict[str, Any]:
+    variants = deterministic_label_variants(
+        str(kc_row.get("canonical_name") or ""),
+        kc_row.get("aliases") or [],
+    )
+    siblings = sibling_labels_for(kc_row, all_kc_rows)
+    topic_path_labels = kc_row.get("topic_path_labels") or []
+
+    # embedding_index_root (2026-07-25): when provided, reuses the SAME Ollama instance/base_url
+    # step_05p's own use_model LLM classification call already starts (model_config["base_url"]),
+    # not a new server - just an additional model (qwen3-embedding:8b) served from it.
+    profile_windows = collect_profile_windows_with_source_surface_kernel(
+        kc_row=kc_row,
+        all_kc_rows=all_kc_rows,
+        source_rows=source_rows,
+        max_snippets_per_kc=max_snippets_per_kc,
+        min_score=min_snippet_score,
+        dynamic_broad_token_min_df=max(1, len(dynamic_broad_tokens) or 1),
+        sentence_source_manifest="step4_5_sentence_overlay",
+        sentence_source_jsonl="sentence_corpus.jsonl",
+        embedding_index_root=embedding_index_root,
+        ollama_host=str(model_config.get("base_url")) if embedding_index_root is not None else None,
+    )
+    strict_source_windows = profile_windows["strict_source_windows"]
+    exploratory_profile_windows = profile_windows["exploratory_profile_windows"]
+    source_window_supplier_stats = profile_windows.get("source_window_supplier_stats", {})
+    topic_local_context_scout_windows: List[Dict[str, Any]] = []
+    topic_local_context_scout_used = False
+
+    if not strict_source_windows and not exploratory_profile_windows:
+        topic_local_context_scout_windows = _topic_local_content_scout_windows(
+            kc_row=kc_row,
+            source_rows=source_rows,
+            variants=variants,
+            max_snippets_per_kc=max_snippets_per_kc,
+            dynamic_broad_tokens=dynamic_broad_tokens,
+        )
+        # Crowd-out fix (2026-07-24, confirmed via real-execution census): sibling-anchor
+        # windows used to be unconditionally prepended ahead of topic_local_content_scout's own
+        # windows, then both were trimmed to the shared max_snippets_per_kc budget together.
+        # topic_local_content_scout always tries to fill its own full budget regardless of
+        # quality (confirmed: even pure generic branch-token filler fills to capacity), so a
+        # raw window-count check can't tell genuine KC-specific hits apart from filler. The
+        # window dict already carries a directly-usable, domain-agnostic signal for this:
+        # target_overlap (populated only when the row matched one of the KC's OWN label/alias
+        # tokens, scored via anchor_reason == "target_label_anchor" - the strongest tier that
+        # function's own docstring defines, versus weaker branch/topic-only hits). Real-execution
+        # census confirmed this discriminates correctly: KC_CLF_NB_008/KC_CLU_SIM_002/
+        # KC_EVAL_BASIC_010/KC_FSEL_STAT_004 each had multiple real target_overlap hits (their
+        # own working candidates, now correctly preserved); the original 6 Mechanism-A/B targets
+        # (e.g. KC_CLF_UND_002) had zero target_overlap hits across all 12 topic_local windows
+        # (confirmed: their canonical-name vocabulary genuinely doesn't appear in the corpus),
+        # matching the "0-1" low-signal threshold below.
+        label_anchored_window_count = sum(
+            1 for w in topic_local_context_scout_windows if w.get("target_overlap")
+        )
+        sibling_anchor_scout_windows: List[Dict[str, Any]] = []
+        widened_scout_windows: List[Dict[str, Any]] = []
+        if label_anchored_window_count <= 1:
+            sibling_anchor_scout_windows = _sibling_confirmed_anchor_scout_windows(
+                kc_row=kc_row,
+                source_rows=source_rows,
+                max_snippets_per_kc=max_snippets_per_kc,
+            )
+            # Structural retrieval-cascade fix (2026-07-28): label_anchored_window_count <= 1
+            # here means the KC's own canonical name + aliases contributed no genuine
+            # distinctive corpus vocabulary - topic_local_content_scout's own 20-window
+            # output (confirmed via real-execution audit for all 33 flagged KCs) is
+            # branch/topic-level filler, not KC-specific content. Anchor-based token
+            # filtering has nothing real left to filter FOR in this narrow case, so run
+            # an additional widened pass that drops the anchor requirement but keeps
+            # every existing safety filter (heading-only/unsafe/bibliographic/prompt-like)
+            # plus a structural evidence-shape requirement in its place. This never
+            # triggers for KCs with real anchored signal (label_anchored_window_count > 1)
+            # or for KCs that never reach this branch at all (strict/exploratory > 0).
+            widened_scout_windows = _topic_local_content_scout_windows(
+                kc_row=kc_row,
+                source_rows=source_rows,
+                variants=variants,
+                max_snippets_per_kc=max_snippets_per_kc,
+                dynamic_broad_tokens=dynamic_broad_tokens,
+                widen_unanchored=True,
+            )
+
+        # Sibling-confirmed anchors first, then the widened unanchored pass (both only
+        # reached when topic_local_content_scout found little/nothing KC-specific - see
+        # gate above), then topic_local_content_scout's own narrow output last, since in
+        # this branch it is confirmed filler-dominated and should not crowd out real or
+        # widened candidates once _enforce_profile_window_budget truncates by list order.
+        # When topic_local_content_scout DID find real label-anchored content, both
+        # sibling_anchor_scout_windows and widened_scout_windows stay empty and this is a
+        # no-op concatenation, exactly matching pre-fix behavior for those KCs.
+        combined_scout_windows = sibling_anchor_scout_windows + widened_scout_windows + topic_local_context_scout_windows
+        if combined_scout_windows:
+            exploratory_profile_windows = combined_scout_windows
+            topic_local_context_scout_windows = combined_scout_windows
+            topic_local_context_scout_used = True
+            source_window_supplier_stats = dict(source_window_supplier_stats or {})
+            source_window_supplier_stats["topic_local_content_scout"] = {
+                "used": True,
+                "window_count": len(topic_local_context_scout_windows),
+                "role": "profiler_input_only_not_evidence",
+                "policy": "content_bearing_topic_context_after_surface_retrieval_starvation",
+            }
+            if sibling_anchor_scout_windows:
+                source_window_supplier_stats["sibling_confirmed_branch_anchor_scout"] = {
+                    "used": True,
+                    "window_count": len(sibling_anchor_scout_windows),
+                    "role": "profiler_input_only_not_evidence",
+                    "policy": "confirmed_sibling_branch_page_proximity_after_label_search_starvation",
+                    "gate_label_anchored_topic_local_window_count": label_anchored_window_count,
+                }
+            if widened_scout_windows:
+                source_window_supplier_stats["topic_local_content_scout_widened"] = {
+                    "used": True,
+                    "window_count": len(widened_scout_windows),
+                    "role": "profiler_input_only_not_evidence",
+                    "policy": "unanchored_content_widening_after_scout_starvation_evidence_shape_gated",
+                    "gate_label_anchored_topic_local_window_count": label_anchored_window_count,
+                }
+
+    strict_source_windows, exploratory_profile_windows, profile_window_budget_audit = _enforce_profile_window_budget(
+        strict_source_windows,
+        exploratory_profile_windows,
+        max_snippets_per_kc=max_snippets_per_kc,
+    )
+    if topic_local_context_scout_used:
+        kept_topic_ids = {normalize_text(w.get("snippet_id") or "") for w in exploratory_profile_windows}
+        topic_local_context_scout_windows = [
+            w for w in topic_local_context_scout_windows
+            if normalize_text(w.get("snippet_id") or "") in kept_topic_ids
+        ]
+
+    snippets = strict_source_windows + exploratory_profile_windows
+
+    accepted: List[Dict[str, Any]] = []
+    quarantined: List[Dict[str, Any]] = []
+    rejected: List[Dict[str, Any]] = []
+    sibling_checks: List[Dict[str, Any]] = []
+    retrieval_routes: List[Dict[str, Any]] = []
+    model_error = ""
+    llm_policy_norm = str(llm_policy or ("always" if use_model else "never")).strip().lower()
+    if llm_policy_norm not in {"always", "edge", "never"}:
+        llm_policy_norm = "always" if use_model else "never"
+    model_call_attempted = False
+    model_call_status = "not_requested"
+    model_call_skipped_reason = ""
+    if not use_model or llm_policy_norm == "never":
+        model_call_status = "skipped"
+        model_call_skipped_reason = "model_disabled_or_llm_policy_never"
+    elif not snippets:
+        model_call_status = "skipped"
+        model_call_skipped_reason = "no_profile_windows_to_classify"
+
+    if use_model and llm_policy_norm != "never" and snippets:
+        model_call_attempted = True
+        model_call_status = "attempted"
+        try:
+            kc_meta = {
+                "kc_id": kc_row.get("kc_id"),
+                "canonical_name": kc_row.get("canonical_name"),
+                "aliases": kc_row.get("aliases") or [],
+                "topic_path_labels": topic_path_labels,
+                "sibling_labels": siblings,
+            }
+            model_obj = ollama_chat_json(
+                base_url=str(model_config.get("base_url") or "http://localhost:11434"),
+                model=str(model_config.get("model") or "qwen3-14b-kc-8k"),
+                system_prompt=str(model_config.get("system_prompt") or SYSTEM_PROMPT),
+                user_prompt=build_user_prompt(
+                    kc_meta,
+                    snippets,
+                    strict_source_windows=strict_source_windows,
+                    exploratory_profile_windows=exploratory_profile_windows,
+                    base_profile=base_profile,
+                    feedback_gap_request=feedback_gap_request,
+                    feedback_round=feedback_round,
+                ),
+                timeout_seconds=int(model_config.get("timeout_seconds") or 180),
+                temperature=float(model_config.get("temperature") or 0.0),
+                think=bool(model_config.get("think", False)),
+                seed=(int(model_config["seed"]) if model_config.get("seed") is not None else None),
+            )
+            model_validated = post_validate_model_output(
+                kc_row={**dict(kc_row), "sibling_labels": siblings},
+                model_obj=model_obj,
+                snippets=snippets,
+                deterministic_variants=variants,
+            )
+            accepted.extend(model_validated["accepted_source_cues"])
+            quarantined.extend(model_validated["quarantined_terms"])
+            rejected.extend(model_validated["rejected_candidates"])
+            sibling_checks.extend(model_validated["sibling_constraint_checks"])
+            retrieval_routes.extend(model_validated.get("retrieval_routes") or [])
+            model_call_status = "parsed_valid_json"
+        except Exception as exc:
+            model_error = repr(exc)
+            model_call_status = "failed"
+            quarantined.append({
+                "term": "",
+                "reason": "model_call_failed:" + repr(exc),
+                "related_snippet_ids": [],
+                "active": False,
+            })
+
+    deterministic_fallback_used = False
+    deterministic_fallback_reason = ""
+    if model_error and snippets and not retrieval_routes:
+        fallback_parts = _build_deterministic_timeout_fallback_profile_parts(
+            kc_row=kc_row,
+            snippets=snippets,
+            max_routes=min(4, max(1, int(max_snippets_per_kc or 1) // 3)),
+        )
+        fallback_accepted = fallback_parts.get("accepted_source_cues") or []
+        fallback_routes = fallback_parts.get("retrieval_routes") or []
+        if fallback_routes:
+            accepted.extend(fallback_accepted)
+            retrieval_routes.extend(fallback_routes)
+            deterministic_fallback_used = True
+            deterministic_fallback_reason = "model_call_failed_but_high_confidence_source_windows_present"
+
+    label_mismatch_audit = _detect_source_sparse_label_mismatch(
+        kc_row=kc_row,
+        snippets=snippets,
+        accepted=accepted,
+        retrieval_routes=retrieval_routes,
+    )
+
+    query_variants: List[Dict[str, Any]] = []
+    for v in variants:
+        query_variants.append({
+            "query": v["term"],
+            "source": "deterministic_label_variant",
+            "variant_type": v.get("variant_type"),
+            "active": True,
+        })
+
+    for cue in accepted:
+        query_variant = {
+            "query": cue["term"],
+            "source": "accepted_source_cue",
+            "cue_type": cue.get("cue_type"),
+            "active": True,
+            "provenance": cue.get("provenance") or [],
+        }
+        if cue.get("cue_type_raw"):
+            query_variant["cue_type_raw"] = cue.get("cue_type_raw")
+        if cue.get("secondary_cue_types"):
+            query_variant["secondary_cue_types"] = cue.get("secondary_cue_types")
+        if cue.get("unsupported_cue_type_parts"):
+            query_variant["unsupported_cue_type_parts"] = cue.get("unsupported_cue_type_parts")
+        query_variants.append(query_variant)
+
+    seen_q = set()
+    dedup_queries = []
+    for q in query_variants:
+        key = str(q.get("query") or "").lower()
+        if not key or key in seen_q:
+            continue
+        seen_q.add(key)
+        dedup_queries.append(q)
+
+    shapes = set(infer_expected_evidence_shapes(str(kc_row.get("canonical_name") or ""), variants))
+    for snip in snippets:
+        shapes.update(snip.get("evidence_shapes") or [])
+    for cue in accepted:
+        shapes.add(str(cue.get("cue_type") or "context_phrase"))
+
+    if strict_source_windows:
+        profile_input_status = "strict_windows_available"
+    elif topic_local_context_scout_used:
+        profile_input_status = "topic_local_content_scout"
+    elif exploratory_profile_windows:
+        profile_input_status = "exploratory_only"
+    else:
+        profile_input_status = "no_windows"
+
+    positive_route_count = _positive_step5x_route_count(retrieval_routes)
+    non_positive_route_count = _non_positive_retrieval_route_count(retrieval_routes)
+
+    if accepted or positive_route_count > 0:
+        profile_status = "usable"
+    elif snippets and retrieval_routes:
+        profile_status = "needs_rescue"
+    elif snippets:
+        profile_status = "weak"
+    else:
+        profile_status = "reject"
+
+    shapeaware_hints = build_expected_evidence_shape_hints(
+        sorted(shapes),
+        accepted,
+        [*strict_source_windows, *exploratory_profile_windows, *snippets],
+    )
+    shapeaware_negative_terms = [
+        *[
+            normalize_text(item.get("term"))
+            for item in rejected
+            if isinstance(item, Mapping) and normalize_text(item.get("term"))
+        ],
+        *[
+            normalize_text(item.get("term"))
+            for item in quarantined
+            if isinstance(item, Mapping) and normalize_text(item.get("term"))
+        ],
+    ]
+
+    profile = {
+        "profile_contract_version": PROFILE_CONTRACT_VERSION,
+        "kc_id": kc_row.get("kc_id"),
+        "knowledge_unit_id": normalize_knowledge_unit_fields(kc_row).get("knowledge_unit_id") or kc_row.get("kc_id"),
+        "knowledge_unit_type": normalize_knowledge_unit_fields(kc_row).get("knowledge_unit_type") or "kc",
+        "canonical_name": kc_row.get("canonical_name"),
+        "aliases": kc_row.get("aliases") or [],
+        "topic_path_labels": topic_path_labels,
+        "parent_topic_label": kc_row.get("parent_topic_label") or "",
+        "sibling_labels": siblings,
+        "deterministic_label_variants": variants,
+        "accepted_source_cues": accepted,
+        "query_variants": dedup_queries,
+        "retrieval_routes": retrieval_routes,
+        "expected_evidence_shapes": sorted(shapes),
+        "branch_constraints": {
+            "topic_path_labels": topic_path_labels,
+            "require_compatible_source_context_when_available": True,
+        },
+        "sibling_constraint_checks": sibling_checks,
+        "quarantined_terms": quarantined,
+        "rejected_candidates": rejected,
+        "profile_status": profile_status,
+        "audit": {
+            "profile_input_status": profile_input_status,
+            "strict_source_window_count": len(strict_source_windows),
+            "exploratory_profile_window_count": len(exploratory_profile_windows),
+            "strict_source_windows": strict_source_windows,
+            "exploratory_profile_windows": exploratory_profile_windows,
+            "retrieval_route_count": len(retrieval_routes),
+            "positive_step5x_route_count": positive_route_count,
+            "non_positive_retrieval_route_count": non_positive_route_count,
+            "candidate_snippet_count": len(snippets),
+            "candidate_snippets": snippets,
+            "candidate_snippets_compat_note": "compatibility view; use strict_source_windows and exploratory_profile_windows for Step 5p semantics",
+            "topic_local_content_scout_used": bool(topic_local_context_scout_used),
+            "topic_local_content_scout_window_count": len(topic_local_context_scout_windows),
+            "topic_local_content_scout_windows": topic_local_context_scout_windows,
+            "source_window_supplier": source_window_supplier_stats,
+            "profile_window_budget": profile_window_budget_audit,
+            "deterministic_model_timeout_fallback_used": bool(deterministic_fallback_used),
+            "deterministic_model_timeout_fallback_reason": deterministic_fallback_reason,
+            "source_sparse_label_mismatch": label_mismatch_audit,
+            "model_used": bool(use_model),
+            "llm_policy": llm_policy_norm,
+            "model_call_attempted": bool(model_call_attempted),
+            "model_call_status": model_call_status,
+            "model_call_skipped_reason": model_call_skipped_reason,
+            "model_used_for_profile": bool(model_call_attempted and not model_error),
+            "model_error": model_error,
+            "dynamic_broad_token_count": len(dynamic_broad_tokens),
+            "feedback_mode": bool(feedback_gap_request),
+            "feedback_round": int(feedback_round or 0),
+            "feedback_gap_request_id": str((feedback_gap_request or {}).get("gap_request_id") or ""),
+            "validation": {},
+        },
+    }
+
+    profile.update(build_role_target_contract(
+        unit_row={**dict(kc_row), "knowledge_unit_type": normalize_knowledge_unit_fields(kc_row).get("knowledge_unit_type") or "kc"},
+        accepted_source_cues=accepted,
+        retrieval_routes=retrieval_routes,
+        strict_source_windows=strict_source_windows,
+        exploratory_profile_windows=exploratory_profile_windows,
+        quarantined_terms=quarantined,
+        rejected_terms=rejected,
+        expected_evidence_shapes=sorted(shapes),
+        profile_input_status=profile_input_status,
+        source_sparse_label_mismatch=label_mismatch_audit,
+    ))
+
+    profile.update(
+        _build_shapeaware_profile_fields(
+            kc_row,
+            query_variants=dedup_queries,
+            retrieval_routes=retrieval_routes,
+            expected_evidence_shape_hints=shapeaware_hints,
+            negative_terms=shapeaware_negative_terms,
+        )
+    )
+
+    profile = harden_profile_output(profile)
+
+    validation = validate_profile(profile)
+    profile["audit"]["validation"] = validation
+    if not validation["ok"]:
+        profile["profile_status"] = "reject"
+
+    return profile
+
+
+def build_profiles(
+    *,
+    registry_jsonl: Path,
+    source_overlay_jsonl: Path,
+    output_root: Path,
+    set_manifest_root: Path,
+    run_id: str,
+    exact_kc_ids: Sequence[str] | None = None,
+    limit_kcs: int | None = None,
+    max_snippets_per_kc: int = 12,
+    min_snippet_score: float = 4.0,
+    use_model: bool = False,
+    llm_policy: str | None = None,
+    model_config: Mapping[str, Any] | None = None,
+    dynamic_broad_token_min_df: int = 12,
+    resume: bool = False,
+    checkpoint_every: int = 1,
+    base_profile_jsonl: Path | None = None,
+    feedback_gap_jsonl: Path | None = None,
+    feedback_round: int = 0,
+    embedding_index_root: Path | None = None,
+
+    **_ignored_step5p_runner_compat_kwargs: object) -> Dict[str, Any]:
+    """Build Step 5p retrieval profiles with optional per-KC checkpointing.
+
+    Default behavior stays strict: without resume=True, an existing run_id is rejected.
+    With resume=True, completed profile rows in kc_retrieval_profiles.jsonl are reused
+    and only missing selected KCs are built. Step 5p windows remain profiler inputs only,
+    not evidence.
+    """
+    registry_rows_raw = read_jsonl(registry_jsonl)
+    source_rows = read_jsonl(source_overlay_jsonl)
+    feedback_round = int(feedback_round or 0)
+
+    base_profiles_by_kc: Dict[str, Dict[str, Any]] = {}
+    if base_profile_jsonl is not None:
+        for row in read_jsonl(base_profile_jsonl):
+            kc_id = str(row.get("kc_id") or "")
+            if kc_id:
+                base_profiles_by_kc[kc_id] = dict(row)
+
+    gap_requests_by_kc: Dict[str, Dict[str, Any]] = {}
+    if feedback_gap_jsonl is not None:
+        for row in read_jsonl(feedback_gap_jsonl):
+            kc_id = str(row.get("kc_id") or "")
+            if kc_id:
+                gap_requests_by_kc[kc_id] = dict(row)
+
+    if feedback_gap_jsonl is not None and not exact_kc_ids:
+        exact_kc_ids = [str(kc_id) for kc_id in gap_requests_by_kc.keys()]
+
+    # Always keep topic rows available as context when the registry provides
+    # them. Selection remains KC-only unless exact IDs request topic rows. This
+    # preserves the current full-run behavior while allowing hierarchy-overlay
+    # registries to improve KC profiling with parent/topic context.
+    unit_rows = extract_knowledge_unit_rows(
+        registry_rows_raw,
+        include_topics=True,
+    )
+    kc_rows = [row for row in unit_rows if str(row.get("knowledge_unit_type") or "") == "kc"]
+    include_topics_for_exact_selection = bool(exact_kc_ids)
+    selection_pool = unit_rows if include_topics_for_exact_selection else kc_rows
+    selected_rows = select_kcs(selection_pool, exact_kc_ids=exact_kc_ids, limit_kcs=limit_kcs)
+    selected_ids = [str(row.get("kc_id") or row.get("knowledge_unit_id") or "") for row in selected_rows if row.get("kc_id") or row.get("knowledge_unit_id")]
+    selected_topic_rows = [row for row in selected_rows if str(row.get("knowledge_unit_type") or "") == "topic"]
+
+    dynamic_broad_tokens = build_dynamic_broad_tokens(kc_rows, min_df=dynamic_broad_token_min_df)
+
+    processed_dir = output_root / run_id
+    set_manifest_path = set_manifest_root / f"{run_id}_step5p_kc_retrieval_profile_set.json"
+
+    profile_jsonl = processed_dir / "kc_retrieval_profiles.jsonl"
+    stats_json = processed_dir / "kc_retrieval_profile_stats.json"
+    schema_snapshot_json = processed_dir / "kc_retrieval_profile_schema_snapshot.json"
+    audit_md = processed_dir / "kc_retrieval_profile_audit.md"
+    checkpoint_json = processed_dir / "kc_retrieval_profile_checkpoint.json"
+
+    if not resume and (processed_dir.exists() or set_manifest_path.exists()):
+        raise RuntimeError(f"Requested run_id already exists: {run_id}")
+
+    processed_dir.mkdir(parents=True, exist_ok=bool(resume))
+    set_manifest_path.parent.mkdir(parents=True, exist_ok=True)
+
+    existing_by_kc: Dict[str, Dict[str, Any]] = {}
+    duplicate_existing_kc_ids: List[str] = []
+    if resume and profile_jsonl.exists():
+        for row in read_jsonl(profile_jsonl):
+            kc_id = str(row.get("kc_id") or "")
+            if not kc_id:
+                continue
+            if kc_id in existing_by_kc:
+                duplicate_existing_kc_ids.append(kc_id)
+                continue
+            existing_by_kc[kc_id] = dict(row)
+
+    if duplicate_existing_kc_ids:
+        raise RuntimeError(
+            "Cannot resume Step 5p run with duplicate existing profile rows: "
+            + ", ".join(sorted(set(duplicate_existing_kc_ids)))
+        )
+
+    profiles: List[Dict[str, Any]] = []
+    for kc_row in selected_rows:
+        kc_id = str(kc_row.get("kc_id") or "")
+        if kc_id in existing_by_kc:
+            profiles.append(existing_by_kc[kc_id])
+
+    completed_ids = {str(p.get("kc_id") or p.get("knowledge_unit_id") or "") for p in profiles if p.get("kc_id") or p.get("knowledge_unit_id")}
+    remaining_rows = [row for row in selected_rows if str(row.get("kc_id") or row.get("knowledge_unit_id") or "") not in completed_ids]
+
+    checkpoint_every = max(1, int(checkpoint_every or 1))
+
+    def append_profile_row(path: Path, row: Mapping[str, Any]) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+
+    def ordered_profiles() -> List[Dict[str, Any]]:
+        by_id = {str(p.get("kc_id") or p.get("knowledge_unit_id") or ""): p for p in profiles if p.get("kc_id") or p.get("knowledge_unit_id")}
+        return [by_id[unit_id] for unit_id in selected_ids if unit_id in by_id]
+
+    def build_stats(current_profiles: Sequence[Mapping[str, Any]], final: bool) -> Dict[str, Any]:
+        collection_validation = validate_profile_collection(current_profiles)
+        status_counter = Counter(str(p.get("profile_status") or "") for p in current_profiles)
+        accepted_counter = Counter()
+        for p in current_profiles:
+            accepted_counter[str(p.get("kc_id"))] = len(p.get("accepted_source_cues") or [])
+
+        completed_now = [str(p.get("kc_id") or p.get("knowledge_unit_id") or "") for p in current_profiles if p.get("kc_id") or p.get("knowledge_unit_id")]
+        remaining_now = [unit_id for unit_id in selected_ids if unit_id not in set(completed_now)]
+
+        return {
+            "profile_contract_version": PROFILE_CONTRACT_VERSION,
+            "run_id": run_id,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "inputs": {
+                "registry_jsonl": registry_jsonl.as_posix(),
+                "source_overlay_jsonl": source_overlay_jsonl.as_posix(),
+                "exact_kc_ids": list(exact_kc_ids or []),
+                "limit_kcs": limit_kcs,
+                "base_profile_jsonl": base_profile_jsonl.as_posix() if base_profile_jsonl is not None else "",
+                "feedback_gap_jsonl": feedback_gap_jsonl.as_posix() if feedback_gap_jsonl is not None else "",
+                "feedback_round": feedback_round,
+            },
+            "counts": {
+                "registry_knowledge_unit_rows": len(unit_rows),
+                "registry_kc_rows": len(kc_rows),
+                "registry_topic_rows": sum(1 for row in unit_rows if str(row.get("knowledge_unit_type") or "") == "topic"),
+                "selected_knowledge_unit_rows": len(selected_rows),
+                "selected_kc_rows": sum(1 for row in selected_rows if str(row.get("knowledge_unit_type") or "") == "kc"),
+                "selected_topic_rows": len(selected_topic_rows),
+                "source_overlay_rows": len(source_rows),
+                "profiles": len(current_profiles),
+                "completed_profiles": len(completed_now),
+                "remaining_profiles": len(remaining_now),
+            },
+            "profile_status_counter": dict(status_counter),
+            "accepted_cue_count_by_kc": dict(accepted_counter),
+            "collection_validation": collection_validation,
+            "active_pointer_policy": "do_not_update_active_pointer",
+            "behavior": {
+                "use_model": bool(use_model),
+                "llm_policy": str(llm_policy or ("always" if use_model else "never")),
+                "max_snippets_per_kc": max_snippets_per_kc,
+                "min_snippet_score": min_snippet_score,
+                "dynamic_broad_token_min_df": dynamic_broad_token_min_df,
+                "resume": bool(resume),
+                "checkpoint_every": checkpoint_every,
+                "feedback_mode": bool(feedback_gap_jsonl is not None),
+                "feedback_round": feedback_round,
+                "base_profile_count": len(base_profiles_by_kc),
+                "gap_request_count": len(gap_requests_by_kc),
+            },
+            "checkpointing": {
+                "enabled": bool(resume),
+                "final": bool(final),
+                "completed_kc_ids": completed_now,
+                "remaining_kc_ids": remaining_now,
+                "profile_jsonl": profile_jsonl.as_posix(),
+                "checkpoint_json": checkpoint_json.as_posix(),
+            },
+        }
+
+    def write_sidecars(current_profiles: Sequence[Mapping[str, Any]], final: bool) -> Dict[str, Any]:
+        current_profiles = list(current_profiles)
+        stats = build_stats(current_profiles, final=final)
+
+        schema_snapshot = {
+            "profile_contract_version": PROFILE_CONTRACT_VERSION,
+            "required_top_level_fields": sorted(list(current_profiles[0].keys())) if current_profiles else [],
+            "audit_profile_window_fields": [
+                "profile_input_status",
+                "strict_source_windows",
+                "exploratory_profile_windows",
+                "candidate_snippets",
+            ],
+            "accepted_cue_required_fields": ["term", "cue_type", "active", "provenance"],
+            "query_variant_required_fields": ["query", "source", "active"],
+            "profile_output_hardening_fields": [
+                "retrieval_role",
+                "retrieval_channels",
+                "risk_flags",
+                "step5x_eligible",
+                "requires_hierarchy_guard",
+                "expected_evidence_shape_hints",
+            ],
+            "forbidden_seed_fields": ["seed_definition", "seed_floor", "seed_floor_fallback"],
+            "resumability_fields": [
+                "resume",
+                "checkpoint_every",
+                "completed_profiles",
+                "remaining_profiles",
+                "completed_kc_ids",
+                "remaining_kc_ids",
+            ],
+        }
+
+        write_json(stats_json, stats)
+        write_json(schema_snapshot_json, schema_snapshot)
+        write_json(checkpoint_json, stats["checkpointing"])
+
+        md = []
+        md.append("# KC Retrieval Profile Builder Audit")
+        md.append("")
+        md.append("## Summary")
+        md.append("")
+        md.append("```json")
+        md.append(json.dumps(stats, indent=2, ensure_ascii=False))
+        md.append("```")
+        md.append("")
+        md.append("## Profile rows")
+        for p in current_profiles:
+            md.append("")
+            md.append(f"### {p.get('kc_id')} | {p.get('canonical_name')}")
+            md.append("")
+            md.append(f"- status: `{p.get('profile_status')}`")
+            md.append(f"- accepted_source_cues: `{len(p.get('accepted_source_cues') or [])}`")
+            md.append(f"- query_variants: `{len(p.get('query_variants') or [])}`")
+            md.append(f"- expected_evidence_shapes: `{json.dumps(p.get('expected_evidence_shapes'), ensure_ascii=False)}`")
+            md.append(f"- profile_input_status: `{p.get('audit', {}).get('profile_input_status')}`")
+            md.append(f"- strict_source_windows: `{p.get('audit', {}).get('strict_source_window_count')}`")
+            md.append(f"- exploratory_profile_windows: `{p.get('audit', {}).get('exploratory_profile_window_count')}`")
+            md.append(f"- candidate_snippets: `{p.get('audit', {}).get('candidate_snippet_count')}`")
+            if p.get("accepted_source_cues"):
+                md.append("- accepted cues:")
+                for cue in p.get("accepted_source_cues")[:5]:
+                    md.append(f"  - {cue.get('term')} | {cue.get('cue_type')} | {cue.get('provenance')}")
+            if p.get("quarantined_terms"):
+                md.append("- quarantined:")
+                for q in p.get("quarantined_terms")[:5]:
+                    md.append(f"  - {q.get('term')} | {q.get('reason')}")
+        audit_md.write_text("\n".join(md), encoding="utf-8")
+
+        set_manifest = {
+            "stage": "step5p_kc_retrieval_profile",
+            "profile_contract_version": PROFILE_CONTRACT_VERSION,
+            "run_id": run_id,
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "artifacts": {
+                "kc_retrieval_profiles_jsonl": profile_jsonl.as_posix(),
+                "kc_retrieval_profile_stats_json": stats_json.as_posix(),
+                "kc_retrieval_profile_schema_snapshot_json": schema_snapshot_json.as_posix(),
+                "kc_retrieval_profile_audit_md": audit_md.as_posix(),
+                "kc_retrieval_profile_checkpoint_json": checkpoint_json.as_posix(),
+            },
+            "inputs": stats["inputs"],
+            "checkpointing": stats["checkpointing"],
+            "active_pointer_policy": "do_not_update_active_pointer",
+        }
+        write_json(set_manifest_path, set_manifest)
+
+        return stats
+
+    # In a fresh non-resume run, make sure stale partial profile_jsonl cannot survive.
+    if not resume and profile_jsonl.exists():
+        profile_jsonl.unlink()
+
+    built_since_checkpoint = 0
+
+    for kc_row in remaining_rows:
+        kc_id = str(kc_row.get("kc_id") or kc_row.get("knowledge_unit_id") or "")
+        base_profile = base_profiles_by_kc.get(kc_id)
+        gap_request = gap_requests_by_kc.get(kc_id)
+        profile = build_profile_for_kc(
+            kc_row=kc_row,
+            all_kc_rows=unit_rows,
+            source_rows=source_rows,
+            dynamic_broad_tokens=dynamic_broad_tokens,
+            max_snippets_per_kc=max_snippets_per_kc,
+            min_snippet_score=min_snippet_score,
+            use_model=use_model,
+            model_config=model_config or {},
+            llm_policy=llm_policy,
+            base_profile=base_profile,
+            embedding_index_root=embedding_index_root,
+            feedback_gap_request=gap_request,
+            feedback_round=feedback_round,
+        )
+        if base_profile is not None and gap_request is not None and feedback_round > 0:
+            profile = merge_profile_feedback(
+                base_profile=base_profile,
+                repair_profile=profile,
+                gap_request=gap_request,
+                feedback_round=feedback_round,
+            )
+            validation = validate_profile(profile)
+            profile.setdefault("audit", {})["validation"] = validation
+            if not validation["ok"]:
+                profile["profile_status"] = "reject"
+
+        profiles.append(profile)
+        append_profile_row(profile_jsonl, profile)
+        built_since_checkpoint += 1
+
+        if built_since_checkpoint >= checkpoint_every:
+            profiles = ordered_profiles()
+            write_sidecars(profiles, final=False)
+            built_since_checkpoint = 0
+
+    profiles = ordered_profiles()
+
+    # Rewrite JSONL once at the end to preserve selected KC order and remove any accidental ordering drift.
+    write_jsonl(profile_jsonl, profiles)
+
+    stats = write_sidecars(profiles, final=True)
+    collection_validation = stats["collection_validation"]
+
+    return {
+        "ok": collection_validation["ok"],
+        "run_id": run_id,
+        "processed_dir": processed_dir.as_posix(),
+        "set_manifest": set_manifest_path.as_posix(),
+        "stats": stats,
+    }
+

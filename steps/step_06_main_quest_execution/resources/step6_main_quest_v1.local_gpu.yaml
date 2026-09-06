@@ -1,0 +1,28 @@
+runtime_profile:
+  name: local_gpu
+  status: active_local_runtime_overlay
+  execution_authorized_by_profile_alone: false
+  intended_use: bounded_local_main_quest_startup_smoke_then_run
+
+execution:
+  interpreter_path: <PATH_TO_PYTHON>\python.exe
+  launcher_kind: direct_python_process
+  device_mode: cuda
+  working_directory_policy: repo_root
+  current_activation_branch: mainquest/step6-local-activation
+
+models:
+  generation:
+    generation_model: qwen3.5:9b
+    resolved_model_alias: qwen3.5:9b
+    base_url: http://127.0.0.1:11434
+  reranker:
+    device: cuda
+  gate_llm:
+    resolved_model_alias: qwen3.5:9b
+    base_url: http://127.0.0.1:11434
+
+runtime:
+  hpc_portable_semantics: true
+  startup_smoke_required_before_run: true
+  first_bounded_run_limit_kcs: 10

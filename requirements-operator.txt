@@ -1,0 +1,7 @@
+# Secondary operator-shell / maintenance convenience surface only.
+# This is enough for:
+# - scripts/local/run_stage.py
+# - scripts/hpc/render_main_quest_config.py
+# - scripts/maintenance/check_operator_repo.py
+# It is not the full retained-pipeline bootstrap for the preserved step tree.
+PyYAML>=6.0.0

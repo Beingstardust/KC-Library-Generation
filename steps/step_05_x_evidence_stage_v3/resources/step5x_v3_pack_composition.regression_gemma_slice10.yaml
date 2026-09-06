@@ -1,0 +1,32 @@
+inputs:
+  step5x_v3_scored_set_manifest: "_reference_artifacts/stage2_v3_hardened_clusterb_acceptance/stage2_v3_hardened_clusterb_acceptance_20260427_232520.tar.gz::data/processed/evidence_stage_v3_scored_candidates/_sets/step5x_v3_scored_candidates_regression10_hardened_clusterb_20260427_232222_step5x_v3_scored_candidates_set.json"
+  scored_candidates_jsonl: ""
+  exact_kc_ids:
+    - KC_CLF_NB_011
+    - KC_CLU_CORE_002
+    - KC_CLU_DBS_001
+    - KC_CLU_DBS_003
+    - KC_CLU_EVAL_001
+    - KC_CLU_EVAL_002
+    - KC_CLU_EVAL_012
+    - KC_DE_PREP_003
+    - KC_EVAL_BASIC_005
+    - KC_EVAL_SAMP_003
+  limit_kcs: 10
+
+outputs:
+  output_root: "data/processed/evidence_stage_v3_evidence_packs"
+  set_manifest_root: "data/processed/evidence_stage_v3_evidence_packs/_sets"
+
+composition:
+  max_definition_kernel: 2
+  max_explanatory_gloss: 3
+  max_scope_condition: 2
+  max_formula_notation: 2
+  max_example_or_procedure: 2
+  max_context_completion: 2
+  max_sibling_contrast: 4
+  max_ordered_pack_items: 8
+  max_ordered_pack_chars: 1800
+  allow_context_completion_in_ordered_pack: true
+  min_positive_items_for_standard: 1

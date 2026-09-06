@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/kc-l/downstream-library-contract.json",
+  "schema_version": "step6.downstream_library_contract.v1",
+  "title": "KC Downstream Library Contract",
+  "allowed_source_tiers": [
+    "frozen_reviewed_library",
+    "provisional_machine_pass_library",
+    "kc_review_sandbox"
+  ],
+  "operational_loadable_tiers": [
+    "frozen_reviewed_library",
+    "provisional_machine_pass_library"
+  ],
+  "non_operational_tiers": [
+    "kc_review_sandbox"
+  ],
+  "required_common_fields": [
+    "library_tier",
+    "review_status",
+    "source_run_id",
+    "kc_id"
+  ],
+  "tier_policies": {
+    "frozen_reviewed_library": {
+      "operational_load_allowed": true,
+      "human_approved": true,
+      "allowed_review_statuses": [
+        "approved",
+        "edited_approved"
+      ],
+      "required_fields": [
+        "library_tier",
+        "review_status",
+        "source_run_id",
+        "kc_id",
+        "title",
+        "level",
+        "reviewer_facing_definition",
+        "evidence_spans",
+        "source_provenance"
+      ]
+    },
+    "provisional_machine_pass_library": {
+      "operational_load_allowed": true,
+      "human_approved": false,
+      "allowed_review_statuses": [
+        "draft_generated",
+        "review_ready"
+      ],
+      "required_fields": [
+        "status",
+        "library_tier",
+        "review_status",
+        "source_run_id",
+        "kc_id",
+        "title",
+        "level",
+        "reviewer_facing_definition",
+        "evidence_spans",
+        "source_provenance",
+        "risk_flags",
+        "review_priority",
+        "system_recommendation",
+        "content_source_mode",
+        "content_repair_applied",
+        "content_repair_reason",
+        "original_content_source",
+        "review_content_source",
+        "integrity_repair_notes"
+      ]
+    },
+    "kc_review_sandbox": {
+      "operational_load_allowed": false,
+      "human_approved": false,
+      "allowed_review_statuses": [
+        "review_ready",
+        "rejected",
+        "skipped_before_review"
+      ],
+      "required_fields": [
+        "status",
+        "library_tier",
+        "review_status",
+        "source_run_id",
+        "kc_id",
+        "reason",
+        "source_provenance"
+      ]
+    }
+  },
+  "forbidden_assumptions": [
+    {
+      "code": "missing_tier_metadata",
+      "rule": "Entries missing library_tier or review_status are invalid for downstream consumption."
+    },
+    {
+      "code": "sandbox_as_operational",
+      "rule": "Sandbox entries must never be loaded as ordinary operational KC entries."
+    },
+    {
+      "code": "provisional_equals_reviewed",
+      "rule": "Provisional machine-pass entries must never be treated as frozen reviewed entries or human-approved entries."
+    }
+  ],
+  "guard_rules": {
+    "require_explicit_tier_metadata": true,
+    "require_expected_tier_match": true,
+    "reject_sandbox_for_operational_loads": true,
+    "reject_provisional_as_human_approved": true,
+    "reject_missing_required_fields": true
+  }
+}

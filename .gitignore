@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Pipeline runtime directories (created on first run, contents not tracked)
+data/input/*
+!data/input/.gitkeep
+data/work/*
+!data/work/.gitkeep
+data/runs/*
+!data/runs/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/library/active/*
+!data/library/active/.gitkeep
+data/library/frozen/*
+!data/library/frozen/.gitkeep
+data/exports/*
+!data/exports/.gitkeep
+
+# Source course materials are third-party copyrighted works and are never
+# committed to this repository. See the Data Availability section in README.md.
+data/raw/
+*.pdf
+sentence_corpus.jsonl
+
+# Model caches and downloaded weights
+data/reranker_models/
+docling_hf_models
+
+# Local editor / OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,56 @@
+inputs:
+  step5_3_set_manifest: ""
+  step5_3_candidates_jsonl: ""
+  registry_jsonl: ""
+  source_overlay_jsonl: ""
+  profile_jsonl: ""
+  exact_kc_ids: []
+  limit_kcs: null
+
+outputs:
+  output_root: "data/processed/evidence_stage_v3_candidate_bank"
+  set_manifest_root: "data/processed/evidence_stage_v3_candidate_bank/_sets"
+
+behavior:
+  allow_reference_artifact_inputs: true
+  fail_if_no_candidate_source: true
+  allow_seed_bearing_input_for_diagnostic: false
+  exclude_seed_fields: true
+  preserve_raw_support_profile: true
+  preserve_raw_alignment_breakdown: true
+
+source_surface_fallback:
+  enabled: false
+  max_fallback_per_kc: 8
+  min_score: 4.0
+  require_surface_match: true
+  require_hierarchy_compatibility: true
+  dynamic_broad_token_min_doc_frequency: 12
+  allow_acronym_surface_match: true
+  reject_prompt_like: true
+  reject_fragmentary: true
+  reject_formula_only_without_surface: true
+
+direct_overlay_supplement:
+  enabled: false
+  supplement_jsonl: ""
+  max_candidates_per_kc: 8
+  min_score: 4.8
+  reject_prompt_like: true
+  reject_fragmentary: true
+  reject_reference_like: true
+  reject_formula_only_without_target_signal: true
+  # Optional generic source-overlay supplement generator. Disabled by default.
+  # When enabled with generate_from_source_overlay=true, Step 5x scans a sentence
+  # overlay using only registry/profile-derived target phrases and then passes
+  # generated supplement rows through the unchanged scoring and pack gates.
+  generate_from_source_overlay: false
+  source_overlay_jsonl: ""
+  source_overlay_max_scan_rows: 0
+  source_overlay_max_hits_per_kc: 120
+  source_overlay_min_scan_score: 5.8
+  source_overlay_dynamic_broad_phrase_kc_fraction: 0.25
+  source_overlay_min_single_token_len: 5
+  source_overlay_allow_uppercase_acronym: true
+  source_overlay_promote_source_block_window: true
+  source_overlay_source_block_window_max_chars: 900

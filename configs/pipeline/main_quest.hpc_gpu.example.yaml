@@ -1,0 +1,27 @@
+runtime_profile:
+  name: hpc_gpu
+  status: example_hpc_runtime_profile
+  intended_use: future_textbook_scale_hpc_run
+
+execution:
+  interpreter_path: /path/to/venvs/kc_l_v2/bin/python
+  launcher_kind: slurm_batch_submission
+  device_mode: cuda
+
+models:
+  generation_endpoint: http://127.0.0.1:11434
+  gate_endpoint: http://127.0.0.1:11434
+  reranker_device: cuda
+
+storage:
+  external_runtime_root: /path/to/scratch/kc_l
+  staged_input_root: /path/to/scratch/kc_l/staged_input
+  cache_root: /path/to/scratch/kc_l/cache
+  runs_root: /path/to/scratch/kc_l/runs
+
+slurm:
+  submit_command: sbatch
+  partition: gpu46GB
+  account: null
+  gres: gpu:1
+

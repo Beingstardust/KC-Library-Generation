@@ -1,0 +1,34 @@
+inputs:
+  registry_jsonl: ""
+  source_overlay_jsonl: ""
+  exact_kc_ids: []
+  limit_kcs: null
+
+outputs:
+  output_root: "data/processed/kc_retrieval_profiles"
+  set_manifest_root: "data/processed/kc_retrieval_profiles/_sets"
+
+behavior:
+  use_model: true
+  llm_policy: "always"
+  max_snippets_per_kc: 20
+  min_snippet_score: 4.0
+  dynamic_broad_token_min_df: 12
+  checkpoint_every: 5
+
+model:
+  provider: "ollama"
+  base_url: "http://localhost:11434"
+  model: "gemma4:31b"
+  context_length: 32768
+  temperature: 0
+  # 2026-07-27 fix: temperature=0 alone was not producing reproducible retrieval-profile
+  # output across repeated runs (confirmed real drift this week, traced to model_client.py's
+  # ollama_chat_json never setting a seed) - fixed value chosen arbitrarily, only its
+  # constancy across runs matters. See model_client.py's own comment for the caveat that
+  # this is necessary but not proven sufficient (GPU floating-point non-associativity is a
+  # separate possible variance source) - verify empirically, do not assume this alone closes
+  # the gap.
+  seed: 20260727
+  think: false
+  timeout_seconds: 240

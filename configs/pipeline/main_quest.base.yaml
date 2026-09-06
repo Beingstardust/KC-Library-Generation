@@ -1,0 +1,80 @@
+project:
+  name: kc_library_generation_system
+  repo_layout_version: kc_l.operator_repo.v1
+  starts_clean: true
+  timezone: Europe/Berlin
+
+operator_runtime:
+  public_stage_script: scripts/local/run_stage.py
+  validation_script: scripts/maintenance/check_operator_repo.py
+  legacy_step_surface_status: internal_only
+  future_ui_ready: true
+
+inputs:
+  course_materials_dir: data/input/course_materials
+  hierarchy_dir: data/input/hierarchy
+  accepted_course_material_extensions:
+    - .pdf
+  hierarchy_file_extensions:
+    - .json
+    - .yaml
+    - .yml
+
+schema_profile:
+  locked_core_path: configs/schemas/default/core_schema.locked.json
+  extension_schema_path: configs/schemas/examples/extension_schema.template.json
+  freeze_selection_in_run_manifest: true
+
+outputs:
+  work_cache_root: data/work/cache
+  work_staging_root: data/work/staging
+  runs_root: data/runs
+  frozen_library_root: data/library/frozen
+  active_pointer_path: data/library/active/knowledge_library_release_pointer.json
+  exports_root: data/exports
+
+review:
+  human_actions:
+    - approve
+    - edit_and_approve
+    - reject
+  usability_boundary: approved_only
+  review_packet_format: offline_filesystem_bundle
+
+freeze:
+  topic_library_and_kc_library_remain_separate: true
+  approved_only_library_required: true
+  conservative_graph_semantics_required: true
+  kc_specific_criteria_must_remain_empty: true
+
+hpc:
+  slurm_template_path: configs/hpc/slurm_textbook_first_run.template.sh
+  runtime_storage_template_path: configs/hpc/runtime_storage.template.yaml
+  heavy_runtime_data_outside_repo: true
+
+legacy_internal_flow:
+  intake:
+    - steps/step_01_hierarchy/scripts/01_hierarchy_normalize.py
+    - steps/step_02_pdf_ingest_blockstore/scripts/run_step2.py
+    - steps/step_03_doctree_index/scripts/run_step3.py
+    - steps/step_03_5_blockstore_cleanup/scripts/run_step3_5.py
+    - steps/step_03_6_math_salvage/scripts/run_step3_6.py
+  draft_generation:
+    - steps/step_04_structure_retrieval_index/scripts/run_step4.py
+    - steps/step_04_5_sentence_overlay/scripts/run_step4_5.py
+    - steps/step_05_kc_evidence_mining/scripts/run_step5.py
+    - steps/step_05_2_evidence_sharpen/scripts/run_step5_2.py
+    - steps/step_05_3_evidence_recalibrated/scripts/run_step5_3.py
+    - steps/step_06_6_kc_drafting_input_overlay/scripts/run_step6_6_kc_drafting_input_overlay.py
+    - steps/step_06_7_kc_draft_generation/scripts/run_step6_7_kc_draft_generation.py
+    - steps/step_06_8_kc_review_packet_emission/scripts/run_step6_8_kc_review_packet_emission.py
+  review_resolution:
+    - steps/step_06_9_kc_review_audit_ingestion/scripts/run_step6_9_kc_review_audit_ingestion.py
+    - steps/step_06_10_kc_review_audit_resolution/scripts/run_step6_10_kc_review_audit_resolution.py
+    - steps/step_06_11_reviewed_library_assembly/scripts/run_step6_11_reviewed_library_assembly.py
+  freeze_package_index:
+    - steps/step_06_12_reviewed_library_runtime_packaging/scripts/run_step6_12_reviewed_library_runtime_packaging.py
+    - steps/step_06_13_reviewed_library_retrieval_pilot/scripts/run_step6_13_reviewed_library_retrieval_pilot.py
+    - steps/step_01_7_knowledge_library_schema_validation/scripts/run_step01_7_knowledge_library_schema_validation.py
+    - steps/step_01_8_knowledge_library_access_layer/scripts/run_step01_8_knowledge_library_access_layer.py
+    - steps/step_01_9_knowledge_library_grounding_bridge/scripts/run_step01_9_knowledge_library_grounding_bridge.py

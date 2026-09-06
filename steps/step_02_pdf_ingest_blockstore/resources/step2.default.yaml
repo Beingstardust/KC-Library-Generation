@@ -1,0 +1,67 @@
+project:
+  timezone: "Europe/Amsterdam"
+
+doc:
+  doc_id: "DOC_EXAMPLE"
+  pdf_path: "data/input/course_materials/example.pdf"
+
+  freeze_inputs: true
+  frozen_store_dir: "data/raw/frozen"
+
+output:
+  processed_blockstore_dir: "data/processed/blockstore"
+  runs_dir: "data/runs"
+
+  render_page_images: true
+  render_dpi: 144
+  render_format: "png"
+
+  work_dir: "data/work"
+  use_work_dir_for_external_tools: true
+  keep_work_dir: false
+
+layers:
+  pymupdf:
+    enabled: true
+    extract_blocks: true
+    sort_text: true
+    write_raw_dump: true
+
+  docling:
+    enabled: true
+    cli: "docling"
+    to_format: "json"
+    pipeline: "standard"
+    pdf_backend: "docling_parse"
+    ocr: false
+    tables: true
+    abort_on_error: false
+    show_layout: false
+    extra_args: []
+    chunking:
+      enabled: true
+      threshold_pages: 300
+      pages_per_chunk: 100
+
+  mineru:
+    enabled: true
+    cli: "mineru"
+    backend: "pipeline"
+    extra_args:
+      - "--source"
+      - "local"
+      - "--device"
+      - "cpu"
+      - "--lang"
+      - "en"
+      - "--method"
+      - "auto"
+
+validation:
+  min_pages: 1
+  min_total_blocks: 20
+  require_each_enabled_layer_nonempty: true
+
+logging:
+  verbose: true
+

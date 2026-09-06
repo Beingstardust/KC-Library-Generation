@@ -1,0 +1,18 @@
+runtime_profile:
+  name: local_gpu
+  status: example_local_runtime_profile
+  intended_use: bounded_first_run_or_local_preflight
+
+execution:
+  interpreter_path: /path/to/venvs/kc_l_v2/bin/python
+  launcher_kind: direct_python_process
+  device_mode: cuda
+
+models:
+  generation_endpoint: http://127.0.0.1:11434
+  gate_endpoint: http://127.0.0.1:11434
+  reranker_device: cuda
+
+storage:
+  external_runtime_root: null
+

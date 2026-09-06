@@ -1,0 +1,39 @@
+{
+  "project": {
+    "timezone": "Europe/Berlin"
+  },
+  "inputs": {
+    "kc_registry_path": "data/processed/hierarchy/20260228T211719Z/kc_registry.jsonl",
+    "step5_active_set_pointer": "data/processed/kc_evidence/_sets/ACTIVE_STEP5_EVIDENCE_SET.txt",
+    "schema_path": "schema.json"
+  },
+  "extraction": {
+    "max_evidence_blocks_considered_per_kc": 12,
+    "evidence_minimal_target": 4,
+    "evidence_minimal_max": 6,
+    "quote_max_chars": 240,
+    "definition_max_chars": 280,
+    "definition_full_max_chars": 900,
+    "allowed_kc_types": [
+      "concept",
+      "procedure",
+      "metric",
+      "theorem_or_claim",
+      "misconception_cluster"
+    ],
+    "model": "",
+    "ollama_base_url": "http://127.0.0.1:11434",
+    "temperature": 0,
+    "timeout_seconds": 180
+  },
+  "outputs": {
+    "processed_root": "data/processed/kc_library",
+    "sets_dir": "data/processed/kc_library/_sets"
+  },
+  "audit": {
+    "runs_dir": "data/runs"
+  },
+  "runtime": {
+    "sample_kcs": 10
+  }
+}

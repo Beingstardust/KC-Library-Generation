@@ -1,0 +1,48 @@
+project:
+  timezone: "Europe/Amsterdam"
+
+input:
+  step2_sets_dir: "data/processed/blockstore/_sets"
+  step2_active_set_file: "data/processed/blockstore/_sets/ACTIVE_STEP2_SET.txt"
+
+  step3_sets_dir: "data/processed/doctree/_sets"
+  step3_active_set_file: "data/processed/doctree/_sets/ACTIVE_STEP3_SET.txt"
+
+output:
+  processed_enriched_dir: "data/processed/blockstore_enriched"
+  enriched_sets_dir: "data/processed/blockstore_enriched/_sets"
+  runs_dir: "data/runs"
+
+boilerplate:
+  enabled: true
+  apply_layers: ["mineru"]     # MinerU-first
+  apply_content_types: ["text"]
+
+  # Line repetition heuristics
+  min_page_frac: 0.60          # appears on >=60% pages
+  min_pages_abs: 10            # or >=10 pages
+  max_line_len: 120
+
+  # Positional prior (requires page height)
+  bottom_y_frac: 0.78          # footer zone
+  bottom_majority_frac: 0.60   # majority occurrences in bottom zone
+
+  # Hard regex patterns (high precision)
+  patterns:
+    page_number: true
+    url_email: true
+    copyright: true
+
+  # Safety: never remove page titles discovered in Step 3
+  protect_step3_titles: true
+
+formula_qa:
+  enabled: true
+  # we only generate a report, no modification of blocks
+  suspicious_if:
+    eq_count_mineru_is_zero: true
+    math_symbol_ratio_ge: 0.08   # on pymupdf text
+    min_chars_for_math_check: 200
+
+logging:
+  verbose: true

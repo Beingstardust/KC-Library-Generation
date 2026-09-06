@@ -1,0 +1,11 @@
+inputs:
+  step6_7_set_manifest: data/work/cache/current_step_artifacts/step6_7_set_manifest.current.json
+
+outputs:
+  processed_root: data/processed/kc_draft_canonicalization
+  sets_root: data/processed/kc_draft_canonicalization/_sets
+  runs_root: data/runs
+
+canonicalization:
+  allow_definition_extractive_selection: true
+  allow_scope_extractive_selection: false

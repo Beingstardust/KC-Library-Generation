@@ -1,0 +1,25 @@
+step: 4.5
+
+inputs:
+  active_step4_set: /path/to/scratch/kc_l/data/processed/retrieval_index/_sets/ACTIVE_STEP4_SET.txt
+  active_step4_5_set_pointer: /path/to/scratch/kc_l/data/processed/retrieval_sentence_overlay/_sets/ACTIVE_STEP4_5_SET.txt
+
+outputs:
+  processed_root: /path/to/scratch/kc_l/data/processed/retrieval_sentence_overlay
+  sets_dir: /path/to/scratch/kc_l/data/processed/retrieval_sentence_overlay/_sets
+
+run:
+  dry_run: false
+  strict: true
+  doc_id_allowlist: []
+
+acceptance:
+  min_docs_with_sentences: 3
+  max_invalid_sentence_rows: 0
+  require_patch_metadata_if_available: true
+  require_upstream_inputs_unchanged: true
+
+audit:
+  runs_dir: /path/to/projects/kc_l_v2_mirror_20260810/data/runs
+  freeze_inputs: false
+  log_level: INFO

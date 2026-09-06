@@ -1,0 +1,15 @@
+# Clean-start full128 template for the operator repo.
+# Refresh current artifact aliases with: python scripts/maintenance/refresh_current_step_artifacts.py
+inputs:
+  step6_6_set_manifest: data/work/cache/current_step_artifacts/step6_6_set_manifest.current.json
+outputs:
+  processed_root: data/processed/kc_drafts
+  sets_root: data/processed/kc_drafts/_sets
+  runs_root: data/runs
+slice:
+  limit_kcs: 128
+selection:
+  max_bundle_size: 4
+  max_explanatory_candidates: 3
+
+
