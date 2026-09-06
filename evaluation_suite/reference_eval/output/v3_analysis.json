@@ -1,0 +1,405 @@
+{
+  "delta": 0.05,
+  "delta_sensitivity": [
+    0.03,
+    0.1
+  ],
+  "ir_metrics": {
+    "intrinsic_P-Q": {
+      "P@5": 0.726,
+      "R@5": 0.1454,
+      "nDCG@5": 0.5714,
+      "P@10": 0.6279,
+      "R@10": 0.2379,
+      "nDCG@10": 0.5229,
+      "P@20": 0.4692,
+      "R@20": 0.3304,
+      "nDCG@20": 0.4862
+    },
+    "intrinsic_P-G": {
+      "P@5": 0.726,
+      "R@5": 0.1454,
+      "nDCG@5": 0.5714,
+      "P@10": 0.6279,
+      "R@10": 0.2379,
+      "nDCG@10": 0.5229,
+      "P@20": 0.4692,
+      "R@20": 0.3304,
+      "nDCG@20": 0.4862
+    },
+    "intrinsic_P-D": {
+      "P@5": 0.726,
+      "R@5": 0.1454,
+      "nDCG@5": 0.5714,
+      "P@10": 0.6279,
+      "R@10": 0.2379,
+      "nDCG@10": 0.5229,
+      "P@20": 0.4692,
+      "R@20": 0.3304,
+      "nDCG@20": 0.4862
+    },
+    "extrinsic_P-Q": {
+      "P@5": 0.726,
+      "R@5": 0.1454,
+      "nDCG@5": 0.5714,
+      "P@10": 0.6279,
+      "R@10": 0.2379,
+      "nDCG@10": 0.5229,
+      "P@20": 0.4692,
+      "R@20": 0.3304,
+      "nDCG@20": 0.4862
+    },
+    "extrinsic_B-Q": {
+      "P@5": 0.4077,
+      "R@5": 0.0797,
+      "nDCG@5": 0.2541,
+      "P@10": 0.3686,
+      "R@10": 0.1374,
+      "nDCG@10": 0.2399,
+      "P@20": 0.3103,
+      "R@20": 0.2333,
+      "nDCG@20": 0.2433
+    },
+    "extrinsic_DOS-Q": {
+      "P@5": 0.6064,
+      "R@5": 0.1124,
+      "nDCG@5": 0.3619,
+      "P@10": 0.6244,
+      "R@10": 0.2401,
+      "nDCG@10": 0.4074,
+      "P@20": 0.5971,
+      "R@20": 0.4705,
+      "nDCG@20": 0.4728
+    },
+    "sensitivity_DOS-Q_matched": {
+      "P@5": 0.6789,
+      "R@5": 0.1251,
+      "nDCG@5": 0.4892,
+      "P@10": 0.5421,
+      "R@10": 0.1853,
+      "nDCG@10": 0.4274,
+      "P@20": 0.3934,
+      "R@20": 0.2484,
+      "nDCG@20": 0.378
+    }
+  },
+  "groundedness_by_cell": {
+    "datamining|D": {
+      "n": 148,
+      "mean": 0.8169
+    },
+    "datamining|G": {
+      "n": 133,
+      "mean": 0.9661
+    },
+    "datamining|Q": {
+      "n": 143,
+      "mean": 0.9519
+    },
+    "mathematics|D": {
+      "n": 69,
+      "mean": 0.6817
+    },
+    "mathematics|G": {
+      "n": 68,
+      "mean": 0.9294
+    },
+    "mathematics|Q": {
+      "n": 65,
+      "mean": 0.9199
+    },
+    "sociology|D": {
+      "n": 148,
+      "mean": 0.8909
+    },
+    "sociology|G": {
+      "n": 148,
+      "mean": 0.9943
+    },
+    "sociology|Q": {
+      "n": 148,
+      "mean": 0.9666
+    }
+  },
+  "model_agnostic_tost": {
+    "datamining: D vs G": {
+      "mean_diff": -0.1474,
+      "ci90": [
+        -0.1783,
+        -0.1172
+      ],
+      "equivalent": false,
+      "n": 132,
+      "sensitivity": {
+        "0.03": false,
+        "0.1": false
+      }
+    },
+    "datamining: D vs Q": {
+      "mean_diff": -0.1129,
+      "ci90": [
+        -0.1367,
+        -0.0895
+      ],
+      "equivalent": false,
+      "n": 141,
+      "sensitivity": {
+        "0.03": false,
+        "0.1": false
+      }
+    },
+    "datamining: G vs Q": {
+      "mean_diff": 0.0245,
+      "ci90": [
+        0.0072,
+        0.0423
+      ],
+      "equivalent": true,
+      "n": 127,
+      "sensitivity": {
+        "0.03": false,
+        "0.1": true
+      }
+    },
+    "mathematics: D vs G": {
+      "mean_diff": -0.2402,
+      "ci90": [
+        -0.2908,
+        -0.1906
+      ],
+      "equivalent": false,
+      "n": 68,
+      "sensitivity": {
+        "0.03": false,
+        "0.1": false
+      }
+    },
+    "mathematics: D vs Q": {
+      "mean_diff": -0.2142,
+      "ci90": [
+        -0.2585,
+        -0.1719
+      ],
+      "equivalent": false,
+      "n": 65,
+      "sensitivity": {
+        "0.03": false,
+        "0.1": false
+      }
+    },
+    "mathematics: G vs Q": {
+      "mean_diff": 0.0063,
+      "ci90": [
+        -0.0229,
+        0.0355
+      ],
+      "equivalent": true,
+      "n": 65,
+      "sensitivity": {
+        "0.03": false,
+        "0.1": true
+      }
+    },
+    "sociology: D vs G": {
+      "mean_diff": -0.1034,
+      "ci90": [
+        -0.129,
+        -0.0789
+      ],
+      "equivalent": false,
+      "n": 148,
+      "sensitivity": {
+        "0.03": false,
+        "0.1": false
+      }
+    },
+    "sociology: D vs Q": {
+      "mean_diff": -0.0758,
+      "ci90": [
+        -0.0992,
+        -0.0528
+      ],
+      "equivalent": false,
+      "n": 148,
+      "sensitivity": {
+        "0.03": false,
+        "0.1": false
+      }
+    },
+    "sociology: G vs Q": {
+      "mean_diff": 0.0276,
+      "ci90": [
+        0.0149,
+        0.042
+      ],
+      "equivalent": true,
+      "n": 148,
+      "sensitivity": {
+        "0.03": false,
+        "0.1": true
+      }
+    }
+  },
+  "domain_agnostic_tost": {
+    "D: datamining vs mathematics": {
+      "mean_diff": 0.1353,
+      "ci90": [
+        0.0771,
+        0.1937
+      ],
+      "equivalent": false,
+      "n_a": 148,
+      "n_b": 69
+    },
+    "D: datamining vs sociology": {
+      "mean_diff": -0.0739,
+      "ci90": [
+        -0.1146,
+        -0.0346
+      ],
+      "equivalent": false,
+      "n_a": 148,
+      "n_b": 148
+    },
+    "D: mathematics vs sociology": {
+      "mean_diff": -0.2092,
+      "ci90": [
+        -0.2655,
+        -0.1549
+      ],
+      "equivalent": false,
+      "n_a": 69,
+      "n_b": 148
+    },
+    "G: datamining vs mathematics": {
+      "mean_diff": 0.0366,
+      "ci90": [
+        0.0105,
+        0.0641
+      ],
+      "equivalent": false,
+      "n_a": 133,
+      "n_b": 68
+    },
+    "G: datamining vs sociology": {
+      "mean_diff": -0.0282,
+      "ci90": [
+        -0.0425,
+        -0.0154
+      ],
+      "equivalent": true,
+      "n_a": 133,
+      "n_b": 148
+    },
+    "G: mathematics vs sociology": {
+      "mean_diff": -0.0648,
+      "ci90": [
+        -0.0896,
+        -0.0414
+      ],
+      "equivalent": false,
+      "n_a": 68,
+      "n_b": 148
+    },
+    "Q: datamining vs mathematics": {
+      "mean_diff": 0.032,
+      "ci90": [
+        0.0081,
+        0.0558
+      ],
+      "equivalent": false,
+      "n_a": 143,
+      "n_b": 65
+    },
+    "Q: datamining vs sociology": {
+      "mean_diff": -0.0147,
+      "ci90": [
+        -0.0328,
+        0.0033
+      ],
+      "equivalent": true,
+      "n_a": 143,
+      "n_b": 148
+    },
+    "Q: mathematics vs sociology": {
+      "mean_diff": -0.0467,
+      "ci90": [
+        -0.0708,
+        -0.0225
+      ],
+      "equivalent": false,
+      "n_a": 65,
+      "n_b": 148
+    }
+  },
+  "variance_components": {
+    "datamining": {
+      "n_kcs": 126,
+      "n_drafter": 3,
+      "var_kc": 0.003412,
+      "var_drafter": 0.00537,
+      "var_residual": 0.014236,
+      "pct_kc": 14.8,
+      "pct_drafter": 23.3,
+      "pct_residual": 61.8,
+      "g_coefficient": 0.4183
+    },
+    "mathematics": {
+      "n_kcs": 65,
+      "n_drafter": 3,
+      "var_kc": 0.004422,
+      "var_drafter": 0.015464,
+      "var_residual": 0.019246,
+      "pct_kc": 11.3,
+      "pct_drafter": 39.5,
+      "pct_residual": 49.2,
+      "g_coefficient": 0.4081
+    },
+    "sociology": {
+      "n_kcs": 148,
+      "n_drafter": 3,
+      "var_kc": 0.00276,
+      "var_drafter": 0.002781,
+      "var_residual": 0.01242,
+      "pct_kc": 15.4,
+      "pct_drafter": 15.5,
+      "pct_residual": 69.2,
+      "g_coefficient": 0.4
+    }
+  },
+  "variance_components_excl_D": {
+    "datamining": {
+      "n_kcs": 127,
+      "n_drafter": 2,
+      "var_kc": 0.0,
+      "var_drafter": 0.000243,
+      "var_residual": 0.007195,
+      "pct_kc": 0.0,
+      "pct_drafter": 3.3,
+      "pct_residual": 96.7,
+      "g_coefficient": 0.0
+    },
+    "mathematics": {
+      "n_kcs": 65,
+      "n_drafter": 2,
+      "var_kc": 0.001505,
+      "var_drafter": 0.0,
+      "var_residual": 0.010848,
+      "pct_kc": 12.2,
+      "pct_drafter": 0.0,
+      "pct_residual": 87.8,
+      "g_coefficient": 0.2173
+    },
+    "sociology": {
+      "n_kcs": 148,
+      "n_drafter": 2,
+      "var_kc": 0.0,
+      "var_drafter": 0.000348,
+      "var_residual": 0.005047,
+      "pct_kc": 0.0,
+      "pct_drafter": 6.4,
+      "pct_residual": 93.6,
+      "g_coefficient": 0.0
+    }
+  }
+}

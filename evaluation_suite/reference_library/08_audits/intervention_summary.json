@@ -1,0 +1,9 @@
+{
+  "generated_utc": "2026-08-24T12:00:00Z",
+  "status": "NOT YET COMPUTED - this is a placeholder scaffold. Populate at curation completion per section 12/25 of the reference-construction spec: %ACCEPT, %MINOR_EDIT, %MAJOR_EDIT, %REPLACE, %corpus-unsupported, review-time statistics, edit reason-code frequencies, Wilson CIs if useful. This file is descriptive workflow evidence only.",
+  "hard_rule": "Do NOT equate edit distance with correctness, and do NOT compare Qwen/Gemma/DeepSeek using distance from this reference - the reference was seeded from Qwen. The action distribution may support a claim like 'X% of machine drafts required no or only local expert intervention.' It must NOT be used to claim 'Qwen is better than Gemma because it has lower edit distance to gold.' See 07_methods/ANTI_ANCHORING_PROTOCOL.md.",
+  "counts": null,
+  "proportions": null,
+  "review_time_stats": null,
+  "reason_code_frequencies": null
+}

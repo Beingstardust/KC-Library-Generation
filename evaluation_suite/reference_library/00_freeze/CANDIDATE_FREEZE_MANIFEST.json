@@ -1,0 +1,146 @@
+{
+  "manifest_version": "1.0",
+  "generated_utc": "2026-08-24T11:00:00Z",
+  "purpose": "Freeze every candidate system artifact, the original course corpus, and the hierarchy overlay BEFORE expert reference construction begins. Once this manifest is written, none of these files may be regenerated, repaired, or modified using information learned from the reference (per REFERENCE_CONSTRUCTION_METHOD.md section on anti-leakage). All hashes below were computed fresh on 2026-08-24 directly against the live files on Cluster-B (host hpc-cluster-b.example.edu), not inferred from filenames and not solely carried forward from source_artifact_manifest.json - though they are cross-checked against that file's prior-recorded hashes as an independent consistency check (all 7 candidates matched exactly, see verification_cross_check below).",
+  "verification_cross_check": {
+    "method": "verify_candidate_freeze.py run on Cluster-B: for each of the 7 candidate arms, computed sha256 over the raw file bytes, counted JSONL rows, and extracted the KC id set (knowledge_unit_id, cross-checked against source_packet.kc_id) fresh - independent of any previously-recorded value.",
+    "result": "all 7 sha256 hashes matched the values already recorded in evaluation_suite/final_pipeline/output/r9_final/source_artifact_manifest.json exactly (no drift since those records were made); all 7 files have row_count=159 and unique_kc_id_count=159; the 159 KC id sets are IDENTICAL across all 7 candidate arms (zero missing, zero extra, checked pairwise against the first arm as reference).",
+    "raw_verification_output": "00_freeze/_verification_run_raw.json"
+  },
+  "candidate_systems": {
+    "intrinsic": {
+      "question": "Given identical Proposed evidence, which drafter (Qwen3.8 27B / Gemma4 31B / DeepSeek R1 32B) produces the highest-quality KC content?",
+      "P-Q": {
+        "arm_label": "Proposed + Qwen3.8 27B (intrinsic)",
+        "drafter": "qwen3.8:27b",
+        "repo_head": "6ebcd7562ebaf8d2199b6a94eb7ec8836dd4300e",
+        "prompt_mode": "not controlled_comparator (drafting_instruction visible) - this is the ORIGINAL intrinsic-experiment build, distinct from the extrinsic P-Q rebuild below",
+        "absolute_path_cluster_b": "/path/to/pipeline/projects/kc_l_vnext_r9_latest_20260822/data/v3/runs/r9_latest_20260822T202514Z_datamining_latest/drafts/kc_drafts_qwen38_27b.jsonl",
+        "sha256": "6f17d205294a785f488e12b539dc53b68e203e3aa8c86914cb3c7c0c086ab242",
+        "row_count": 159, "unique_kc_id_count": 159,
+        "slurm_job": 250263,
+        "NOTE_NOT_THE_SEED": "This file is a SEPARATE frozen artifact from the seed used in 01_seed/. Do not confuse them - they differ in commit and prompt_mode. See seed_source_designation below for which file the console actually seeds from."
+      },
+      "P-G": {
+        "arm_label": "Proposed + Gemma4 31B (intrinsic)",
+        "drafter": "gemma4:31b",
+        "repo_head": "6ebcd7562ebaf8d2199b6a94eb7ec8836dd4300e",
+        "absolute_path_cluster_b": "/path/to/pipeline/projects/kc_l_vnext_r9_latest_20260822/data/v3/runs/r9_latest_20260822T202514Z_datamining_latest/drafts/kc_drafts_gemma4_31b.jsonl",
+        "sha256": "16c41f6111994c8b976312aa0756409f43378d12cc8825af01accaa606aeaffe",
+        "row_count": 159, "unique_kc_id_count": 159,
+        "slurm_job": 250264
+      },
+      "P-D": {
+        "arm_label": "Proposed + DeepSeek R1 32B (intrinsic)",
+        "drafter": "deepseek-r1:32b",
+        "repo_head": "6ebcd7562ebaf8d2199b6a94eb7ec8836dd4300e",
+        "absolute_path_cluster_b": "/path/to/pipeline/projects/kc_l_vnext_r9_latest_20260822/data/v3/runs/r9_latest_20260822T202514Z_datamining_latest/drafts/kc_drafts_deepseek_r1_32b.jsonl",
+        "sha256": "81395612db55321a92e662006842232d7bcc507c95321e145dc099502fa1da41",
+        "row_count": 159, "unique_kc_id_count": 159,
+        "slurm_job": 250265,
+        "known_technical_failure": "1 hard failure recorded in v3/audit/74_R9_SESSION_AUDIT_20260823.md (data-mining DeepSeek pattern), preserved not hand-repaired - frozen as-is, not to be regenerated after this freeze"
+      }
+    },
+    "extrinsic": {
+      "question": "With the drafter fixed at Qwen3.8 27B, which retrieval/evidence architecture (Proposed / Base Dense / native DOS-RAG) produces the highest-quality KC Library?",
+      "built_at_commit": "450c88ce3bff580acdb6cb7217b00bc0b5df5724",
+      "prompt_mode": "controlled_comparator on all 3 conditions (drafting_instruction NOT model-visible, matching what Base Dense/DOS-RAG structurally never carry)",
+      "P-Q": {
+        "arm_label": "Proposed + Qwen3.8 27B (extrinsic, controlled_comparator) - THIS IS THE DESIGNATED SEED SOURCE, see seed_source_designation below",
+        "absolute_path_cluster_b": "/path/to/pipeline/wt_450c88c_extrinsic/data/v3/runs/r9final_ext_proposed_ctrl_20260823T140000Z/drafts/kc_drafts_qwen38_27b.jsonl",
+        "sha256": "42e15cd17885ea1416eedfaeff3769cfec9fbd4a0ba36d2fd5bc6a32b61b88c1",
+        "row_count": 159, "unique_kc_id_count": 159,
+        "slurm_job": 250771,
+        "preserved_hard_failure": "KC_CLF_UND_006 unparseable_raw_response:JSONDecodeError - not hand-repaired"
+      },
+      "B-Q": {
+        "arm_label": "Base Dense + Qwen3.8 27B (extrinsic)",
+        "absolute_path_cluster_b": "/path/to/pipeline/wt_450c88c_extrinsic/data/v3/runs/r9final_ext_basedense_20260823T140000Z/drafts/kc_drafts_qwen38_27b.jsonl",
+        "sha256": "d0bf25739153f58532310ae1baf95e994b85e8cb90e6d24af10d498f4eabda34",
+        "row_count": 159, "unique_kc_id_count": 159,
+        "slurm_job": 250772,
+        "preserved_hard_failure": "KC_EVAL_COMP_003 unparseable_raw_response:JSONDecodeError - not hand-repaired"
+      },
+      "DOS-Q": {
+        "arm_label": "native full DOS-RAG + Qwen3.8 27B (extrinsic)",
+        "absolute_path_cluster_b": "/path/to/pipeline/wt_450c88c_extrinsic/data/v3/runs/r9final_ext_dosrag_20260823T140000Z/drafts/kc_drafts_qwen38_27b.jsonl",
+        "sha256": "cd2b7ef28942ca787bd95bc457a147d4022e88a86e549f5d49bd98dbf8d1ce7d",
+        "row_count": 159, "unique_kc_id_count": 159,
+        "slurm_job": 250773,
+        "preserved_hard_failure": "KC_CLF_NB_004 unparseable_raw_response:JSONDecodeError - not hand-repaired"
+      }
+    },
+    "sensitivity": {
+      "question": "Does DOS-RAG retain content quality when its evidence allowance is constrained to approximately Proposed's evidence volume?",
+      "DOS-Q_matched_budget": {
+        "arm_label": "matched-budget DOS-RAG + Qwen3.8 27B (sensitivity)",
+        "repo_head": "6ebcd7562ebaf8d2199b6a94eb7ec8836dd4300e",
+        "absolute_path_cluster_b": "/path/to/pipeline/projects/kc_l_vnext_r9_latest_20260822/data/v3/runs/r9_latest_20260822T202514Z_dos_budget_matched_latest_run/drafts/kc_drafts_qwen38_27b.jsonl",
+        "sha256": "a1ff688e78a3c2d6baa440280fd33de76be6077b658cb0067a88314843389722",
+        "row_count": 159, "unique_kc_id_count": 159
+      }
+    }
+  },
+  "seed_source_designation": {
+    "CORRECTED_2026-08-25": "SUPERSEDES the original designation recorded here on 2026-08-24. The original text (preserved below under superseded_original_designation) designated extrinsic.P-Q as the seed. That was a PLANNING designation made before the expert curation was actually performed, and the completed adjudicated reference proves it was not what the expert actually curated against.",
+    "decision": "The editing scaffold that actually seeded the completed expert-adjudicated reference is intrinsic.P-Q (r9_latest_20260822T202514Z_datamining_latest, commit 6ebcd75, drafting_instruction visible).",
+    "empirical_basis_not_assumption": "The adjudicated reference's own original_machine_draft_text field was exact-string-compared against all 7 frozen candidate arms (identify_seed_arm.py, run on Cluster-B 2026-08-25). Result: intrinsic_P-Q 159/159 exact text matches AND 159/159 status matches; extrinsic_P-Q only 17/159; intrinsic_P-G 10/159; intrinsic_P-D 9/159; extrinsic_B-Q 7/159; sensitivity_DOS-Q_matched 9/159; extrinsic_DOS-Q 3/159. The identification is therefore unambiguous and was measured, not inferred from filenames or from the earlier planning note.",
+    "methodologically_sensitive_overlap_this_creates": "intrinsic.P-Q is BOTH the seed source AND one of the frozen candidates later evaluated against the resulting reference. The Qwen-seed anchoring threat therefore applies most directly to the INTRINSIC experiment's Proposed/Qwen arm. extrinsic.P-Q is a different build (different commit, controlled_comparator prompt mode, only 17/159 identical drafts) and is one step removed from the seed - though still same drafter model on byte-identical evidence, so it is not independent of the seed either and must not be described as such. See ANTI_ANCHORING_PROTOCOL.md and THREATS_TO_VALIDITY.md for the full mitigation design.",
+    "superseded_original_designation": {
+      "retained_for_provenance": true,
+      "original_decision": "extrinsic.P-Q (r9final_ext_proposed_ctrl_20260823T140000Z, commit 450c88c, controlled_comparator mode)",
+      "original_rationale": "extrinsic.P-Q was the most current build and used the methodologically stricter controlled_comparator prompt mode.",
+      "why_it_was_wrong": "It was a forward-looking plan for which artifact SHOULD seed curation, recorded before curation happened. The curation that was actually carried out used intrinsic.P-Q. The manifest is corrected to describe what actually occurred rather than what was planned; no candidate artifact was modified as a result of this correction."
+    }
+  },
+
+  "unique_primary_arm_count_decision_2026-08-25": {
+    "decision": "SIX unique primary candidate arms, not five.",
+    "background": "The evaluation specification stated 'There are five unique primary arms because Proposed/Qwen is shared' between the intrinsic and extrinsic experiments.",
+    "why_five_does_not_hold": "intrinsic.P-Q and extrinsic.P-Q are genuinely different artifacts: different sha256 (6f17d205... vs 42e15cd1...), different build commits (6ebcd75 vs 450c88c), different prompt modes (drafting_instruction visible vs controlled_comparator), and only 17/159 identical draft texts. Neither can substitute for the other without breaking the within-experiment control each was specifically built to satisfy - the intrinsic comparison requires all three drafters share one prompt mode and one evidence file, and the extrinsic comparison requires all three retrieval architectures share controlled_comparator (which is precisely why the extrinsic arm was rebuilt on 2026-08-23).",
+    "consequence": "Human calibration is 30 stratified KCs x 6 arms = 180 rows rather than the 150 the specification anticipated. Confirmed by the operator on 2026-08-25.",
+    "six_arms": ["intrinsic_P-Q", "intrinsic_P-G", "intrinsic_P-D", "extrinsic_P-Q", "extrinsic_B-Q", "extrinsic_DOS-Q"],
+    "sensitivity_arm_excluded_from_primary": "sensitivity_DOS-Q_matched remains a separate sensitivity analysis, not a primary arm."
+  },
+
+  "revalidation_2026-08-25": {
+    "trigger": "Specification section 6 requires revalidating candidate file hashes before reference-based evaluation.",
+    "method": "verify_candidate_freeze.py re-run on Cluster-B 2026-08-25, recomputing sha256/row-count/KC-id-set fresh for all 7 arms.",
+    "result": "PASS - all 7 sha256 values identical to the 2026-08-24 freeze, all 7 at 159 rows / 159 unique KC ids, and the 159 KC id sets remain identical across every arm (zero pairwise mismatches). No candidate was regenerated.",
+    "raw_output": "00_freeze/candidate_revalidation_20260825.json"
+  },
+  "corpus": {
+    "absolute_path_cluster_b": "/path/to/pipeline/projects/kc_l_v2_clean/data/processed/retrieval_sentence_overlay/20260727T022835Z_9e856df6/2026-07-27_085228/sentence_corpus.jsonl",
+    "sha256": "62c4d26543ee5ac2b81fbb2d7ad772b031d18616d93334122c979d99e867bc33",
+    "sha256_note": "freshly re-hashed 2026-08-24 as this freeze required (source_artifact_manifest.json had flagged this hash as carried-forward, not independently re-verified, and recommended re-verification before final freeze) - matches the prior record exactly, no drift.",
+    "size_bytes": 135653826,
+    "row_count": 100218,
+    "local_mirror": "evaluation_suite/final_pipeline/reference_library/corpus_support/sentence_corpus.jsonl",
+    "local_mirror_sha256_verified": true,
+    "schema_note": "each row is one sentence with a stable sentence_id (doc_id::block_id::sNNN), doc_id, block_id, page_index, char_start/char_end, plus content-type flags (is_formula_like, is_definition_like, is_procedure_like, is_example_like) - this is the citation unit used by all source_refs in the reference schema."
+  },
+  "hierarchy": {
+    "absolute_path_cluster_b": "/path/to/pipeline/projects/kc_l_v2_clean/data/processed/hierarchy_overlay/20260727T022835Z_9e856df6/2026-07-27_022841_hierarchy_overlay/hierarchy_overlay.jsonl",
+    "sha256_prior_record": "021525464ed2b6fce6da1b21ca6a0d62efd1fcd78ab433d1ed39321a49a6fce2",
+    "line_count": 188,
+    "local_mirror": "evaluation_suite/final_pipeline/reference_library/corpus_support/hierarchy_overlay.jsonl",
+    "cross_check_already_performed": "source_artifact_manifest.json corpus_and_hierarchy.hierarchy already verified this file's 160 node identities are IDENTICAL to the r7-handoff-named file despite differing filenames - PASS, not the historical taxonomy-split corruption case. Not re-run this session; carried forward as already-verified.",
+    "per_kc_hierarchy_path_source": "per-KC hierarchy_path/topic_path used by the reference console is read from each draft row's own embedded source_packet.hierarchy field (present identically in the seed file), not re-derived from this overlay file separately - avoids a second cross-reference step for a value that is already resolved and frozen inside the seed."
+  },
+  "original_course_corpus_source_pdfs": {
+    "note": "The ORIGINAL COURSE CORPUS per the reference-construction protocol - these are the 4 source PDFs the sentence_corpus.jsonl was extracted from. Located via the shared provenance hash '9e856df6' embedded in the corpus/hierarchy artifact paths above.",
+    "absolute_dir_cluster_b": "/path/to/pipeline/projects/kc_l_v2_clean/data/input/9e856df6-ed73-4e33-9536-82aa7bdeec30/course_materials/",
+    "local_mirror_dir": "evaluation_suite/final_pipeline/reference_library/corpus_support/source_pdfs/",
+    "files": {
+      "Guides merged.pdf": {"sha256": "15ca535cb174869c3320abd227fb1230f11b2b2a0a98dec6e7e14d28e81fe04b", "size_bytes": 3221031, "doc_id": "DOC_Guides_merged"},
+      "data-preprocessing-book-Chapter 3n4.pdf": {"sha256": "581bf6f4b2dbd4de1ba24140b1b50a23514059a78244bbdbfce84a093b80d6a0", "size_bytes": 805996, "doc_id": "DOC_data_preprocessing_book_Chapter_3n4"},
+      "data-preprocessing-book-Chapter 7.pdf": {"sha256": "2c510eb9a39d6a1b37a953e0037c2a130b373c29108abc619f40b46d3964bf86", "size_bytes": 737023, "doc_id": "DOC_data_preprocessing_book_Chapter_7"},
+      "introduction-to-data-mining-.pdf": {"sha256": "cbbc3dc56aa0230286af23cd276a1282f96fba1910cfe79edce9855accf18ed5", "size_bytes": 24541097, "doc_id": "DOC_introduction_to_data_mining"}
+    },
+    "local_mirror_sha256_verified": true,
+    "doc_id_coverage_check": "all 4 doc_ids above account for all 4 distinct doc_id values present in sentence_corpus.jsonl (verified by direct enumeration: DOC_Guides_merged, DOC_data_preprocessing_book_Chapter_3n4, DOC_data_preprocessing_book_Chapter_7, DOC_introduction_to_data_mining - no fifth doc_id exists in the corpus and none of these 4 PDFs is unaccounted for)."
+  },
+  "authority_not_used_as_gold": {
+    "note": "Per explicit instruction, none of the following are treated as the authority for reference construction, even though they were used to build the candidate drafts: the Proposed evidence packet, the Base Dense evidence packet, DOS-RAG evidence, or the Qwen seed text itself. Only the original course corpus (sentence_corpus.jsonl + the 4 source PDFs above) is authoritative. The reference console's source-search tooling is built exclusively against sentence_corpus.jsonl, never against any candidate's evidence packet."
+  }
+}

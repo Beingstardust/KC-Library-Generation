@@ -1,0 +1,846 @@
+{
+  "model": "selene-1-llama-3.3-70b",
+  "n_rows": 36,
+  "results": [
+    {
+      "review_case_id": "HC-fe4c7df687de961fe9ef",
+      "unit_id": "KC_CLF_DT_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-012572a0a7733bca8eba",
+      "unit_id": "KC_CLF_DT_011",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-10eefdcd19e35d850253",
+      "unit_id": "KC_CLF_DT_011",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-c7a22e085fb6b86e4477",
+      "unit_id": "KC_CLF_DT_011",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-839137c7dbcf0db5b788",
+      "unit_id": "KC_CLF_NB_004",
+      "calls": {
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": null,
+      "M2_correctness_per_claim": null,
+      "TARGET_ALIGNMENT": null,
+      "M3_core_completeness": "NOT_JUDGEABLE"
+    },
+    {
+      "review_case_id": "HC-8e87b0cfbfe2543b8e8b",
+      "unit_id": "KC_CLU_DBS_006",
+      "calls": {
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": null,
+      "M2_correctness_per_claim": null,
+      "TARGET_ALIGNMENT": null,
+      "M3_core_completeness": "NOT_JUDGEABLE"
+    },
+    {
+      "review_case_id": "HC-3988c8211e3b9932aad8",
+      "unit_id": "KC_CLU_EVAL_006",
+      "calls": {
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": null,
+      "M2_correctness_per_claim": null,
+      "TARGET_ALIGNMENT": null,
+      "M3_core_completeness": "NOT_JUDGEABLE"
+    },
+    {
+      "review_case_id": "HC-44d0fe7bd50c94c16bbb",
+      "unit_id": "KC_CLU_EVAL_006",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "WRONG_TARGET",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-5135c846672dc6b056ae",
+      "unit_id": "KC_CLU_EVAL_006",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "CORE_COMPLETE"
+    },
+    {
+      "review_case_id": "HC-5d473b06fde52c36e5a9",
+      "unit_id": "KC_CLU_EVAL_006",
+      "calls": {
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": null,
+      "M2_correctness_per_claim": null,
+      "TARGET_ALIGNMENT": null,
+      "M3_core_completeness": "NOT_JUDGEABLE"
+    },
+    {
+      "review_case_id": "HC-9779fd29bc094c329d9c",
+      "unit_id": "KC_CLU_EVAL_006",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "FAIL",
+      "TARGET_ALIGNMENT": "WRONG_TARGET",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-4e99d9bd1b90d761c06a",
+      "unit_id": "KC_CLU_EVAL_008",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "FAIL",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-f316fba7e366eb539092",
+      "unit_id": "KC_CLU_HIER_003",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "CORE_COMPLETE"
+    },
+    {
+      "review_case_id": "HC-e9229ca0d9b51b943c45",
+      "unit_id": "KC_CLU_SIM_008",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-f562230d9916c1c51c94",
+      "unit_id": "KC_CLU_SIM_008",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "CORE_COMPLETE"
+    },
+    {
+      "review_case_id": "HC-f30f923a64482583721b",
+      "unit_id": "KC_DE_MISS_001",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "CORE_COMPLETE"
+    },
+    {
+      "review_case_id": "HC-0b7850199c2d62a48a45",
+      "unit_id": "KC_DE_MISS_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-260cc44a55c30bbd5e29",
+      "unit_id": "KC_DE_MISS_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-2e4e4e252edf537cd759",
+      "unit_id": "KC_DE_MISS_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-3d1171ac85488e14c5bc",
+      "unit_id": "KC_DE_MISS_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-55a48ea7dc0d42a3831f",
+      "unit_id": "KC_DE_MISS_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-5e4d9f3efe1c94d71f7b",
+      "unit_id": "KC_DE_MISS_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-28a2c09707f3b6ef1fd7",
+      "unit_id": "KC_DE_MISS_004",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "FAIL",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-07ce180cc589519c73bb",
+      "unit_id": "KC_EVAL_COMP_002",
+      "calls": {
+        "decompose": {
+          "status": "TRUNCATED"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": null,
+      "M2_correctness_per_claim": null,
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-2f7313a9df3ef879d6e4",
+      "unit_id": "KC_EVAL_COMP_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-7cb2e87e9b257d04b871",
+      "unit_id": "KC_EVAL_COMP_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-a4d6036a6f3e531d700b",
+      "unit_id": "KC_EVAL_COMP_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-a83b97f3e56b9970a53c",
+      "unit_id": "KC_EVAL_COMP_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-b1cddc7619260ebb2267",
+      "unit_id": "KC_EVAL_COMP_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-f53e5463e92f3ef2c36a",
+      "unit_id": "KC_EVAL_ENS_002",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-f99685f55e8880cff0f2",
+      "unit_id": "KC_EVAL_ENS_002",
+      "calls": {
+        "decompose": {
+          "status": "STRUCTURAL_INVALID"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": null,
+      "M2_correctness_per_claim": null,
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "CORE_COMPLETE"
+    },
+    {
+      "review_case_id": "HC-f8de8c65183efa7b96e8",
+      "unit_id": "KC_EVAL_ROC_003",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "CORE_COMPLETE"
+    },
+    {
+      "review_case_id": "HC-e219fa93e8bcb48961a7",
+      "unit_id": "KC_EVAL_SAMP_004",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-f6e2c05b914a94c10e5c",
+      "unit_id": "KC_EVAL_SAMP_004",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "CORE_COMPLETE"
+    },
+    {
+      "review_case_id": "HC-c467da5ca8f29f39b61d",
+      "unit_id": "KC_FSEL_GEN_006",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "MATERIAL_OMISSION"
+    },
+    {
+      "review_case_id": "HC-e17cb6d4990a33205e07",
+      "unit_id": "KC_FSEL_STAT_001",
+      "calls": {
+        "decompose": {
+          "status": "OK"
+        },
+        "m1": {
+          "status": "OK"
+        },
+        "m2": {
+          "status": "OK"
+        },
+        "target": {
+          "status": "OK"
+        },
+        "m3": {
+          "status": "OK"
+        }
+      },
+      "M1_faithfulness_per_claim": "PASS",
+      "M2_correctness_per_claim": "PASS",
+      "TARGET_ALIGNMENT": "TARGET_ALIGNED",
+      "M3_core_completeness": "CORE_COMPLETE"
+    }
+  ]
+}

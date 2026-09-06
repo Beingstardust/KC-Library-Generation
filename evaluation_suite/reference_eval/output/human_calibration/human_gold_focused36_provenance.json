@@ -1,0 +1,100 @@
+{
+  "generated_utc": "2026-08-27T20:19:48Z",
+  "source_xlsx": "KC_ANNOTATION_FOCUSED.xlsx",
+  "source_xlsx_sha256": "e669a9da52578fc19a7dd742d54b2647549e75d94a32c262a68915ad874ddf56",
+  "output_jsonl": "human_gold_focused36.jsonl",
+  "output_jsonl_sha256": "36bc07c3df7983361f993e42f0dec9827512589d81e3216a0fec5e663a61b666",
+  "n_rows": 36,
+  "annotator_provenance": {
+    "type": "LLM-SUGGESTION-ASSISTED, HUMAN-VALIDATED — single pass",
+    "NOT": "independent unaided human annotation; NOT a second data point for human-human agreement",
+    "disclosed_by": "annotator, at handoff",
+    "operator_statement": "used several LLM experts for suggestions; performed validation and made most judgments themselves",
+    "anchoring_risk": "structurally identical to the Qwen-seed anchoring threat central to this project's reference construction (see paper_methods/THREATS_TO_VALIDITY.md section 1): a human judgment formed in the presence of a machine suggestion can be pulled toward it even when the human believes they judged independently.",
+    "verification_evidence_of_genuine_engagement": {
+      "n_compared": 36,
+      "n_identical_notes": 0,
+      "label_diffs": [
+        {
+          "case_id": "HC-44d0fe7bd50c94c16bbb",
+          "task": "M1_faithfulness_per_claim",
+          "final": "FAIL",
+          "chatgpt_only_pass": "PASS"
+        },
+        {
+          "case_id": "HC-9779fd29bc094c329d9c",
+          "task": "M1_faithfulness_per_claim",
+          "final": "FAIL",
+          "chatgpt_only_pass": "PASS"
+        },
+        {
+          "case_id": "HC-260cc44a55c30bbd5e29",
+          "task": "M1_faithfulness_per_claim",
+          "final": "FAIL",
+          "chatgpt_only_pass": "PASS"
+        },
+        {
+          "case_id": "HC-f8de8c65183efa7b96e8",
+          "task": "M2_correctness_per_claim",
+          "final": "FAIL",
+          "chatgpt_only_pass": "PASS"
+        },
+        {
+          "case_id": "HC-f6e2c05b914a94c10e5c",
+          "task": "M1_faithfulness_per_claim",
+          "final": "FAIL",
+          "chatgpt_only_pass": "PASS"
+        },
+        {
+          "case_id": "HC-f6e2c05b914a94c10e5c",
+          "task": "M2_correctness_per_claim",
+          "final": "FAIL",
+          "chatgpt_only_pass": "PASS"
+        }
+      ]
+    }
+  },
+  "human_human_agreement": "NOT COMPUTABLE — only one annotation pass exists for this subset.",
+  "class_counts_vs_protocol_min_10": {
+    "M1_faithfulness_per_claim": {
+      "distribution": {
+        "PASS": 26,
+        "NOT_JUDGEABLE": 4,
+        "FAIL": 6
+      },
+      "minority_class": "FAIL",
+      "minority_n": 6,
+      "meets_min_10": false
+    },
+    "M2_correctness_per_claim": {
+      "distribution": {
+        "PASS": 23,
+        "NOT_JUDGEABLE": 4,
+        "FAIL": 9
+      },
+      "minority_class": "FAIL",
+      "minority_n": 9,
+      "meets_min_10": false
+    },
+    "M3_core_completeness": {
+      "distribution": {
+        "CORE_COMPLETE": 20,
+        "MATERIAL_OMISSION": 16
+      },
+      "minority_class": "MATERIAL_OMISSION",
+      "minority_n": 16,
+      "meets_min_10": true
+    },
+    "TARGET_ALIGNMENT": {
+      "distribution": {
+        "TARGET_ALIGNED": 27,
+        "WRONG_TARGET": 5,
+        "NOT_JUDGEABLE": 4
+      },
+      "minority_class": "WRONG_TARGET",
+      "minority_n": 5,
+      "meets_min_10": false
+    }
+  },
+  "note": "class counts are fixed by the human labels and do not depend on Selene's predictions; whether a task returns INSUFFICIENT_VALIDATION_SUPPORT is therefore already determined at this point, before any judge inference is run."
+}

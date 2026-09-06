@@ -1,0 +1,11 @@
+{
+  "lock_name": "JUDGE_PROMPTS_FROZEN",
+  "written_utc": "2026-08-25T11:22:52Z",
+  "hashes": {
+    "reference_eval\\reference_judge_schema.py": "602662a6cfad1518d82ca17f003f0cf4a5884dcf9560808f2994693f5677cae0",
+    "reference_eval\\reference_judge_prompts.py": "4684ecf15e5ac0b1e1d9646ba20e82ebf2c5430400cd8ede814b4080516d22ac"
+  },
+  "grammar_enforcement_verified": true,
+  "grammar_enforcement_evidence": "tests/test_grammar_enforcement.py, run against vLLM 0.27.1 + XGrammar: oneOf branches materialize and bind each M2 label to its permitted evidence-id family; if/then/else is confirmed silently ignored and is therefore not used anywhere.",
+  "lock_sha256": "656da3f3d000ed41b67509ed3b0d7c16f4b7f7f5e9dd793d17a9f66c51f3e4a8"
+}

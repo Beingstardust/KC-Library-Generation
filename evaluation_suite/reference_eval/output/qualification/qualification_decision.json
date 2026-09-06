@@ -1,0 +1,464 @@
+{
+  "protocol_sha256": "a91e9fbc66b0eb3d24dbbe038830c7547345575de636558b6acfb3721528712e",
+  "annotations_sha256": "36bc07c3df7983361f993e42f0dec9827512589d81e3216a0fec5e663a61b666",
+  "annotations_b_sha256": null,
+  "predictions_sha256": "39ff1943579b5c89782e632037b5f2fd8baabc7efab9f0867e4d37fa451bfb5c",
+  "n_rows_annotated": 36,
+  "human_human": {},
+  "qualification": {
+    "M1_EVIDENCE_FAITHFULNESS": {
+      "n": 30,
+      "human_pass_n": 24,
+      "human_fail_n": 6,
+      "raw_agreement": 0.6333333333333333,
+      "gwet_ac1": {
+        "ac1": 0.353575,
+        "p_a": 0.633333,
+        "e_gwet": 0.432778,
+        "n": 30,
+        "q_categories": 2,
+        "undefined_reason": null
+      },
+      "cohens_kappa_SECONDARY_ONLY": 0.2028985507246377,
+      "pass_precision": 0.8823529411764706,
+      "pass_recall": 0.625,
+      "fail_precision": 0.3076923076923077,
+      "fail_recall": 0.6666666666666666,
+      "false_pass_count": 2,
+      "false_pass_rate": 0.3333333333333333,
+      "false_fail_count": 9,
+      "false_fail_rate": 0.375,
+      "confusion_matrix": {
+        "FAIL->FAIL": 4,
+        "FAIL->PASS": 2,
+        "PASS->FAIL": 9,
+        "PASS->PASS": 15
+      },
+      "wilson_pass_recall": [
+        0.42709962442674276,
+        0.7884063244045122
+      ],
+      "wilson_fail_recall": [
+        0.299993315138392,
+        0.9032285888942195
+      ],
+      "thresholds": {
+        "raw_agreement_min": 0.85,
+        "gwet_ac1_min": 0.7,
+        "fail_recall_min": 0.85,
+        "false_pass_rate_max": 0.1,
+        "rationale": "a false PASS lets an unsupported draft claim be treated as grounded"
+      },
+      "flags": [
+        "SMALL_DENOMINATOR: human FAIL n=6 (<10)"
+      ],
+      "gate_checks": {
+        "raw_agreement_min": {
+          "observed": 0.6333333333333333,
+          "threshold": 0.85,
+          "met": false
+        },
+        "gwet_ac1_min": {
+          "observed": 0.353575,
+          "threshold": 0.7,
+          "met": false
+        },
+        "fail_recall_min": {
+          "observed": 0.6666666666666666,
+          "threshold": 0.85,
+          "met": false
+        },
+        "false_pass_rate_max": {
+          "observed": 0.3333333333333333,
+          "threshold": 0.1,
+          "met": false
+        }
+      },
+      "decision": "INSUFFICIENT_VALIDATION_SUPPORT",
+      "reason": "small denominators with unmet gates ['raw_agreement_min', 'gwet_ac1_min', 'fail_recall_min', 'false_pass_rate_max']"
+    },
+    "M2_REFERENCE_SOURCE_CORRECTNESS": {
+      "n": 30,
+      "human_pass_n": 22,
+      "human_fail_n": 8,
+      "raw_agreement": 0.6666666666666666,
+      "gwet_ac1": {
+        "ac1": 0.538462,
+        "p_a": 0.666667,
+        "e_gwet": 0.277778,
+        "n": 30,
+        "q_categories": 2,
+        "undefined_reason": null
+      },
+      "cohens_kappa_SECONDARY_ONLY": -0.11940298507462677,
+      "pass_precision": 0.7142857142857143,
+      "pass_recall": 0.9090909090909091,
+      "fail_precision": 0.0,
+      "fail_recall": 0.0,
+      "false_pass_count": 8,
+      "false_pass_rate": 1.0,
+      "false_fail_count": 2,
+      "false_fail_rate": 0.09090909090909091,
+      "confusion_matrix": {
+        "FAIL->PASS": 8,
+        "PASS->FAIL": 2,
+        "PASS->PASS": 20
+      },
+      "wilson_pass_recall": [
+        0.7218505315839417,
+        0.9747045710090046
+      ],
+      "wilson_fail_recall": [
+        0.0,
+        0.32440756488388023
+      ],
+      "thresholds": {
+        "raw_agreement_min": 0.85,
+        "gwet_ac1_min": 0.7,
+        "fail_recall_min": 0.85,
+        "false_pass_rate_max": 0.1,
+        "rationale": "safety-critical; a fluent but materially incorrect claim must not routinely pass",
+        "required_mechanism": "REFERENCE_SILENT_BUT_SOURCE_SUPPORTED escape path must remain operative"
+      },
+      "flags": [
+        "SMALL_DENOMINATOR: human FAIL n=8 (<10)"
+      ],
+      "gate_checks": {
+        "raw_agreement_min": {
+          "observed": 0.6666666666666666,
+          "threshold": 0.85,
+          "met": false
+        },
+        "gwet_ac1_min": {
+          "observed": 0.538462,
+          "threshold": 0.7,
+          "met": false
+        },
+        "fail_recall_min": {
+          "observed": 0.0,
+          "threshold": 0.85,
+          "met": false
+        },
+        "false_pass_rate_max": {
+          "observed": 1.0,
+          "threshold": 0.1,
+          "met": false
+        }
+      },
+      "decision": "INSUFFICIENT_VALIDATION_SUPPORT",
+      "reason": "small denominators with unmet gates ['raw_agreement_min', 'gwet_ac1_min', 'fail_recall_min', 'false_pass_rate_max']"
+    },
+    "M3_CORE_COMPLETENESS": {
+      "n": 36,
+      "human_pass_n": 20,
+      "human_fail_n": 16,
+      "raw_agreement": 0.5555555555555556,
+      "gwet_ac1": {
+        "ac1": 0.392405,
+        "p_a": 0.555556,
+        "e_gwet": 0.268519,
+        "n": 36,
+        "q_categories": 3,
+        "undefined_reason": null
+      },
+      "cohens_kappa_SECONDARY_ONLY": 0.23404255319148937,
+      "pass_precision": 1.0,
+      "pass_recall": 0.4,
+      "fail_precision": 0.5,
+      "fail_recall": 1.0,
+      "false_pass_count": 0,
+      "false_pass_rate": 0.0,
+      "false_fail_count": 12,
+      "false_fail_rate": 0.6,
+      "confusion_matrix": {
+        "FAIL->FAIL": 12,
+        "FAIL->NOT_JUDGEABLE": 4,
+        "PASS->FAIL": 12,
+        "PASS->PASS": 8
+      },
+      "wilson_pass_recall": [
+        0.21880653237281705,
+        0.6134184992377469
+      ],
+      "wilson_fail_recall": [
+        0.7575059933447592,
+        1.0
+      ],
+      "thresholds": {
+        "raw_agreement_min": 0.8,
+        "gwet_ac1_min": 0.65,
+        "pass_recall_min": 0.75,
+        "fail_recall_min": 0.75,
+        "rationale": "larger legitimate human-boundary component, so a lower agreement gate; but gated in BOTH directions because systematic one-sided rejection is not acceptable"
+      },
+      "flags": [],
+      "gate_checks": {
+        "raw_agreement_min": {
+          "observed": 0.5555555555555556,
+          "threshold": 0.8,
+          "met": false
+        },
+        "gwet_ac1_min": {
+          "observed": 0.392405,
+          "threshold": 0.65,
+          "met": false
+        },
+        "pass_recall_min": {
+          "observed": 0.4,
+          "threshold": 0.75,
+          "met": false
+        },
+        "fail_recall_min": {
+          "observed": 1.0,
+          "threshold": 0.75,
+          "met": true
+        }
+      },
+      "decision": "NOT_QUALIFIED",
+      "reason": "unmet gates: ['raw_agreement_min', 'gwet_ac1_min', 'pass_recall_min']"
+    },
+    "TARGET_ALIGNMENT": {
+      "n": 32,
+      "human_pass_n": 27,
+      "human_fail_n": 5,
+      "raw_agreement": 0.90625,
+      "gwet_ac1": {
+        "ac1": 0.883566,
+        "p_a": 0.90625,
+        "e_gwet": 0.194824,
+        "n": 32,
+        "q_categories": 2,
+        "undefined_reason": null
+      },
+      "cohens_kappa_SECONDARY_ONLY": 0.5294117647058824,
+      "pass_precision": 0.9,
+      "pass_recall": 1.0,
+      "fail_precision": 1.0,
+      "fail_recall": 0.4,
+      "false_pass_count": 3,
+      "false_pass_rate": 0.6,
+      "false_fail_count": 0,
+      "false_fail_rate": 0.0,
+      "confusion_matrix": {
+        "FAIL->FAIL": 2,
+        "FAIL->PASS": 3,
+        "PASS->PASS": 27
+      },
+      "wilson_pass_recall": [
+        0.8754449702581328,
+        0.9999999999999998
+      ],
+      "wilson_fail_recall": [
+        0.11762077423264783,
+        0.769275718723987
+      ],
+      "thresholds": {
+        "raw_agreement_min": 0.8,
+        "gwet_ac1_min": 0.65,
+        "fail_recall_min": 0.85,
+        "false_pass_rate_max": 0.1,
+        "rationale": "wrong-target drafts are a major failure mode; sensitivity to sibling substitution must be retained"
+      },
+      "flags": [
+        "SMALL_DENOMINATOR: human FAIL n=5 (<10)"
+      ],
+      "gate_checks": {
+        "raw_agreement_min": {
+          "observed": 0.90625,
+          "threshold": 0.8,
+          "met": true
+        },
+        "gwet_ac1_min": {
+          "observed": 0.883566,
+          "threshold": 0.65,
+          "met": true
+        },
+        "fail_recall_min": {
+          "observed": 0.4,
+          "threshold": 0.85,
+          "met": false
+        },
+        "false_pass_rate_max": {
+          "observed": 0.6,
+          "threshold": 0.1,
+          "met": false
+        }
+      },
+      "decision": "INSUFFICIENT_VALIDATION_SUPPORT",
+      "reason": "small denominators with unmet gates ['fail_recall_min', 'false_pass_rate_max']"
+    },
+    "M4A_RETRIEVAL_CLAIM_SUPPORT": {
+      "decision": "INSUFFICIENT_VALIDATION_SUPPORT",
+      "reason": "no comparable labels",
+      "n": 0
+    }
+  },
+  "decisions": {
+    "M1_EVIDENCE_FAITHFULNESS": "INSUFFICIENT_VALIDATION_SUPPORT",
+    "M2_REFERENCE_SOURCE_CORRECTNESS": "INSUFFICIENT_VALIDATION_SUPPORT",
+    "M3_CORE_COMPLETENESS": "NOT_QUALIFIED",
+    "TARGET_ALIGNMENT": "INSUFFICIENT_VALIDATION_SUPPORT",
+    "M4A_RETRIEVAL_CLAIM_SUPPORT": "INSUFFICIENT_VALIDATION_SUPPORT"
+  },
+  "JUDGE_QUALIFIED": false,
+  "decision_note": "Criterion-wise. No averaging across tasks. M4A failing alone does NOT invalidate M1/M2/M3/TARGET - it means automated retrieval-reference recall is unvalidated.",
+  "seed_bias_audit": {
+    "by_arm": {
+      "M1_EVIDENCE_FAITHFULNESS": {
+        "extrinsic_B-Q": {
+          "n": 5,
+          "disagree": 2,
+          "false_fail": 2
+        },
+        "extrinsic_DOS-Q": {
+          "n": 5
+        },
+        "intrinsic_P-G": {
+          "n": 5,
+          "disagree": 2,
+          "false_fail": 2
+        },
+        "extrinsic_P-Q": {
+          "n": 5,
+          "disagree": 2,
+          "false_fail": 2
+        },
+        "intrinsic_P-D": {
+          "n": 6,
+          "disagree": 2,
+          "false_pass": 2
+        },
+        "intrinsic_P-Q": {
+          "n": 4,
+          "disagree": 3,
+          "false_fail": 3
+        }
+      },
+      "M2_REFERENCE_SOURCE_CORRECTNESS": {
+        "extrinsic_B-Q": {
+          "n": 5
+        },
+        "extrinsic_DOS-Q": {
+          "n": 5,
+          "disagree": 1,
+          "false_pass": 1
+        },
+        "intrinsic_P-G": {
+          "n": 5,
+          "disagree": 1,
+          "false_pass": 1
+        },
+        "extrinsic_P-Q": {
+          "n": 5,
+          "disagree": 2,
+          "false_pass": 2
+        },
+        "intrinsic_P-D": {
+          "n": 6,
+          "disagree": 4,
+          "false_fail": 1,
+          "false_pass": 3
+        },
+        "intrinsic_P-Q": {
+          "n": 4,
+          "disagree": 2,
+          "false_fail": 1,
+          "false_pass": 1
+        }
+      },
+      "M3_CORE_COMPLETENESS": {
+        "extrinsic_B-Q": {
+          "n": 6,
+          "disagree": 4,
+          "false_fail": 3
+        },
+        "extrinsic_DOS-Q": {
+          "n": 6,
+          "disagree": 3,
+          "false_fail": 2
+        },
+        "intrinsic_P-G": {
+          "n": 6,
+          "disagree": 1,
+          "false_fail": 1
+        },
+        "extrinsic_P-Q": {
+          "n": 6,
+          "disagree": 3,
+          "false_fail": 2
+        },
+        "intrinsic_P-Q": {
+          "n": 6,
+          "disagree": 2,
+          "false_fail": 1
+        },
+        "intrinsic_P-D": {
+          "n": 6,
+          "disagree": 3,
+          "false_fail": 3
+        }
+      },
+      "TARGET_ALIGNMENT": {
+        "extrinsic_B-Q": {
+          "n": 5
+        },
+        "extrinsic_DOS-Q": {
+          "n": 5,
+          "disagree": 1,
+          "false_pass": 1
+        },
+        "intrinsic_P-G": {
+          "n": 6,
+          "disagree": 1,
+          "false_pass": 1
+        },
+        "extrinsic_P-Q": {
+          "n": 5,
+          "disagree": 1,
+          "false_pass": 1
+        },
+        "intrinsic_P-D": {
+          "n": 6
+        },
+        "intrinsic_P-Q": {
+          "n": 5
+        }
+      }
+    },
+    "audit_flags_by_arm": {
+      "extrinsic_B-Q": {
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=YES": 4,
+        "POSSIBLE_REFERENCE_DEFECT=NO": 6,
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=NO": 2
+      },
+      "extrinsic_DOS-Q": {
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=NO": 2,
+        "POSSIBLE_REFERENCE_DEFECT=NO": 6,
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=YES": 4
+      },
+      "intrinsic_P-G": {
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=NO": 4,
+        "POSSIBLE_REFERENCE_DEFECT=NO": 6,
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=YES": 2
+      },
+      "extrinsic_P-Q": {
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=NO": 4,
+        "POSSIBLE_REFERENCE_DEFECT=NO": 5,
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=YES": 2,
+        "POSSIBLE_REFERENCE_DEFECT=YES": 1
+      },
+      "intrinsic_P-Q": {
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=NO": 4,
+        "POSSIBLE_REFERENCE_DEFECT=NO": 5,
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=YES": 2,
+        "POSSIBLE_REFERENCE_DEFECT=YES": 1
+      },
+      "intrinsic_P-D": {
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=NO": 5,
+        "POSSIBLE_REFERENCE_DEFECT=NO": 6,
+        "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE=YES": 1
+      }
+    },
+    "interpretation_guard": "Absence of bias may NOT be inferred from a nonsignificant difference. This is a disclosed threat-to-validity diagnostic."
+  }
+}

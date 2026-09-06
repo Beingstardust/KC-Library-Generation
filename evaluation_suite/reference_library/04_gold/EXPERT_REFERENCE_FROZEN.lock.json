@@ -1,0 +1,12 @@
+{
+  "lock_name": "EXPERT_REFERENCE_FROZEN",
+  "frozen_utc": "2026-08-24T22:53:16Z",
+  "reference_jsonl": "expert_adjudicated_reference_kc_library.jsonl",
+  "reference_jsonl_sha256": "6ea703e6b126f4e37b0b6ff34dacd3f72ef936b5a0d6b21725dbbf63ead31aed",
+  "manifest_sha256": "7ada615689ad95920f84dfe19220d323f1b0262aaa5b1d7a02eeb2d7963c2544",
+  "ordered_kc_id_sha256": "45c3931c0229c6fb1f88e9e53f343d77dc89efb2157e50b17124239b5bb265fb",
+  "corpus_snapshot_sha256": "62c4d26543ee5ac2b81fbb2d7ad772b031d18616d93334122c979d99e867bc33",
+  "source_evidence_store_sha256": "96d489558c4f33ac3104a40e63c40d4e23503c7d06870f5d068738fcbf685893",
+  "candidate_freeze_manifest_sha256": "d85c7b4b4bf8e00f7e1940b4b0d1496477e42900166b0ecaccda0c0fdddf1f9c",
+  "note": "The production evaluation runner must verify this lock before executing. Reference content is frozen: any change to expert_adjudicated_reference_kc_library.jsonl invalidates this lock and every downstream result."
+}

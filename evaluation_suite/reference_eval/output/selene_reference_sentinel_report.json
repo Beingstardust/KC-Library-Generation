@@ -1,0 +1,453 @@
+{
+  "model": "selene-1-llama-3.3-70b",
+  "n_sentinels": 36,
+  "case_types": {
+    "SOURCE_BOUNDARY": 2,
+    "REFERENCE_CONTENT": 33,
+    "ABSTENTION": 1
+  },
+  "structural": {
+    "decompose_candidate": {
+      "n": 34,
+      "structural_valid": 34,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 34,
+      "contract_validity_rate": 1.0,
+      "truncated": 0,
+      "call_failed": 0,
+      "retried": 0,
+      "recovered_by_retry": 0,
+      "status_counts": {
+        "OK": 34
+      }
+    },
+    "decompose_reference": {
+      "n": 34,
+      "structural_valid": 34,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 34,
+      "contract_validity_rate": 1.0,
+      "truncated": 0,
+      "call_failed": 0,
+      "retried": 0,
+      "recovered_by_retry": 0,
+      "status_counts": {
+        "OK": 34
+      }
+    },
+    "m1": {
+      "n": 34,
+      "structural_valid": 34,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 34,
+      "contract_validity_rate": 1.0,
+      "truncated": 0,
+      "call_failed": 0,
+      "retried": 0,
+      "recovered_by_retry": 0,
+      "status_counts": {
+        "OK": 34
+      }
+    },
+    "m2": {
+      "n": 33,
+      "structural_valid": 33,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 33,
+      "contract_validity_rate": 1.0,
+      "truncated": 0,
+      "call_failed": 0,
+      "retried": 0,
+      "recovered_by_retry": 0,
+      "status_counts": {
+        "OK": 33
+      }
+    },
+    "m3_coverage": {
+      "n": 33,
+      "structural_valid": 33,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 33,
+      "contract_validity_rate": 1.0,
+      "truncated": 0,
+      "call_failed": 0,
+      "retried": 0,
+      "recovered_by_retry": 0,
+      "status_counts": {
+        "OK": 33
+      }
+    },
+    "m3_holistic": {
+      "n": 33,
+      "structural_valid": 33,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 33,
+      "contract_validity_rate": 1.0,
+      "truncated": 0,
+      "call_failed": 0,
+      "retried": 0,
+      "recovered_by_retry": 0,
+      "status_counts": {
+        "OK": 33
+      }
+    },
+    "m4_coverage": {
+      "n": 34,
+      "structural_valid": 34,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 34,
+      "contract_validity_rate": 1.0,
+      "truncated": 0,
+      "call_failed": 0,
+      "retried": 0,
+      "recovered_by_retry": 0,
+      "status_counts": {
+        "OK": 34
+      }
+    },
+    "m4_holistic": {
+      "n": 34,
+      "structural_valid": 25,
+      "structural_validity_rate": 0.7352941176470589,
+      "contract_valid": 25,
+      "contract_validity_rate": 0.7352941176470589,
+      "truncated": 9,
+      "call_failed": 0,
+      "retried": 9,
+      "recovered_by_retry": 0,
+      "status_counts": {
+        "OK": 25,
+        "TRUNCATED": 9
+      }
+    },
+    "target": {
+      "n": 33,
+      "structural_valid": 22,
+      "structural_validity_rate": 0.6666666666666666,
+      "contract_valid": 22,
+      "contract_validity_rate": 0.6666666666666666,
+      "truncated": 11,
+      "call_failed": 0,
+      "retried": 12,
+      "recovered_by_retry": 1,
+      "status_counts": {
+        "OK": 22,
+        "TRUNCATED": 11
+      }
+    }
+  },
+  "semantic": {
+    "M1_faithfulness": {
+      "n_with_expectation": 34,
+      "n_judgeable": 34,
+      "n_unjudgeable_invalid_call": 0,
+      "agreement": 0.8823529411764706,
+      "n_match": 30,
+      "confusion_matrix": {
+        "FAIL->FAIL": 16,
+        "PASS->FAIL": 4,
+        "PASS->PASS": 14
+      },
+      "fail_recall": 1.0,
+      "n_expected_fail": 16,
+      "false_pass": [],
+      "n_false_pass": 0,
+      "false_fail": [
+        "SENT_003",
+        "SENT_012",
+        "SENT_017",
+        "SENT_018"
+      ],
+      "n_false_fail": 4,
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_003",
+          "expected": "PASS",
+          "actual": "FAIL"
+        },
+        {
+          "sentinel_id": "SENT_012",
+          "expected": "PASS",
+          "actual": "FAIL"
+        },
+        {
+          "sentinel_id": "SENT_017",
+          "expected": "PASS",
+          "actual": "FAIL"
+        },
+        {
+          "sentinel_id": "SENT_018",
+          "expected": "PASS",
+          "actual": "FAIL"
+        }
+      ]
+    },
+    "M2_correctness": {
+      "n_with_expectation": 31,
+      "n_judgeable": 31,
+      "n_unjudgeable_invalid_call": 0,
+      "agreement": 0.967741935483871,
+      "n_match": 30,
+      "confusion_matrix": {
+        "FAIL->FAIL": 14,
+        "FAIL->PASS": 1,
+        "PASS->PASS": 16
+      },
+      "fail_recall": 0.9333333333333333,
+      "n_expected_fail": 15,
+      "false_pass": [
+        "SENT_029"
+      ],
+      "n_false_pass": 1,
+      "false_fail": [],
+      "n_false_fail": 0,
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_029",
+          "expected": "FAIL",
+          "actual": "PASS"
+        }
+      ]
+    },
+    "M3_core_completeness": {
+      "n_with_expectation": 32,
+      "n_judgeable": 32,
+      "n_unjudgeable_invalid_call": 0,
+      "agreement": 0.90625,
+      "n_match": 29,
+      "confusion_matrix": {
+        "CORE_COMPLETE->CORE_COMPLETE": 14,
+        "CORE_COMPLETE->MATERIAL_OMISSION": 3,
+        "MATERIAL_OMISSION->MATERIAL_OMISSION": 15
+      },
+      "fail_recall": 1.0,
+      "n_expected_fail": 15,
+      "false_pass": [],
+      "n_false_pass": 0,
+      "false_fail": [
+        "SENT_011",
+        "SENT_029",
+        "SENT_035"
+      ],
+      "n_false_fail": 3,
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_011",
+          "expected": "CORE_COMPLETE",
+          "actual": "MATERIAL_OMISSION"
+        },
+        {
+          "sentinel_id": "SENT_029",
+          "expected": "CORE_COMPLETE",
+          "actual": "MATERIAL_OMISSION"
+        },
+        {
+          "sentinel_id": "SENT_035",
+          "expected": "CORE_COMPLETE",
+          "actual": "MATERIAL_OMISSION"
+        }
+      ]
+    },
+    "M4_evidence_adequacy": {
+      "n_with_expectation": 36,
+      "n_judgeable": 25,
+      "n_unjudgeable_invalid_call": 11,
+      "agreement": 0.28,
+      "n_match": 7,
+      "confusion_matrix": {
+        "EVIDENCE_ADEQUATE->EVIDENCE_ADEQUATE": 1,
+        "EVIDENCE_ADEQUATE->MATERIAL_EVIDENCE_GAP": 18,
+        "MATERIAL_EVIDENCE_GAP->MATERIAL_EVIDENCE_GAP": 6
+      },
+      "fail_recall": 1.0,
+      "n_expected_fail": 6,
+      "false_pass": [],
+      "n_false_pass": 0,
+      "false_fail": [
+        "SENT_005",
+        "SENT_007",
+        "SENT_008",
+        "SENT_009",
+        "SENT_014",
+        "SENT_015",
+        "SENT_017",
+        "SENT_018",
+        "SENT_020",
+        "SENT_021",
+        "SENT_022",
+        "SENT_023",
+        "SENT_024",
+        "SENT_025",
+        "SENT_028",
+        "SENT_030",
+        "SENT_031",
+        "SENT_036"
+      ],
+      "n_false_fail": 18,
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_005",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_007",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_008",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_009",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_014",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_015",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_017",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_018",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_020",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_021",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_022",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_023",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_024",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_025",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_028",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_030",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_031",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_036",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        }
+      ]
+    },
+    "TARGET_ALIGNMENT": {
+      "n_with_expectation": 33,
+      "n_judgeable": 22,
+      "n_unjudgeable_invalid_call": 11,
+      "agreement": 0.8636363636363636,
+      "n_match": 19,
+      "confusion_matrix": {
+        "TARGET_ALIGNED->TARGET_ALIGNED": 17,
+        "TARGET_ALIGNED->WRONG_TARGET": 3,
+        "WRONG_TARGET->WRONG_TARGET": 2
+      },
+      "fail_recall": 1.0,
+      "n_expected_fail": 2,
+      "false_pass": [],
+      "n_false_pass": 0,
+      "false_fail": [
+        "SENT_020",
+        "SENT_023",
+        "SENT_025"
+      ],
+      "n_false_fail": 3,
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_020",
+          "expected": "TARGET_ALIGNED",
+          "actual": "WRONG_TARGET"
+        },
+        {
+          "sentinel_id": "SENT_023",
+          "expected": "TARGET_ALIGNED",
+          "actual": "WRONG_TARGET"
+        },
+        {
+          "sentinel_id": "SENT_025",
+          "expected": "TARGET_ALIGNED",
+          "actual": "WRONG_TARGET"
+        }
+      ]
+    }
+  },
+  "decomposition_quality": {
+    "candidate_problems": 3,
+    "reference_problems": 0,
+    "problem_details": [
+      {
+        "sentinel_id": "SENT_003",
+        "which": "decompose_candidate",
+        "problems": [
+          "KC_EVAL_BASIC_006::sentinel:claim:002: parent_span is not a literal substring of the source text"
+        ]
+      },
+      {
+        "sentinel_id": "SENT_012",
+        "which": "decompose_candidate",
+        "problems": [
+          "KC_FSEL_FW_002::sentinel:claim:002: parent_span is not a literal substring of the source text"
+        ]
+      },
+      {
+        "sentinel_id": "SENT_013",
+        "which": "decompose_candidate",
+        "problems": [
+          "KC_CLU_EVAL_008::sentinel:claim:006: parent_span is not a literal substring of the source text"
+        ]
+      }
+    ],
+    "note": "Structural checks only (parent_span must be a literal substring, formula relations must survive splitting, gross under-coverage flagged). Bounded HUMAN validation of the decomposition is still required before results are opened."
+  },
+  "claim_counts": {
+    "candidate_total": 207,
+    "reference_total": 258
+  },
+  "caveat": "DEVELOPMENT-STAGE RESULTS. Sentinel performance does not qualify a judge for production use; qualification requires human calibration against the same constructs."
+}

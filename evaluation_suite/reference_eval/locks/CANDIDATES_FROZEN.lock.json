@@ -1,0 +1,14 @@
+{
+  "lock_name": "CANDIDATES_FROZEN",
+  "written_utc": "2026-08-25T11:22:52Z",
+  "candidate_freeze_manifest": "reference_library/00_freeze/CANDIDATE_FREEZE_MANIFEST.json",
+  "hashes": {
+    "reference_library\\00_freeze\\CANDIDATE_FREEZE_MANIFEST.json": "d85c7b4b4bf8e00f7e1940b4b0d1496477e42900166b0ecaccda0c0fdddf1f9c",
+    "reference_library\\00_freeze\\candidates_frozen.lock.json": "2d2acf3a04cb3a4c5e018690ba916de88d06fbe87a7b4f6b5a61cb71d3a87d7a",
+    "reference_library\\00_freeze\\candidate_revalidation_20260825.json": "89f95d9cb6290c98c6856d9406d103b5886aac05fe2d223cc68870b7b77cf5ef"
+  },
+  "n_arms": 7,
+  "unique_primary_arms": 6,
+  "note": "Candidate draft files live on Cluster-B and are hashed inside CANDIDATE_FREEZE_MANIFEST.json; revalidated 2026-08-25 with all 7 hashes unchanged. If any candidate hash differs at verification time, the evaluation must STOP.",
+  "lock_sha256": "9a0e5f3643ea959662208a9056231e0806a68f08a3f16df3caf9604a7a754a21"
+}

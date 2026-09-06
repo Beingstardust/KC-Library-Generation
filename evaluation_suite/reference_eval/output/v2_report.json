@@ -1,0 +1,635 @@
+{
+  "generated_utc": "2026-08-31T23:14:52Z",
+  "instrument": "Cluster A ant2, 4xH100, TP4, CUDA 13 - single instrument, zero deviation",
+  "protocol": "OVERHAUL_PROTOCOL_v2.md (pre-registered)",
+  "coverage": {
+    "kcs_total": 159,
+    "kcs_scored": 151,
+    "excluded_no_expert_reference": [
+      "KC_CLF_UND_005",
+      "KC_EVAL_BASIC_007",
+      "KC_EVAL_BASIC_008",
+      "KC_EVAL_BASIC_009",
+      "KC_EVAL_COMP_001",
+      "KC_EVAL_COMP_004",
+      "KC_EVAL_COMP_005"
+    ],
+    "excluded_decomposition_failed": [
+      "KC_CLF_NB_009"
+    ],
+    "note": "All 8 exclusions are arm-independent: a reference and its decomposition are properties of the KC, so every arm loses the SAME KCs and paired comparisons stay balanced. The excluded set is NOT random, however - 4 of the 7 reference-less KCs are exactly those where the Proposed retriever returned zero evidence. Had they been scorable they would have scored 0 context recall for Proposed, while BaseDense, which always returns passages, might have scored above 0. The exclusion therefore plausibly flatters Proposed on ABSOLUTE retrieval recall; relative paired comparisons are unaffected."
+  },
+  "abstention_behaviour_all_rows": {
+    "intrinsic_P-Q": {
+      "n": 159,
+      "abstain_forced": 4,
+      "abstain_chosen": 10,
+      "drafted_with_zero_evidence": 0
+    },
+    "intrinsic_P-G": {
+      "n": 159,
+      "abstain_forced": 4,
+      "abstain_chosen": 6,
+      "drafted_with_zero_evidence": 0
+    },
+    "intrinsic_P-D": {
+      "n": 159,
+      "abstain_forced": 4,
+      "abstain_chosen": 6,
+      "drafted_with_zero_evidence": 0
+    },
+    "extrinsic_P-Q": {
+      "n": 159,
+      "abstain_forced": 4,
+      "abstain_chosen": 11,
+      "drafted_with_zero_evidence": 0
+    },
+    "extrinsic_B-Q": {
+      "n": 159,
+      "abstain_forced": 0,
+      "abstain_chosen": 12,
+      "drafted_with_zero_evidence": 0
+    },
+    "extrinsic_DOS-Q": {
+      "n": 159,
+      "abstain_forced": 0,
+      "abstain_chosen": 5,
+      "drafted_with_zero_evidence": 0
+    },
+    "sensitivity_DOS-Q_matched": {
+      "n": 159,
+      "abstain_forced": 7,
+      "abstain_chosen": 10,
+      "drafted_with_zero_evidence": 0
+    }
+  },
+  "length_adjusted": {
+    "nugget_recall": {
+      "n_bins": 5,
+      "band_upper_bounds": [
+        125,
+        160,
+        197,
+        245
+      ],
+      "band_weights": [
+        0.202,
+        0.203,
+        0.202,
+        0.195,
+        0.2
+      ],
+      "by_arm": {
+        "extrinsic_B-Q": {
+          "raw_drafted_only": 0.5928,
+          "length_adjusted": 0.605,
+          "shift": 0.0122,
+          "bands_covered": 5,
+          "mean_words": 176.5
+        },
+        "extrinsic_DOS-Q": {
+          "raw_drafted_only": 0.7519,
+          "length_adjusted": 0.6751,
+          "shift": -0.0768,
+          "bands_covered": 5,
+          "mean_words": 218.5
+        },
+        "extrinsic_P-Q": {
+          "raw_drafted_only": 0.8651,
+          "length_adjusted": 0.836,
+          "shift": -0.0291,
+          "bands_covered": 5,
+          "mean_words": 231.2
+        },
+        "intrinsic_P-D": {
+          "raw_drafted_only": 0.6909,
+          "length_adjusted": 0.7961,
+          "shift": 0.1053,
+          "bands_covered": 4,
+          "mean_words": 122.7
+        },
+        "intrinsic_P-G": {
+          "raw_drafted_only": 0.7675,
+          "length_adjusted": 0.7731,
+          "shift": 0.0056,
+          "bands_covered": 5,
+          "mean_words": 187.5
+        },
+        "intrinsic_P-Q": {
+          "raw_drafted_only": 0.8947,
+          "length_adjusted": 0.8655,
+          "shift": -0.0292,
+          "bands_covered": 5,
+          "mean_words": 245.5
+        },
+        "sensitivity_DOS-Q_matched": {
+          "raw_drafted_only": 0.6161,
+          "length_adjusted": 0.6354,
+          "shift": 0.0193,
+          "bands_covered": 5,
+          "mean_words": 170.4
+        }
+      }
+    },
+    "faithfulness": {
+      "n_bins": 5,
+      "band_upper_bounds": [
+        125,
+        159,
+        195,
+        244
+      ],
+      "band_weights": [
+        0.204,
+        0.197,
+        0.199,
+        0.2,
+        0.198
+      ],
+      "by_arm": {
+        "extrinsic_B-Q": {
+          "raw_drafted_only": 0.936,
+          "length_adjusted": 0.9343,
+          "shift": -0.0017,
+          "bands_covered": 5,
+          "mean_words": 176.5
+        },
+        "extrinsic_DOS-Q": {
+          "raw_drafted_only": 0.9801,
+          "length_adjusted": 0.9703,
+          "shift": -0.0098,
+          "bands_covered": 5,
+          "mean_words": 218.5
+        },
+        "extrinsic_P-Q": {
+          "raw_drafted_only": 0.9533,
+          "length_adjusted": 0.9477,
+          "shift": -0.0056,
+          "bands_covered": 5,
+          "mean_words": 231.2
+        },
+        "intrinsic_P-D": {
+          "raw_drafted_only": 0.8249,
+          "length_adjusted": 0.8081,
+          "shift": -0.0168,
+          "bands_covered": 4,
+          "mean_words": 122.4
+        },
+        "intrinsic_P-G": {
+          "raw_drafted_only": 0.968,
+          "length_adjusted": 0.9701,
+          "shift": 0.0021,
+          "bands_covered": 5,
+          "mean_words": 180.9
+        },
+        "intrinsic_P-Q": {
+          "raw_drafted_only": 0.952,
+          "length_adjusted": 0.9333,
+          "shift": -0.0187,
+          "bands_covered": 5,
+          "mean_words": 230.8
+        },
+        "sensitivity_DOS-Q_matched": {
+          "raw_drafted_only": 0.9289,
+          "length_adjusted": 0.9345,
+          "shift": 0.0057,
+          "bands_covered": 5,
+          "mean_words": 170.4
+        }
+      }
+    }
+  },
+  "length_robustness_nugget_recall": {
+    "intrinsic_P-Q vs intrinsic_P-G": {
+      "n_kcs": 144,
+      "raw_diff": 0.1112,
+      "adjusted_diff": 0.0818,
+      "ci95": [
+        0.0266,
+        0.1357
+      ],
+      "ci_excludes_zero": true,
+      "sign_flips": false
+    },
+    "intrinsic_P-Q vs intrinsic_P-D": {
+      "n_kcs": 143,
+      "raw_diff": 0.1855,
+      "adjusted_diff": 0.0598,
+      "ci95": [
+        -0.0005,
+        0.173
+      ],
+      "ci_excludes_zero": false,
+      "sign_flips": false
+    },
+    "intrinsic_P-G vs intrinsic_P-D": {
+      "n_kcs": 146,
+      "raw_diff": 0.072,
+      "adjusted_diff": -0.025,
+      "ci95": [
+        -0.0675,
+        0.0803
+      ],
+      "ci_excludes_zero": false,
+      "sign_flips": true
+    },
+    "extrinsic_P-Q vs extrinsic_B-Q": {
+      "n_kcs": 138,
+      "raw_diff": 0.2627,
+      "adjusted_diff": 0.2269,
+      "ci95": [
+        0.1497,
+        0.3011
+      ],
+      "ci_excludes_zero": true,
+      "sign_flips": false
+    },
+    "extrinsic_P-Q vs extrinsic_DOS-Q": {
+      "n_kcs": 141,
+      "raw_diff": 0.0941,
+      "adjusted_diff": 0.1265,
+      "ci95": [
+        0.0335,
+        0.2157
+      ],
+      "ci_excludes_zero": true,
+      "sign_flips": false
+    },
+    "extrinsic_B-Q vs extrinsic_DOS-Q": {
+      "n_kcs": 143,
+      "raw_diff": -0.1672,
+      "adjusted_diff": -0.0803,
+      "ci95": [
+        -0.1575,
+        -0.0008
+      ],
+      "ci_excludes_zero": true,
+      "sign_flips": false
+    }
+  },
+  "summary_by_arm": {
+    "extrinsic_B-Q": {
+      "n_kcs": 151,
+      "context_recall": 0.4664,
+      "nugget_recall": 0.5654,
+      "faithfulness": 0.936,
+      "abstention_rate": 0.0464,
+      "abstain_forced_no_evidence": 0,
+      "abstain_chosen_despite_evidence": 7,
+      "mean_evidence_items": 123.1,
+      "mean_claims": 7.21
+    },
+    "extrinsic_DOS-Q": {
+      "n_kcs": 151,
+      "context_recall": 0.6978,
+      "nugget_recall": 0.7369,
+      "faithfulness": 0.9801,
+      "abstention_rate": 0.0199,
+      "abstain_forced_no_evidence": 0,
+      "abstain_chosen_despite_evidence": 3,
+      "mean_evidence_items": 33.7,
+      "mean_claims": 8.53
+    },
+    "extrinsic_P-Q": {
+      "n_kcs": 151,
+      "context_recall": 0.7083,
+      "nugget_recall": 0.8193,
+      "faithfulness": 0.9533,
+      "abstention_rate": 0.053,
+      "abstain_forced_no_evidence": 0,
+      "abstain_chosen_despite_evidence": 8,
+      "mean_evidence_items": 17.2,
+      "mean_claims": 8.87
+    },
+    "intrinsic_P-D": {
+      "n_kcs": 151,
+      "context_recall": 0.7083,
+      "nugget_recall": 0.6726,
+      "faithfulness": 0.8249,
+      "abstention_rate": 0.0265,
+      "abstain_forced_no_evidence": 0,
+      "abstain_chosen_despite_evidence": 4,
+      "mean_evidence_items": 17.2,
+      "mean_claims": 5.85
+    },
+    "intrinsic_P-G": {
+      "n_kcs": 151,
+      "context_recall": 0.7083,
+      "nugget_recall": 0.7472,
+      "faithfulness": 0.968,
+      "abstention_rate": 0.0265,
+      "abstain_forced_no_evidence": 0,
+      "abstain_chosen_despite_evidence": 4,
+      "mean_evidence_items": 17.2,
+      "mean_claims": 7.72
+    },
+    "intrinsic_P-Q": {
+      "n_kcs": 151,
+      "context_recall": 0.7083,
+      "nugget_recall": 0.8532,
+      "faithfulness": 0.952,
+      "abstention_rate": 0.0464,
+      "abstain_forced_no_evidence": 0,
+      "abstain_chosen_despite_evidence": 7,
+      "mean_evidence_items": 17.2,
+      "mean_claims": 8.92
+    },
+    "sensitivity_DOS-Q_matched": {
+      "n_kcs": 151,
+      "context_recall": 0.4657,
+      "nugget_recall": 0.5671,
+      "faithfulness": 0.9289,
+      "abstention_rate": 0.0795,
+      "abstain_forced_no_evidence": 2,
+      "abstain_chosen_despite_evidence": 10,
+      "mean_evidence_items": 11.6,
+      "mean_claims": 6.87
+    }
+  },
+  "paired_comparisons": {
+    "intrinsic": {
+      "nugget_recall": {
+        "intrinsic_P-Q vs intrinsic_P-G": {
+          "n_kcs": 151,
+          "mean_diff": 0.106,
+          "ci95": [
+            0.0741,
+            0.1398
+          ],
+          "better_a1": 44,
+          "better_a2": 2,
+          "mcnemar_p": 0.0,
+          "ci_excludes_zero": true,
+          "holm_p": 0.0,
+          "significant": true
+        },
+        "intrinsic_P-Q vs intrinsic_P-D": {
+          "n_kcs": 151,
+          "mean_diff": 0.1806,
+          "ci95": [
+            0.1345,
+            0.2278
+          ],
+          "better_a1": 65,
+          "better_a2": 7,
+          "mcnemar_p": 0.0,
+          "ci_excludes_zero": true,
+          "holm_p": 0.0,
+          "significant": true
+        },
+        "intrinsic_P-G vs intrinsic_P-D": {
+          "n_kcs": 151,
+          "mean_diff": 0.0746,
+          "ci95": [
+            0.0274,
+            0.1224
+          ],
+          "better_a1": 47,
+          "better_a2": 24,
+          "mcnemar_p": 0.008555,
+          "ci_excludes_zero": true,
+          "holm_p": 0.008555,
+          "significant": true
+        }
+      },
+      "faithfulness": {
+        "intrinsic_P-Q vs intrinsic_P-G": {
+          "n_kcs": 126,
+          "mean_diff": -0.0247,
+          "ci95": [
+            -0.0457,
+            -0.0042
+          ],
+          "better_a1": 15,
+          "better_a2": 35,
+          "mcnemar_p": 0.0066,
+          "ci_excludes_zero": true,
+          "holm_p": 0.0066,
+          "significant": true
+        },
+        "intrinsic_P-Q vs intrinsic_P-D": {
+          "n_kcs": 140,
+          "mean_diff": 0.1103,
+          "ci95": [
+            0.0834,
+            0.1377
+          ],
+          "better_a1": 75,
+          "better_a2": 15,
+          "mcnemar_p": 0.0,
+          "ci_excludes_zero": true,
+          "holm_p": 0.0,
+          "significant": true
+        },
+        "intrinsic_P-G vs intrinsic_P-D": {
+          "n_kcs": 130,
+          "mean_diff": 0.1403,
+          "ci95": [
+            0.1054,
+            0.1772
+          ],
+          "better_a1": 69,
+          "better_a2": 13,
+          "mcnemar_p": 0.0,
+          "ci_excludes_zero": true,
+          "holm_p": 0.0,
+          "significant": true
+        }
+      }
+    },
+    "extrinsic": {
+      "context_recall": {
+        "extrinsic_P-Q vs extrinsic_B-Q": {
+          "n_kcs": 151,
+          "mean_diff": 0.2419,
+          "ci95": [
+            0.1584,
+            0.3243
+          ],
+          "better_a1": 84,
+          "better_a2": 24,
+          "mcnemar_p": 0.0,
+          "ci_excludes_zero": true,
+          "holm_p": 0.0,
+          "significant": false,
+          "ceiling_a1": 0.9999,
+          "ceiling_a2": 0.5905,
+          "ceiling_gap": 0.4094,
+          "dilution_confounded": true
+        },
+        "extrinsic_P-Q vs extrinsic_DOS-Q": {
+          "n_kcs": 151,
+          "mean_diff": 0.0104,
+          "ci95": [
+            -0.0627,
+            0.0817
+          ],
+          "better_a1": 42,
+          "better_a2": 39,
+          "mcnemar_p": 0.824313,
+          "ci_excludes_zero": false,
+          "holm_p": 0.824313,
+          "significant": false,
+          "ceiling_a1": 0.9999,
+          "ceiling_a2": 0.9903,
+          "ceiling_gap": 0.0097
+        },
+        "extrinsic_B-Q vs extrinsic_DOS-Q": {
+          "n_kcs": 151,
+          "mean_diff": -0.2314,
+          "ci95": [
+            -0.3,
+            -0.1626
+          ],
+          "better_a1": 20,
+          "better_a2": 76,
+          "mcnemar_p": 0.0,
+          "ci_excludes_zero": true,
+          "holm_p": 0.0,
+          "significant": false,
+          "ceiling_a1": 0.5905,
+          "ceiling_a2": 0.9903,
+          "ceiling_gap": 0.3998,
+          "dilution_confounded": true
+        }
+      },
+      "nugget_recall": {
+        "extrinsic_P-Q vs extrinsic_B-Q": {
+          "n_kcs": 151,
+          "mean_diff": 0.2539,
+          "ci95": [
+            0.189,
+            0.3186
+          ],
+          "better_a1": 87,
+          "better_a2": 17,
+          "mcnemar_p": 0.0,
+          "ci_excludes_zero": true,
+          "holm_p": 0.0,
+          "significant": true
+        },
+        "extrinsic_P-Q vs extrinsic_DOS-Q": {
+          "n_kcs": 151,
+          "mean_diff": 0.0823,
+          "ci95": [
+            0.0273,
+            0.1368
+          ],
+          "better_a1": 51,
+          "better_a2": 20,
+          "mcnemar_p": 0.000303,
+          "ci_excludes_zero": true,
+          "holm_p": 0.000303,
+          "significant": true
+        },
+        "extrinsic_B-Q vs extrinsic_DOS-Q": {
+          "n_kcs": 151,
+          "mean_diff": -0.1716,
+          "ci95": [
+            -0.2295,
+            -0.1118
+          ],
+          "better_a1": 15,
+          "better_a2": 64,
+          "mcnemar_p": 0.0,
+          "ci_excludes_zero": true,
+          "holm_p": 0.0,
+          "significant": true
+        }
+      },
+      "faithfulness": {
+        "extrinsic_P-Q vs extrinsic_B-Q": {
+          "n_kcs": 138,
+          "mean_diff": 0.0066,
+          "ci95": [
+            -0.0158,
+            0.0296
+          ],
+          "better_a1": 31,
+          "better_a2": 29,
+          "mcnemar_p": 0.897422,
+          "ci_excludes_zero": false,
+          "holm_p": 0.897422,
+          "significant": false
+        },
+        "extrinsic_P-Q vs extrinsic_DOS-Q": {
+          "n_kcs": 141,
+          "mean_diff": -0.0302,
+          "ci95": [
+            -0.0471,
+            -0.0135
+          ],
+          "better_a1": 12,
+          "better_a2": 39,
+          "mcnemar_p": 0.000198,
+          "ci_excludes_zero": true,
+          "holm_p": 0.000594,
+          "significant": true
+        },
+        "extrinsic_B-Q vs extrinsic_DOS-Q": {
+          "n_kcs": 143,
+          "mean_diff": -0.0468,
+          "ci95": [
+            -0.0705,
+            -0.0249
+          ],
+          "better_a1": 11,
+          "better_a2": 37,
+          "mcnemar_p": 0.000222,
+          "ci_excludes_zero": true,
+          "holm_p": 0.000594,
+          "significant": true
+        }
+      }
+    }
+  },
+  "exploratory": {
+    "extrinsic_DOS-Q vs sensitivity_DOS-Q_matched": {
+      "context_recall": {
+        "n_kcs": 151,
+        "mean_diff": 0.2321,
+        "ci95": [
+          0.1791,
+          0.2883
+        ],
+        "better_a1": 66,
+        "better_a2": 5,
+        "mcnemar_p": 0.0,
+        "ci_excludes_zero": true
+      },
+      "nugget_recall": {
+        "n_kcs": 151,
+        "mean_diff": 0.1698,
+        "ci95": [
+          0.1175,
+          0.2229
+        ],
+        "better_a1": 58,
+        "better_a2": 11,
+        "mcnemar_p": 0.0,
+        "ci_excludes_zero": true
+      },
+      "faithfulness": {
+        "n_kcs": 138,
+        "mean_diff": 0.0556,
+        "ci95": [
+          0.0309,
+          0.0826
+        ],
+        "better_a1": 35,
+        "better_a2": 13,
+        "mcnemar_p": 0.002088,
+        "ci_excludes_zero": true
+      }
+    }
+  },
+  "caveats": [
+    "Absolute JUDGE_QUALIFIED=false. Only relative within-KC claims are licensed.",
+    "Arm-independence established at LOW POWER (4-6 calibration rows per arm); weak evidence, not proof.",
+    "Human gold is 36 rows from a SINGLE annotator, against a literature calibration benchmark of roughly 150 [R-02].",
+    "F-45: context recall is depressed by evidence-set size (judge recovers 0.5905 of provably-present nuggets at 123 passages vs 1.0000 at 17). Comparisons against BaseDense are confounded and carry no claim; nugget recall, judged on drafts, is unaffected.",
+    "Nugget and context metrics cover 151 of 159 KCs: 7 KCs have NO expert reference (the library covers 152/159) and KC_CLF_NB_009 fails decomposition structurally (F-36). All 8 drop identically for every arm, so paired comparisons stay balanced, but the excluded set is NOT random - 4 of the 7 reference-less KCs are exactly those where Proposed retrieved zero evidence, so the exclusion plausibly flatters Proposed ABSOLUTE retrieval recall (F-42).",
+    "F-40 RESOLVED: the two recall prompts carry no constant offset (B = 0.0000; both recover 100% shown the same content), so the attribution gap is NOT prompt-asymmetry confounded. It remains uninterpretable for large-evidence arms under F-45.",
+    "Completeness is verbosity-confounded under this Llama-family judge; length-adjusted figures are reported alongside (F-35, R-07)."
+  ]
+}

@@ -1,0 +1,676 @@
+{
+  "run_kind": "DEVELOPMENT SENTINEL RUN - not a judge qualification pass",
+  "model": "selene-1-llama-3.3-70b",
+  "n_sentinels": 36,
+  "case_types": {
+    "SOURCE_BOUNDARY": 2,
+    "REFERENCE_CONTENT": 33,
+    "ABSTENTION": 1
+  },
+  "gold_source": "reference_sentinel_gold.jsonl",
+  "predictions_source": "selene_reference_sentinel_raw.json",
+  "note": "Gold and predictions are read from separate files, so a gold revision recomputes aggregates without rerunning inference.",
+  "structural": {
+    "M1_EVIDENCE_FAITHFULNESS": {
+      "n_calls": 34,
+      "structural_valid": 34,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 34,
+      "contract_validity_rate": 1.0,
+      "truncation_count": 0,
+      "invalid_output_count": 0,
+      "call_failed_count": 0,
+      "retried": 0,
+      "status_counts": {
+        "OK": 34
+      }
+    },
+    "M2_REFERENCE_SOURCE_CORRECTNESS": {
+      "n_calls": 33,
+      "structural_valid": 33,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 33,
+      "contract_validity_rate": 1.0,
+      "truncation_count": 0,
+      "invalid_output_count": 0,
+      "call_failed_count": 0,
+      "retried": 0,
+      "status_counts": {
+        "OK": 33
+      }
+    },
+    "M3_CORE_COMPLETENESS": {
+      "n_calls": 33,
+      "structural_valid": 33,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 33,
+      "contract_validity_rate": 1.0,
+      "truncation_count": 0,
+      "invalid_output_count": 0,
+      "call_failed_count": 0,
+      "retried": 0,
+      "status_counts": {
+        "OK": 33
+      }
+    },
+    "M4_RETRIEVAL_REFERENCE_COVERAGE": {
+      "n_calls": 34,
+      "structural_valid": 34,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 34,
+      "contract_validity_rate": 1.0,
+      "truncation_count": 0,
+      "invalid_output_count": 0,
+      "call_failed_count": 0,
+      "retried": 0,
+      "status_counts": {
+        "OK": 34
+      }
+    },
+    "EXPLORATORY_HOLISTIC_EVIDENCE_ADEQUACY": {
+      "n_calls": 34,
+      "structural_valid": 34,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 34,
+      "contract_validity_rate": 1.0,
+      "truncation_count": 0,
+      "invalid_output_count": 0,
+      "call_failed_count": 0,
+      "retried": 0,
+      "status_counts": {
+        "OK": 34
+      }
+    },
+    "TARGET_ALIGNMENT": {
+      "n_calls": 33,
+      "structural_valid": 33,
+      "structural_validity_rate": 1.0,
+      "contract_valid": 33,
+      "contract_validity_rate": 1.0,
+      "truncation_count": 0,
+      "invalid_output_count": 0,
+      "call_failed_count": 0,
+      "retried": 0,
+      "status_counts": {
+        "OK": 33
+      }
+    }
+  },
+  "semantic": {
+    "M1_EVIDENCE_FAITHFULNESS": {
+      "kind": "binary",
+      "n_with_expectation": 34,
+      "n_gold_pending": 0,
+      "gold_pending_ids": [],
+      "n_applicable_resolved_gold": 34,
+      "n_unjudgeable_invalid_call": 0,
+      "unjudgeable_ids": [],
+      "n_valid_semantic": 34,
+      "agreement_resolved_only": 0.8235294117647058,
+      "n_match": 28,
+      "pass_metrics": {
+        "precision": 1.0,
+        "recall": 0.6666666666666666,
+        "tp": 12,
+        "fp": 0,
+        "fn": 6
+      },
+      "fail_metrics": {
+        "precision": 0.7272727272727273,
+        "recall": 1.0,
+        "tp": 16,
+        "fp": 6,
+        "fn": 0
+      },
+      "n_false_pass": 0,
+      "false_pass": [],
+      "n_false_fail": 6,
+      "false_fail": [
+        "SENT_003",
+        "SENT_007",
+        "SENT_012",
+        "SENT_014",
+        "SENT_017",
+        "SENT_018"
+      ],
+      "not_judgeable_predictions": 0,
+      "confusion_matrix": {
+        "FAIL->FAIL": 16,
+        "PASS->FAIL": 6,
+        "PASS->PASS": 12
+      },
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_003",
+          "expected": "PASS",
+          "actual": "FAIL"
+        },
+        {
+          "sentinel_id": "SENT_007",
+          "expected": "PASS",
+          "actual": "FAIL"
+        },
+        {
+          "sentinel_id": "SENT_012",
+          "expected": "PASS",
+          "actual": "FAIL"
+        },
+        {
+          "sentinel_id": "SENT_014",
+          "expected": "PASS",
+          "actual": "FAIL"
+        },
+        {
+          "sentinel_id": "SENT_017",
+          "expected": "PASS",
+          "actual": "FAIL"
+        },
+        {
+          "sentinel_id": "SENT_018",
+          "expected": "PASS",
+          "actual": "FAIL"
+        }
+      ]
+    },
+    "M2_REFERENCE_SOURCE_CORRECTNESS": {
+      "kind": "binary",
+      "n_with_expectation": 33,
+      "n_gold_pending": 2,
+      "gold_pending_ids": [
+        "SENT_032",
+        "SENT_033"
+      ],
+      "n_applicable_resolved_gold": 31,
+      "n_unjudgeable_invalid_call": 0,
+      "unjudgeable_ids": [],
+      "n_valid_semantic": 31,
+      "agreement_resolved_only": 0.967741935483871,
+      "n_match": 30,
+      "pass_metrics": {
+        "precision": 0.9411764705882353,
+        "recall": 1.0,
+        "tp": 16,
+        "fp": 1,
+        "fn": 0
+      },
+      "fail_metrics": {
+        "precision": 1.0,
+        "recall": 0.9333333333333333,
+        "tp": 14,
+        "fp": 0,
+        "fn": 1
+      },
+      "n_false_pass": 1,
+      "false_pass": [
+        "SENT_029"
+      ],
+      "n_false_fail": 0,
+      "false_fail": [],
+      "not_judgeable_predictions": 0,
+      "confusion_matrix": {
+        "FAIL->FAIL": 14,
+        "FAIL->PASS": 1,
+        "PASS->PASS": 16
+      },
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_029",
+          "expected": "FAIL",
+          "actual": "PASS"
+        }
+      ]
+    },
+    "M3_CORE_COMPLETENESS": {
+      "kind": "binary",
+      "n_with_expectation": 32,
+      "n_gold_pending": 0,
+      "gold_pending_ids": [],
+      "n_applicable_resolved_gold": 32,
+      "n_unjudgeable_invalid_call": 0,
+      "unjudgeable_ids": [],
+      "n_valid_semantic": 32,
+      "agreement_resolved_only": 0.90625,
+      "n_match": 29,
+      "pass_metrics": {
+        "precision": 1.0,
+        "recall": 0.8235294117647058,
+        "tp": 14,
+        "fp": 0,
+        "fn": 3
+      },
+      "fail_metrics": {
+        "precision": 0.8333333333333334,
+        "recall": 1.0,
+        "tp": 15,
+        "fp": 3,
+        "fn": 0
+      },
+      "n_false_pass": 0,
+      "false_pass": [],
+      "n_false_fail": 3,
+      "false_fail": [
+        "SENT_011",
+        "SENT_029",
+        "SENT_035"
+      ],
+      "not_judgeable_predictions": 0,
+      "confusion_matrix": {
+        "CORE_COMPLETE->CORE_COMPLETE": 14,
+        "CORE_COMPLETE->MATERIAL_OMISSION": 3,
+        "MATERIAL_OMISSION->MATERIAL_OMISSION": 15
+      },
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_011",
+          "expected": "CORE_COMPLETE",
+          "actual": "MATERIAL_OMISSION"
+        },
+        {
+          "sentinel_id": "SENT_029",
+          "expected": "CORE_COMPLETE",
+          "actual": "MATERIAL_OMISSION"
+        },
+        {
+          "sentinel_id": "SENT_035",
+          "expected": "CORE_COMPLETE",
+          "actual": "MATERIAL_OMISSION"
+        }
+      ]
+    },
+    "M4_RETRIEVAL_REFERENCE_COVERAGE": {
+      "kind": "continuous",
+      "metric": "retrieval_reference_recall",
+      "n_computable": 34,
+      "mean": 0.7796791443850267,
+      "median": 1.0,
+      "min": 0.0,
+      "max": 1.0,
+      "n_at_1.0": 21,
+      "n_below_1.0": 13,
+      "per_sentinel": {
+        "SENT_002": 0.0,
+        "SENT_003": 0.0,
+        "SENT_004": 1.0,
+        "SENT_005": 1.0,
+        "SENT_006": 1.0,
+        "SENT_007": 0.9091,
+        "SENT_008": 1.0,
+        "SENT_009": 1.0,
+        "SENT_010": 1.0,
+        "SENT_011": 1.0,
+        "SENT_012": 0.5,
+        "SENT_013": 0.4,
+        "SENT_014": 0.9,
+        "SENT_015": 1.0,
+        "SENT_016": 1.0,
+        "SENT_017": 1.0,
+        "SENT_018": 0.5,
+        "SENT_019": 1.0,
+        "SENT_020": 1.0,
+        "SENT_021": 1.0,
+        "SENT_022": 1.0,
+        "SENT_023": 0.9,
+        "SENT_024": 1.0,
+        "SENT_025": 0.0,
+        "SENT_026": 1.0,
+        "SENT_027": 1.0,
+        "SENT_028": 1.0,
+        "SENT_029": 0.5,
+        "SENT_030": 1.0,
+        "SENT_031": 0.9,
+        "SENT_032": 1.0,
+        "SENT_033": 0.0,
+        "SENT_035": 0.0,
+        "SENT_036": 1.0
+      },
+      "interpretation_guard": "This is a continuous coverage diagnostic. A value below 1.0 must NOT be read as 'insufficient evidence' - a concise evidence set can omit reference detail and still support an adequate draft. Not a condition of materially_sound."
+    },
+    "EXPLORATORY_HOLISTIC_EVIDENCE_ADEQUACY": {
+      "kind": "binary",
+      "n_with_expectation": 36,
+      "n_gold_pending": 0,
+      "gold_pending_ids": [],
+      "n_applicable_resolved_gold": 36,
+      "n_unjudgeable_invalid_call": 2,
+      "unjudgeable_ids": [
+        "SENT_001",
+        "SENT_034"
+      ],
+      "n_valid_semantic": 34,
+      "agreement_resolved_only": 0.23529411764705882,
+      "n_match": 8,
+      "pass_metrics": {
+        "precision": 1.0,
+        "recall": 0.037037037037037035,
+        "tp": 1,
+        "fp": 0,
+        "fn": 26
+      },
+      "fail_metrics": {
+        "precision": 0.21212121212121213,
+        "recall": 1.0,
+        "tp": 7,
+        "fp": 26,
+        "fn": 0
+      },
+      "n_false_pass": 0,
+      "false_pass": [],
+      "n_false_fail": 26,
+      "false_fail": [
+        "SENT_004",
+        "SENT_005",
+        "SENT_006",
+        "SENT_007",
+        "SENT_008",
+        "SENT_009",
+        "SENT_011",
+        "SENT_014",
+        "SENT_015",
+        "SENT_016",
+        "SENT_017",
+        "SENT_018",
+        "SENT_019",
+        "SENT_020",
+        "SENT_021",
+        "SENT_022",
+        "SENT_023",
+        "SENT_024",
+        "SENT_025",
+        "SENT_026",
+        "SENT_027",
+        "SENT_028",
+        "SENT_030",
+        "SENT_031",
+        "SENT_032",
+        "SENT_036"
+      ],
+      "not_judgeable_predictions": 0,
+      "confusion_matrix": {
+        "EVIDENCE_ADEQUATE->EVIDENCE_ADEQUATE": 1,
+        "EVIDENCE_ADEQUATE->MATERIAL_EVIDENCE_GAP": 26,
+        "MATERIAL_EVIDENCE_GAP->MATERIAL_EVIDENCE_GAP": 7
+      },
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_004",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_005",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_006",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_007",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_008",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_009",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_011",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_014",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_015",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_016",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_017",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_018",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_019",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_020",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_021",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_022",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_023",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_024",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_025",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_026",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_027",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_028",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_030",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_031",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_032",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        },
+        {
+          "sentinel_id": "SENT_036",
+          "expected": "EVIDENCE_ADEQUATE",
+          "actual": "MATERIAL_EVIDENCE_GAP"
+        }
+      ]
+    },
+    "TARGET_ALIGNMENT": {
+      "kind": "binary",
+      "n_with_expectation": 33,
+      "n_gold_pending": 0,
+      "gold_pending_ids": [],
+      "n_applicable_resolved_gold": 33,
+      "n_unjudgeable_invalid_call": 0,
+      "unjudgeable_ids": [],
+      "n_valid_semantic": 33,
+      "agreement_resolved_only": 0.8181818181818182,
+      "n_match": 27,
+      "pass_metrics": {
+        "precision": 1.0,
+        "recall": 0.8,
+        "tp": 24,
+        "fp": 0,
+        "fn": 6
+      },
+      "fail_metrics": {
+        "precision": 0.3333333333333333,
+        "recall": 1.0,
+        "tp": 3,
+        "fp": 6,
+        "fn": 0
+      },
+      "n_false_pass": 0,
+      "false_pass": [],
+      "n_false_fail": 6,
+      "false_fail": [
+        "SENT_019",
+        "SENT_020",
+        "SENT_021",
+        "SENT_023",
+        "SENT_024",
+        "SENT_025"
+      ],
+      "not_judgeable_predictions": 0,
+      "confusion_matrix": {
+        "TARGET_ALIGNED->TARGET_ALIGNED": 24,
+        "TARGET_ALIGNED->WRONG_TARGET": 6,
+        "WRONG_TARGET->WRONG_TARGET": 3
+      },
+      "mismatches": [
+        {
+          "sentinel_id": "SENT_019",
+          "expected": "TARGET_ALIGNED",
+          "actual": "WRONG_TARGET"
+        },
+        {
+          "sentinel_id": "SENT_020",
+          "expected": "TARGET_ALIGNED",
+          "actual": "WRONG_TARGET"
+        },
+        {
+          "sentinel_id": "SENT_021",
+          "expected": "TARGET_ALIGNED",
+          "actual": "WRONG_TARGET"
+        },
+        {
+          "sentinel_id": "SENT_023",
+          "expected": "TARGET_ALIGNED",
+          "actual": "WRONG_TARGET"
+        },
+        {
+          "sentinel_id": "SENT_024",
+          "expected": "TARGET_ALIGNED",
+          "actual": "WRONG_TARGET"
+        },
+        {
+          "sentinel_id": "SENT_025",
+          "expected": "TARGET_ALIGNED",
+          "actual": "WRONG_TARGET"
+        }
+      ]
+    }
+  },
+  "metric_scope": {
+    "M1_EVIDENCE_FAITHFULNESS": {
+      "primary_use": true,
+      "qualification_gate": true,
+      "derived_metric_dependency": true
+    },
+    "M2_REFERENCE_SOURCE_CORRECTNESS": {
+      "primary_use": true,
+      "qualification_gate": true,
+      "derived_metric_dependency": true
+    },
+    "M3_CORE_COMPLETENESS": {
+      "primary_use": true,
+      "qualification_gate": true,
+      "derived_metric_dependency": true
+    },
+    "M4_RETRIEVAL_REFERENCE_COVERAGE": {
+      "primary_use": true,
+      "qualification_gate": true,
+      "derived_metric_dependency": false,
+      "metric": "retrieval_reference_recall",
+      "note": "Upstream retrieval diagnostic. NOT a condition of materially_sound - that flag measures the final KC draft, and retrieval coverage explains it rather than defining it. Must not be relabelled 'evidence sufficiency' except descriptively: a system may retrieve well under 100% of reference content and still hold enough to draft a correct KC."
+    },
+    "EXPLORATORY_HOLISTIC_EVIDENCE_ADEQUACY": {
+      "primary_use": false,
+      "qualification_gate": false,
+      "derived_metric_dependency": false,
+      "deprecated_as_primary_utc": "2026-08-25",
+      "former_name": "M4_EVIDENCE_ADEQUACY",
+      "reason": "Development sentinels showed the judge treating the full expert reference as an exhaustive checklist, returning MATERIAL_EVIDENCE_GAP whenever any reference detail was absent even when the evidence was already sufficient to draft an adequate KC. Same construct-validity failure as the earlier F5 design.",
+      "permitted_uses": [
+        "exploratory diagnostic",
+        "optional human-calibration research output"
+      ],
+      "forbidden_uses": [
+        "primary metric",
+        "materially_sound",
+        "judge qualification gating",
+        "intrinsic comparison",
+        "extrinsic comparison",
+        "system success/failure classification",
+        "automatic abstention validity"
+      ]
+    },
+    "TARGET_ALIGNMENT": {
+      "primary_use": true,
+      "qualification_gate": true,
+      "derived_metric_dependency": true
+    }
+  },
+  "decomposition_quality": {
+    "candidate_problems": 2,
+    "reference_problems": 0,
+    "details": [
+      {
+        "sentinel_id": "SENT_003",
+        "which": "decompose_candidate",
+        "problems": [
+          "KC_EVAL_BASIC_006::sentinel:claim:003: parent_span is not a literal substring of the source text"
+        ]
+      },
+      {
+        "sentinel_id": "SENT_012",
+        "which": "decompose_candidate",
+        "problems": [
+          "KC_FSEL_FW_002::sentinel:claim:002: parent_span is not a literal substring of the source text"
+        ]
+      }
+    ]
+  },
+  "claim_counts": {
+    "candidate_total": 206,
+    "reference_total": 258
+  }
+}

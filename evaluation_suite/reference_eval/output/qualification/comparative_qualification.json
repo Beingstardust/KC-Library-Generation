@@ -1,0 +1,372 @@
+{
+  "generated_utc": "2026-08-30T16:49:46Z",
+  "protocol": "COMPARATIVE_USE_PROTOCOL.md",
+  "condition_tested": "C2 - no detectable arm-dependent disagreement",
+  "alpha": 0.05,
+  "note": "Absolute qualification (JUDGE_QUALIFIED=false) is NOT revisited here. This tests only whether judge-vs-human disagreement depends on which arm produced the draft.",
+  "tasks": {
+    "M1_EVIDENCE_FAITHFULNESS": {
+      "n": 30,
+      "by_arm": {
+        "extrinsic_B-Q": {
+          "n": 5,
+          "disagree": 2,
+          "disagree_rate": 0.4,
+          "wilson_disagree_rate": [
+            0.1176,
+            0.7693
+          ],
+          "judge_over_flags": 2,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 2
+        },
+        "extrinsic_DOS-Q": {
+          "n": 5,
+          "disagree": 0,
+          "disagree_rate": 0.0,
+          "wilson_disagree_rate": [
+            0.0,
+            0.4345
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 0
+        },
+        "extrinsic_P-Q": {
+          "n": 5,
+          "disagree": 2,
+          "disagree_rate": 0.4,
+          "wilson_disagree_rate": [
+            0.1176,
+            0.7693
+          ],
+          "judge_over_flags": 2,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 2
+        },
+        "intrinsic_P-D": {
+          "n": 6,
+          "disagree": 2,
+          "disagree_rate": 0.3333,
+          "wilson_disagree_rate": [
+            0.0968,
+            0.7
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 2,
+          "signed_bias_over_minus_under": -2
+        },
+        "intrinsic_P-G": {
+          "n": 5,
+          "disagree": 2,
+          "disagree_rate": 0.4,
+          "wilson_disagree_rate": [
+            0.1176,
+            0.7693
+          ],
+          "judge_over_flags": 2,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 2
+        },
+        "intrinsic_P-Q": {
+          "n": 4,
+          "disagree": 3,
+          "disagree_rate": 0.75,
+          "wilson_disagree_rate": [
+            0.3006,
+            0.9544
+          ],
+          "judge_over_flags": 3,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 3
+        }
+      },
+      "exact_test": "Fisher-Freeman-Halton, arm x {disagree, agree}",
+      "p_value": 0.41769,
+      "alpha": 0.05,
+      "arm_dependent_detected": false,
+      "flags": [
+        "LOW_POWER: arms with <10 labelled rows: ['extrinsic_B-Q', 'extrinsic_DOS-Q', 'extrinsic_P-Q', 'intrinsic_P-D', 'intrinsic_P-G', 'intrinsic_P-Q']"
+      ],
+      "decision": "COMPARATIVE_QUALIFIED",
+      "interpretation": "No arm-dependent disagreement detected. NOTE: with these per-arm counts the test has low power, so this is weak evidence of arm-independence, not proof of it."
+    },
+    "M2_REFERENCE_SOURCE_CORRECTNESS": {
+      "n": 30,
+      "by_arm": {
+        "extrinsic_B-Q": {
+          "n": 5,
+          "disagree": 0,
+          "disagree_rate": 0.0,
+          "wilson_disagree_rate": [
+            0.0,
+            0.4345
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 0
+        },
+        "extrinsic_DOS-Q": {
+          "n": 5,
+          "disagree": 1,
+          "disagree_rate": 0.2,
+          "wilson_disagree_rate": [
+            0.0362,
+            0.6245
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": -1
+        },
+        "extrinsic_P-Q": {
+          "n": 5,
+          "disagree": 2,
+          "disagree_rate": 0.4,
+          "wilson_disagree_rate": [
+            0.1176,
+            0.7693
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 2,
+          "signed_bias_over_minus_under": -2
+        },
+        "intrinsic_P-D": {
+          "n": 6,
+          "disagree": 4,
+          "disagree_rate": 0.6667,
+          "wilson_disagree_rate": [
+            0.3,
+            0.9032
+          ],
+          "judge_over_flags": 1,
+          "judge_under_flags": 3,
+          "signed_bias_over_minus_under": -2
+        },
+        "intrinsic_P-G": {
+          "n": 5,
+          "disagree": 1,
+          "disagree_rate": 0.2,
+          "wilson_disagree_rate": [
+            0.0362,
+            0.6245
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": -1
+        },
+        "intrinsic_P-Q": {
+          "n": 4,
+          "disagree": 2,
+          "disagree_rate": 0.5,
+          "wilson_disagree_rate": [
+            0.15,
+            0.85
+          ],
+          "judge_over_flags": 1,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": 0
+        }
+      },
+      "exact_test": "Fisher-Freeman-Halton, arm x {disagree, agree}",
+      "p_value": 0.246722,
+      "alpha": 0.05,
+      "arm_dependent_detected": false,
+      "flags": [
+        "LOW_POWER: arms with <10 labelled rows: ['extrinsic_B-Q', 'extrinsic_DOS-Q', 'extrinsic_P-Q', 'intrinsic_P-D', 'intrinsic_P-G', 'intrinsic_P-Q']"
+      ],
+      "decision": "COMPARATIVE_QUALIFIED",
+      "interpretation": "No arm-dependent disagreement detected. NOTE: with these per-arm counts the test has low power, so this is weak evidence of arm-independence, not proof of it."
+    },
+    "M3_CORE_COMPLETENESS": {
+      "n": 36,
+      "by_arm": {
+        "extrinsic_B-Q": {
+          "n": 6,
+          "disagree": 4,
+          "disagree_rate": 0.6667,
+          "wilson_disagree_rate": [
+            0.3,
+            0.9032
+          ],
+          "judge_over_flags": 3,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": 2
+        },
+        "extrinsic_DOS-Q": {
+          "n": 6,
+          "disagree": 3,
+          "disagree_rate": 0.5,
+          "wilson_disagree_rate": [
+            0.1876,
+            0.8124
+          ],
+          "judge_over_flags": 2,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": 1
+        },
+        "extrinsic_P-Q": {
+          "n": 6,
+          "disagree": 3,
+          "disagree_rate": 0.5,
+          "wilson_disagree_rate": [
+            0.1876,
+            0.8124
+          ],
+          "judge_over_flags": 2,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": 1
+        },
+        "intrinsic_P-D": {
+          "n": 6,
+          "disagree": 3,
+          "disagree_rate": 0.5,
+          "wilson_disagree_rate": [
+            0.1876,
+            0.8124
+          ],
+          "judge_over_flags": 3,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 3
+        },
+        "intrinsic_P-G": {
+          "n": 6,
+          "disagree": 1,
+          "disagree_rate": 0.1667,
+          "wilson_disagree_rate": [
+            0.0301,
+            0.5635
+          ],
+          "judge_over_flags": 1,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 1
+        },
+        "intrinsic_P-Q": {
+          "n": 6,
+          "disagree": 2,
+          "disagree_rate": 0.3333,
+          "wilson_disagree_rate": [
+            0.0968,
+            0.7
+          ],
+          "judge_over_flags": 1,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": 0
+        }
+      },
+      "exact_test": "Fisher-Freeman-Halton, arm x {disagree, agree}",
+      "p_value": 0.720704,
+      "alpha": 0.05,
+      "arm_dependent_detected": false,
+      "flags": [
+        "LOW_POWER: arms with <10 labelled rows: ['extrinsic_B-Q', 'extrinsic_DOS-Q', 'extrinsic_P-Q', 'intrinsic_P-D', 'intrinsic_P-G', 'intrinsic_P-Q']"
+      ],
+      "decision": "COMPARATIVE_QUALIFIED",
+      "interpretation": "No arm-dependent disagreement detected. NOTE: with these per-arm counts the test has low power, so this is weak evidence of arm-independence, not proof of it."
+    },
+    "TARGET_ALIGNMENT": {
+      "n": 32,
+      "by_arm": {
+        "extrinsic_B-Q": {
+          "n": 5,
+          "disagree": 0,
+          "disagree_rate": 0.0,
+          "wilson_disagree_rate": [
+            0.0,
+            0.4345
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 0
+        },
+        "extrinsic_DOS-Q": {
+          "n": 5,
+          "disagree": 1,
+          "disagree_rate": 0.2,
+          "wilson_disagree_rate": [
+            0.0362,
+            0.6245
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": -1
+        },
+        "extrinsic_P-Q": {
+          "n": 5,
+          "disagree": 1,
+          "disagree_rate": 0.2,
+          "wilson_disagree_rate": [
+            0.0362,
+            0.6245
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": -1
+        },
+        "intrinsic_P-D": {
+          "n": 6,
+          "disagree": 0,
+          "disagree_rate": 0.0,
+          "wilson_disagree_rate": [
+            0.0,
+            0.3903
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 0
+        },
+        "intrinsic_P-G": {
+          "n": 6,
+          "disagree": 1,
+          "disagree_rate": 0.1667,
+          "wilson_disagree_rate": [
+            0.0301,
+            0.5635
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 1,
+          "signed_bias_over_minus_under": -1
+        },
+        "intrinsic_P-Q": {
+          "n": 5,
+          "disagree": 0,
+          "disagree_rate": 0.0,
+          "wilson_disagree_rate": [
+            0.0,
+            0.4345
+          ],
+          "judge_over_flags": 0,
+          "judge_under_flags": 0,
+          "signed_bias_over_minus_under": 0
+        }
+      },
+      "exact_test": "Fisher-Freeman-Halton, arm x {disagree, agree}",
+      "p_value": 0.854839,
+      "alpha": 0.05,
+      "arm_dependent_detected": false,
+      "flags": [
+        "LOW_POWER: arms with <10 labelled rows: ['extrinsic_B-Q', 'extrinsic_DOS-Q', 'extrinsic_P-Q', 'intrinsic_P-D', 'intrinsic_P-G', 'intrinsic_P-Q']"
+      ],
+      "decision": "COMPARATIVE_QUALIFIED",
+      "interpretation": "No arm-dependent disagreement detected. NOTE: with these per-arm counts the test has low power, so this is weak evidence of arm-independence, not proof of it."
+    },
+    "M4A_RETRIEVAL_CLAIM_SUPPORT": {
+      "decision": "INSUFFICIENT_COMPARATIVE_SUPPORT",
+      "reason": "no comparable labels for this task",
+      "n": 0
+    }
+  },
+  "decisions": {
+    "M1_EVIDENCE_FAITHFULNESS": "COMPARATIVE_QUALIFIED",
+    "M2_REFERENCE_SOURCE_CORRECTNESS": "COMPARATIVE_QUALIFIED",
+    "M3_CORE_COMPLETENESS": "COMPARATIVE_QUALIFIED",
+    "TARGET_ALIGNMENT": "COMPARATIVE_QUALIFIED",
+    "M4A_RETRIEVAL_CLAIM_SUPPORT": "INSUFFICIENT_COMPARATIVE_SUPPORT"
+  },
+  "COMPARATIVE_USE_LICENSED_FOR": [
+    "M1_EVIDENCE_FAITHFULNESS",
+    "M2_REFERENCE_SOURCE_CORRECTNESS",
+    "M3_CORE_COMPLETENESS",
+    "TARGET_ALIGNMENT"
+  ],
+  "standing_absolute_result": "JUDGE_QUALIFIED=false (unchanged, see qualification_decision.json)"
+}

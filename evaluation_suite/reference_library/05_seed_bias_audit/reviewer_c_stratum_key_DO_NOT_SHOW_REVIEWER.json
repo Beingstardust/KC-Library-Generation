@@ -1,0 +1,41 @@
+{
+  "seed": 20260901,
+  "quota": {
+    "ACCEPT": 18,
+    "CHANGED": 9,
+    "UNSUPPORTED": 3
+  },
+  "note": "Stratum assignment for analysis only. Reviewer C must never see this file.",
+  "strata": {
+    "KC_DE_MISS_002": "CHANGED",
+    "KC_FSEL_GEN_006": "ACCEPT",
+    "KC_CLU_EVAL_011": "CHANGED",
+    "KC_CLU_EVAL_003": "ACCEPT",
+    "KC_CLU_EVAL_005": "ACCEPT",
+    "KC_CLF_UND_005": "UNSUPPORTED",
+    "KC_CLU_SIM_001": "ACCEPT",
+    "KC_CLU_EVAL_009": "CHANGED",
+    "KC_CLU_DBS_009": "ACCEPT",
+    "KC_CLU_SIM_007": "ACCEPT",
+    "KC_EVAL_BASIC_003": "ACCEPT",
+    "KC_EVAL_SAMP_002": "ACCEPT",
+    "KC_DE_PREP_001": "ACCEPT",
+    "KC_EVAL_IMBAL_002": "ACCEPT",
+    "KC_CLU_EVAL_002": "ACCEPT",
+    "KC_CLF_UND_002": "CHANGED",
+    "KC_EVAL_COMP_002": "CHANGED",
+    "KC_FSEL_GEN_007": "ACCEPT",
+    "KC_EVAL_BASIC_006": "CHANGED",
+    "KC_EVAL_BASIC_007": "UNSUPPORTED",
+    "KC_EVAL_COMP_008": "CHANGED",
+    "KC_FSEL_FW_003": "ACCEPT",
+    "KC_CLF_UND_001": "ACCEPT",
+    "KC_CLU_DBS_007": "ACCEPT",
+    "KC_CLF_DT_004": "ACCEPT",
+    "KC_EVAL_COMP_001": "UNSUPPORTED",
+    "KC_CLU_EVAL_008": "CHANGED",
+    "KC_FSEL_GEN_002": "ACCEPT",
+    "KC_CLU_HIER_006": "ACCEPT",
+    "KC_DE_MISS_005": "CHANGED"
+  }
+}

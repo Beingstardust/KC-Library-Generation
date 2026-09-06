@@ -1,0 +1,101 @@
+{
+  "generated_utc": "2026-08-27",
+  "derived_from": "reference_human_calibration_workbook_v2_MATERIALIZED.jsonl",
+  "derived_from_sha256": "dae62772e96d36b2cd4c8b5821ba003074e3cc875437042bcbac237e27b5526a",
+  "n_rows": 36,
+  "n_kc": 17,
+  "design": "4 highest-risk + 2 lowest-risk rows per arm, 6 arms",
+  "selection_rule": {
+    "judge_outputs_used": false,
+    "signals": {
+      "expert_review_action": {
+        "REPLACE": 3,
+        "MAJOR_EDIT": 2,
+        "MINOR_EDIT": 1,
+        "ACCEPT": 0
+      },
+      "empty_draft": "+2 each, capped at 2 drafts",
+      "min_draft_reference_length_ratio_below_0.35": "+1",
+      "formula_bearing_reference": "+1"
+    },
+    "tie_break": "KC id ascending, so the selection is reproducible"
+  },
+  "hard_easy_split_by_arm": {
+    "extrinsic_B-Q": {
+      "hard": [
+        "HC-8e87b0cfbfe2543b8e8b",
+        "HC-3d1171ac85488e14c5bc",
+        "HC-5135c846672dc6b056ae",
+        "HC-b1cddc7619260ebb2267"
+      ],
+      "easy": [
+        "HC-e219fa93e8bcb48961a7",
+        "HC-fe4c7df687de961fe9ef"
+      ]
+    },
+    "extrinsic_DOS-Q": {
+      "hard": [
+        "HC-839137c7dbcf0db5b788",
+        "HC-012572a0a7733bca8eba",
+        "HC-2e4e4e252edf537cd759",
+        "HC-2f7313a9df3ef879d6e4"
+      ],
+      "easy": [
+        "HC-f30f923a64482583721b",
+        "HC-f53e5463e92f3ef2c36a"
+      ]
+    },
+    "extrinsic_P-Q": {
+      "hard": [
+        "HC-5d473b06fde52c36e5a9",
+        "HC-55a48ea7dc0d42a3831f",
+        "HC-a83b97f3e56b9970a53c",
+        "HC-c7a22e085fb6b86e4477"
+      ],
+      "easy": [
+        "HC-e9229ca0d9b51b943c45",
+        "HC-f8de8c65183efa7b96e8"
+      ]
+    },
+    "intrinsic_P-D": {
+      "hard": [
+        "HC-9779fd29bc094c329d9c",
+        "HC-260cc44a55c30bbd5e29",
+        "HC-28a2c09707f3b6ef1fd7",
+        "HC-7cb2e87e9b257d04b871"
+      ],
+      "easy": [
+        "HC-c467da5ca8f29f39b61d",
+        "HC-f6e2c05b914a94c10e5c"
+      ]
+    },
+    "intrinsic_P-G": {
+      "hard": [
+        "HC-44d0fe7bd50c94c16bbb",
+        "HC-0b7850199c2d62a48a45",
+        "HC-10eefdcd19e35d850253",
+        "HC-a4d6036a6f3e531d700b"
+      ],
+      "easy": [
+        "HC-f316fba7e366eb539092",
+        "HC-f99685f55e8880cff0f2"
+      ]
+    },
+    "intrinsic_P-Q": {
+      "hard": [
+        "HC-3988c8211e3b9932aad8",
+        "HC-07ce180cc589519c73bb",
+        "HC-4e99d9bd1b90d761c06a",
+        "HC-5e4d9f3efe1c94d71f7b"
+      ],
+      "easy": [
+        "HC-e17cb6d4990a33205e07",
+        "HC-f562230d9916c1c51c94"
+      ]
+    }
+  },
+  "arm_balance": "exactly 6 rows per arm",
+  "why_both_halves": "M3 gates PASS recall AND FAIL recall, so a purely failure-enriched sample would leave one of its two gates untestable.",
+  "disclosure": "Rates computed on this subset are conditional on an ENRICHED sample and are not population estimates for the frozen 180. They test whether the gates hold where they bind.",
+  "sample_integrity": "strict subset of the frozen 180; no KC added, no row regenerated, no resampling"
+}

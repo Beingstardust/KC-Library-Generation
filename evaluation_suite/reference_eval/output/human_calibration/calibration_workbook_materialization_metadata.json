@@ -1,0 +1,24 @@
+{
+  "generated_utc": "2026-08-25T11:35:19Z",
+  "source_workbook": "reference_human_calibration_workbook_v2.jsonl",
+  "source_workbook_sha256": "5ed2fb54af04cccb24e932023f20b40b8752452d7019087ce494c7de8c645d76",
+  "materialized_workbook": "reference_human_calibration_workbook_v2_MATERIALIZED.jsonl",
+  "materialized_sha256": "dae62772e96d36b2cd4c8b5821ba003074e3cc875437042bcbac237e27b5526a",
+  "n_rows": 180,
+  "n_unique_kc": 30,
+  "n_arms": 6,
+  "rows_per_arm": {
+    "intrinsic_P-D": 30,
+    "intrinsic_P-G": 30,
+    "extrinsic_DOS-Q": 30,
+    "intrinsic_P-Q": 30,
+    "extrinsic_B-Q": 30,
+    "extrinsic_P-Q": 30
+  },
+  "n_empty_candidate_drafts": 4,
+  "empty_draft_note": "An empty candidate draft is a real abstention by that system and is presented as such. It is not an error and must not be filtered out - how a system behaves when it declines to draft is part of what is being evaluated.",
+  "sample_unchanged": true,
+  "sample_verification": "All rows verified field-for-field on review_case_id, unit_id, presentation_position, canonical_name, hierarchy_path, expert_reference and expert_source_citations.",
+  "blinding_verified": "Every materialized row scanned against the full forbidden-pattern set (excluding the KC-identity pattern, which is legitimate in a human workbook). Zero violations. Native evidence ids replaced with opaque SRC_* ids; the draft's self-reported grounded/partial/abstained status was deliberately dropped as a machine-status signal.",
+  "arm_identity_location": "reference_human_calibration_blinded_mapping.jsonl ONLY"
+}

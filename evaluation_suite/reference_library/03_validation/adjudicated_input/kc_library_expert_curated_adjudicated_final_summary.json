@@ -1,0 +1,29 @@
+{
+  "schema_version": "kc_library_adjudicated_summary_v1",
+  "kc_count": 159,
+  "unique_kc_count": 159,
+  "action_counts": {
+    "ACCEPT": 117,
+    "REPLACE": 10,
+    "NO_REFERENCE_CORPUS_UNSUPPORTED": 7,
+    "MAJOR_EDIT": 15,
+    "MINOR_EDIT": 10
+  },
+  "support_counts": {
+    "SUPPORTED": 150,
+    "UNSUPPORTED": 7,
+    "PARTIALLY_SUPPORTED": 2
+  },
+  "changed_from_machine_draft_count": 42,
+  "changed_from_machine_draft_pct": 26.42,
+  "unchanged_accept_count": 117,
+  "genuine_corpus_gap_count": 7,
+  "integrity_checks": {
+    "all_159_rows_present": true,
+    "all_ids_unique": true,
+    "all_actions_match_cross_reviewer_adjudication": true,
+    "all_support_states_match_cross_reviewer_adjudication": true,
+    "unsupported_rows_have_no_reference_text": true,
+    "accept_rows_preserve_original_machine_draft": true
+  }
+}

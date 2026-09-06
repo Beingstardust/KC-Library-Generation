@@ -1,0 +1,45 @@
+{
+  "approved_by": "reference_reviewer",
+  "approved_utc": "2026-08-24T22:50:56Z",
+  "approval_channel": "AGENT_SESSION_RELAY",
+  "approval_channel_meaning": "a human gave an explicit recorded approval decision inside an agent session and the agent relayed the acknowledgement phrase on their behalf - weaker provenance than a live terminal",
+  "approval_note": "Operator selected 'Yes - approve as final' in an explicit AskUserQuestion approval gate in a Claude Code session on 2026-08-25, after being shown the 159-row validation result, the full adjudicated action/support counts, and the preapproval sha256 69e3fc627972d35e5f7ed22e1c6af6b60f7f496bdf5c5aa78a9b6e6dbdf2e20a.",
+  "acknowledgement_phrase": "I APPROVE THIS EXPERT REFERENCE AS FINAL",
+  "preapproval_artifact": "kc_library_expert_curated_adjudicated_final.jsonl",
+  "preapproval_sha256": "69e3fc627972d35e5f7ed22e1c6af6b60f7f496bdf5c5aa78a9b6e6dbdf2e20a",
+  "approved_artifact": "kc_library_expert_adjudicated_reference_APPROVED.jsonl",
+  "approved_sha256": "6ea703e6b126f4e37b0b6ff34dacd3f72ef936b5a0d6b21725dbbf63ead31aed",
+  "n_rows": 159,
+  "action_counts": {
+    "ACCEPT": 117,
+    "REPLACE": 10,
+    "NO_REFERENCE_CORPUS_UNSUPPORTED": 7,
+    "MAJOR_EDIT": 15,
+    "MINOR_EDIT": 10
+  },
+  "support_counts": {
+    "SUPPORTED": 150,
+    "UNSUPPORTED": 7,
+    "PARTIALLY_SUPPORTED": 2
+  },
+  "immutable_fields_verified": [
+    "knowledge_unit_id",
+    "knowledge_unit_type",
+    "canonical_name",
+    "hierarchy",
+    "support_state",
+    "review_action",
+    "reference_text",
+    "reference_display_text",
+    "source_evidence_ids",
+    "full_source_refs",
+    "reason_codes",
+    "source_limitations",
+    "original_machine_draft_status",
+    "original_machine_draft_text",
+    "changed_from_machine_draft",
+    "adjudication_reason",
+    "cross_reviewer_adjudicated"
+  ],
+  "post_write_verification": "PASS - all immutable fields byte-identical to preapproval artifact"
+}

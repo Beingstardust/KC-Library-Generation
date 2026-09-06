@@ -1,0 +1,12 @@
+{
+  "lock_name": "BLINDING_FROZEN",
+  "written_utc": "2026-08-25T11:22:52Z",
+  "forbidden_pattern_count": 36,
+  "forbidden_patterns_sha256": "e25e2c113eb48db9aa266c2f28f967b62d7a1cbc9033bad6011bf412a0a77584",
+  "calibration_mapping": {
+    "reference_eval\\output\\human_calibration\\reference_human_calibration_blinded_mapping.jsonl": "89b7d5e279eedb35e3b38c41501243f558cbbd633cea29c74800a4f67151af80",
+    "reference_eval\\output\\human_calibration\\reference_human_calibration_workbook.jsonl": "4efe87d8959d0eae8d1f0546afbea30be1a580d5dcbcddfe8c8a7b1eaad47a2e"
+  },
+  "note": "Blinding is enforced at prompt-build time by assert_blinded(), verified against all 159 frozen reference texts and all 36 sentinels with zero false positives and all known leak forms caught. Arm identity exists only in the mapping file, never in the workbook.",
+  "lock_sha256": "e1ca3d86d0f9fabac8ec176c5a3c6880a40e5745ada3a42abe1042051e1485b8"
+}

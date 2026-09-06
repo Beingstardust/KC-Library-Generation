@@ -1,0 +1,10 @@
+{
+  "generated_utc": "2026-08-24T12:00:00Z",
+  "generator": "02_curation/validate_reference_provenance.py",
+  "note": "Initial baseline run before any curation - 0 committed records exist yet, so this vacuously PASSes. Re-run this script periodically during curation and overwrite this file; freeze_reference_library.py (not yet built - see 07_methods/EVALUATION_METHOD_PLAN.md) must re-run it once more at final freeze and require result==PASS with n_committed_records==159.",
+  "n_committed_records": 0,
+  "n_citations_checked": 0,
+  "n_unresolved": 0,
+  "failures": [],
+  "result": "PASS"
+}

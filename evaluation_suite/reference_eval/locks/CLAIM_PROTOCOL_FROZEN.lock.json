@@ -1,0 +1,10 @@
+{
+  "lock_name": "CLAIM_PROTOCOL_FROZEN",
+  "written_utc": "2026-08-25T11:22:52Z",
+  "hashes": {
+    "reference_eval\\reference_claim_schema.py": "8c0af200b8f6ea6490f6074b75bc0df77c4844342e90777516f3b3671d78267b"
+  },
+  "decomposition_prompt_sha256": "71098448863496c8ec54c92e8b3c7eeb0865780f6d9eafacf4da32c71bc5ad6a",
+  "note": "Freezes both the claim data model and the decomposition prompt. Changing either changes what a 'claim' is, which invalidates every downstream per-claim metric.",
+  "lock_sha256": "c61dde120fb40401107a74cd67322b616b55324a9a146549c42d7bd629bc4d11"
+}

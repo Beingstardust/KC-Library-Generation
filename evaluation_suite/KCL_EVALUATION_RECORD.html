@@ -1,0 +1,1443 @@
+<title>KC_L Evaluation Record</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#FBFCFD; --surface:#FFFFFF; --surface-2:#F3F6F9;
+  --ink:#12181F; --text:#2C3742; --muted:#5A6672; --faint:#8794A1;
+  --rule:#DCE3E9; --rule-strong:#C3CDD7;
+  --accent:#1B4D8F; --accent-soft:#E8EFF7;
+  --bad:#A03A2B; --bad-soft:#F8ECEA;
+  --good:#1F6B52; --good-soft:#E7F2EE;
+  --warn:#8A5A11; --warn-soft:#FAF0DF;
+  --measure:68ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1319; --surface:#151C24; --surface-2:#1B242E;
+    --ink:#EDF2F7; --text:#D3DBE3; --muted:#9AA7B4; --faint:#74828F;
+    --rule:#26313C; --rule-strong:#37444F;
+    --accent:#7CB0EA; --accent-soft:#16283D;
+    --bad:#E89383; --bad-soft:#2E1D1A;
+    --good:#6CC6A2; --good-soft:#162A24;
+    --warn:#D8AC6A; --warn-soft:#2B2418;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1319; --surface:#151C24; --surface-2:#1B242E;
+  --ink:#EDF2F7; --text:#D3DBE3; --muted:#9AA7B4; --faint:#74828F;
+  --rule:#26313C; --rule-strong:#37444F;
+  --accent:#7CB0EA; --accent-soft:#16283D;
+  --bad:#E89383; --bad-soft:#2E1D1A;
+  --good:#6CC6A2; --good-soft:#162A24;
+  --warn:#D8AC6A; --warn-soft:#2B2418;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--text);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.62; margin:0; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px 120px}
+
+.masthead{border-bottom:2px solid var(--ink);padding:52px 0 26px}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 18px
+}
+h1{
+  font-family:Spectral,Georgia,serif;font-weight:600;font-size:clamp(2.3rem,5.2vw,3.5rem);
+  line-height:1.06;letter-spacing:-.018em;color:var(--ink);margin:0 0 18px;text-wrap:balance
+}
+.standfirst{
+  font-family:Spectral,Georgia,serif;font-size:1.16rem;line-height:1.58;color:var(--muted);
+  max-width:62ch;margin:0 0 26px
+}
+.runline{
+  display:flex;flex-wrap:wrap;gap:8px 26px;font-family:"IBM Plex Mono",monospace;
+  font-size:12px;color:var(--faint);border-top:1px solid var(--rule);padding-top:16px
+}
+.runline b{color:var(--text);font-weight:500}
+
+.cols{display:grid;grid-template-columns:218px minmax(0,1fr);gap:52px;align-items:start;margin-top:44px}
+@media (max-width:960px){.cols{grid-template-columns:1fr;gap:28px}}
+nav.toc{position:sticky;top:22px;font-size:13.5px;line-height:1.45}
+@media (max-width:960px){
+  nav.toc{position:static;border:1px solid var(--rule);border-radius:3px;padding:18px 20px;background:var(--surface)}
+}
+nav.toc .tochead{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--faint);margin:0 0 10px
+}
+nav.toc .part{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);margin:16px 0 6px;padding-left:10px
+}
+nav.toc ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+nav.toc a{
+  display:flex;gap:9px;text-decoration:none;color:var(--muted);padding:3px 0;
+  border-left:2px solid transparent;padding-left:10px;margin-left:-12px
+}
+nav.toc a:hover{color:var(--accent);border-left-color:var(--accent)}
+nav.toc a .n{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--faint);min-width:15px}
+
+main{min-width:0}
+.partbreak{
+  border-top:2px solid var(--ink);margin:60px 0 0;padding-top:16px;
+  display:flex;align-items:baseline;gap:14px
+}
+.partbreak .pl{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent)
+}
+.partbreak .pt{font-family:Spectral,Georgia,serif;font-size:1.1rem;color:var(--muted);font-style:italic}
+section{padding-top:22px;margin-bottom:52px;scroll-margin-top:20px}
+h2{
+  font-family:Spectral,Georgia,serif;font-weight:600;font-size:1.72rem;line-height:1.2;
+  color:var(--ink);margin:0 0 10px;letter-spacing:-.012em;text-wrap:balance;
+  display:flex;gap:14px;align-items:baseline
+}
+h2 .sn{
+  font-family:"IBM Plex Mono",monospace;font-size:.86rem;font-weight:500;color:var(--accent);
+  letter-spacing:.04em;flex:none
+}
+h3{font-family:"IBM Plex Sans",sans-serif;font-weight:600;font-size:1.06rem;color:var(--ink);margin:32px 0 8px}
+h4{
+  font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:11.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--faint);margin:26px 0 8px
+}
+p{margin:0 0 14px;max-width:var(--measure)}
+ul,ol.body{margin:0 0 16px;padding-left:20px;max-width:var(--measure)}
+li{margin-bottom:7px}
+a{color:var(--accent)}
+strong{color:var(--ink);font-weight:600}
+code{
+  font-family:"IBM Plex Mono",monospace;font-size:.88em;
+  background:var(--surface-2);padding:1px 5px;border-radius:2px;color:var(--ink)
+}
+.lede{font-size:1.04rem;color:var(--muted);max-width:var(--measure);margin-bottom:20px}
+
+.formula{
+  border:1px solid var(--rule-strong);border-left:3px solid var(--accent);
+  background:var(--surface);border-radius:2px;padding:18px 20px;margin:16px 0 20px;overflow-x:auto
+}
+.formula .fname{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:11px
+}
+.formula .fx{
+  font-family:"IBM Plex Mono",monospace;font-size:14.5px;line-height:1.85;color:var(--ink);
+  white-space:pre;font-weight:500
+}
+.formula .plain{
+  font-size:14px;color:var(--text);margin-top:13px;padding-top:11px;
+  border-top:1px dashed var(--rule);white-space:normal;max-width:var(--measure)
+}
+.formula .plain b{color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+.formula .where{
+  font-size:13.5px;color:var(--muted);margin-top:11px;white-space:normal;max-width:var(--measure)
+}
+.formula .where b{color:var(--text)}
+
+.tw{overflow-x:auto;margin:14px 0 8px;border:1px solid var(--rule);border-radius:2px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:500;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--faint);text-align:left;padding:11px 13px;
+  border-bottom:1px solid var(--rule-strong);white-space:nowrap;background:var(--surface-2)
+}
+td{padding:9px 13px;border-bottom:1px solid var(--rule);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-family:"IBM Plex Mono",monospace}
+td.arm{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink);white-space:nowrap}
+tr.hl td{background:var(--accent-soft)}
+tr.danger td{background:var(--bad-soft)}
+caption{
+  caption-side:bottom;text-align:left;font-size:12.5px;color:var(--faint);
+  padding:10px 13px;border-top:1px solid var(--rule)
+}
+.tnote{font-size:12.5px;color:var(--faint);margin:2px 0 18px;max-width:var(--measure)}
+
+.chip{
+  display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:500;
+  letter-spacing:.09em;text-transform:uppercase;padding:2px 7px;border-radius:2px;
+  border:1px solid currentColor;white-space:nowrap
+}
+.c-good{color:var(--good);background:var(--good-soft)}
+.c-bad{color:var(--bad);background:var(--bad-soft)}
+.c-warn{color:var(--warn);background:var(--warn-soft)}
+.c-neut{color:var(--muted);background:var(--surface-2)}
+
+.note{
+  border:1px solid var(--rule);border-left:3px solid var(--muted);background:var(--surface);
+  padding:15px 18px;margin:18px 0;border-radius:2px;max-width:var(--measure)
+}
+.note.bad{border-left-color:var(--bad);background:var(--bad-soft)}
+.note.good{border-left-color:var(--good);background:var(--good-soft)}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note.plain{border-left-color:var(--accent);background:var(--accent-soft)}
+.note p:last-child{margin-bottom:0}
+.note .nh{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;margin-bottom:8px;color:var(--ink)
+}
+.note.bad .nh{color:var(--bad)} .note.good .nh{color:var(--good)}
+.note.warn .nh{color:var(--warn)} .note.plain .nh{color:var(--accent)}
+
+dl.defs{margin:14px 0 20px;max-width:var(--measure)}
+dl.defs dt{
+  font-family:"IBM Plex Sans",sans-serif;font-size:14.5px;font-weight:600;color:var(--ink);margin-top:16px
+}
+dl.defs dd{margin:3px 0 0;color:var(--muted);font-size:14.5px}
+dl.defs dd .also{display:block;font-size:13px;color:var(--faint);margin-top:3px}
+
+.spec{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin:16px 0 20px;border-radius:2px;overflow:hidden
+}
+.spec div{background:var(--surface);padding:13px 15px}
+.spec dt{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:5px
+}
+.spec dd{margin:0;font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);word-break:break-word}
+
+.doc{
+  border:1px solid var(--rule);border-radius:2px;background:var(--surface-2);
+  padding:15px 18px;margin:12px 0 18px;font-size:14px;line-height:1.6;max-width:var(--measure)
+}
+.doc .dh{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:9px;display:flex;justify-content:space-between;gap:12px
+}
+.doc.q{border-left:3px solid var(--accent)}
+.nuglist{list-style:none;padding:0;margin:0;max-width:var(--measure)}
+.nuglist li{
+  display:flex;gap:11px;padding:8px 0;border-bottom:1px solid var(--rule);font-size:14px;margin:0
+}
+.nuglist li:last-child{border-bottom:none}
+.nuglist .idx{font-family:"IBM Plex Mono",monospace;color:var(--faint);font-size:12.5px;flex:none;width:16px}
+
+.rule{border:0;border-top:1px solid var(--rule);margin:34px 0}
+.footer{border-top:2px solid var(--ink);margin-top:60px;padding-top:22px;font-size:13px;color:var(--faint);max-width:var(--measure)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">Reference-based LLM-judge evaluation · v2 · final</p>
+  <h1>KC_L Evaluation Record</h1>
+  <p class="standfirst">What we measured, how each measurement works, what the numbers mean, and
+  which conclusions survived scrutiny — including a second, independent judge that overturned one of
+  them. Written to be read start to finish once, then used as a reference while writing the paper.</p>
+  <div class="runline">
+    <span><b>Judge</b> Selene-1-Llama-3.3-70B</span>
+    <span><b>Instrument</b> Cluster A ant2 · 4×H100</span>
+    <span><b>Rows</b> 1113 + 1137 crossed</span>
+    <span><b>Judgements</b> ~30k</span>
+    <span><b>Judges</b> 2, independent</span>
+    <span><b>Closed</b> 2026-09-01</span>
+  </div>
+</header>
+
+<div class="cols">
+<nav class="toc">
+  <div class="tochead">Contents</div>
+  <div class="part">I · Understanding</div>
+  <ol>
+    <li><a href="#s1"><span class="n">1</span><span>What is being measured</span></a></li>
+    <li><a href="#s2"><span class="n">2</span><span>One KC, traced end to end</span></a></li>
+    <li><a href="#s3"><span class="n">3</span><span>Glossary</span></a></li>
+  </ol>
+  <div class="part">II · Method</div>
+  <ol>
+    <li><a href="#s4"><span class="n">4</span><span>The instrument</span></a></li>
+    <li><a href="#s5"><span class="n">5</span><span>Design &amp; corpus</span></a></li>
+    <li><a href="#s6"><span class="n">6</span><span>Metric formulas</span></a></li>
+    <li><a href="#s7"><span class="n">7</span><span>Statistical methods</span></a></li>
+    <li><a href="#s8"><span class="n">8</span><span>Validating the judge</span></a></li>
+  </ol>
+  <div class="part">III · Findings</div>
+  <ol>
+    <li><a href="#s9"><span class="n">9</span><span>What the pipeline does</span></a></li>
+    <li><a href="#s10"><span class="n">10</span><span>The seed question, settled</span></a></li>
+    <li><a href="#s11"><span class="n">11</span><span>What stands</span></a></li>
+    <li><a href="#s12"><span class="n">12</span><span>Threats to validity</span></a></li>
+    <li><a href="#s13"><span class="n">13</span><span>Paper-ready claims</span></a></li>
+    <li><a href="#s14"><span class="n">14</span><span>Reproducibility</span></a></li>
+    
+  </ol>
+</nav>
+
+<main>
+
+<div class="partbreak"><span class="pl">Part I</span><span class="pt">Understanding — read this first</span></div>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+<h2><span class="sn">§1</span>What is being measured</h2>
+
+<h3>The system under test</h3>
+<p>KC_L is an automated pipeline that writes short explanatory descriptions of <strong>knowledge
+components</strong> — the individual concepts in a course, like "Boosting" or "Learning Phase". For
+each concept the pipeline does two things:</p>
+<ol class="body">
+  <li><strong>Retrieval</strong> — searches the course materials and pulls out the passages it thinks
+  are relevant.</li>
+  <li><strong>Drafting</strong> — hands those passages to a language model, which writes the
+  description.</li>
+</ol>
+<p>Both halves can fail, and they fail differently. Retrieval can miss the passage that explains the
+concept. Or retrieval can find it and the drafter can ignore it. Or the drafter can write something
+confident that no retrieved passage supports. A good evaluation has to tell these apart.</p>
+
+<h3>The ablation: changing one thing at a time</h3>
+<p>An <strong>ablation</strong> is the practice of varying exactly one component and holding
+everything else fixed, so any difference in output can be attributed to that component. We ran two:</p>
+<div class="tw">
+<table>
+<thead><tr><th>Family</th><th>What changes</th><th>What is held fixed</th><th>Question answered</th></tr></thead>
+<tbody>
+<tr><td><strong>Intrinsic</strong></td><td>The drafting model — Qwen, Gemma, DeepSeek</td><td>Retrieval (identical passages)</td><td>Which model writes better descriptions from the same evidence?</td></tr>
+<tr><td><strong>Extrinsic</strong></td><td>The retrieval method — Proposed, DOS-RAG, BaseDense</td><td>The drafter (always Qwen)</td><td>Which retrieval method finds better evidence?</td></tr>
+</tbody>
+</table>
+</div>
+<p>Each configuration is called an <strong>arm</strong>. Seven arms × 159 concepts = 1113 descriptions
+to evaluate. Their short names read as <em>retrieval-drafter</em>: <code>P-Q</code> is
+Proposed retrieval with Qwen drafting, <code>B-Q</code> is BaseDense with Qwen, and so on.</p>
+
+<h3>How the judging works</h3>
+<p>Grading 1113 descriptions by hand was not feasible, so a large language model does the grading.
+This is standard practice — <em>LLM-as-a-judge</em> — and it brings its own problems, which is why
+roughly half this document is about validating the judge rather than about the results.</p>
+<p>The judge needs something to grade against. Two different reference points are used, and the
+difference between them turns out to be the single most important thing in this document:</p>
+<div class="tw">
+<table>
+<thead><tr><th>Graded against</th><th>Question the judge is asked</th><th>Metrics</th></tr></thead>
+<tbody>
+<tr><td><strong>The retrieved passages</strong></td><td>Is everything this description asserts actually supported by the evidence it was given?</td><td>Faithfulness</td></tr>
+<tr><td><strong>An expert reference</strong></td><td>Does this description cover what a human expert said the concept requires?</td><td>Nugget recall, context recall</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note plain">
+  <div class="nh">The short version of what happened</div>
+  <p>The expert reference was built by editing the Qwen pipeline's own drafts — a deliberate design
+  choice, but one that carries an anchoring risk. That risk has now been <strong>audited rather than
+  assumed</strong>: an independent reviewer rebuilt references from the corpus with no exposure to any
+  system, and found no distortion and no unsupported content in the library (§10).</p>
+  <p>The retrieval comparison was nevertheless rebuilt from scratch, because the original metric had a
+  separate and fatal flaw — it compared systems returning 17 passages against systems returning 123,
+  with no rank cutoff (§8.4). The replacement is a standard pooled test collection (§9.1).</p>
+</div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+<h2><span class="sn">§2</span>One KC, traced end to end</h2>
+<p class="lede">Every metric in this document can be understood from a single real example. This is
+<code>KC_CLF_UND_001</code> — the concept "Learning Phase" — with real data, not an illustration.</p>
+
+<h3>Step 1 — the expert reference</h3>
+<p>A human expert wrote what a correct description of this concept must contain:</p>
+<div class="doc">
+  <div class="dh"><span>Expert reference · KC_CLF_UND_001 "Learning Phase"</span><span>gold standard</span></div>
+  The learning phase (also referred to as the training phase) is the stage in which a classification
+  algorithm learns from training data. In this phase, the algorithm estimates model parameters, such
+  as the prior probability <em>P(y)</em> and class-conditional probabilities <em>P(x|y)</em>, by
+  analyzing the training set. For example, the prior probability <em>P(y)</em> is estimated by
+  computing the fraction of training instances that belong to each class. The learned model is then
+  typically tested over test data to obtain predictive accuracy. This phase is distinct from the
+  querying phase, where the trained model is applied to new data, and from specific algorithmic
+  implementations like Naive Bayes parameter estimation.
+</div>
+
+<h3>Step 2 — break it into nuggets</h3>
+<p>A <strong>nugget</strong> is one atomic fact, small enough to be either present or absent with no
+argument about it. The judge splits the reference into nuggets and labels each one
+<strong>VITAL</strong> (leave it out and the description is materially wrong or unusable) or
+<strong>OKAY</strong> (true and useful, but elaboration rather than definition).</p>
+<p>This happens <strong>once per concept</strong> and the same nugget list is used for all seven
+arms — so no arm can be advantaged by getting an easier breakdown.</p>
+<ul class="nuglist">
+  <li><span class="idx">1</span><span><span class="chip c-bad">vital</span> The learning phase is the stage in which a classification algorithm learns from training data.</span></li>
+  <li><span class="idx">2</span><span><span class="chip c-bad">vital</span> In the learning phase, the algorithm estimates model parameters by analyzing the training set.</span></li>
+  <li><span class="idx">3</span><span><span class="chip c-neut">okay</span> The prior probability P(y) is estimated by computing the fraction of training instances that belong to each class.</span></li>
+  <li><span class="idx">4</span><span><span class="chip c-neut">okay</span> The learned model is then typically tested over test data to obtain predictive accuracy.</span></li>
+  <li><span class="idx">5</span><span><span class="chip c-bad">vital</span> The learning phase is distinct from the querying phase, where the trained model is applied to new data.</span></li>
+</ul>
+<p class="tnote">Five nuggets, three of them vital. Only the vital ones are scored — that is the
+"strict vital recall" convention from the TREC RAG track [R-04].</p>
+
+<h3>Step 3 — grade each arm's description against the nuggets</h3>
+<p>For each nugget the judge decides whether the description conveys it: <strong>SUPPORTED</strong>,
+<strong>PARTIAL</strong> (gestures at it but omits what makes it substantive), or
+<strong>NOT_SUPPORTED</strong>. Wording may differ — the judge is asked about meaning, not phrasing.
+In the strict score <em>PARTIAL counts as zero</em>.</p>
+
+<div class="doc q">
+  <div class="dh"><span>Qwen (intrinsic_P-Q) · 115 words</span><span>vital 3/3 → recall 1.000</span></div>
+  The learning phase (also referred to as the training phase) is the stage in which a classification
+  algorithm learns from training data. In this phase, the algorithm estimates model parameters, such
+  as the prior probability P(y) and class-conditional probabilities P(x|y), by analyzing the training
+  set. For example, the prior probability P(y) is estimated by computing the fraction of training
+  instances that belong to each class. The learned model is then typically tested over test data to
+  obtain predictive accuracy. This phase is distinct from the querying phase…
+</div>
+<div class="doc">
+  <div class="dh"><span>Gemma (intrinsic_P-G) · 134 words</span><span>vital 1/3 → recall 0.333</span></div>
+  The learning phase is a stage in the predictive process where an algorithm learns from training
+  data. <em>In some feature selection contexts, this is Stage 2 of a process, following an initial
+  stage of feature selection using measures like distance, consistency, dependence, or
+  information…</em> In specific probabilistic contexts, the training phase requires learning
+  parameters for P(y) and P(x|y).
+  <br><br><span style="color:var(--muted)">Nugget 1 SUPPORTED · nugget 2 PARTIAL (counts 0) ·
+  nugget 5 NOT_SUPPORTED — it never distinguishes the learning phase from the querying phase, and
+  drifts into feature selection instead.</span>
+</div>
+<div class="doc">
+  <div class="dh"><span>DeepSeek (intrinsic_P-D) · 105 words</span><span>vital 2/3 → recall 0.667</span></div>
+  The Learning Phase is a critical stage in machine learning where the algorithm processes training
+  data to learn patterns and relationships. This phase involves two main activities: feature
+  selection and model training… The learning phase is distinct from other phases like the querying
+  phase, which involves applying the trained model to new instances.
+  <br><br><span style="color:var(--muted)">Nugget 1 SUPPORTED · nugget 2 PARTIAL (counts 0) ·
+  nugget 5 SUPPORTED.</span>
+</div>
+
+<h3>Step 4 — the arithmetic</h3>
+<div class="formula">
+  <div class="fname">Vital-nugget recall on this KC</div>
+<div class="fx">    Qwen      3 of 3 vital nuggets supported  =  1.000
+    DeepSeek  2 of 3                           =  0.667
+    Gemma     1 of 3                           =  0.333</div>
+  <div class="plain"><b>In plain terms</b>
+  What fraction of the must-have facts did this description actually convey? That is the whole
+  metric. Averaging it over 151 concepts gives the arm's completeness score.</div>
+</div>
+
+<h3>Step 5 — the other metric: faithfulness</h3>
+<p>Completeness asks whether the description covered enough. <strong>Faithfulness</strong> asks the
+opposite question — whether everything it said is <em>backed by the retrieved evidence</em>. The
+judge splits the description into individual claims and checks each one against the passages the
+pipeline retrieved. The reference is not involved at all.</p>
+<div class="formula">
+  <div class="fname">Per-claim faithfulness</div>
+<div class="fx">    supported claims  ⁄  total claims</div>
+  <div class="plain"><b>In plain terms</b>
+  Of everything this description asserts, what fraction can be traced back to a passage the system
+  actually retrieved? A description that invents a plausible-sounding sentence loses points here even
+  if the sentence is true.</div>
+</div>
+
+<div class="note bad">
+  <div class="nh">Now look again at the Qwen draft</div>
+  <p>Compare it word for word against the expert reference at the top of this section. It is
+  <strong>the same text</strong>.</p>
+  <p>That is not a coincidence and not cherry-picking. The expert reference library was built by
+  <em>editing Qwen's drafts</em>, and for this concept the expert accepted Qwen's draft unchanged —
+  as they did for 117 of the 159 concepts. So the nuggets were extracted from Qwen's own writing, and
+  Qwen then scored a perfect 3/3 for reproducing it.</p>
+  <p>This is the seed problem. §10 quantifies it. Everything in §9 should be read knowing it is
+  coming.</p>
+</div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+<h2><span class="sn">§3</span>Glossary</h2>
+<p class="lede">Every term used in this document, in plain language. Skim it now, return to it as
+needed.</p>
+
+<h4>The system</h4>
+<dl class="defs">
+  <dt>Knowledge component (KC)</dt>
+  <dd>One teachable concept from the course — "Boosting", "Learning Phase". The unit everything is
+  measured on. There are 159.</dd>
+
+  <dt>Retrieval</dt>
+  <dd>The search step: given a concept name, pull relevant passages out of the course materials.
+  Three methods are compared — <strong>Proposed</strong> (ours), <strong>DOS-RAG</strong> (a strong
+  contemporary method), and <strong>BaseDense</strong> (a simple dense-vector baseline).</dd>
+
+  <dt>Drafter</dt>
+  <dd>The language model that writes the description from the retrieved passages. Three compared:
+  Qwen3.8-27B, Gemma4-31B, DeepSeek-R1-32B.</dd>
+
+  <dt>Arm</dt>
+  <dd>One complete configuration — a retrieval method plus a drafter. Named
+  <em>retrieval-drafter</em>: <code>P-Q</code> = Proposed + Qwen.</dd>
+
+  <dt>Ablation</dt>
+  <dd>Varying exactly one component while holding the rest fixed, so a difference in results can be
+  attributed to that component.</dd>
+
+  <dt>Abstention</dt>
+  <dd>The system declining to write a description at all. Not an error and not missing data — a real
+  behaviour that gets scored. Split into <strong>forced</strong> (retrieval returned nothing, so
+  declining is correct) and <strong>chosen</strong> (evidence was available and it declined anyway).</dd>
+</dl>
+
+<h4>The grading</h4>
+<dl class="defs">
+  <dt>Judge</dt>
+  <dd>The language model doing the grading — Selene-1-Llama-3.3-70B, a model fine-tuned for
+  evaluation. Frozen for the whole campaign: same weights, same settings, same prompts.</dd>
+
+  <dt>Expert reference</dt>
+  <dd>A human-written statement of what a correct description of a concept must contain. The gold
+  standard. <em>Critical caveat: ours was created by editing Qwen's output — see §10.</em></dd>
+
+  <dt>Claim</dt>
+  <dd>One assertion extracted from a description. A 200-word description typically yields 8–9 claims.
+  Used for faithfulness.</dd>
+
+  <dt>Nugget</dt>
+  <dd>One atomic fact extracted from the <em>reference</em>. Labelled <strong>VITAL</strong>
+  (definitional — omitting it makes the description materially incomplete) or <strong>OKAY</strong>
+  (accurate elaboration). 1185 nuggets across 151 concepts, 475 of them vital.
+  <span class="also">Claims come from the description; nuggets come from the reference. Easy to
+  confuse, opposite directions.</span></dd>
+
+  <dt>Faithfulness</dt>
+  <dd>Fraction of a description's claims that the retrieved evidence supports. Answers: <em>is it
+  making things up?</em></dd>
+
+  <dt>Vital-nugget recall (completeness)</dt>
+  <dd>Fraction of the reference's vital nuggets that the description conveys. Answers: <em>did it
+  leave out anything essential?</em></dd>
+
+  <dt>Context recall</dt>
+  <dd>Fraction of vital nuggets that are recoverable from the <em>retrieved passages</em> — judged
+  with no description involved at all. This is what lets us separate a retrieval failure from a
+  drafting failure.</dd>
+
+  <dt>All-or-nothing aggregation</dt>
+  <dd>The discarded v1 scoring rule: a description scored 1 only if <em>every</em> claim was
+  supported, else 0. Sounds strict, but it mostly measures length — a longer description has more
+  claims and more chances to fail. See §6.2.</dd>
+</dl>
+
+<h4>The statistics</h4>
+<dl class="defs">
+  <dt>Paired comparison</dt>
+  <dd>Comparing two arms concept by concept rather than comparing their overall averages. Since every
+  arm describes the same 159 concepts, pairing cancels out the fact that some concepts are simply
+  harder than others.</dd>
+
+  <dt>Bootstrap confidence interval</dt>
+  <dd>A way to get error bars without assuming a bell curve: resample the concepts at random 10,000
+  times, recompute the difference each time, and take the middle 95% of the answers. If that range
+  excludes zero, the difference is unlikely to be noise.</dd>
+
+  <dt>McNemar test</dt>
+  <dd>A significance test for paired data. It ignores concepts where both arms did the same and looks
+  only at where they disagreed — if A beats B on 44 concepts and loses on 2, that lopsidedness is
+  what it measures.</dd>
+
+  <dt>Holm correction</dt>
+  <dd>Running many tests means some will look significant by luck. Holm tightens the threshold to
+  compensate. We correct within each family of three comparisons.</dd>
+
+  <dt>Macro vs micro averaging</dt>
+  <dd><strong>Macro</strong>: score each concept, then average the scores — every concept counts
+  equally. <strong>Micro</strong>: pool all the nuggets together — concepts with more nuggets count
+  more. Our protocol fixes the concept as the unit, so macro governs.</dd>
+
+  <dt>Direct standardisation (length adjustment)</dt>
+  <dd>Re-scoring every arm as if all of them wrote descriptions of the same length distribution, so a
+  model can't win just by writing more. Needed because Llama-family judges reward verbosity [R-07].</dd>
+
+  <dt>Pre-registration</dt>
+  <dd>Writing down the prediction and the decision threshold, and committing it to git, <em>before</em>
+  running the test — so the analysis cannot be tuned after seeing the answer. Every validation test
+  here was pre-registered.</dd>
+</dl>
+
+<h4>The problems</h4>
+<dl class="defs">
+  <dt>Judge qualification</dt>
+  <dd>Checking whether the judge's verdicts match a human's. The original gate <strong>failed</strong>,
+  which is why this document avoids absolute quality claims. That verdict has since been narrowed:
+  scored with the graded completeness metric rather than the discarded binary one, the judge
+  <strong>passes</strong> all four gates (§8.6). The other three tasks were never disagreement
+  failures — they lack enough minority-class examples to decide.</dd>
+
+  <dt>Second judge / inter-judge agreement</dt>
+  <dd>Running an independent model over the same judgements to see whether conclusions depend on the
+  choice of judge. It measures <em>reliability</em>, not validity — two judges can agree and both
+  be wrong (§8.7).</dd>
+
+  <dt>Verbosity bias</dt>
+  <dd>The tendency of LLM judges to score longer answers higher at equal quality. Llama-family judges
+  have it strongly; ours is Llama-family.</dd>
+
+  <dt>Serial-position sensitivity</dt>
+  <dd>Our own discovery: when the judge is given many passages, it reliably misses information sitting
+  late in the list — even when that information is definitely there. See §8.4.</dd>
+
+  <dt>Seed / anchoring bias</dt>
+  <dd>When a gold standard is created by editing a machine's output, it inherits that machine's
+  choices, and grading that machine against it is partly circular. This is what happened to us.
+  See §10.</dd>
+</dl>
+</section>
+
+<div class="partbreak"><span class="pl">Part II</span><span class="pt">Method — the exact definitions</span></div>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+<h2><span class="sn">§4</span>The instrument</h2>
+<p class="lede">Frozen before the campaign and unchanged throughout. All v2 measurements come from one
+machine; the earlier mixed-cluster provenance was discarded.</p>
+
+<dl class="spec">
+  <div><dt>Judge model</dt><dd>AtlaAI/Selene-1-Llama-3.3-70B</dd></div>
+  <div><dt>Precision</dt><dd>bfloat16</dd></div>
+  <div><dt>vLLM</dt><dd>0.27.1</dd></div>
+  <div><dt>XGrammar</dt><dd>0.2.3</dd></div>
+  <div><dt>GPU</dt><dd>4 × H100 NVL</dd></div>
+  <div><dt>Tensor parallel</dt><dd>4</dd></div>
+  <div><dt>max_model_len</dt><dd>40960</dd></div>
+  <div><dt>temperature</dt><dd>0.0</dd></div>
+  <div><dt>top_p</dt><dd>1.0</dd></div>
+  <div><dt>seed</dt><dd>20260825</dd></div>
+  <div><dt>All penalties</dt><dd>0.0 / 1.0</dd></div>
+  <div><dt>Execution</dt><dd>strictly sequential</dd></div>
+</dl>
+
+<p><code>frequency_penalty</code> was briefly 0.2 while diagnosing output stalls, then removed: vLLM
+applies it directly to generation logits, so it is not a formatting control and can change semantic
+decisions even at temperature 0. Two penalty-free runs gave an identical verdict distribution
+(20 FAIL / 14 PASS) while penalty=0.2 shifted it to 22 FAIL / 12 PASS.</p>
+
+<div class="note warn">
+  <div class="nh">Why every stage ran one request at a time</div>
+  <p>Running requests concurrently changed the judge's answers. Under default kernels, concurrency
+  changed 1 verdict in 144. With <code>VLLM_BATCH_INVARIANT=1</code> — which forces a fixed
+  arithmetic reduction order regardless of batching — it changed 0 of 144 [R-09, R-10]. That flag is
+  not enabled on the machine used for v2, so everything ran sequentially. Slower, but reproducible.</p>
+</div>
+
+<h3>Structured output and blinding</h3>
+<p>The judge returns JSON constrained by a compiled grammar. Three constraints are load-bearing and
+were learned by failure: the <strong>verdict field must come first</strong> (with it last, the model
+picks its branch by choosing the next key, which made one verdict unreachable — measured as zero
+occurrences across 36 cases); the <strong>rationale must be optional</strong> (a required trailing
+free-text field made the model open a string it had nothing to put in and run to the token cap); and
+<strong><code>oneOf</code> must be used rather than <code>if/then/else</code></strong>, which
+compiles cleanly and is then silently dropped from the grammar.</p>
+<p><strong>Blinding:</strong> arm identity never reaches the judge. 36 forbidden patterns are checked
+at prompt-build time by a function that <em>raises rather than warns</em>; evidence ids that would
+reveal the retrieval lane are replaced with opaque <code>SRC_*</code> ids. Exactly one exemption was
+granted all campaign, for the phrase "a variant proposed by Breiman" in a KC about Boosting — which
+tripped the guard only because one of our pipelines is named <em>Proposed</em>.</p>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+<h2><span class="sn">§5</span>Design and corpus</h2>
+<div class="tw">
+<table>
+<thead><tr><th>Arm</th><th>Family</th><th>Drafter</th><th>Retrieval</th><th class="num">Mean passages</th></tr></thead>
+<tbody>
+<tr><td class="arm">intrinsic_P-Q</td><td>intrinsic</td><td>qwen3.8:27b</td><td>Proposed</td><td class="num">17.2</td></tr>
+<tr><td class="arm">intrinsic_P-G</td><td>intrinsic</td><td>gemma4:31b</td><td>Proposed</td><td class="num">17.2</td></tr>
+<tr><td class="arm">intrinsic_P-D</td><td>intrinsic</td><td>deepseek-r1:32b</td><td>Proposed</td><td class="num">17.2</td></tr>
+<tr><td class="arm">extrinsic_P-Q</td><td>extrinsic</td><td>qwen3.8:27b</td><td>Proposed</td><td class="num">17.2</td></tr>
+<tr><td class="arm">extrinsic_B-Q</td><td>extrinsic</td><td>qwen3.8:27b</td><td>BaseDense</td><td class="num">123.1</td></tr>
+<tr><td class="arm">extrinsic_DOS-Q</td><td>extrinsic</td><td>qwen3.8:27b</td><td>DOS-RAG</td><td class="num">33.7</td></tr>
+<tr><td class="arm">sensitivity_DOS-Q_matched</td><td>sensitivity</td><td>qwen3.8:27b</td><td>DOS-RAG, budget-matched</td><td class="num">11.6</td></tr>
+</tbody>
+</table>
+</div>
+
+<dl class="defs">
+  <dt>1113 evaluation rows</dt>
+  <dd>159 concepts × 7 arms. Every arm has a row for every concept; an empty draft is a genuine
+  abstention and is scored as such, never dropped.</dd>
+  <dt>151 concepts scored for reference-based metrics</dt>
+  <dd>Seven concepts have no expert reference at all (the library covers 152/159) and one fails
+  decomposition because a LaTeX formula exceeds the 300-character nugget bound. All eight drop
+  identically for every arm.</dd>
+  <dt>4 distinct evidence configurations</dt>
+  <dd>Verified, not assumed: all three intrinsic arms plus <code>extrinsic_P-Q</code> share the
+  identical passage set on 155 of 159 concepts. So the intrinsic family genuinely holds retrieval
+  fixed, and context recall costs 604 judgements rather than 1113.</dd>
+  <dt>1185 nuggets, 475 vital</dt>
+  <dd>7.85 per concept (range 3–18); 3.15 vital (range 1–7).</dd>
+</dl>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+<h2><span class="sn">§6</span>Metric formulas</h2>
+<p class="lede">Each with a plain-language reading and its published source.</p>
+
+<h3>6.1 Per-claim faithfulness <span class="chip c-good">stands</span></h3>
+<div class="formula">
+  <div class="fname">RAGAS faithfulness [R-01]</div>
+<div class="fx">              |{ c ∈ C : label(c) = SUPPORTED }|
+    F(d)  =  ─────────────────────────────────────
+                          |C|</div>
+  <div class="plain"><b>In plain terms</b>
+  Split the description into individual claims; count how many the retrieved passages back up;
+  divide. 1.0 means nothing was asserted that the evidence doesn't support.</div>
+  <div class="where"><b>C</b> = claims extracted from description <b>d</b>. Abstentions are
+  <b>excluded</b>, not scored zero — a description with no text has no claims, so faithfulness is
+  undefined rather than perfect or failing.</div>
+</div>
+
+<h3>6.2 All-or-nothing aggregation <span class="chip c-neut">discarded, v1</span></h3>
+<div class="formula">
+  <div class="fname">The v1 rule, and why it was replaced</div>
+<div class="fx">    M1(d)  =  1  if every claim is SUPPORTED, else 0
+
+    E[M1]  ≈  p ⁿ</div>
+  <div class="plain"><b>In plain terms</b>
+  "Perfect or nothing." The problem: if each claim independently has a 96% chance of being supported,
+  a 9-claim description scores 0.96⁹ ≈ 0.69 and a 6-claim one scores 0.96⁶ ≈ 0.78 — so the shorter
+  description "wins" purely for saying less. This is a length measurement wearing a quality
+  measurement's clothes.</div>
+  <div class="where">The p ⁿ model was fitted on the main corpus and then tested on domain data it had
+  never seen, predicting mathematics' rate to within <b>0.021</b> (§9.5).</div>
+</div>
+
+<h3>6.3 Vital-nugget recall <span class="chip c-bad">withdrawn — §10</span></h3>
+<div class="formula">
+  <div class="fname">Strict vital recall [R-03, R-04]</div>
+<div class="fx">              |{ n ∈ N_v : label(n) = SUPPORTED }|
+    R(d)  =  ──────────────────────────────────────
+                          |N_v|
+
+    lenient variant:   SUPPORTED = 1.0
+                       PARTIAL   = 0.5
+                       NOT_SUP.  = 0.0</div>
+  <div class="plain"><b>In plain terms</b>
+  Of the must-have facts, how many did the description actually say? PARTIAL counts as zero in the
+  strict score; the lenient half-credit variant was registered in advance as secondary so the choice
+  couldn't be made after seeing results.</div>
+  <div class="where"><b>N_v</b> = vital nuggets for that concept. Decomposition happens once per
+  concept and is shared by all arms.</div>
+</div>
+
+<h3>6.4 Context recall <span class="chip c-bad">withdrawn — §8.4 and §10</span></h3>
+<div class="formula">
+  <div class="fname">RAGAS context recall [R-01]</div>
+<div class="fx">               |{ n ∈ N_v : label(n) = PRESENT }|
+    CR(e)  =  ────────────────────────────────────
+                          |N_v|</div>
+  <div class="plain"><b>In plain terms</b>
+  Ignore the description entirely. Look only at the passages retrieval pulled up, and ask: is the
+  information needed to state each must-have fact actually in there? A low score means retrieval
+  failed and no drafter could have succeeded.</div>
+  <div class="where">Judged with <b>no drafter in the loop</b>, which is what makes retrieval
+  separable from generation [R-05].</div>
+</div>
+
+<h3>6.5 Aggregation</h3>
+<div class="formula">
+  <div class="fname">Macro governs</div>
+<div class="fx">                1                                 Σ_k  s_k
+    M_macro  =  ───  Σ  m_k          M_micro  =  ──────────
+               |K|   k∈K                          Σ_k  t_k</div>
+  <div class="plain"><b>In plain terms</b>
+  Macro scores each concept then averages, so all concepts count equally. Micro pools everything, so
+  concepts with more nuggets pull harder. Our protocol makes the concept the unit of analysis, so
+  macro is the one that counts — but both are reported wherever they differ.</div>
+</div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+<h2><span class="sn">§7</span>Statistical methods</h2>
+<p class="lede">Fixed in a pre-registered protocol before the ablation was run.</p>
+
+<div class="formula">
+  <div class="fname">Paired within-concept difference</div>
+<div class="fx">                 1
+    Δ(a₁,a₂)  =  ───  Σ  [ m(a₁,k) − m(a₂,k) ]
+                |K'|  k∈K'</div>
+  <div class="plain"><b>In plain terms</b>
+  Don't compare two arms' averages — compare them concept by concept and average the differences.
+  Some concepts are just harder, and pairing removes that.</div>
+  <div class="where"><b>K'</b> = concepts where both arms have a defined value. Concepts missing a
+  verdict for either arm are excluded and reported, <b>never imputed</b>.</div>
+</div>
+
+<div class="formula">
+  <div class="fname">Concept-clustered bootstrap, B = 10 000</div>
+<div class="fx">    repeat 10 000 times:
+        resample |K'| concepts WITH replacement
+        recompute the mean paired difference
+
+    CI₉₅  =  [ 2.5th percentile , 97.5th percentile ]</div>
+  <div class="plain"><b>In plain terms</b>
+  Error bars without assuming a bell curve. If the middle 95% of those 10,000 answers never crosses
+  zero, the difference is unlikely to be luck. Whole concepts are resampled, not individual rows,
+  because rows from the same concept aren't independent.</div>
+</div>
+
+<div class="formula">
+  <div class="fname">Exact McNemar test</div>
+<div class="fx">    b  =  concepts where a₁ beat a₂
+    c  =  concepts where a₂ beat a₁
+
+                        min(b,c)
+    p  =  min( 1 ,  2 ·    Σ     C(b+c, i)  ⁄  2^(b+c) )
+                         i=0</div>
+  <div class="plain"><b>In plain terms</b>
+  Throw away every concept where the two arms tied and look only at the disagreements. If A wins 44
+  and loses 2, how surprising is that if they were really equal? Exact rather than approximate
+  because some disagreement counts are small.</div>
+</div>
+
+<div class="formula">
+  <div class="fname">Holm–Bonferroni, within family</div>
+<div class="fx">    sort  p₍₁₎ ≤ p₍₂₎ ≤ … ≤ p₍m₎
+
+    p_adj₍i₎  =  max   min( 1 , (m − j + 1) · p₍j₎ )
+                 j ≤ i</div>
+  <div class="plain"><b>In plain terms</b>
+  Run enough tests and something will look significant by chance. Holm raises the bar to compensate.
+  With m = 3 comparisons per family, the strongest result must clear a threshold three times
+  stricter.</div>
+  <div class="where">The two families are corrected <b>separately</b>, as pre-specified. The
+  sensitivity arm is exploratory and enters no confirmatory claim.</div>
+</div>
+
+<div class="formula">
+  <div class="fname">Direct standardisation for length</div>
+<div class="fx">    bands B  =  quintiles of pooled draft length
+    w_b      =  pooled count in band b     ← standard population
+
+                      w_b
+    M_adj(a) =   Σ   ──────  ·  m̄(a,b)
+               b∈B_a   Σ w
+                      b∈B_a</div>
+  <div class="plain"><b>In plain terms</b>
+  Sort all descriptions into five length bands. Score each arm within each band, then re-average
+  using the <em>same</em> length mix for everyone. A model that writes twice as much no longer gets
+  credit for that alone.</div>
+  <div class="where">Renormalising over covered bands prevents penalising an arm with an empty band.
+  Abstentions excluded — a zero-length draft has no band.</div>
+</div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+<h2><span class="sn">§8</span>Validating the judge</h2>
+<p class="lede">Five tests, each pre-registered with a git-verifiable timestamp before its result
+existed. Two of them changed our conclusions.</p>
+
+<h3>8.1 Absolute qualification <span class="chip c-bad">failed</span></h3>
+<p>Does the judge agree with a human? On the only properly-powered task (n=36, 20 PASS / 16 FAIL):
+raw agreement <strong>0.556</strong> against a required 0.80; Gwet AC1 <strong>0.392</strong> against
+0.65; PASS recall <strong>0.40</strong> against 0.75. FAIL recall was 1.00 and met its gate.</p>
+<p>The failure is <em>one-directional over-flagging</em> — false-pass rate 0.00, false-fail rate 0.60.
+The judge catches every genuine omission and also flags 12 of 20 descriptions the human thought were
+fine. Because that strictness is applied to every arm's description of the same concept, it largely
+cancels under pairing — which is why relative comparisons remain licensed and absolute ones never do.</p>
+
+<h3>8.2 Adoption test <span class="chip c-good">passed</span></h3>
+<p>Registered in advance: the new nugget metric must separate the human's judgements better than the
+old holistic verdict did, or it is not adopted.</p>
+<div class="tw">
+<table>
+<thead><tr><th>Predictor</th><th class="num">AUC vs human label</th></tr></thead>
+<tbody>
+<tr class="hl"><td>v2 vital-nugget recall</td><td class="num">0.8578</td></tr>
+<tr><td>v1 holistic verdict</td><td class="num">0.7000</td></tr>
+</tbody>
+</table>
+</div>
+<p class="tnote">Descriptions the human called complete average 0.650 nugget recall; those called
+materially incomplete average 0.094. <strong>Limit:</strong> the test reuses the same 36
+single-annotator rows, so it shows v2 is better than v1, not that it is valid in absolute terms.</p>
+
+<h3>8.3 Are the two recall prompts on the same scale? <span class="chip c-good">yes</span></h3>
+<p>Nugget recall and context recall use different prompts, so a systematic difference in strictness
+would fake a gap between them. Both prompts were shown the <em>same</em> expert reference — from
+which the nuggets were extracted, so the right answer is 1.0 for both by construction.</p>
+<p>Both returned exactly <strong>1.0000</strong> (n=151, 302 calls, offset B = 0.0000, CI
+[0.0000, 0.0000]). Not a degenerate result — the judge still emitted PARTIALs, and the same scoring
+path on real data produces wide spread. The registered hypothesis was disconfirmed.</p>
+
+<h3>8.4 Does a bigger passage set confuse the judge? <span class="chip c-bad">yes, severely</span></h3>
+<p>Each concept's own reference — which provably contains every nugget — was hidden among unrelated
+distractor passages at a random position, at three set sizes. <strong>The correct answer is 1.0 every
+time.</strong></p>
+<div class="tw">
+<table>
+<thead><tr><th class="num">Passages</th><th class="num">Judge recovers</th><th class="num">Shortfall</th><th>Matches which arm</th></tr></thead>
+<tbody>
+<tr><td class="num">17</td><td class="num">1.0000</td><td class="num">0.0000</td><td>Proposed (17.2)</td></tr>
+<tr><td class="num">33</td><td class="num">0.9934</td><td class="num">0.0066</td><td>DOS-RAG (33.7)</td></tr>
+<tr class="danger"><td class="num">123</td><td class="num">0.5905</td><td class="num">0.4095</td><td>BaseDense (123.1)</td></tr>
+</tbody>
+<caption>Paired drop 17→123 = +0.4095, CI [+0.3322, +0.4868], n=151, 453 calls, 0 failures.</caption>
+</table>
+</div>
+<p><strong>The cause is position, not truncation.</strong> Within the 123-passage condition every
+prompt is the same length and only the target's position varies: recall is 1.0000 for positions 0–33
+and 0.20–0.40 beyond position 59. Truncation is excluded twice over — a truncated prompt would
+collapse to exactly 0.0 past a fixed point, yet the last decile still scores 0.3125, and the server
+allows 40,960 tokens against ~25k-token prompts with every call returning OK. The judge
+<em>reads</em> the late passages and <em>fails to use</em> them.</p>
+<p><strong>Consequence:</strong> BaseDense's context recall of 0.4664 sits <em>below the 0.5905 a
+perfect retriever would score at its set size</em>. Context recall cannot compare arms with different
+retrieval budgets. No numeric correction is applied — the test's biases run in both directions and
+cannot be netted out, so the comparison is downgraded rather than adjusted.</p>
+
+<h3>8.5 Does the same problem affect faithfulness? <span class="chip c-good">no — it reverses</span></h3>
+<p>Same manipulation, applied to faithfulness: identical claims judged twice, once against the arm's
+own ~18 passages and once against those same passages padded to 123.</p>
+<div class="tw">
+<table>
+<thead><tr><th>Condition</th><th class="num">Faithfulness</th></tr></thead>
+<tbody>
+<tr><td>Own evidence (~18 passages)</td><td class="num">0.9537</td></tr>
+<tr class="hl"><td>Padded to 123 passages</td><td class="num">0.9712</td></tr>
+</tbody>
+<caption>Change −0.0175, CI [−0.0325, −0.0024], McNemar p = 0.00082. Lowered in 7 of 143 concepts,
+<strong>raised in 27</strong>, unchanged in 109.</caption>
+</table>
+</div>
+<div class="note good">
+  <div class="nh">The bias changes sign depending on the question</div>
+  <p>Padding <em>depresses</em> context recall (−0.41) and <em>inflates</em> faithfulness (+0.02).
+  The explanation that fits both: an overloaded judge falls back on the task's <strong>default
+  answer</strong> — "not present" when hunting for one specific fact, "supported" when asked whether
+  anything at all backs a claim.</p>
+  <p>So "long contexts degrade LLM judges" is too crude to act on. The direction depends on the
+  question, and a correction applied with the wrong sign would make things worse.</p>
+</div>
+<h3>8.6 Re-running the qualification gate <span class="chip c-good">passes</span></h3>
+<p>The blanket <code>JUDGE_QUALIFIED = false</code> turned out to be broader than the evidence
+supported. Reading the original decision task by task, <strong>only one task actually failed</strong>
+— the other three returned <code>INSUFFICIENT</code>, which is a <em>sample-size</em> verdict, not a
+disagreement verdict. TARGET alignment in fact agrees at raw <strong>0.906</strong> (AC1 0.884) and is
+blocked purely by having 5 minority-class rows instead of 10.</p>
+<p>The one genuine failure, completeness, was a <strong>binary</strong> verdict. v2 replaced it with a
+<strong>graded</strong> score — but the gate had never been re-run on the replacement. Re-running it,
+with the decision threshold chosen <strong>leave-one-out</strong> so it never sees the row it
+predicts:</p>
+<div class="tw">
+<table>
+<thead><tr><th>Gate</th><th class="num">Required</th><th class="num">v1 binary verdict</th><th class="num">v2 graded score</th></tr></thead>
+<tbody>
+<tr><td>raw agreement</td><td class="num">≥ 0.80</td><td class="num">0.556 ✗</td><td class="num"><strong>0.8611 ✓</strong></td></tr>
+<tr><td>Gwet AC1</td><td class="num">≥ 0.65</td><td class="num">0.392 ✗</td><td class="num"><strong>0.7224 ✓</strong></td></tr>
+<tr><td>PASS recall</td><td class="num">≥ 0.75</td><td class="num">0.400 ✗</td><td class="num"><strong>0.8000 ✓</strong></td></tr>
+<tr><td>FAIL recall</td><td class="num">≥ 0.75</td><td class="num">1.000 ✓</td><td class="num"><strong>0.9375 ✓</strong></td></tr>
+</tbody>
+<caption>Confusion under leave-one-out: TP 16, TN 15, FP 1, FN 4, n = 36.</caption>
+</table>
+</div>
+<div class="note good">
+  <div class="nh">The judge was not miscalibrated — the rubric was throwing information away</div>
+  <p>This fits the original diagnosis exactly: the failure was <em>one-directional over-flagging</em>
+  (false-pass 0.00, false-fail 0.60). A uniformly strict judge with a graded output can be
+  thresholded; a binary one cannot.</p>
+  <p><strong>Scope.</strong> This establishes agreement with <em>this annotator's</em> 36 labels at a
+  cross-validated threshold. It is not absolute validity — same annotator, same rows. The
+  supportable phrasing is "qualified on completeness against the available human labels".</p>
+</div>
+
+<h3>8.7 A second, independent judge <span class="chip c-bad">rankings do not reproduce</span></h3>
+<p>Chosen by elimination rather than availability. Two rules did the work: <strong>not Llama-family</strong>
+(our judge is Llama-3.3, and the family's verbosity bias would be reproduced rather than tested), and
+<strong>not a drafter family</strong> (models favour their own generations). That excluded every
+obvious candidate. The generic rubric-scoring judges were excluded on a third ground — they score
+1–5 against a rubric, which is not our task, so a disagreement would be uninterpretable.</p>
+<p><strong>MiniCheck-Flan-T5-Large</strong>: an encoder–decoder T5, sharing no lineage with any model
+in this study, whose native task <code>(document, claim) → supported</code> <em>is</em> groundedness.
+Benchmarked at 74.7% balanced accuracy on grounded fact-checking, matching Claude-3 Opus.</p>
+<p><strong>Made clean by construction.</strong> The earlier campaign discarded its claim texts, so
+claims were re-extracted, <em>stored</em>, and then <strong>both judges scored the identical
+claims</strong> against identical evidence — 7,747 ablation and 7,914 crossed claims, with
+<strong>zero</strong> length mismatches. Any disagreement is instrument difference and nothing else.</p>
+<div class="tw">
+<table>
+<thead><tr><th>Per-claim, matched</th><th class="num">Ablation</th><th class="num">Crossed 3×3</th></tr></thead>
+<tbody>
+<tr><td>raw agreement</td><td class="num">0.7176</td><td class="num">0.6884</td></tr>
+<tr><td><strong>Gwet AC1</strong></td><td class="num"><strong>0.6076</strong></td><td class="num"><strong>0.5457</strong></td></tr>
+<tr><td>Cohen κ</td><td class="num">0.0744</td><td class="num">—</td></tr>
+<tr><td>Selene support rate</td><td class="num">0.9428</td><td class="num">0.9272</td></tr>
+<tr><td>MiniCheck support rate</td><td class="num">0.7200</td><td class="num">0.6826</td></tr>
+</tbody>
+<caption>Read AC1, not κ. With one category at 94% prevalence, κ collapses toward zero even at high
+agreement — the <em>kappa paradox</em>. The pre-registered protocol already treats AC1 as primary and
+records κ as secondary for exactly this reason.</caption>
+</table>
+</div>
+
+<h4>The arm ranking does not survive</h4>
+<div class="tw">
+<table>
+<thead><tr><th>Arm</th><th class="num">Selene</th><th class="num">MiniCheck</th><th class="num">Δ</th></tr></thead>
+<tbody>
+<tr class="hl"><td class="arm">extrinsic_DOS-Q</td><td class="num">0.9691</td><td class="num">0.9218</td><td class="num"><strong>−0.047</strong></td></tr>
+<tr><td class="arm">intrinsic_P-G</td><td class="num">0.9634</td><td class="num">0.6966</td><td class="num">−0.267</td></tr>
+<tr><td class="arm">intrinsic_P-Q</td><td class="num">0.9518</td><td class="num">0.6406</td><td class="num">−0.311</td></tr>
+<tr><td class="arm">extrinsic_P-Q</td><td class="num">0.9517</td><td class="num">0.6275</td><td class="num">−0.324</td></tr>
+<tr><td class="arm">extrinsic_B-Q</td><td class="num">0.9354</td><td class="num">0.7073</td><td class="num">−0.228</td></tr>
+<tr><td class="arm">sensitivity_DOS-Q_matched</td><td class="num">0.9274</td><td class="num">0.7133</td><td class="num">−0.214</td></tr>
+<tr><td class="arm">intrinsic_P-D</td><td class="num">0.8130</td><td class="num">0.5865</td><td class="num">−0.227</td></tr>
+</tbody>
+<caption>Spearman ρ = <strong>+0.4286</strong>. Only the two endpoints survive — DOS-RAG best,
+DeepSeek-R1 worst — under both judges. The middle five positions scramble.</caption>
+</table>
+</div>
+
+<h4>The mechanism, measured</h4>
+<p>The per-arm deltas differ sevenfold, which is a signal rather than noise. The driver is
+<strong>document length, not passage count</strong>: correlation with the MiniCheck score is
+<strong>+0.261</strong> for document words but only +0.053 for number of passages. DOS-RAG retrieves
+2,212 words per concept against Proposed's 914, so its claims are more often <em>fully</em> entailed
+— which strict entailment rewards and a partial-support rubric does not. Our judge rates that gap at
++0.016; the independent verifier rates it +0.294, an <strong>eighteenfold</strong> amplification.</p>
+<p>This is a genuine difference of construct, not a defect in either judge.</p>
+
+<h3>8.8 The control that makes 8.7 interpretable <span class="chip c-good">0.17% drift</span></h3>
+<p>A disagreement between two judges only means something if you know how much the numbers move on a
+plain re-run. Re-judging with the <em>same</em> judge over re-extracted claims gives exactly that — a
+full end-to-end repeat of decomposition and judging.</p>
+<div class="tw">
+<table>
+<thead><tr><th>Comparison</th><th class="num">Per-claim agreement</th><th class="num">Arm-ordering ρ</th></tr></thead>
+<tbody>
+<tr class="hl"><td><strong>Selene vs itself</strong> (full re-run)</td><td class="num"><strong>0.9983</strong></td><td class="num"><strong>+0.9643</strong></td></tr>
+<tr><td>Selene vs MiniCheck</td><td class="num">0.7176</td><td class="num">+0.4286</td></tr>
+</tbody>
+<caption>13 of 7,610 claims flipped. Support-rate drift −0.0001; maximum arm-level drift 0.0027.</caption>
+</table>
+</div>
+<p>So the second-judge disagreement <strong>cannot be run-to-run noise</strong>. This also happens to
+be the first direct reproducibility measurement for the pipeline, and it is better than expected
+given batch invariance is off: nondeterminism is visible exactly where predicted — 1.5% of drafts
+re-decompose to a different claim count — but it barely propagates to aggregates. A campaign this
+size absorbs it; a 36-row calibration set would not.</p>
+</section>
+
+<div class="partbreak"><span class="pl">Part III</span><span class="pt">Findings</span></div>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+<h2><span class="sn">§9</span>What the pipeline does</h2>
+<p class="lede">Three claims, three appropriate statistical forms. Two of them are
+<strong>equivalence</strong> claims, which cannot be established by a non-significant difference
+test — the error the earlier version of this evaluation made.</p>
+
+<h3>9.1 Retrieval — a pooled test collection</h3>
+<p>Each of 8246 pooled passages was judged <strong>individually</strong> for whether it supports
+describing the concept. Individual judging is what makes this immune to the serial-position failure
+in §8.4, and <code>@k</code> metrics are designed for systems that return different numbers of
+results.</p>
+<div class="tw">
+<table>
+<thead><tr><th>Retrieval</th><th class="num">Passages/KC</th><th class="num">P@10</th><th class="num">R@10</th><th class="num">nDCG@10</th><th class="num">R@20</th></tr></thead>
+<tbody>
+<tr class="hl"><td class="arm">Proposed</td><td class="num">17.2</td><td class="num"><strong>0.6279</strong></td><td class="num">0.2379</td><td class="num"><strong>0.5229</strong></td><td class="num">0.3304</td></tr>
+<tr><td class="arm">DOS-RAG</td><td class="num">33.7</td><td class="num">0.6244</td><td class="num">0.2401</td><td class="num">0.4074</td><td class="num"><strong>0.4705</strong></td></tr>
+<tr><td class="arm">DOS-RAG budget-matched</td><td class="num">11.6</td><td class="num">0.5421</td><td class="num">0.1853</td><td class="num">0.4274</td><td class="num">0.2484</td></tr>
+<tr><td class="arm">BaseDense</td><td class="num">123.1</td><td class="num">0.3686</td><td class="num">0.1374</td><td class="num">0.2399</td><td class="num">0.2333</td></tr>
+</tbody>
+<caption>All four Proposed-lineage arms share one evidence configuration and are therefore identical
+here, as expected. Pool: union of top-20 from all seven arms, 0 call failures.</caption>
+</table>
+</div>
+<div class="note good">
+  <div class="nh">The efficiency claim is restored, properly measured</div>
+  <p>BaseDense returns <strong>7.2× more passages</strong> than Proposed and its top-10 precision is
+  <strong>0.3686 against 0.6279</strong>. It retrieves far more and ranks far worse. The earlier
+  retraction was correct that the <em>old</em> measurement could not support this claim; the pooled
+  measurement can.</p>
+  <p><strong>Proposed versus DOS-RAG is a ranking difference, not a recall difference.</strong> They
+  are near-identical on P@10 (0.6279 vs 0.6244) and R@10 (0.2379 vs 0.2401), but Proposed's nDCG@10
+  is markedly higher (0.5229 vs 0.4074) — it puts the definitional material at the top. DOS-RAG leads
+  at R@20 because it returns twice as much, which is a budget effect rather than a quality one.</p>
+</div>
+<p class="tnote"><strong>Disclosed limitation — pool bias.</strong> Relevant passages outside the pool
+count as non-relevant. Mitigated by pooling seven diverse runs, one returning 123 passages per KC.
+The four Proposed-lineage arms contribute <em>zero</em> passages unique to them, so the ground truth
+cannot be characterised as Proposed's own output.</p>
+
+<h3>9.2 Model-agnosticism — equivalence testing</h3>
+<p>Groundedness across the full crossed <strong>3 drafters × 3 domains</strong> design (1137 rows,
+0 failures), tested with TOST against a margin fixed in advance at δ = 0.05.</p>
+<div class="tw">
+<table>
+<thead><tr><th>Comparison</th><th class="num">mathematics</th><th class="num">data-mining</th><th class="num">sociology</th></tr></thead>
+<tbody>
+<tr class="hl"><td class="arm">Gemma vs Qwen</td><td class="num">+0.0063 <span class="chip c-good">equiv</span></td><td class="num">+0.0245 <span class="chip c-good">equiv</span></td><td class="num">+0.0276 <span class="chip c-good">equiv</span></td></tr>
+<tr><td class="arm">DeepSeek vs Qwen</td><td class="num">−0.2142</td><td class="num">−0.1129</td><td class="num">−0.0758</td></tr>
+<tr><td class="arm">DeepSeek vs Gemma</td><td class="num">−0.2402</td><td class="num">−0.1474</td><td class="num">−0.1034</td></tr>
+</tbody>
+<caption>Qwen and Gemma are statistically equivalent in every domain. DeepSeek-R1 is not equivalent to
+either, anywhere.</caption>
+</table>
+</div>
+<p>DeepSeek's deficit is <strong>consistent across three unrelated subjects</strong>, which makes it a
+stable model property rather than a pipeline–domain interaction. Two characteristics measurable
+<em>without looking at quality</em> support the same reading: it writes 118 / 114 / 123 words across
+the three domains against Qwen's 208 / 234 / 245, and self-reports <code>grounded</code> on ~99% of
+concepts where the others use <code>partial</code> 10–20% of the time.</p>
+
+<h4>Variance decomposition — the number the claim needs</h4>
+<div class="tw">
+<table>
+<thead><tr><th>Domain</th><th class="num">Drafter share, all three</th><th class="num">Drafter share, Qwen + Gemma</th></tr></thead>
+<tbody>
+<tr><td>data-mining</td><td class="num">23.3%</td><td class="num"><strong>3.3%</strong></td></tr>
+<tr><td>mathematics</td><td class="num">39.5%</td><td class="num"><strong>0.0%</strong></td></tr>
+<tr><td>sociology</td><td class="num">15.5%</td><td class="num"><strong>6.4%</strong></td></tr>
+</tbody>
+<caption>Share of groundedness variance attributable to the drafter facet.</caption>
+</table>
+</div>
+<div class="note bad">
+  <div class="nh">Downgraded — the equivalence verdict is judge-dependent</div>
+  <p>Under our judge the claim reads <em>model-agnostic across drafters of comparable capability</em>:
+  the drafter explains 0–6.4% of variance among the two in-scope models. Under the independent
+  verifier (§8.7), scoring the <strong>identical claims</strong>, only <strong>5 of 9</strong>
+  comparisons agree:</p>
+  <div class="tw">
+  <table>
+  <thead><tr><th>Comparison</th><th class="num">Selene</th><th class="num">MiniCheck</th></tr></thead>
+  <tbody>
+  <tr><td class="arm">maths: Gemma vs Qwen</td><td class="num">+0.0161 <strong>EQUIV</strong></td><td class="num">+0.0346 not</td></tr>
+  <tr><td class="arm">data-mining: Gemma vs Qwen</td><td class="num">+0.0213 <strong>EQUIV</strong></td><td class="num">+0.0476 not</td></tr>
+  <tr><td class="arm">sociology: Gemma vs Qwen</td><td class="num">+0.0250 EQUIV</td><td class="num">+0.0261 EQUIV</td></tr>
+  <tr><td class="arm">sociology: DeepSeek vs Qwen</td><td class="num">−0.0806 not</td><td class="num"><strong>−0.0002 EQUIV</strong></td></tr>
+  <tr><td class="arm">sociology: DeepSeek vs Gemma</td><td class="num">−0.1056 not</td><td class="num"><strong>−0.0262 EQUIV</strong></td></tr>
+  </tbody>
+  </table>
+  </div>
+  <p>The headline — equivalent in all three domains — reproduces in <strong>one</strong>. In sociology
+  the second judge finds DeepSeek equivalent to both others, contradicting the outlier account.</p>
+  <p><strong>What survives is the ordering:</strong> Gemma ≥ Qwen &gt; DeepSeek in mathematics and
+  data-mining under both judges. Report that, not statistical equivalence. Note also that δ = 0.05 is
+  an <em>absolute</em> margin applied to two metrics with different spreads, so the verdict is
+  sensitive to both the judge and the margin — which is itself the finding.</p>
+</div>
+<p class="tnote"><strong>Limits.</strong> One observation per cell, so the drafter × concept
+interaction is confounded with error — the residual term is 49–97% and G-coefficients are
+correspondingly low (0.0–0.42), meaning item-level measurement is noisy even where the drafter effect
+is small. Excluding DeepSeek is defensible only because the exclusion criterion is a compliance
+characteristic measurable without reference to quality, and both figures are reported regardless.</p>
+
+<h3>9.3 Domain-agnosticism — partial</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Drafter</th><th class="num">data-mining vs sociology</th><th class="num">data-mining vs maths</th><th class="num">maths vs sociology</th></tr></thead>
+<tbody>
+<tr><td class="arm">Qwen</td><td class="num">−0.0147 <span class="chip c-good">equiv</span></td><td class="num">+0.0320</td><td class="num">−0.0467</td></tr>
+<tr><td class="arm">Gemma</td><td class="num">−0.0282 <span class="chip c-good">equiv</span></td><td class="num">+0.0366</td><td class="num">−0.0648</td></tr>
+<tr><td class="arm">DeepSeek</td><td class="num">−0.0739</td><td class="num">+0.1353</td><td class="num">−0.2092</td></tr>
+</tbody>
+</table>
+</div>
+<p>Data-mining and sociology are equivalent for both in-scope drafters. <strong>Mathematics is
+consistently the hardest domain</strong> and falls outside δ = 0.05 — though the gaps are small in
+absolute terms (0.032–0.065) and would pass at δ = 0.10. Consistent with the one reference that broke
+decomposition being formula-heavy: formulaic content is harder both to ground and to decompose.</p>
+
+<h4>Groundedness by cell</h4>
+<div class="tw">
+<table>
+<thead><tr><th>Domain</th><th class="num">Qwen</th><th class="num">Gemma</th><th class="num">DeepSeek</th></tr></thead>
+<tbody>
+<tr><td>mathematics</td><td class="num">0.9199</td><td class="num">0.9294</td><td class="num">0.6817</td></tr>
+<tr><td>data-mining</td><td class="num">0.9519</td><td class="num">0.9661</td><td class="num">0.8169</td></tr>
+<tr><td>sociology</td><td class="num">0.9666</td><td class="num">0.9943</td><td class="num">0.8909</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>9.4 Abstention — the safety dimension</h3>
+<p>Scored against the expert's corpus-support judgement, which is a statement about the course
+materials rather than about any system's wording.</p>
+<div class="tw">
+<table>
+<thead><tr><th>Arm</th><th class="num">Correct answer</th><th class="num">Correct refusal</th><th class="num">Missed refusal</th><th class="num">False refusal</th></tr></thead>
+<tbody>
+<tr class="hl"><td class="arm">Proposed (intrinsic)</td><td class="num">145</td><td class="num">7</td><td class="num"><strong>0</strong></td><td class="num">7</td></tr>
+<tr><td class="arm">Proposed (extrinsic)</td><td class="num">144</td><td class="num">7</td><td class="num"><strong>0</strong></td><td class="num">8</td></tr>
+<tr><td class="arm">Gemma / DeepSeek</td><td class="num">148</td><td class="num">6</td><td class="num">1</td><td class="num">4</td></tr>
+<tr><td class="arm">BaseDense</td><td class="num">145</td><td class="num">5</td><td class="num">2</td><td class="num">7</td></tr>
+<tr class="danger"><td class="arm">DOS-RAG</td><td class="num">149</td><td class="num">2</td><td class="num"><strong>5</strong></td><td class="num">3</td></tr>
+</tbody>
+<caption><em>Missed refusal</em> = the corpus does not support the concept and the system wrote a
+description anyway. That is the dangerous cell.</caption>
+</table>
+</div>
+<p><strong>Proposed caught all 7 unsupported concepts; DOS-RAG missed 5 of 7.</strong> This cuts
+against the groundedness ranking, which puts DOS-RAG highest — it scores well partly <em>because</em>
+it confidently drafts on concepts it should have declined. Groundedness alone cannot see that.</p>
+<p>Separately, across all 1113 rows and every arm, <strong>no system ever produced a description from
+an empty evidence set</strong>.</p>
+
+<h3>9.5 A metric that failed <span class="chip c-bad">negative result</span></h3>
+<p>An automated editorial triage — usable as-is / minor edit / major edit / unusable — was run on all
+1113 drafts. It fails twice over. It <strong>does not discriminate</strong>: every arm lands at
+97.2–99.3% "usable or minor", and the judge never once used <code>UNUSABLE</code>. And it is
+<strong>not validated</strong>: against the expert's own codes on 159 drafts, exact agreement is
+<strong>0.462</strong> (0.952 within one level), because the judge compresses toward the middle —
+downgrading 59 of 117 expert-<code>ACCEPT</code> drafts to <code>MINOR_EDIT</code>.</p>
+<p>It is reported as a construct failure, not as a result. This is the third metric in the campaign
+to sit at ceiling and fail to separate arms, alongside correctness and target alignment — a pattern
+worth reporting in itself: <strong>LLM judges asked for holistic editorial verdicts compress toward
+the middle and do not resolve differences a human resolves.</strong></p>
+<p>The trustworthy answer to "how much work do these drafts need" is therefore the human one:</p>
+<div class="tw">
+<table>
+<thead><tr><th>Expert verdict on 159 drafts</th><th class="num">n</th><th class="num">%</th></tr></thead>
+<tbody>
+<tr class="hl"><td>Usable as-is</td><td class="num">117</td><td class="num">73.6%</td></tr>
+<tr><td>Minor edit</td><td class="num">10</td><td class="num">6.3%</td></tr>
+<tr><td>Major edit</td><td class="num">15</td><td class="num">9.4%</td></tr>
+<tr><td>Replace</td><td class="num">10</td><td class="num">6.3%</td></tr>
+<tr><td>No corpus support</td><td class="num">7</td><td class="num">4.4%</td></tr>
+</tbody>
+<caption><strong>Four in five drafts were usable as-is or after a light pass.</strong></caption>
+</table>
+</div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="s10">
+<h2><span class="sn">§10</span>The seed question, settled</h2>
+<p class="lede">The reference library was built by expert editing of Qwen's drafts. That was a
+deliberate design choice with anti-anchoring controls, but one control — the seed-blind audit — had
+never been run, so the risk could not be sized. It has now been run.</p>
+
+<p>An independent reviewer, with no exposure to any system output or to the existing library, wrote
+references for a stratified 30-concept sample directly from the corpus. Comparison was
+<strong>blinded and order-randomised</strong>: the judge saw two descriptions as A and B with no
+indication which was which.</p>
+<div class="tw">
+<table>
+<thead><tr><th>Relationship to the independently written reference</th><th class="num">n</th></tr></thead>
+<tbody>
+<tr><td>Both valid, different formulation</td><td class="num">14</td></tr>
+<tr><td>Blind reference missing content <em>(length artifact — see below)</em></td><td class="num">9</td></tr>
+<tr><td>Substantively equivalent</td><td class="num">4</td></tr>
+<tr class="hl"><td><strong>Seeded reference distorts the concept</strong></td><td class="num"><strong>0</strong></td></tr>
+<tr class="hl"><td><strong>Seeded reference asserts unsupported content</strong></td><td class="num"><strong>0</strong></td></tr>
+</tbody>
+<caption>n = 27 comparable; the 3 corpus-unsupported concepts have no reference text to compare.</caption>
+</table>
+</div>
+<div class="note good">
+  <div class="nh">Neither failure mode occurred</div>
+  <p>The seeded library never disagreed with an independently written reference about what a concept
+  <em>is</em>, and never asserted content the corpus does not support. Those are the two ways a
+  machine-seeded reference could be invalid, and neither appears.</p>
+  <p><strong>The discriminating test is the stratum check.</strong> If the seed had shaped the
+  content, agreement should be <em>worse</em> where the expert accepted the draft unchanged. It is
+  not: accepted concepts agree 13/18, edited ones 5/9 — no effect in the direction seed bias
+  predicts.</p>
+</div>
+<p class="tnote"><strong>Limits, declared before the run.</strong> The blind references average 24
+words against the library's ~150 and cite about one passage each, so the "missing content" direction
+is an effort artifact and carries no information about bias — the 9 verdicts in that row were
+expected. The reviewer also judged all 3 corpus-unsupported concepts to be supported, suggesting a
+less strict threshold than the original expert. Single reviewer, n = 27. This sizes the threat; it
+does not eliminate it.</p>
+<p>The residual issue that does stand: the nugget set used for completeness inherits Qwen's
+<strong>content selection</strong>, so completeness comparisons carry an asymmetry. Completeness is
+therefore reported as secondary throughout, with that stated.</p>
+</section>
+
+<!-- ============ 11 ============ -->
+<section id="s11">
+<h2><span class="sn">§11</span>What stands</h2>
+<div class="note good">
+  <div class="nh">Supported</div>
+  <ul style="margin-bottom:0">
+    <li><strong>Retrieval quality and efficiency.</strong> Proposed matches DOS-RAG's precision and
+    recall at half the evidence budget and ranks better (nDCG@10 0.5229 vs 0.4074); BaseDense
+    retrieves 7.2× more and ranks far worse (P@10 0.3686 vs 0.6279).</li>
+    <li><strong>Drafter ordering:</strong> Gemma ≥ Qwen &gt; DeepSeek, stable across two independent
+    judges and three domains. (The stronger <em>equivalence</em> claim does not survive — see
+    below.)</li>
+    <li><strong>Reproducibility.</strong> The pipeline reproduces itself at 99.83% per claim, with no
+    arm moving more than 0.003 across a full re-run.</li>
+    <li><strong>Completeness judging is qualified</strong> against the available human labels
+    (§8.6), which narrows the blanket "no absolute claims" caveat.</li>
+    <li><strong>Domain transfer</strong> for data-mining and sociology; mathematics is measurably
+    harder.</li>
+    <li><strong>Abstention discipline.</strong> Proposed caught 7/7 unsupported concepts; no arm ever
+    drafted from empty evidence.</li>
+    <li><strong>The reference library</strong>, cleared by the seed-blind audit on both invalidating
+    failure modes.</li>
+    <li><strong>Every instrument finding</strong> — serial-position sensitivity, the task-dependent
+    sign flip, the length artifact, batch-invariance.</li>
+  </ul>
+</div>
+<div class="note bad">
+  <div class="nh">Not supported</div>
+  <ul style="margin-bottom:0">
+    <li><strong>"Proposed retrieves better than DOS-RAG" as a recall claim.</strong> They are
+    equivalent on P@10 and R@10. The supportable claim is about <em>ranking</em> and <em>budget</em>.</li>
+    <li><strong>Model-agnosticism as an equivalence claim.</strong> Reproduces in only 1 of 3
+    domains under an independent judge (§8.7). Downgraded to an ordering claim.</li>
+    <li><strong>The groundedness arm ranking beyond its endpoints.</strong> Spearman ρ = +0.43
+    between judges; only "DOS-RAG best, DeepSeek worst" survives.</li>
+    <li><strong>Full domain-agnosticism.</strong> Mathematics falls outside the margin for every
+    drafter.</li>
+    <li><strong>Automated editorial triage.</strong> Non-discriminating and unvalidated (§9.5).</li>
+    <li><strong>Absolute quality claims outside completeness.</strong> M1, M2, TARGET and M4A
+    remain unvalidated for want of minority-class examples — they need roughly 4, 2 and 5 more
+    labelled rows respectively.</li>
+  </ul>
+</div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section id="s12">
+<h2><span class="sn">§12</span>Threats to validity</h2>
+<dl class="defs">
+  <dt>Judge qualification <span class="chip c-warn">partly resolved</span></dt>
+  <dd>Completeness now passes all four gates on the graded metric at a cross-validated threshold
+  (§8.6), bounded by 36 single-annotator labels. The other three tasks are undecided for want of
+  minority-class examples, not because they disagreed.</dd>
+
+  <dt>Judge dependence <span class="chip c-bad">unresolved</span></dt>
+  <dd>An independent verifier reproduces only the endpoints of the groundedness ranking
+  (ρ = +0.43) and only 1 of 3 equivalence verdicts. Ranking claims beyond the endpoints are not
+  robust to judge choice. The control (§8.8) rules out noise as the explanation.</dd>
+
+  <dt>Seed provenance <span class="chip c-warn">sized, not eliminated</span></dt>
+  <dd>Control 6 found no distortion and no unsupported assertion, and no stratum effect. But n = 27,
+  one reviewer, and short references. Completeness remains secondary because the nugget set inherits
+  the seed's content selection.</dd>
+
+  <dt>Serial-position sensitivity <span class="chip c-good">designed out</span></dt>
+  <dd>Pooled judgements are made one passage at a time, so the failure cannot arise in the retrieval
+  metrics. It still bars the old context-recall figures from use.</dd>
+
+  <dt>Pool bias <span class="chip c-warn">disclosed</span></dt>
+  <dd>Relevant passages outside the top-20 pool count as non-relevant. Seven diverse runs contribute,
+  one returning 123 passages per concept.</dd>
+
+  <dt>One observation per cell <span class="chip c-warn">limits the variance model</span></dt>
+  <dd>Drafter × concept interaction is confounded with error; G-coefficients are low (0.0–0.42).</dd>
+
+  <dt>Outlier exclusion <span class="chip c-warn">criterion-based, still an exclusion</span></dt>
+  <dd>DeepSeek is excluded from the headline agnosticism figure on compliance characteristics
+  measurable without reference to quality. Both figures are reported.</dd>
+
+  <dt>Calibration sample <span class="chip c-warn">small</span></dt>
+  <dd>36 labels, one annotator, clustered in 17 concepts, cross-checked by the annotator against
+  other tools. Human–human agreement is not computable.</dd>
+
+  <dt>Second judge <span class="chip c-neut">not run</span></dt>
+  <dd>Would measure reliability, not validity — two judges can agree and both be wrong.</dd>
+</dl>
+</section>
+
+<!-- ============ 13 ============ -->
+<section id="s13">
+<h2><span class="sn">§13</span>Paper-ready claims</h2>
+<dl class="defs">
+  <dt>[C-01] Batch-invariant serving is required for reproducible LLM-judge evaluation</dt>
+  <dd>Concurrency changed 1 verdict in 144 under default kernels, 0 of 144 with batch-invariant
+  kernels. Reproducibility is a serving-configuration property, not only a sampling property.</dd>
+
+  <dt>[C-02] All-or-nothing claim aggregation manufactures spurious rankings</dt>
+  <dd>The rate is ≈ p ⁿ and therefore a function of length; reproduces out-of-domain to within 0.021.</dd>
+
+  <dt>[C-05] Reference-based metrics are undefined, not merely unmeasured, outside the reference domain</dt>
+  <dd>Groundedness transfers because it needs no reference; nugget metrics do not exist without one.</dd>
+
+  <dt>[C-07] Evidence-grounded abstention held across an entire campaign</dt>
+  <dd>0 of 1113 descriptions produced from an empty evidence set, across seven arms — and the
+  proposed retrieval caught every corpus-unsupported concept.</dd>
+
+  <dt>[C-08] LLM-judge context recall is serial-position sensitive, so it cannot compare retrieval systems with different top-k <span class="chip c-good">strongest</span></dt>
+  <dd>Recall of provably-present content collapses from 1.0000 at 17 passages to 0.5905 at 123, while
+  the same manipulation <em>inflates</em> faithfulness — an overloaded judge falls back on each task's
+  default label, so the bias changes sign by task. The fix is standard and cheap: pooled per-passage
+  judgements, which we then used.</dd>
+
+  <dt>[C-09] Machine-seeded references can be audited rather than assumed <span class="chip c-good">methodological</span></dt>
+  <dd>Expert-edited machine output is a legitimate reference-construction method, but the anchoring
+  risk is real and must be sized. A stratified seed-blind reconstruction does it: comparing on
+  substantive relationship rather than lexical overlap, and using the expert's own edit codes as
+  strata, separates "the seed shaped the content" from "the expert edited the weaker drafts". Here it
+  returned zero distortion, zero unsupported assertion, and no stratum effect.</dd>
+
+  <dt>[C-10] Model-agnosticism is an equivalence claim and needs equivalence statistics <span class="chip c-good">methodological</span></dt>
+  <dd>A non-significant difference test is not evidence that a pipeline is model-agnostic — it is
+  equally consistent with low power. TOST against a pre-registered margin, plus a variance
+  decomposition reporting the drafter's share of quality variance, states the property quantitatively
+  and degrades gracefully when it holds only within a capability band. Here: 0–6.4% for drafters of
+  comparable capability, against 15.5–39.5% including a weaker one.</dd>
+
+  <dt>[C-12] A judge that fails on a binary rubric can pass on a graded one <span class="chip c-good">methodological</span></dt>
+  <dd>The same judge, the same labels, the same rows: 0.556 raw agreement as a binary verdict,
+  <strong>0.8611</strong> as a graded score thresholded leave-one-out. The failure was one-directional
+  over-flagging, and a uniformly strict judge with graded output can be calibrated where a binary one
+  cannot. Before concluding an LLM judge is unusable, check whether the <em>rubric</em> rather than the
+  judge is discarding the information.</dd>
+
+  <dt>[C-13] Inter-judge reliability must be measured against a re-run baseline <span class="chip c-good">methodological</span></dt>
+  <dd>Two judges disagreeing means nothing without knowing how much a plain re-run moves the numbers.
+  Here the same pipeline reproduces itself at 99.83% per claim (ρ = +0.96) while two independent
+  judges reach only 0.72 (ρ = +0.43) — which establishes the disagreement as construct difference
+  rather than noise. Reporting the second judge without this control would have been uninterpretable.
+  The mechanism was then identified by measurement: strict entailment rewards longer retrieved
+  evidence (r = +0.26 with document words) where a partial-support rubric does not.</dd>
+
+  <dt>[C-11] Holistic editorial verdicts from an LLM judge do not resolve what a human resolves <span class="chip c-neut">negative result</span></dt>
+  <dd>An automated post-editing triage placed 97–99% of every arm's drafts in the top two categories
+  and never used the bottom one, agreeing with expert codes only 0.462 exactly. Third metric in this
+  campaign to fail this way.</dd>
+</dl>
+<p class="tnote">[C-03], [C-04] and [C-06] concerned the earlier reference-mediated metrics and are
+superseded; they remain in the findings log with their status changed rather than deleted.</p>
+</section>
+
+<!-- ============ 14 ============ -->
+<section id="s14">
+<h2><span class="sn">§14</span>Reproducibility</h2>
+<p>Every result regenerates from committed JSONL. The consistency audit re-derives each property from
+raw data rather than trusting the report and exits non-zero on failure.</p>
+<p><strong>Reproducibility, measured.</strong> A full end-to-end re-run of decomposition and judging
+agrees with the original on <strong>99.83%</strong> of 7,610 claims, with support-rate drift of
+−0.0001 and no arm moving by more than 0.0027 (ordering ρ = +0.9643). Batch invariance is off on
+this server and 1.5% of drafts re-decompose to a different claim count, but it barely propagates to
+aggregate conclusions.</p>
+<p>Judgement volume across the campaign: 1113 ablation rows × 4 stages, 604 evidence-configuration
+judgements, 302 calibration calls, 453 dilution calls, 435 faithfulness-dilution calls, 1137 crossed
+groundedness rows, <strong>8246 pooled relevance judgements</strong>, 1113 triage judgements, and 30
+seed-audit comparisons, 2,250 claim extractions, 2,083 re-judgements over stored claims, and 15,661
+independent verifier scores — with zero unresolved call failures in the v3 stages.</p>
+<p>Re-deriving rather than trusting caught five real defects: a micro/macro aggregation
+inconsistency, a coverage misstatement, a misleadingly-named field, an over-claimed seed-bias
+conclusion, and — in the seed audit itself — an <strong>inverted de-blinding map that had reported
+the opposite conclusion</strong>. That last one was caught by reading the output rather than
+accepting it, and was recoverable only because both the raw label and the blinding flag were stored.</p>
+</section>
+
+<div class="footer">
+  <p>Living record. The authoritative history is <code>git log -p</code> on
+  <code>EVALUATION_FINDINGS.md</code>, where findings F-01…F-48 are maintained with status values and
+  never deleted — including the ones this document withdraws.</p>
+</div>
+
+</main>
+</div>
+</div>

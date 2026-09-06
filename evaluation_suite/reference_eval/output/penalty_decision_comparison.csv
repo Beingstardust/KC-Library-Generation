@@ -1,0 +1,3 @@
+sentinel_id,task,penalty_free_previous,penalty_0.2,penalty_free_final,changed_between_penalty_and_final
+SENT_007,M1,PASS,FAIL,PASS,YES
+SENT_014,M1,PASS,FAIL,PASS,YES

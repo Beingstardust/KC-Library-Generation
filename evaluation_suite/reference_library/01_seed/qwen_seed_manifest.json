@@ -1,0 +1,16 @@
+{
+  "generated_utc": "2026-08-24T11:15:00Z",
+  "source_file": "_source_qwen_draft_raw.jsonl",
+  "source_sha256_verified_against_freeze_manifest": "42e15cd17885ea1416eedfaeff3769cfec9fbd4a0ba36d2fd5bc6a32b61b88c1",
+  "source_seed_arm": "extrinsic P-Q (r9final_ext_proposed_ctrl_20260823T140000Z, commit 450c88c, controlled_comparator) - see 00_freeze/CANDIDATE_FREEZE_MANIFEST.json seed_source_designation",
+  "output_file": "qwen_seed.jsonl",
+  "output_sha256": "3f7ec03097411330a051140cdcd5feb6bcf4f952c0c66f4e62ff37369dd397ed",
+  "n_kc": 159,
+  "status_counts": {
+    "grounded": 121,
+    "partial": 23,
+    "abstained": 14,
+    "technical_failure": 1
+  },
+  "immutability_note": "This file is never edited in place after generation. The curation console (02_curation/reference_console.py) opens it read-only. If build_seed_snapshot.py is ever re-run, the resulting qwen_seed.jsonl sha256 must be compared against this manifest's output_sha256 before any console session trusts it - a mismatch means the seed changed after curation may have started, which must be treated as a protocol violation and investigated, not silently accepted."
+}

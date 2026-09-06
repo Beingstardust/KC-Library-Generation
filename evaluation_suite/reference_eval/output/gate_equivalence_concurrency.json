@@ -1,0 +1,22 @@
+{
+  "verdict": "DIVERGENT",
+  "n_compared": 36,
+  "n_differences": 1,
+  "only_in_sequential": [],
+  "only_in_concurrent": [],
+  "differences": [
+    {
+      "id": "HC-fe4c7df687de961fe9ef",
+      "task": "M1_faithfulness_per_claim",
+      "sequential": "PASS",
+      "concurrent": "FAIL"
+    }
+  ],
+  "tasks_compared": [
+    "M1_faithfulness_per_claim",
+    "M2_correctness_per_claim",
+    "M3_core_completeness",
+    "TARGET_ALIGNMENT"
+  ],
+  "meaning": "Concurrency changed at least one verdict. Do NOT use it - run sequentially."
+}

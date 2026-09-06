@@ -1,0 +1,770 @@
+{
+  "generated_utc": "2026-08-31T10:34:22Z",
+  "protocol": "COMPARATIVE_USE_PROTOCOL.md section 3 (pre-registered)",
+  "standing_absolute_result": "JUDGE_QUALIFIED=false; M3_CORE_COMPLETENESS NOT_QUALIFIED",
+  "comparative_basis": "COMPARATIVE_QUALIFIED for M1/M2/M3/TARGET (arm-independence, LOW_POWER)",
+  "unit_of_analysis": "knowledge component (KC)",
+  "bootstrap": {
+    "resamples": 10000,
+    "cluster": "KC",
+    "seed": 20260831
+  },
+  "n_rows_loaded": 1113,
+  "n_rows_ok": 1112,
+  "n_rows_error": 1,
+  "duplicate_rows_deduped": 0,
+  "error_rows": {
+    "KC_EVAL_ENS_004|sensitivity_DOS-Q_matched": "BlindingViolation: prompt contains blinding-violating text 'variant proposed' (pattern '\\\\b(system|arm|pipeline|architecture|retrieval|evidence\\\\s+pack\\\\w*|packet|condition|variant|configuration)\\\\s+proposed\\\\b'). Renumber ids or pass an explicit allow= exemption if this is genuine domain text."
+  },
+  "n_kcs": 159,
+  "arms": [
+    "extrinsic_B-Q",
+    "extrinsic_DOS-Q",
+    "extrinsic_P-Q",
+    "intrinsic_P-D",
+    "intrinsic_P-G",
+    "intrinsic_P-Q",
+    "sensitivity_DOS-Q_matched"
+  ],
+  "instrument_provenance": {
+    "ants_tp4_h100_frozen": 553,
+    "cluster_b_BI_a100_tp2": 559
+  },
+  "abstention_rate_by_arm": {
+    "extrinsic_B-Q": {
+      "n_kcs": 159,
+      "abstained": 12,
+      "rate": 0.0755
+    },
+    "extrinsic_DOS-Q": {
+      "n_kcs": 159,
+      "abstained": 5,
+      "rate": 0.0314
+    },
+    "extrinsic_P-Q": {
+      "n_kcs": 159,
+      "abstained": 15,
+      "rate": 0.0943
+    },
+    "intrinsic_P-D": {
+      "n_kcs": 159,
+      "abstained": 10,
+      "rate": 0.0629
+    },
+    "intrinsic_P-G": {
+      "n_kcs": 159,
+      "abstained": 10,
+      "rate": 0.0629
+    },
+    "intrinsic_P-Q": {
+      "n_kcs": 159,
+      "abstained": 14,
+      "rate": 0.0881
+    },
+    "sensitivity_DOS-Q_matched": {
+      "n_kcs": 158,
+      "abstained": 17,
+      "rate": 0.1076
+    }
+  },
+  "per_arm_pass_rates": {
+    "M1_faithfulness_per_claim": {
+      "extrinsic_B-Q": {
+        "n_judgeable": 147,
+        "n_not_judgeable": 12,
+        "pass_rate": 0.7347
+      },
+      "extrinsic_DOS-Q": {
+        "n_judgeable": 154,
+        "n_not_judgeable": 5,
+        "pass_rate": 0.8442
+      },
+      "extrinsic_P-Q": {
+        "n_judgeable": 144,
+        "n_not_judgeable": 15,
+        "pass_rate": 0.6944
+      },
+      "intrinsic_P-D": {
+        "n_judgeable": 148,
+        "n_not_judgeable": 11,
+        "pass_rate": 0.4527
+      },
+      "intrinsic_P-G": {
+        "n_judgeable": 133,
+        "n_not_judgeable": 26,
+        "pass_rate": 0.8195
+      },
+      "intrinsic_P-Q": {
+        "n_judgeable": 143,
+        "n_not_judgeable": 16,
+        "pass_rate": 0.6853
+      },
+      "sensitivity_DOS-Q_matched": {
+        "n_judgeable": 141,
+        "n_not_judgeable": 17,
+        "pass_rate": 0.7163
+      }
+    },
+    "M2_correctness_per_claim": {
+      "extrinsic_B-Q": {
+        "n_judgeable": 144,
+        "n_not_judgeable": 15,
+        "pass_rate": 0.9653
+      },
+      "extrinsic_DOS-Q": {
+        "n_judgeable": 148,
+        "n_not_judgeable": 11,
+        "pass_rate": 0.973
+      },
+      "extrinsic_P-Q": {
+        "n_judgeable": 142,
+        "n_not_judgeable": 17,
+        "pass_rate": 0.9718
+      },
+      "intrinsic_P-D": {
+        "n_judgeable": 147,
+        "n_not_judgeable": 12,
+        "pass_rate": 0.9116
+      },
+      "intrinsic_P-G": {
+        "n_judgeable": 130,
+        "n_not_judgeable": 29,
+        "pass_rate": 0.9769
+      },
+      "intrinsic_P-Q": {
+        "n_judgeable": 143,
+        "n_not_judgeable": 16,
+        "pass_rate": 0.972
+      },
+      "sensitivity_DOS-Q_matched": {
+        "n_judgeable": 138,
+        "n_not_judgeable": 20,
+        "pass_rate": 0.9565
+      }
+    },
+    "M3_core_completeness": {
+      "extrinsic_B-Q": {
+        "n_judgeable": 152,
+        "n_not_judgeable": 7,
+        "pass_rate": 0.3947
+      },
+      "extrinsic_DOS-Q": {
+        "n_judgeable": 152,
+        "n_not_judgeable": 7,
+        "pass_rate": 0.6645
+      },
+      "extrinsic_P-Q": {
+        "n_judgeable": 152,
+        "n_not_judgeable": 7,
+        "pass_rate": 0.8158
+      },
+      "intrinsic_P-D": {
+        "n_judgeable": 152,
+        "n_not_judgeable": 7,
+        "pass_rate": 0.5724
+      },
+      "intrinsic_P-G": {
+        "n_judgeable": 150,
+        "n_not_judgeable": 9,
+        "pass_rate": 0.62
+      },
+      "intrinsic_P-Q": {
+        "n_judgeable": 152,
+        "n_not_judgeable": 7,
+        "pass_rate": 0.8158
+      },
+      "sensitivity_DOS-Q_matched": {
+        "n_judgeable": 151,
+        "n_not_judgeable": 7,
+        "pass_rate": 0.4106
+      }
+    },
+    "TARGET_ALIGNMENT": {
+      "extrinsic_B-Q": {
+        "n_judgeable": 145,
+        "n_not_judgeable": 14,
+        "pass_rate": 0.9931
+      },
+      "extrinsic_DOS-Q": {
+        "n_judgeable": 149,
+        "n_not_judgeable": 10,
+        "pass_rate": 0.9866
+      },
+      "extrinsic_P-Q": {
+        "n_judgeable": 144,
+        "n_not_judgeable": 15,
+        "pass_rate": 1.0
+      },
+      "intrinsic_P-D": {
+        "n_judgeable": 148,
+        "n_not_judgeable": 11,
+        "pass_rate": 0.9797
+      },
+      "intrinsic_P-G": {
+        "n_judgeable": 148,
+        "n_not_judgeable": 11,
+        "pass_rate": 0.973
+      },
+      "intrinsic_P-Q": {
+        "n_judgeable": 145,
+        "n_not_judgeable": 14,
+        "pass_rate": 1.0
+      },
+      "sensitivity_DOS-Q_matched": {
+        "n_judgeable": 139,
+        "n_not_judgeable": 19,
+        "pass_rate": 0.9928
+      }
+    }
+  },
+  "paired_comparisons": {
+    "families": {
+      "intrinsic": {
+        "M1_faithfulness_per_claim": {
+          "intrinsic_P-Q vs intrinsic_P-G": {
+            "n_kc_pairs": 127,
+            "excluded_kcs": 32,
+            "discordant_a1_better": 11,
+            "discordant_a2_better": 31,
+            "paired_diff_a1_minus_a2": -0.1575,
+            "bootstrap_ci95": [
+              -0.252,
+              -0.063
+            ],
+            "mcnemar_exact_p": 0.002887,
+            "judge_human_disagreement_rate": 0.3667,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.002887,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          },
+          "intrinsic_P-Q vs intrinsic_P-D": {
+            "n_kc_pairs": 141,
+            "excluded_kcs": 18,
+            "discordant_a1_better": 46,
+            "discordant_a2_better": 15,
+            "paired_diff_a1_minus_a2": 0.2199,
+            "bootstrap_ci95": [
+              0.1135,
+              0.3191
+            ],
+            "mcnemar_exact_p": 8.8e-05,
+            "judge_human_disagreement_rate": 0.3667,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.000176,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          },
+          "intrinsic_P-G vs intrinsic_P-D": {
+            "n_kc_pairs": 132,
+            "excluded_kcs": 27,
+            "discordant_a1_better": 59,
+            "discordant_a2_better": 11,
+            "paired_diff_a1_minus_a2": 0.3636,
+            "bootstrap_ci95": [
+              0.2576,
+              0.4697
+            ],
+            "mcnemar_exact_p": 0.0,
+            "judge_human_disagreement_rate": 0.3667,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          }
+        },
+        "M2_correctness_per_claim": {
+          "intrinsic_P-Q vs intrinsic_P-G": {
+            "n_kc_pairs": 125,
+            "excluded_kcs": 34,
+            "discordant_a1_better": 2,
+            "discordant_a2_better": 4,
+            "paired_diff_a1_minus_a2": -0.016,
+            "bootstrap_ci95": [
+              -0.056,
+              0.024
+            ],
+            "mcnemar_exact_p": 0.6875,
+            "judge_human_disagreement_rate": 0.3333,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.6875,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          },
+          "intrinsic_P-Q vs intrinsic_P-D": {
+            "n_kc_pairs": 141,
+            "excluded_kcs": 18,
+            "discordant_a1_better": 9,
+            "discordant_a2_better": 3,
+            "paired_diff_a1_minus_a2": 0.0426,
+            "bootstrap_ci95": [
+              -0.0071,
+              0.0922
+            ],
+            "mcnemar_exact_p": 0.145996,
+            "judge_human_disagreement_rate": 0.3333,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.291992,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          },
+          "intrinsic_P-G vs intrinsic_P-D": {
+            "n_kc_pairs": 129,
+            "excluded_kcs": 30,
+            "discordant_a1_better": 9,
+            "discordant_a2_better": 2,
+            "paired_diff_a1_minus_a2": 0.0543,
+            "bootstrap_ci95": [
+              0.0078,
+              0.1085
+            ],
+            "mcnemar_exact_p": 0.06543,
+            "judge_human_disagreement_rate": 0.3333,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.19629,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          }
+        },
+        "M3_core_completeness": {
+          "intrinsic_P-Q vs intrinsic_P-G": {
+            "n_kc_pairs": 150,
+            "excluded_kcs": 9,
+            "discordant_a1_better": 29,
+            "discordant_a2_better": 0,
+            "paired_diff_a1_minus_a2": 0.1933,
+            "bootstrap_ci95": [
+              0.1333,
+              0.26
+            ],
+            "mcnemar_exact_p": 0.0,
+            "judge_human_disagreement_rate": 0.4444,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          },
+          "intrinsic_P-Q vs intrinsic_P-D": {
+            "n_kc_pairs": 152,
+            "excluded_kcs": 7,
+            "discordant_a1_better": 40,
+            "discordant_a2_better": 3,
+            "paired_diff_a1_minus_a2": 0.2434,
+            "bootstrap_ci95": [
+              0.1711,
+              0.3224
+            ],
+            "mcnemar_exact_p": 0.0,
+            "judge_human_disagreement_rate": 0.4444,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          },
+          "intrinsic_P-G vs intrinsic_P-D": {
+            "n_kc_pairs": 150,
+            "excluded_kcs": 9,
+            "discordant_a1_better": 34,
+            "discordant_a2_better": 26,
+            "paired_diff_a1_minus_a2": 0.0533,
+            "bootstrap_ci95": [
+              -0.0467,
+              0.1533
+            ],
+            "mcnemar_exact_p": 0.366294,
+            "judge_human_disagreement_rate": 0.4444,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.366294,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          }
+        },
+        "TARGET_ALIGNMENT": {
+          "intrinsic_P-Q vs intrinsic_P-G": {
+            "n_kc_pairs": 145,
+            "excluded_kcs": 14,
+            "discordant_a1_better": 1,
+            "discordant_a2_better": 0,
+            "paired_diff_a1_minus_a2": 0.0069,
+            "bootstrap_ci95": [
+              0.0,
+              0.0207
+            ],
+            "mcnemar_exact_p": 1.0,
+            "judge_human_disagreement_rate": 0.0938,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 1.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          },
+          "intrinsic_P-Q vs intrinsic_P-D": {
+            "n_kc_pairs": 144,
+            "excluded_kcs": 15,
+            "discordant_a1_better": 1,
+            "discordant_a2_better": 0,
+            "paired_diff_a1_minus_a2": 0.0069,
+            "bootstrap_ci95": [
+              0.0,
+              0.0208
+            ],
+            "mcnemar_exact_p": 1.0,
+            "judge_human_disagreement_rate": 0.0938,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 1.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          },
+          "intrinsic_P-G vs intrinsic_P-D": {
+            "n_kc_pairs": 147,
+            "excluded_kcs": 12,
+            "discordant_a1_better": 1,
+            "discordant_a2_better": 2,
+            "paired_diff_a1_minus_a2": -0.0068,
+            "bootstrap_ci95": [
+              -0.034,
+              0.0136
+            ],
+            "mcnemar_exact_p": 1.0,
+            "judge_human_disagreement_rate": 0.0938,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 1.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          }
+        }
+      },
+      "extrinsic": {
+        "M1_faithfulness_per_claim": {
+          "extrinsic_P-Q vs extrinsic_B-Q": {
+            "n_kc_pairs": 139,
+            "excluded_kcs": 20,
+            "discordant_a1_better": 21,
+            "discordant_a2_better": 30,
+            "paired_diff_a1_minus_a2": -0.0647,
+            "bootstrap_ci95": [
+              -0.1655,
+              0.036
+            ],
+            "mcnemar_exact_p": 0.262438,
+            "judge_human_disagreement_rate": 0.3667,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.262438,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          },
+          "extrinsic_P-Q vs extrinsic_DOS-Q": {
+            "n_kc_pairs": 142,
+            "excluded_kcs": 17,
+            "discordant_a1_better": 10,
+            "discordant_a2_better": 37,
+            "paired_diff_a1_minus_a2": -0.1901,
+            "bootstrap_ci95": [
+              -0.2817,
+              -0.0986
+            ],
+            "mcnemar_exact_p": 9.8e-05,
+            "judge_human_disagreement_rate": 0.3667,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.000294,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          },
+          "extrinsic_B-Q vs extrinsic_DOS-Q": {
+            "n_kc_pairs": 146,
+            "excluded_kcs": 13,
+            "discordant_a1_better": 11,
+            "discordant_a2_better": 32,
+            "paired_diff_a1_minus_a2": -0.1438,
+            "bootstrap_ci95": [
+              -0.226,
+              -0.0616
+            ],
+            "mcnemar_exact_p": 0.001914,
+            "judge_human_disagreement_rate": 0.3667,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.003828,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          }
+        },
+        "M2_correctness_per_claim": {
+          "extrinsic_P-Q vs extrinsic_B-Q": {
+            "n_kc_pairs": 136,
+            "excluded_kcs": 23,
+            "discordant_a1_better": 4,
+            "discordant_a2_better": 3,
+            "paired_diff_a1_minus_a2": 0.0074,
+            "bootstrap_ci95": [
+              -0.0294,
+              0.0441
+            ],
+            "mcnemar_exact_p": 1.0,
+            "judge_human_disagreement_rate": 0.3333,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 1.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          },
+          "extrinsic_P-Q vs extrinsic_DOS-Q": {
+            "n_kc_pairs": 139,
+            "excluded_kcs": 20,
+            "discordant_a1_better": 3,
+            "discordant_a2_better": 4,
+            "paired_diff_a1_minus_a2": -0.0072,
+            "bootstrap_ci95": [
+              -0.0432,
+              0.0288
+            ],
+            "mcnemar_exact_p": 1.0,
+            "judge_human_disagreement_rate": 0.3333,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 1.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          },
+          "extrinsic_B-Q vs extrinsic_DOS-Q": {
+            "n_kc_pairs": 142,
+            "excluded_kcs": 17,
+            "discordant_a1_better": 3,
+            "discordant_a2_better": 4,
+            "paired_diff_a1_minus_a2": -0.007,
+            "bootstrap_ci95": [
+              -0.0423,
+              0.0282
+            ],
+            "mcnemar_exact_p": 1.0,
+            "judge_human_disagreement_rate": 0.3333,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 1.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          }
+        },
+        "M3_core_completeness": {
+          "extrinsic_P-Q vs extrinsic_B-Q": {
+            "n_kc_pairs": 152,
+            "excluded_kcs": 7,
+            "discordant_a1_better": 73,
+            "discordant_a2_better": 9,
+            "paired_diff_a1_minus_a2": 0.4211,
+            "bootstrap_ci95": [
+              0.3224,
+              0.5132
+            ],
+            "mcnemar_exact_p": 0.0,
+            "judge_human_disagreement_rate": 0.4444,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          },
+          "extrinsic_P-Q vs extrinsic_DOS-Q": {
+            "n_kc_pairs": 152,
+            "excluded_kcs": 7,
+            "discordant_a1_better": 36,
+            "discordant_a2_better": 13,
+            "paired_diff_a1_minus_a2": 0.1513,
+            "bootstrap_ci95": [
+              0.0658,
+              0.2368
+            ],
+            "mcnemar_exact_p": 0.001403,
+            "judge_human_disagreement_rate": 0.4444,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.001403,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          },
+          "extrinsic_B-Q vs extrinsic_DOS-Q": {
+            "n_kc_pairs": 152,
+            "excluded_kcs": 7,
+            "discordant_a1_better": 10,
+            "discordant_a2_better": 51,
+            "paired_diff_a1_minus_a2": -0.2697,
+            "bootstrap_ci95": [
+              -0.3618,
+              -0.1776
+            ],
+            "mcnemar_exact_p": 0.0,
+            "judge_human_disagreement_rate": 0.4444,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 0.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": true,
+            "verdict_amended": "significant",
+            "significant_after_holm": true
+          }
+        },
+        "TARGET_ALIGNMENT": {
+          "extrinsic_P-Q vs extrinsic_B-Q": {
+            "n_kc_pairs": 139,
+            "excluded_kcs": 20,
+            "discordant_a1_better": 1,
+            "discordant_a2_better": 0,
+            "paired_diff_a1_minus_a2": 0.0072,
+            "bootstrap_ci95": [
+              0.0,
+              0.0216
+            ],
+            "mcnemar_exact_p": 1.0,
+            "judge_human_disagreement_rate": 0.0938,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 1.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          },
+          "extrinsic_P-Q vs extrinsic_DOS-Q": {
+            "n_kc_pairs": 142,
+            "excluded_kcs": 17,
+            "discordant_a1_better": 0,
+            "discordant_a2_better": 0,
+            "paired_diff_a1_minus_a2": 0.0,
+            "bootstrap_ci95": [
+              0.0,
+              0.0
+            ],
+            "mcnemar_exact_p": 1.0,
+            "judge_human_disagreement_rate": 0.0938,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 1.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          },
+          "extrinsic_B-Q vs extrinsic_DOS-Q": {
+            "n_kc_pairs": 144,
+            "excluded_kcs": 15,
+            "discordant_a1_better": 1,
+            "discordant_a2_better": 1,
+            "paired_diff_a1_minus_a2": 0.0,
+            "bootstrap_ci95": [
+              -0.0208,
+              0.0208
+            ],
+            "mcnemar_exact_p": 1.0,
+            "judge_human_disagreement_rate": 0.0938,
+            "within_instrument_noise": true,
+            "holm_adjusted_p": 1.0,
+            "verdict_as_specified": "WITHIN_INSTRUMENT_NOISE",
+            "ci_excludes_zero": false,
+            "verdict_amended": "not significant",
+            "significant_after_holm": false
+          }
+        }
+      }
+    },
+    "exploratory": {
+      "extrinsic_DOS-Q vs sensitivity_DOS-Q_matched": {
+        "M1_faithfulness_per_claim": {
+          "n_kc_pairs": 140,
+          "excluded_kcs": 19,
+          "discordant_a1_better": 33,
+          "discordant_a2_better": 12,
+          "paired_diff_a1_minus_a2": 0.15,
+          "bootstrap_ci95": [
+            0.0571,
+            0.2429
+          ],
+          "mcnemar_exact_p": 0.002459,
+          "judge_human_disagreement_rate": 0.3667,
+          "within_instrument_noise": true,
+          "status": "EXPLORATORY_ONLY_no_ranking_claim"
+        },
+        "M2_correctness_per_claim": {
+          "n_kc_pairs": 136,
+          "excluded_kcs": 23,
+          "discordant_a1_better": 5,
+          "discordant_a2_better": 3,
+          "paired_diff_a1_minus_a2": 0.0147,
+          "bootstrap_ci95": [
+            -0.0221,
+            0.0588
+          ],
+          "mcnemar_exact_p": 0.726562,
+          "judge_human_disagreement_rate": 0.3333,
+          "within_instrument_noise": true,
+          "status": "EXPLORATORY_ONLY_no_ranking_claim"
+        },
+        "M3_core_completeness": {
+          "n_kc_pairs": 151,
+          "excluded_kcs": 8,
+          "discordant_a1_better": 46,
+          "discordant_a2_better": 8,
+          "paired_diff_a1_minus_a2": 0.2517,
+          "bootstrap_ci95": [
+            0.1656,
+            0.3377
+          ],
+          "mcnemar_exact_p": 0.0,
+          "judge_human_disagreement_rate": 0.4444,
+          "within_instrument_noise": true,
+          "status": "EXPLORATORY_ONLY_no_ranking_claim"
+        },
+        "TARGET_ALIGNMENT": {
+          "n_kc_pairs": 138,
+          "excluded_kcs": 21,
+          "discordant_a1_better": 1,
+          "discordant_a2_better": 1,
+          "paired_diff_a1_minus_a2": 0.0,
+          "bootstrap_ci95": [
+            -0.0217,
+            0.0217
+          ],
+          "mcnemar_exact_p": 1.0,
+          "judge_human_disagreement_rate": 0.0938,
+          "within_instrument_noise": true,
+          "status": "EXPLORATORY_ONLY_no_ranking_claim"
+        }
+      }
+    }
+  },
+  "caveats": [
+    "The judge is NOT qualified in absolute terms. Only relative, within-KC comparisons are licensed; no absolute quality claim follows from these numbers.",
+    "Arm-independence was established at LOW POWER (4-6 calibration rows per arm). Non-significance there is weak evidence, not proof.",
+    "M3 additionally failed absolute qualification (NOT_QUALIFIED) and is reported paired-only.",
+    "Abstentions are excluded from M1/M2/TARGET pairs (no claims exist to judge) and are reported separately as a primary outcome; they are never imputed."
+  ]
+}

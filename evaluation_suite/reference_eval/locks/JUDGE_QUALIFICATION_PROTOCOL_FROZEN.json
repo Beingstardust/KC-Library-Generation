@@ -1,0 +1,129 @@
+{
+  "protocol_id": "JUDGE_QUALIFICATION_PROTOCOL_FROZEN",
+  "frozen_utc": "2026-08-25T11:33:00Z",
+  "human_readable": "JUDGE_QUALIFICATION_PROTOCOL.md",
+  "human_readable_sha256": "b30ca8c0773250a6ad971a74932fe698793d87e0ef2a1904a68aea5d55b8c1ef",
+  "freeze_precedes_results_PROOF": {
+    "statement": "Frozen before any human calibration label existed and before any Selene prediction on the calibration sample was produced. Measured, not asserted.",
+    "human_label_fill_counts_at_freeze": {
+      "M1_faithfulness_per_claim": 0,
+      "M2_correctness_per_claim": 0,
+      "M3_core_completeness": 0,
+      "TARGET_ALIGNMENT": 0,
+      "M4A_retrieval_claim_support": 0,
+      "M4B_exploratory_holistic_evidence_adequacy": 0,
+      "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE": 0,
+      "POSSIBLE_REFERENCE_DEFECT": 0
+    },
+    "n_calibration_rows": 180,
+    "total_human_labels_present_at_freeze": 0,
+    "calibration_prediction_files_present_at_freeze": [],
+    "workbook_sha256_at_freeze": "5ed2fb54af04cccb24e932023f20b40b8752452d7019087ce494c7de8c645d76",
+    "interpretation": "All eight label fields are empty across all 180 rows and no calibration prediction artifact exists, so these thresholds cannot have been chosen in response to observed agreement."
+  },
+  "threshold_status": "PROJECT-LEVEL acceptance thresholds for this study's risk profile. NOT claimed to be universal thresholds from the literature.",
+  "structural_gate": {
+    "structured_contract_validity_min": 0.995,
+    "automatic_failure": "any systematic truncation, or any semantic branch shown to be inaccessible, fails regardless of semantic agreement"
+  },
+  "task_gates": {
+    "M1_EVIDENCE_FAITHFULNESS": {
+      "raw_agreement_min": 0.85,
+      "gwet_ac1_min": 0.7,
+      "fail_recall_min": 0.85,
+      "false_pass_rate_max": 0.1,
+      "rationale": "a false PASS lets an unsupported draft claim be treated as grounded"
+    },
+    "M2_REFERENCE_SOURCE_CORRECTNESS": {
+      "raw_agreement_min": 0.85,
+      "gwet_ac1_min": 0.7,
+      "fail_recall_min": 0.85,
+      "false_pass_rate_max": 0.1,
+      "rationale": "safety-critical; a fluent but materially incorrect claim must not routinely pass",
+      "required_mechanism": "REFERENCE_SILENT_BUT_SOURCE_SUPPORTED escape path must remain operative"
+    },
+    "M3_CORE_COMPLETENESS": {
+      "raw_agreement_min": 0.8,
+      "gwet_ac1_min": 0.65,
+      "pass_recall_min": 0.75,
+      "fail_recall_min": 0.75,
+      "rationale": "larger legitimate human-boundary component, so a lower agreement gate; but gated in BOTH directions because systematic one-sided rejection is not acceptable"
+    },
+    "TARGET_ALIGNMENT": {
+      "raw_agreement_min": 0.8,
+      "gwet_ac1_min": 0.65,
+      "fail_recall_min": 0.85,
+      "false_pass_rate_max": 0.1,
+      "rationale": "wrong-target drafts are a major failure mode; sensitivity to sibling substitution must be retained"
+    },
+    "M4A_RETRIEVAL_CLAIM_SUPPORT": {
+      "unit_of_qualification": "ATOMIC support decisions, NOT the derived continuous recall scalar",
+      "raw_agreement_min": 0.85,
+      "gwet_ac1_min": 0.7,
+      "supported_recall_min": 0.8,
+      "not_supported_recall_min": 0.8,
+      "note": "the per-KC scalar is deterministically derived from atomic labels and is not required to match a human scalar exactly"
+    },
+    "EXPLORATORY_HOLISTIC_EVIDENCE_ADEQUACY": {
+      "gate": null,
+      "qualification_gate": false,
+      "note": "no gate; not used. Demoted for construct-validity failure and may not be re-promoted, including if its numbers improve."
+    }
+  },
+  "small_denominator_safeguard": {
+    "min_class_count": 10,
+    "flag": "SMALL_DENOMINATOR",
+    "requires": [
+      "exact numerator/denominator",
+      "Wilson 95% interval"
+    ],
+    "insufficient_support_label": "INSUFFICIENT_VALIDATION_SUPPORT",
+    "no_automatic_resampling": true
+  },
+  "human_gold_resolution": {
+    "agreement": "use the agreed label",
+    "disagreement": "adjudicate BEFORE judge qualification, adjudicator blind to Selene prediction",
+    "record": [
+      "annotator_a",
+      "annotator_b",
+      "adjudicated_label",
+      "adjudication_rationale"
+    ],
+    "human_human_agreement_computed_first": true,
+    "poor_human_agreement_response": "flag the construct as potentially insufficiently reproducible; do NOT blame the judge first. Changing the rubric after seeing these results requires formally declaring this validation set BURNED."
+  },
+  "decision_rule": {
+    "per_task_classes": [
+      "QUALIFIED",
+      "NOT_QUALIFIED",
+      "INSUFFICIENT_VALIDATION_SUPPORT"
+    ],
+    "primary_campaign_requires": [
+      "M1_EVIDENCE_FAITHFULNESS",
+      "M2_REFERENCE_SOURCE_CORRECTNESS",
+      "M3_CORE_COMPLETENESS",
+      "TARGET_ALIGNMENT"
+    ],
+    "m4a_isolated_failure": "does NOT invalidate M1/M2/M3/TARGET; report that automated retrieval-reference recall is unvalidated and decide separately",
+    "no_averaging": "mean qualification score, mean AC1 and overall accuracy are NOT acceptance rules. Qualification is criterion-wise."
+  },
+  "anti_contamination": [
+    "Selene inference on calibration rows completes and is hashed BEFORE any agreement statistic is computed; metrics are not visible while inference is incomplete.",
+    "Human calibration data is VALIDATION data, not development data.",
+    "M1 PASS recall, TARGET PASS recall, M2 false PASS and M3 false FAILs may not be tuned against it.",
+    "If the frozen evaluator fails, it fails - it is not repaired against these labels and re-tested on the same labels.",
+    "SENT_032/SENT_033 remain GOLD_PENDING development sentinels, are not calibration rows, and do not block human annotation."
+  ],
+  "frozen_instrument_hashes": {
+    "final_judge_decoding_manifest": "5024e669ff9cf3d905e8d61187ec5281615f23ff7e73be813112a8b0381815a3",
+    "judge_prompts_lock": "b38610ba4591c7db6a526658dd9102b7da2f92759fd62f70862a7a00ed003e0e",
+    "claim_protocol_lock": "cc13a9f82ae3225318e45f0eb24d31e99624af8c2e8c96540144a2ad7bf85e52",
+    "blinding_lock": "6380b2d2c63084ee9c8d4a2e465c9d9ad52322bf4d76e9595177fa8f09d993f0",
+    "expert_reference_lock": "bf6065de1137c47a572c0db99cddcb457a67f801e1ed1157721a23fb3a3c728d",
+    "candidates_lock": "839a96be8bfb4e46858d1f8b913b39ca6f45d0985e8a5dd5de1cdcd9917c47fc",
+    "calibration_workbook_v2": "5ed2fb54af04cccb24e932023f20b40b8752452d7019087ce494c7de8c645d76",
+    "calibration_blinded_mapping": "89b7d5e279eedb35e3b38c41501243f558cbbd633cea29c74800a4f67151af80"
+  },
+  "judge_qualified_at_freeze": false,
+  "protocol_sha256": "a91e9fbc66b0eb3d24dbbe038830c7547345575de636558b6acfb3721528712e"
+}

@@ -1,0 +1,9 @@
+{
+  "generated_utc": "2026-08-24T12:00:00Z",
+  "note": "Baseline state at console-ready declaration, before the expert has reviewed any KC. Update by re-running 02_curation/reference_console.py's `progress` command output, or a small wrapper script over 02_curation/committed/*.json, as curation proceeds.",
+  "n_kc_total": 159,
+  "n_reviewed": 0,
+  "n_remaining": 159,
+  "action_counts": {"ACCEPT": 0, "MINOR_EDIT": 0, "MAJOR_EDIT": 0, "REPLACE": 0, "NO_REFERENCE_CORPUS_UNSUPPORTED": 0},
+  "stage_a_in_progress_not_yet_committed": 0
+}

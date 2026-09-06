@@ -1,0 +1,34 @@
+{
+  "scope_id": "calibration_scope_v2",
+  "timestamp_utc": "2026-08-25T09:08:48Z",
+  "sample_status": "UNCHANGED - the frozen 180 rows are preserved exactly",
+  "why_unchanged": "Resampling after a metric-scope change would introduce an additional researcher degree of freedom. The sample was drawn before the M4 decision and is retained verbatim; only its metadata is versioned.",
+  "preserved": {
+    "sampled_kc_identities": true,
+    "arm_assignments": true,
+    "random_seed": 20260825,
+    "stratification": true,
+    "row_order_and_blinding_mapping": true
+  },
+  "n_kc": 30,
+  "n_arms": 6,
+  "n_rows": 180,
+  "workbook": "reference_eval\\output\\human_calibration\\reference_human_calibration_workbook.jsonl",
+  "workbook_sha256": "4efe87d8959d0eae8d1f0546afbea30be1a580d5dcbcddfe8c8a7b1eaad47a2e",
+  "blinded_mapping": "reference_eval\\output\\human_calibration\\reference_human_calibration_blinded_mapping.jsonl",
+  "blinded_mapping_sha256": "89b7d5e279eedb35e3b38c41501243f558cbbd633cea29c74800a4f67151af80",
+  "task_scope": {
+    "M1_claim_faithfulness": "PRIMARY - qualification gating",
+    "M2_claim_source_correctness": "PRIMARY - qualification gating",
+    "M3_holistic_core_completeness": "PRIMARY - qualification gating",
+    "TARGET_alignment": "PRIMARY - qualification gating",
+    "M4A_reference_claim_retrieval_support": "PRIMARY retrieval diagnostic - must also be human-validated on a bounded subset to confirm the per-claim support classification is reliable, but it is a decomposed per-claim task rather than a holistic verdict",
+    "M4B_holistic_evidence_adequacy": "EXPLORATORY_NON_PRIMARY - may optionally be collected for research purposes. Must NOT be used for judge qualification, system ranking, materially_sound, or primary statistical testing."
+  },
+  "seed_bias_diagnostics_retained": [
+    "VALID_SOURCE_SUPPORTED_ALTERNATIVE_BEYOND_REFERENCE",
+    "POSSIBLE_REFERENCE_DEFECT"
+  ],
+  "blinding": "The human evaluator remains blind to model identity, system identity, retrieval architecture, the machine-seed origin of the reference, machine draft status, previous judge output, and previous sentinel outcomes.",
+  "note_on_workbook_fields": "If the workbook carries a holistic adequacy field it is retained for audit/exploratory annotation and is marked EXPLORATORY_NON_PRIMARY; it is not consumed by any qualification or ranking computation."
+}

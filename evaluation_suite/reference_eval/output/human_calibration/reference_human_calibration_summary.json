@@ -1,0 +1,84 @@
+{
+  "n_kc": 30,
+  "n_arms": 6,
+  "n_rows": 180,
+  "seed": 20260825,
+  "sampled_from": "the 150 SUPPORTED KCs only (PARTIALLY_SUPPORTED and UNSUPPORTED are evaluated by different questions - spec section 7B/7C)",
+  "stratum_coverage": {
+    "hierarchy_branch": {
+      "Classification": 7,
+      "Clustering": 9,
+      "Data Engineering": 7,
+      "Model Evaluation and Model Comparison": 7
+    },
+    "reference_edit_action": {
+      "ACCEPT": 24,
+      "MAJOR_EDIT": 4,
+      "REPLACE": 1,
+      "MINOR_EDIT": 1
+    },
+    "formula_bearing": {
+      "False": 12,
+      "True": 18
+    },
+    "procedure_bearing": {
+      "True": 17,
+      "False": 13
+    }
+  },
+  "population_for_comparison": {
+    "hierarchy_branch": {
+      "Classification": 32,
+      "Model Evaluation and Model Comparison": 34,
+      "Clustering": 48,
+      "Data Engineering": 36
+    },
+    "reference_edit_action": {
+      "ACCEPT": 116,
+      "REPLACE": 9,
+      "MAJOR_EDIT": 15,
+      "MINOR_EDIT": 10
+    },
+    "formula_bearing": {
+      "False": 74,
+      "True": 76
+    },
+    "procedure_bearing": {
+      "True": 85,
+      "False": 65
+    }
+  },
+  "blinding": "workbook rows carry NO model, system, retrieval-architecture, or machine-status field. Arm identity exists only in the separate mapping file.",
+  "kc_ids": [
+    "KC_CLF_DT_002",
+    "KC_CLF_DT_004",
+    "KC_CLF_DT_011",
+    "KC_CLF_NB_004",
+    "KC_CLF_NB_005",
+    "KC_CLF_PRUNE_005",
+    "KC_CLF_UND_003",
+    "KC_CLU_DBS_002",
+    "KC_CLU_DBS_006",
+    "KC_CLU_EVAL_004",
+    "KC_CLU_EVAL_006",
+    "KC_CLU_EVAL_008",
+    "KC_CLU_HIER_002",
+    "KC_CLU_HIER_003",
+    "KC_CLU_KM_006",
+    "KC_CLU_SIM_008",
+    "KC_DE_MISS_001",
+    "KC_DE_MISS_002",
+    "KC_DE_MISS_004",
+    "KC_EVAL_BASIC_004",
+    "KC_EVAL_COMP_002",
+    "KC_EVAL_COMP_006",
+    "KC_EVAL_ENS_002",
+    "KC_EVAL_ROC_001",
+    "KC_EVAL_ROC_003",
+    "KC_EVAL_SAMP_004",
+    "KC_FSEL_GEN_005",
+    "KC_FSEL_GEN_006",
+    "KC_FSEL_GOOD_006",
+    "KC_FSEL_STAT_001"
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "manifest_id": "FINAL_JUDGE_DECODING_MANIFEST",
+  "frozen_utc": "2026-08-25T11:23:43Z",
+  "purpose": "Pins the exact evaluator instrument used to produce judge predictions. Formal qualification predictions MUST use this configuration.",
+  "judge_model": {
+    "repo": "AtlaAI/Selene-1-Llama-3.3-70B",
+    "served_name": "selene-1-llama-3.3-70b",
+    "local_path_ants": "~/projects/selene_judge/models/Selene-1-Llama-3.3-70B",
+    "model_config": "{\"_name_or_path\": \"./models/atla_americano_v1/checkpoint-3250\", \"architectures\": [\"LlamaForCausalLM\"], \"model_type\": \"llama\", \"torch_dtype\": \"bfloat16\", \"max_position_embeddings\": 131072, \"vocab_size\": 128256}",
+    "tokenizer_config": "{\"tokenizer_class\": \"PreTrainedTokenizerFast\", \"model_max_length\": 4096, \"chat_template\": \"{{- bos_token }}\\n{%- if custom_tools is defined %}\\n    {%- set tools = custom_tools %}\\n{%- endif %}\\n{%- if not tools_in_user_message is defined %}\\n    {%- set tools_in_user_message = true %}\\n{%- endif %}\\n{%- if not date_string is defined %}\\n    {%- set date_string = \\\"26 Jul 2024\\\" %}\\n{%- endif %}\\n",
+    "chat_template": "the tokenizer's own chat template as shipped with the model revision above; not overridden anywhere in this pipeline"
+  },
+  "serving": {
+    "vllm_version": "0.27.1",
+    "xgrammar_version": "0.2.3",
+    "torch_version": "2.13.0",
+    "transformers_version": "5.15.1",
+    "structured_output_backend": "XGrammar via OpenAI-standard response_format json_schema (strict). extra_body/guided_json is silently ignored when POSTing raw JSON and must never be used here.",
+    "gpu": "NVIDIA H100 NVL, 95830 MiB",
+    "dtype": "bfloat16",
+    "tensor_parallel_size": 4,
+    "max_model_len": 40960,
+    "gpu_memory_utilization": 0.9,
+    "env": {
+      "VLLM_USE_FLASHINFER_SAMPLER": "0"
+    }
+  },
+  "decoding": {
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "frequency_penalty": 0.0,
+    "presence_penalty": 0.0,
+    "repetition_penalty": 1.0,
+    "seed": 20260825,
+    "max_tokens_default": 3000,
+    "max_tokens_decomposition": 4000
+  },
+  "decoding_rationale": {
+    "frequency_penalty": "0.0. Briefly set to 0.2 while diagnosing structured-output stalls and then REMOVED. vLLM applies a frequency penalty directly to generation logits as a function of how often a token has already appeared, so a nonzero value is not a formatting control and can alter semantic decisions even under greedy decoding. Measured here: two penalty-free runs produced an IDENTICAL M1 verdict distribution (20 FAIL / 14 PASS) despite differing in holistic schema, while penalty=0.2 shifted it to 22 FAIL / 12 PASS. The decisive structural remedy was making rationale optional; the penalty only moved preflight failures from 5 to 4.",
+    "selection_basis": "The penalty-free configuration was chosen because it removes a demonstrated generation-logit confound and because the structural issue no longer requires the penalty - NOT because it maximises sentinel accuracy."
+  },
+  "structured_output_design": {
+    "rationale_optional": true,
+    "why": "A REQUIRED trailing free-text field was the decisive stall point: having committed a verdict the model must open a string it has nothing to put in, and inter-token whitespace is a legal continuation. Every string is length-bounded and its character class excludes newlines, so all remaining whitespace is semantically empty.",
+    "decision_field_first": "The verdict is the FIRST field in the branched schemas. With the verdict last, the model selects the oneOf branch by choosing the next KEY, which made the MATERIAL_* branch effectively unreachable (measured: zero MATERIAL_OMISSION across 36 cases).",
+    "grammar_enforcement_verified": "oneOf branches materialise and bind each label to its permitted evidence-id family; minItems==maxItems compiles to exact repetition; maxLength compiles to bounded repetition. if/then/else compiles cleanly but is SILENTLY DROPPED and is used nowhere. Verified by reading the emitted EBNF.",
+    "schema_hashes": {
+      "m1_faithfulness_schema(3)": "a70b4c8bc449b774cf19c6ed265e08ae8381e57be5678137cb6ef8ab1f49b689",
+      "m2_correctness_schema(3)": "0fd70ceca5623c1a12bda45135205f43fe6c9f4a7198bce4c2ab419541293a5a",
+      "m3_claim_coverage_schema(3)": "91944e4953a1e877b9c6db25926c6ba7e38af04e724d71182e7d90a82c44e2fc",
+      "m3_holistic_schema": "728889fbfbb37142b9a2b613bdc0b53a63db4bee4d7d9eedc005c4489532ac59",
+      "m4_retrieval_coverage_schema(3)": "89dd57e1a7b111905b5d9d28c04ebd5b1185f0be44293cf169002bfebc7b1d6e",
+      "m4_holistic_schema": "305199dc100a2381ac1d128dfa555065c1831eaa86a297d25e6c25cd447cdb50",
+      "target_alignment_schema": "bf3a7c8c17eb99512c409e032a70eaf8a34f49e6dd8c44d01bee9d483e328a83",
+      "decomposition_schema": "4f80a6cd197dda06b861eb246effbe5b81acd421a5d6646b448d54446e8f66db"
+    }
+  },
+  "prompt_hashes": {
+    "build_m1_prompt": "eab44d3a3e5ce52bc6405aa927fe087ecf7248c250157fd52af9a42b2e781c8c",
+    "build_m2_prompt": "8befa9612ec7bf4bd28b94d1ad6dbd546092c234a0c9ecd51a700d94cc9ce8df",
+    "build_m3_coverage_prompt": "66854b8602673d55ec518b6c3d8cf44748bc285ae84c6c59330c17d97e4b6168",
+    "build_m3_holistic_prompt": "ad0140d36fb3dc27b41b02b00103234795b5c664bbc5f2f99939430a5feb7d42",
+    "build_m4_prompt": "4f9d8d4b5b1743b377493308f27478ef0cd4e0245cf26b971b7f2e3e08e0f55e",
+    "build_m4_holistic_prompt": "b971e2542df2519c9e160bf79d028eea445b2f9d6145eb8a84d35f64c5ee9f3a",
+    "build_target_alignment_prompt": "340f3d6180692a22fc860cef216a8e3d44b5695a11a00f57eba58ba40025436c",
+    "build_decomposition_prompt": "71098448863496c8ec54c92e8b3c7eeb0865780f6d9eafacf4da32c71bc5ad6a"
+  },
+  "prompt_semantics_unchanged_since": "the reference-based rubric was frozen; only serialization shape and decoding changed after that point",
+  "blinding": {
+    "pattern_count": 36,
+    "patterns_sha256": "e25e2c113eb48db9aa266c2f28f967b62d7a1cbc9033bad6011bf412a0a77584",
+    "enforced_at": "prompt-build time via assert_blinded(); raises rather than warning"
+  },
+  "sentinel_suite": {
+    "version": "reference_sentinel_gold.jsonl (36 cases, translated from the frozen rubric suite)",
+    "sha256": "387d62e2c0eb5c83fcbf483e43491e41f97ff438d3c48f5eb649ecc4411f39cf",
+    "source_suite_sha256": "2d5848aed00ac49c839d64a181ee038dec1c6940113fc2fd04638f3fc4bf5eb3",
+    "gold_pending": [
+      "SENT_032",
+      "SENT_033"
+    ]
+  },
+  "frozen_artifacts_unchanged": {
+    "expert_reference": "6ea703e6b126f4e37b0b6ff34dacd3f72ef936b5a0d6b21725dbbf63ead31aed",
+    "reference_manifest": "7ada615689ad95920f84dfe19220d323f1b0262aaa5b1d7a02eeb2d7963c2544",
+    "candidate_freeze_manifest": "d85c7b4b4bf8e00f7e1940b4b0d1496477e42900166b0ecaccda0c0fdddf1f9c"
+  },
+  "code_hashes": {
+    "run_reference_judge.py": "4c20ba9bb10f250d64790701cca95267db1f74ee0ebeaa4919f23ce5d7661ac2",
+    "reference_judge_schema.py": "602662a6cfad1518d82ca17f003f0cf4a5884dcf9560808f2994693f5677cae0",
+    "reference_judge_prompts.py": "4684ecf15e5ac0b1e1d9646ba20e82ebf2c5430400cd8ede814b4080516d22ac",
+    "reference_claim_schema.py": "8c0af200b8f6ea6490f6074b75bc0df77c4844342e90777516f3b3671d78267b",
+    "reference_metrics.py": "51bdda335482c3bada80b1895d6c4fd0a19ae44e770560952e3dd5c1160cc97f",
+    "preflight_check.py": "85e9b5c1af4e3eb3ff09a571257d15fbee86d0b34f50c993cf6e6e4d77d1de6c"
+  },
+  "git_commit": "8967e3408e941d79fd55daaee4f9cd3f595e9e79",
+  "qualification_status": {
+    "JUDGE_QUALIFIED": false,
+    "statement": "The judge is formally UNQUALIFIED. Development sentinel performance does not qualify it. Qualification requires comparison against blinded human labels on the 180-row calibration sample under a qualification gate pre-registered before human results are opened."
+  }
+}

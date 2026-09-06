@@ -1,0 +1,80 @@
+{
+  "generated_utc": "2026-08-24T22:44:59Z",
+  "reference_file": "kc_library_expert_curated_adjudicated_final.jsonl",
+  "reference_sha256": "69e3fc627972d35e5f7ed22e1c6af6b60f7f496bdf5c5aa78a9b6e6dbdf2e20a",
+  "corpus_sha256": "62c4d26543ee5ac2b81fbb2d7ad772b031d18616d93334122c979d99e867bc33",
+  "evidence_store_sha256": "96d489558c4f33ac3104a40e63c40d4e23503c7d06870f5d068738fcbf685893",
+  "n_reference_rows": 159,
+  "n_source_citation_instances": 980,
+  "n_distinct_source_ids": 980,
+  "n_resolved": 980,
+  "n_unresolved": 0,
+  "resolution_rate": 1.0,
+  "support_state_counts": {
+    "SUPPORTED": 150,
+    "PARTIALLY_SUPPORTED": 2,
+    "UNSUPPORTED": 7
+  },
+  "supported_or_partial_with_zero_resolvable": [],
+  "unsupported_audit": [
+    {
+      "knowledge_unit_id": "KC_CLF_UND_005",
+      "reference_text_empty": true,
+      "has_adjudication_reason": true,
+      "has_source_limitations": true,
+      "review_action": "NO_REFERENCE_CORPUS_UNSUPPORTED",
+      "n_source_evidence_ids": 8
+    },
+    {
+      "knowledge_unit_id": "KC_EVAL_BASIC_007",
+      "reference_text_empty": true,
+      "has_adjudication_reason": true,
+      "has_source_limitations": true,
+      "review_action": "NO_REFERENCE_CORPUS_UNSUPPORTED",
+      "n_source_evidence_ids": 0
+    },
+    {
+      "knowledge_unit_id": "KC_EVAL_BASIC_008",
+      "reference_text_empty": true,
+      "has_adjudication_reason": true,
+      "has_source_limitations": true,
+      "review_action": "NO_REFERENCE_CORPUS_UNSUPPORTED",
+      "n_source_evidence_ids": 0
+    },
+    {
+      "knowledge_unit_id": "KC_EVAL_BASIC_009",
+      "reference_text_empty": true,
+      "has_adjudication_reason": true,
+      "has_source_limitations": true,
+      "review_action": "NO_REFERENCE_CORPUS_UNSUPPORTED",
+      "n_source_evidence_ids": 8
+    },
+    {
+      "knowledge_unit_id": "KC_EVAL_COMP_001",
+      "reference_text_empty": true,
+      "has_adjudication_reason": true,
+      "has_source_limitations": true,
+      "review_action": "NO_REFERENCE_CORPUS_UNSUPPORTED",
+      "n_source_evidence_ids": 1
+    },
+    {
+      "knowledge_unit_id": "KC_EVAL_COMP_004",
+      "reference_text_empty": true,
+      "has_adjudication_reason": true,
+      "has_source_limitations": true,
+      "review_action": "NO_REFERENCE_CORPUS_UNSUPPORTED",
+      "n_source_evidence_ids": 0
+    },
+    {
+      "knowledge_unit_id": "KC_EVAL_COMP_005",
+      "reference_text_empty": true,
+      "has_adjudication_reason": true,
+      "has_source_limitations": true,
+      "review_action": "NO_REFERENCE_CORPUS_UNSUPPORTED",
+      "n_source_evidence_ids": 0
+    }
+  ],
+  "n_failures": 0,
+  "failures": [],
+  "result": "PASS"
+}

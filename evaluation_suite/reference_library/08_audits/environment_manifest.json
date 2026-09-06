@@ -1,0 +1,17 @@
+{
+  "generated_utc": "2026-08-24T12:00:00Z",
+  "console_host": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.14.1",
+    "working_directory": "evaluation_suite/final_pipeline/reference_library/02_curation",
+    "note": "The curation console (reference_console.py) is designed to run entirely locally against the mirrored corpus/seed in corpus_support/ and 01_seed/ - it does not require a live connection to Cluster-B or Cluster A during a curation session."
+  },
+  "data_provenance_host": {
+    "hostname": "hpc-cluster-b.example.edu (Cluster-B)",
+    "note": "All candidate artifacts, the corpus, the source PDFs, and the hierarchy overlay were located and freshly hashed on Cluster-B on 2026-08-24 - see 00_freeze/CANDIDATE_FREEZE_MANIFEST.json for every absolute path and sha256."
+  },
+  "editor_used_for_multiline_fields": {
+    "resolution_order": "$EDITOR environment variable, else notepad (Windows) / nano (POSIX)",
+    "note": "reference_console.py's memo/edit-reference commands shell out to this editor for multi-line text entry; set $EDITOR before launching the console to use a different one."
+  }
+}

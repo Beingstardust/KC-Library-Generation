@@ -1,0 +1,9 @@
+{
+  "frozen_utc": "2026-08-24T11:00:00Z",
+  "revised_utc": "2026-08-25T00:00:00Z",
+  "manifest_file": "CANDIDATE_FREEZE_MANIFEST.json",
+  "manifest_sha256": "d85c7b4b4bf8e00f7e1940b4b0d1496477e42900166b0ecaccda0c0fdddf1f9c",
+  "superseded_manifest_sha256": "f1d5c157f08c4a52694f4ef9f022c849289617d88c51f14901a75be827e8ac9e",
+  "revision_reason": "Corrected seed_source_designation (intrinsic P-Q, empirically identified 159/159, not extrinsic P-Q), recorded the six-unique-primary-arm decision, and appended the 2026-08-25 candidate revalidation result. NO candidate artifact hash changed - all 7 revalidated identical. The superseded manifest hash is retained so the pre-correction state remains auditable.",
+  "note": "freeze_adjudicated_reference.py must re-hash CANDIDATE_FREEZE_MANIFEST.json at reference-freeze time and confirm it equals manifest_sha256."
+}

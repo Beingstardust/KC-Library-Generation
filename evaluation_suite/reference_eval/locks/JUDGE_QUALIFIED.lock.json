@@ -1,0 +1,9 @@
+{
+  "lock_name": "JUDGE_QUALIFIED",
+  "written_utc": "2026-08-25T11:22:52Z",
+  "qualified": false,
+  "status": "NOT_QUALIFIED - development sentinel results exist but the qualification gate has not been evaluated, and human calibration has not been run.",
+  "requirement": "A judge is qualified only against HUMAN calibration labels on the reference-based tasks, per ARES-style human-calibrated validation. Sentinel performance alone does not qualify a judge, and the previous holistic F1-F5 qualification does not transfer to these tasks.",
+  "no_override": "There is no flag that bypasses this lock in production mode.",
+  "lock_sha256": "15e341e044518e64840f7bdb90a7fae293ff38160e44cc66f9037cdd44efbc8f"
+}

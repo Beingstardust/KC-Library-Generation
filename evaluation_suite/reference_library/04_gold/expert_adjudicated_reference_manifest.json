@@ -1,0 +1,56 @@
+{
+  "schema_version": "expert_adjudicated_reference_manifest_v1",
+  "frozen_utc": "2026-08-24T22:53:16Z",
+  "kc_count": 159,
+  "unique_kc_count": 159,
+  "ordered_kc_id_sha256": "45c3931c0229c6fb1f88e9e53f343d77dc89efb2157e50b17124239b5bb265fb",
+  "reference_jsonl_sha256": "6ea703e6b126f4e37b0b6ff34dacd3f72ef936b5a0d6b21725dbbf63ead31aed",
+  "approved_artifact_sha256": "6ea703e6b126f4e37b0b6ff34dacd3f72ef936b5a0d6b21725dbbf63ead31aed",
+  "preapproval_artifact_sha256": "69e3fc627972d35e5f7ed22e1c6af6b60f7f496bdf5c5aa78a9b6e6dbdf2e20a",
+  "adjudication_document_sha256": "35f0e93cc54bb9e1b7afad4ee96f4aae38b54666275a30ce5d3fca365bd612e0",
+  "adjudication_summary_sha256": "a8efadf4c529d8a48bc5ad0689bb3a45cbb654692e57744c5f79363b42fd442a",
+  "corpus_snapshot_sha256": "62c4d26543ee5ac2b81fbb2d7ad772b031d18616d93334122c979d99e867bc33",
+  "source_evidence_store_sha256": "96d489558c4f33ac3104a40e63c40d4e23503c7d06870f5d068738fcbf685893",
+  "candidate_freeze_manifest_sha256": "d85c7b4b4bf8e00f7e1940b4b0d1496477e42900166b0ecaccda0c0fdddf1f9c",
+  "support_state_counts": {
+    "SUPPORTED": 150,
+    "UNSUPPORTED": 7,
+    "PARTIALLY_SUPPORTED": 2
+  },
+  "action_counts": {
+    "ACCEPT": 117,
+    "REPLACE": 10,
+    "NO_REFERENCE_CORPUS_UNSUPPORTED": 7,
+    "MAJOR_EDIT": 15,
+    "MINOR_EDIT": 10
+  },
+  "changed_from_machine_draft_count": 42,
+  "unchanged_accept_count": 117,
+  "human_approval": {
+    "approved_by": "reference_reviewer",
+    "approved_utc": "2026-08-24T22:50:56Z",
+    "approval_channel": "AGENT_SESSION_RELAY",
+    "approval_channel_meaning": "a human gave an explicit recorded approval decision inside an agent session and the agent relayed the acknowledgement phrase on their behalf - weaker provenance than a live terminal",
+    "approval_note": "Operator selected 'Yes - approve as final' in an explicit AskUserQuestion approval gate in a Claude Code session on 2026-08-25, after being shown the 159-row validation result, the full adjudicated action/support counts, and the preapproval sha256 69e3fc627972d35e5f7ed22e1c6af6b60f7f496bdf5c5aa78a9b6e6dbdf2e20a."
+  },
+  "provenance_validation": {
+    "result": "PASS",
+    "n_source_citation_instances": 980,
+    "n_distinct_source_ids": 980,
+    "n_resolved": 980,
+    "n_unresolved": 0,
+    "resolution_rate": 1.0,
+    "resolution_file": "reference_provenance_resolution.jsonl"
+  },
+  "seed_provenance": {
+    "seed_arm": "intrinsic_P-Q",
+    "seed_arm_sha256": "6f17d205294a785f488e12b539dc53b68e203e3aa8c86914cb3c7c0c086ab242",
+    "identification_method": "exact string comparison of the reference's own original_machine_draft_text against all 7 frozen candidate arms: intrinsic_P-Q matched 159/159 text and 159/159 status; next closest was extrinsic_P-Q at 17/159.",
+    "validity_note": "The reference is machine-seeded. It must never be described as independent of Qwen. See 07_methods/THREATS_TO_VALIDITY.md."
+  },
+  "git_commit": "8967e3408e941d79fd55daaee4f9cd3f595e9e79",
+  "software_environment": {
+    "python_version": "3.14.1",
+    "platform": "Windows-11-10.0.26200-SP0"
+  }
+}

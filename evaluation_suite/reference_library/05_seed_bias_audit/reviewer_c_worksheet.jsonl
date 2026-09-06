@@ -1,0 +1,393 @@
+[
+  {
+    "order": 1,
+    "knowledge_unit_id": "KC_DE_MISS_002",
+    "canonical_name": "Missingness Mechanism",
+    "hierarchy": "Data Mining > Data Engineering > Dealing with Missingness > Missingness Mechanism",
+    "support_state": "supported",
+    "source_passages": [
+      "The missingness mechanism is concerned with whether the fact that a variable has missing data is related to the underlying values of the variables in the data",
+      "These mechanisms are classified into three categories: * Missing Completely at Random (MCAR)... * Missing at Random (MAR)... * Missing Not at Random (MNAR)..."
+    ],
+    "reference_text": "Missing data mechanisms describe the relationship between the propensity of data points to be missing and the underlying values (observed or unobserved) of the dataset. They are traditionally categorized into Missing Completely at Random (MCAR), Missing at Random (MAR), and Missing Not at Random (MNAR).",
+    "unsupported_reason": null,
+    "notes": "Extracted from data preprocessing literature regarding missing data handling."
+  },
+  {
+    "order": 2,
+    "knowledge_unit_id": "KC_FSEL_GEN_006",
+    "canonical_name": "Heuristic Search",
+    "hierarchy": "Data Mining > Data Engineering > Feature Selection > Feature Set Generation Algorithms > Heuristic Search",
+    "support_state": "supported",
+    "source_passages": [
+      "Subset generation is essentially a process of heuristic search, with each state in the search space specifying a candidate subset for evaluation."
+    ],
+    "reference_text": "Feature subset generation is treated as a heuristic search problem through the exponentially large space of candidate feature combinations, utilizing strategies like complete, sequential, or random search to find optimal subsets efficiently.",
+    "unsupported_reason": null,
+    "notes": "Extracted from feature selection chapters."
+  },
+  {
+    "order": 3,
+    "knowledge_unit_id": "KC_CLU_EVAL_011",
+    "canonical_name": "External Index: Precision",
+    "hierarchy": "Data Mining > Clustering > Cluster Evaluation > External Index: Precision",
+    "support_state": "supported",
+    "source_passages": [
+      "Precision measures the fraction of specific class objects correctly assigned within a cluster relative to the total number of objects assigned to that cluster."
+    ],
+    "reference_text": "Precision in the context of cluster evaluation acts as an external index measuring the exactness or quality of individual clusters by determining how many of the assigned data points actually belong to the corresponding ground-truth class.",
+    "unsupported_reason": null,
+    "notes": "Cluster evaluation metrics index."
+  },
+  {
+    "order": 4,
+    "knowledge_unit_id": "KC_CLU_EVAL_003",
+    "canonical_name": "Cohesion",
+    "hierarchy": "Data Mining > Clustering > Cluster Evaluation > Cohesion",
+    "support_state": "supported",
+    "source_passages": [
+      "Cluster cohesion measures how closely related the objects in the same cluster are, often evaluated using proximity measures or sum of squared errors."
+    ],
+    "reference_text": "Cohesion measures the internal compactness or tightness of a cluster, indicating how closely related the individual data points are to one another within the same partition.",
+    "unsupported_reason": null,
+    "notes": "Clustering evaluation index."
+  },
+  {
+    "order": 5,
+    "knowledge_unit_id": "KC_CLU_EVAL_005",
+    "canonical_name": "Silhouette Coefficient",
+    "hierarchy": "Data Mining > Clustering > Cluster Evaluation > Silhouette Coefficient",
+    "support_state": "supported",
+    "source_passages": [
+      "The silhouette coefficient combines both cohesion and separation to measure how well a data point lies within its assigned cluster compared to other clusters."
+    ],
+    "reference_text": "The Silhouette Coefficient is a validation metric that evaluates cluster quality by measuring both how tight the clusters are internally (cohesion) and how distinct they are from neighboring clusters (separation).",
+    "unsupported_reason": null,
+    "notes": "Clustering quality metric."
+  },
+  {
+    "order": 6,
+    "knowledge_unit_id": "KC_CLF_UND_005",
+    "canonical_name": "Mutually Exclusive Classes",
+    "hierarchy": "Data Mining > Classification > Classification Underpinnings > Mutually Exclusive Classes",
+    "support_state": "supported",
+    "source_passages": [
+      "Classification tasks often assume that each record belongs to one and only one class label from a set of mutually exclusive classes."
+    ],
+    "reference_text": "Mutually exclusive classes dictate that an instance can be assigned to exactly one class label out of a discrete set of possible categories during classification modeling.",
+    "unsupported_reason": null,
+    "notes": "Classification foundations."
+  },
+  {
+    "order": 7,
+    "knowledge_unit_id": "KC_CLU_SIM_001",
+    "canonical_name": "Properties of a Distance Function",
+    "hierarchy": "Data Mining > Clustering > Similarity and Distance Functions > Properties of a Distance Function",
+    "support_state": "supported",
+    "source_passages": [
+      "A distance function or metric must satisfy specific mathematical properties such as non-negativity, symmetry, and the triangle inequality."
+    ],
+    "reference_text": "Distance functions used in proximity measures must satisfy key properties including non-negativity, symmetry, and the triangle inequality to ensure valid metric space behavior.",
+    "unsupported_reason": null,
+    "notes": "Proximity and distance metrics."
+  },
+  {
+    "order": 8,
+    "knowledge_unit_id": "KC_CLU_EVAL_009",
+    "canonical_name": "External Index: Purity",
+    "hierarchy": "Data Mining > Clustering > Cluster Evaluation > External Index: Purity",
+    "support_state": "supported",
+    "source_passages": [
+      "Purity is an external measure of cluster quality that calculates the fraction of the total number of objects that are correctly assigned given pre-existing class labels."
+    ],
+    "reference_text": "Cluster purity evaluates how effectively clusters correspond to pre-existing external classes by computing the ratio of dominant class elements within each cluster to the overall dataset size.",
+    "unsupported_reason": null,
+    "notes": "External validation measures."
+  },
+  {
+    "order": 9,
+    "knowledge_unit_id": "KC_CLU_DBS_009",
+    "canonical_name": "DBSCAN Advantages and Limitations",
+    "hierarchy": "Data Mining > Clustering > Density-Based Clustering (DBSCAN) > DBSCAN Advantages and Limitations",
+    "support_state": "supported",
+    "source_passages": [
+      "DBSCAN can handle clusters of arbitrary shapes and is robust to outliers, but struggles with varying densities and high dimensional data."
+    ],
+    "reference_text": "DBSCAN offers significant advantages by discovering arbitrarily shaped clusters and filtering noise, but faces limitations when dealing with clusters of vastly differing densities or high-dimensional datasets.",
+    "unsupported_reason": null,
+    "notes": "Density-based clustering."
+  },
+  {
+    "order": 10,
+    "knowledge_unit_id": "KC_CLU_SIM_007",
+    "canonical_name": "Jaccard Coefficient",
+    "hierarchy": "Data Mining > Clustering > Similarity and Distance Functions > Jaccard Coefficient",
+    "support_state": "supported",
+    "source_passages": [
+      "The Jaccard coefficient measures similarity between binary attribute vectors, defined as the size of the intersection divided by the size of the union."
+    ],
+    "reference_text": "The Jaccard coefficient is a popular proximity measure for asymmetric binary data, calculating similarity based on the ratio of shared presence attributes to the total number of unique attributes present in either object.",
+    "unsupported_reason": null,
+    "notes": "Similarity measures."
+  },
+  {
+    "order": 11,
+    "knowledge_unit_id": "KC_EVAL_BASIC_003",
+    "canonical_name": "Precision",
+    "hierarchy": "Data Mining > Model Evaluation and Model Comparison > Classifier Evaluation Basics > Precision",
+    "support_state": "supported",
+    "source_passages": [
+      "Precision is defined as the number of true positives divided by the total number of predicted positives."
+    ],
+    "reference_text": "Precision measures classifier exactness, representing the proportion of predicted positive instances that are actually correct.",
+    "unsupported_reason": null,
+    "notes": "Classifier evaluation metrics."
+  },
+  {
+    "order": 12,
+    "knowledge_unit_id": "KC_EVAL_SAMP_002",
+    "canonical_name": "Random Subsampling",
+    "hierarchy": "Data Mining > Model Evaluation and Model Comparison > Sampling for Testing > Random Subsampling",
+    "support_state": "supported",
+    "source_passages": [
+      "Random subsampling repeats holdout multiple times, creating random partitions of training and testing sets to evaluate model performance stability."
+    ],
+    "reference_text": "Random subsampling is a model evaluation method that performs multiple independent iterations of train-test splits to average out performance variance.",
+    "unsupported_reason": null,
+    "notes": "Sampling techniques for validation."
+  },
+  {
+    "order": 13,
+    "knowledge_unit_id": "KC_DE_PREP_001",
+    "canonical_name": "Data Integration",
+    "hierarchy": "Data Mining > Data Engineering > Preparing the Data for Learning > Data Integration",
+    "support_state": "supported",
+    "source_passages": [
+      "Data integration combines data from multiple disparate sources into a coherent data store, requiring schema integration and conflict resolution."
+    ],
+    "reference_text": "Data integration involves merging data from multiple heterogeneous sources while resolving schema mismatches, duplicate entries, and data value conflicts.",
+    "unsupported_reason": null,
+    "notes": "Data preprocessing and preparation."
+  },
+  {
+    "order": 14,
+    "knowledge_unit_id": "KC_EVAL_IMBAL_002",
+    "canonical_name": "Oversampling (SMOTE)",
+    "hierarchy": "Data Mining > Model Evaluation and Model Comparison > Class Imbalance > Oversampling (SMOTE)",
+    "support_state": "supported",
+    "source_passages": [
+      "SMOTE generates synthetic instances along line segments joining minority class neighbors to handle class imbalance."
+    ],
+    "reference_text": "Synthetic Minority Over-sampling Technique (SMOTE) addresses class imbalance by creating synthetic data points rather than simple duplication, interpolating between feature space neighbors.",
+    "unsupported_reason": null,
+    "notes": "Class imbalance handling."
+  },
+  {
+    "order": 15,
+    "knowledge_unit_id": "KC_CLU_EVAL_002",
+    "canonical_name": "SSE (Cluster Quality)",
+    "hierarchy": "Data Mining > Clustering > Cluster Evaluation > SSE (Cluster Quality)",
+    "support_state": "supported",
+    "source_passages": [
+      "Sum of Squared Errors (SSE) measures clustering quality by summing the squared distances between each object and its assigned cluster centroid."
+    ],
+    "reference_text": "SSE is a common objective and evaluation measure in partitioning clustering that quantifies total internal variation by summing squared distances from cluster points to their respective centers.",
+    "unsupported_reason": null,
+    "notes": "Cluster evaluation metric."
+  },
+  {
+    "order": 16,
+    "knowledge_unit_id": "KC_CLF_UND_002",
+    "canonical_name": "Querying Phase",
+    "hierarchy": "Data Mining > Classification > Classification Underpinnings > Querying Phase",
+    "support_state": "supported",
+    "source_passages": [
+      "In the querying or test phase, the constructed classification model is applied to unseen data instances to predict their target class labels."
+    ],
+    "reference_text": "The querying phase uses test data containing unlabelled instances to evaluate the predictive accuracy of a learned classification model.",
+    "unsupported_reason": null,
+    "notes": "Classification phases."
+  },
+  {
+    "order": 17,
+    "knowledge_unit_id": "KC_EVAL_COMP_002",
+    "canonical_name": "Confidence Interval for Accuracy",
+    "hierarchy": "Data Mining > Model Evaluation and Model Comparison > Finding the Best Model > Confidence Interval for Accuracy",
+    "support_state": "supported",
+    "source_passages": [
+      "Confidence intervals for accuracy provide a probabilistic range based on binomial distribution assumptions to gauge the true generalization performance of a classifier."
+    ],
+    "reference_text": "Confidence intervals for model accuracy estimate the range within which the true error rate or accuracy lies with a specified confidence level, accommodating sample size variations.",
+    "unsupported_reason": null,
+    "notes": "Model comparison and statistical tests."
+  },
+  {
+    "order": 18,
+    "knowledge_unit_id": "KC_FSEL_GEN_007",
+    "canonical_name": "Non-Deterministic Search",
+    "hierarchy": "Data Mining > Data Engineering > Feature Selection > Feature Set Generation Algorithms > Non-Deterministic Search",
+    "support_state": "supported",
+    "source_passages": [
+      "Non-deterministic search strategies such as simulated annealing or genetic algorithms introduce randomness to avoid local optima during feature selection."
+    ],
+    "reference_text": "Non-deterministic search algorithms incorporate stochastic steps to explore feature subset spaces, effectively helping search procedures escape local optima.",
+    "unsupported_reason": null,
+    "notes": "Feature subset generation strategies."
+  },
+  {
+    "order": 19,
+    "knowledge_unit_id": "KC_EVAL_BASIC_006",
+    "canonical_name": "F-Measure",
+    "hierarchy": "Data Mining > Model Evaluation and Model Comparison > Classifier Evaluation Basics > F-Measure",
+    "support_state": "supported",
+    "source_passages": [
+      "The F-measure is the harmonic mean of precision and recall, balancing both false positives and false negatives."
+    ],
+    "reference_text": "The F-measure provides a single balanced metric combining precision and recall via their harmonic mean.",
+    "unsupported_reason": null,
+    "notes": "Classifier evaluation basics."
+  },
+  {
+    "order": 20,
+    "knowledge_unit_id": "KC_EVAL_BASIC_007",
+    "canonical_name": "RMSE for Ordinal Targets",
+    "hierarchy": "Data Mining > Model Evaluation and Model Comparison > Classifier Evaluation Basics > RMSE for Ordinal Targets",
+    "support_state": "supported",
+    "source_passages": [
+      "Root Mean Squared Error measures the magnitude of errors between predicted continuous or ordinal values and actual target values."
+    ],
+    "reference_text": "RMSE calculates the square root of average squared discrepancies between predicted and true target values, penalizing larger errors more heavily.",
+    "unsupported_reason": null,
+    "notes": "Evaluation metrics."
+  },
+  {
+    "order": 21,
+    "knowledge_unit_id": "KC_EVAL_COMP_008",
+    "canonical_name": "Role of Test Sample Size",
+    "hierarchy": "Data Mining > Model Evaluation and Model Comparison > Finding the Best Model > Role of Test Sample Size",
+    "support_state": "supported",
+    "source_passages": [
+      "Larger test sample sizes reduce estimation variance and narrow confidence intervals when comparing classifier error rates."
+    ],
+    "reference_text": "Test sample size directly affects the statistical power and reliability of model comparisons, where larger test sets yield tighter confidence bounds on estimated accuracies.",
+    "unsupported_reason": null,
+    "notes": "Model comparison factors."
+  },
+  {
+    "order": 22,
+    "knowledge_unit_id": "KC_FSEL_FW_003",
+    "canonical_name": "Wrapper Approach",
+    "hierarchy": "Data Mining > Data Engineering > Feature Selection > Filters and Wrappers > Wrapper Approach",
+    "support_state": "supported",
+    "source_passages": [
+      "The wrapper approach evaluates feature subsets using a specific learning algorithm as a black-box evaluator, yielding high accuracy at higher computational cost."
+    ],
+    "reference_text": "Wrapper methods for feature selection utilize the target machine learning algorithm itself to assess the utility of candidate feature subsets.",
+    "unsupported_reason": null,
+    "notes": "Filters and wrappers in feature selection."
+  },
+  {
+    "order": 23,
+    "knowledge_unit_id": "KC_CLF_UND_001",
+    "canonical_name": "Learning Phase",
+    "hierarchy": "Data Mining > Classification > Classification Underpinnings > Learning Phase",
+    "support_state": "supported",
+    "source_passages": [
+      "In the learning phase, a classification model is constructed by analyzing a training set composed of database tuples and their associated class labels."
+    ],
+    "reference_text": "The learning phase of classification involves training an algorithm on historical data with known class labels to build a predictive model.",
+    "unsupported_reason": null,
+    "notes": "Classification foundations."
+  },
+  {
+    "order": 24,
+    "knowledge_unit_id": "KC_CLU_DBS_007",
+    "canonical_name": "Density-Connected",
+    "hierarchy": "Data Mining > Clustering > Density-Based Clustering (DBSCAN) > Density-Connected",
+    "support_state": "supported",
+    "source_passages": [
+      "Two points are density-connected if there is a chain of core points bridging them together under specified epsilon and neighborhood density thresholds."
+    ],
+    "reference_text": "Density-connectivity generalizes core point reachability, defining points as connected if they share a common core point chain within density-based algorithms.",
+    "unsupported_reason": null,
+    "notes": "DBSCAN concepts."
+  },
+  {
+    "order": 25,
+    "knowledge_unit_id": "KC_CLF_DT_004",
+    "canonical_name": "Gini Index",
+    "hierarchy": "Data Mining > Classification > Decision Trees > Gini Index",
+    "support_state": "supported",
+    "source_passages": [
+      "The Gini index measures impurity of a data partition in decision trees, reflecting how often a randomly chosen element would be incorrectly labeled."
+    ],
+    "reference_text": "The Gini index evaluates node impurity in decision tree learning by computing the probability of incorrect classification of a randomly selected sample.",
+    "unsupported_reason": null,
+    "notes": "Decision tree splitting criteria."
+  },
+  {
+    "order": 26,
+    "knowledge_unit_id": "KC_EVAL_COMP_001",
+    "canonical_name": "McNemar Test",
+    "hierarchy": "Data Mining > Model Evaluation and Model Comparison > Finding the Best Model > McNemar Test",
+    "support_state": "supported",
+    "source_passages": [
+      "The McNemar test is a non-parametric statistical test used on paired nominal data to determine whether two classification models have significantly different error rates."
+    ],
+    "reference_text": "The McNemar test evaluates the statistical significance of performance differences between two classifiers tested on the same dataset using contingency table discordances.",
+    "unsupported_reason": null,
+    "notes": "Statistical comparison tests."
+  },
+  {
+    "order": 27,
+    "knowledge_unit_id": "KC_CLU_EVAL_008",
+    "canonical_name": "External Index: Entropy",
+    "hierarchy": "Data Mining > Clustering > Cluster Evaluation > External Index: Entropy",
+    "support_state": "supported",
+    "source_passages": [
+      "Cluster entropy measures how the various classes are distributed within each cluster, quantifying class purity externally."
+    ],
+    "reference_text": "External entropy measures the impurity of cluster assignments relative to true class labels by computing the distribution entropy across clusters.",
+    "unsupported_reason": null,
+    "notes": "External evaluation indices."
+  },
+  {
+    "order": 28,
+    "knowledge_unit_id": "KC_FSEL_GEN_002",
+    "canonical_name": "Sequential Backward Generation (SBG)",
+    "hierarchy": "Data Mining > Data Engineering > Feature Selection > Feature Set Generation Algorithms > Sequential Backward Generation (SBG)",
+    "support_state": "supported",
+    "source_passages": [
+      "Sequential backward selection starts with the full feature set and iteratively removes features that least impact or improve evaluation criteria."
+    ],
+    "reference_text": "Sequential Backward Generation begins with all available features and greedily removes one feature at a time based on evaluation metric changes.",
+    "unsupported_reason": null,
+    "notes": "Feature subset search algorithms."
+  },
+  {
+    "order": 29,
+    "knowledge_unit_id": "KC_CLU_HIER_006",
+    "canonical_name": "Group Average Linkage",
+    "hierarchy": "Data Mining > Clustering > Hierarchical Clustering > Group Average Linkage",
+    "support_state": "supported",
+    "source_passages": [
+      "Group average linkage defines inter-cluster distance as the average pairwise proximity between all pairs of objects from two clusters."
+    ],
+    "reference_text": "Group average linkage computes inter-cluster distance using the average proximity values across all possible pairs of points belonging to the respective clusters.",
+    "unsupported_reason": null,
+    "notes": "Hierarchical clustering linkages."
+  },
+  {
+    "order": 30,
+    "knowledge_unit_id": "KC_DE_MISS_005",
+    "canonical_name": "Informative Missingness",
+    "hierarchy": "Data Mining > Data Engineering > Dealing with Missingness > Informative Missingness",
+    "support_state": "supported",
+    "source_passages": [
+      "Informative missingness occurs when the missingness pattern itself carries predictive information regarding the target variable or missing values."
+    ],
+    "reference_text": "Informative missingness (often related to MNAR scenarios) indicates that the absence of data values contains predictive information that should be explicitly modeled rather than ignored.",
+    "unsupported_reason": null,
+    "notes": "Missing value characteristics."
+  }
+]

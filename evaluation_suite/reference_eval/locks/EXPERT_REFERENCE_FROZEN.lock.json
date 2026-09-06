@@ -1,0 +1,12 @@
+{
+  "lock_name": "EXPERT_REFERENCE_FROZEN",
+  "written_utc": "2026-08-25T11:22:52Z",
+  "source_lock": "reference_library\\04_gold\\EXPERT_REFERENCE_FROZEN.lock.json",
+  "source_lock_sha256": "428b71f5fe021c461c714437a19ea07895aa5b7457d5f2aaf29f2434744d60c2",
+  "reference_library": {
+    "reference_library\\04_gold\\expert_adjudicated_reference_kc_library.jsonl": "6ea703e6b126f4e37b0b6ff34dacd3f72ef936b5a0d6b21725dbbf63ead31aed",
+    "reference_library\\04_gold\\expert_adjudicated_reference_manifest.json": "7ada615689ad95920f84dfe19220d323f1b0262aaa5b1d7a02eeb2d7963c2544",
+    "reference_library\\04_gold\\reference_provenance_resolution.jsonl": "0c8efaa15e9f0492457c9d5eee6b0638b28107ce7f115a69424b01ac8f0e2e59"
+  },
+  "lock_sha256": "fe3ff616a182d0539fb72663d24d126f12edf9079ab23c4e399e1bc94c8db0b9"
+}

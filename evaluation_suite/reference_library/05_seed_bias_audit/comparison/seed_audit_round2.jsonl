@@ -1,0 +1,30 @@
+{"unit_id": "KC_CLF_NB_004", "status": "OK", "blind_is_A": false, "seeded_words": 176, "blind_words": 144, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_FSEL_GOOD_001", "status": "OK", "blind_is_A": true, "seeded_words": 78, "blind_words": 153, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_CLU_KM_005", "status": "OK", "blind_is_A": false, "seeded_words": 198, "blind_words": 156, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_FSEL_FW_004", "status": "OK", "blind_is_A": false, "seeded_words": 219, "blind_words": 163, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_CLU_SIM_008", "status": "OK", "blind_is_A": true, "seeded_words": 341, "blind_words": 161, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_CLF_PRUNE_005", "status": "OK", "blind_is_A": false, "seeded_words": 290, "blind_words": 164, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_FSEL_FUND_004", "status": "OK", "blind_is_A": false, "seeded_words": 94, "blind_words": 169, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_DE_PREP_006", "status": "OK", "blind_is_A": false, "seeded_words": 347, "blind_words": 163, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_CLF_UND_006", "status": "OK", "blind_is_A": true, "seeded_words": 69, "blind_words": 160, "relationship_raw": "B_MISSING_CONTENT_PRESENT_IN_A", "relationship": "SEEDED_MISSING_CONTENT", "rationale": ""}
+{"unit_id": "KC_FSEL_GOOD_004", "status": "SKIP_EMPTY"}
+{"unit_id": "KC_EVAL_ENS_002", "status": "OK", "blind_is_A": true, "seeded_words": 180, "blind_words": 163, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_EVAL_COMP_005", "status": "SKIP_EMPTY"}
+{"unit_id": "KC_CLU_HIER_003", "status": "OK", "blind_is_A": true, "seeded_words": 236, "blind_words": 158, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_EVAL_BASIC_008", "status": "SKIP_EMPTY"}
+{"unit_id": "KC_CLU_SIM_004", "status": "OK", "blind_is_A": true, "seeded_words": 192, "blind_words": 161, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_EVAL_COMP_007", "status": "OK", "blind_is_A": true, "seeded_words": 179, "blind_words": 163, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_CLF_DT_006", "status": "OK", "blind_is_A": true, "seeded_words": 347, "blind_words": 176, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_EVAL_ROC_004", "status": "OK", "blind_is_A": true, "seeded_words": 85, "blind_words": 164, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_CLF_PRUNE_002", "status": "OK", "blind_is_A": false, "seeded_words": 200, "blind_words": 168, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_FSEL_GEN_005", "status": "OK", "blind_is_A": true, "seeded_words": 234, "blind_words": 167, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_CLF_DT_010", "status": "OK", "blind_is_A": false, "seeded_words": 62, "blind_words": 168, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_CLF_DT_003", "status": "OK", "blind_is_A": true, "seeded_words": 57, "blind_words": 165, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_CLF_NB_009", "status": "OK", "blind_is_A": false, "seeded_words": 194, "blind_words": 172, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_EVAL_BASIC_010", "status": "OK", "blind_is_A": true, "seeded_words": 71, "blind_words": 172, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_CLU_EVAL_006", "status": "OK", "blind_is_A": false, "seeded_words": 88, "blind_words": 166, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_CLU_HIER_001", "status": "OK", "blind_is_A": false, "seeded_words": 193, "blind_words": 158, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_EVAL_BASIC_009", "status": "SKIP_EMPTY"}
+{"unit_id": "KC_CLF_UND_004", "status": "OK", "blind_is_A": false, "seeded_words": 172, "blind_words": 171, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}
+{"unit_id": "KC_CLF_DT_011", "status": "OK", "blind_is_A": true, "seeded_words": 60, "blind_words": 172, "relationship_raw": "BOTH_VALID_DIFFERENT_FORMULATION", "relationship": "BOTH_VALID_DIFFERENT_FORMULATION", "rationale": ""}
+{"unit_id": "KC_EVAL_SAMP_003", "status": "OK", "blind_is_A": false, "seeded_words": 459, "blind_words": 186, "relationship_raw": "SUBSTANTIVELY_EQUIVALENT", "relationship": "SUBSTANTIVELY_EQUIVALENT", "rationale": ""}

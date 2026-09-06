@@ -1,0 +1,533 @@
+{
+  "generated_from": "PAPER_CLAIM_LEDGER.md",
+  "n_claims": 26,
+  "claims": [
+    {
+      "claim_id": "RET_PROP_VS_BASE",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "Proposed outperforms the dense baseline at every measured cutoff.",
+      "population": "159 data-mining KCs",
+      "metric": "P/R/nDCG @5,10,20",
+      "result": "all 9 metric-cutoff combinations favour Proposed; every 95% CI excludes zero",
+      "uncertainty": "P@10 +0.2545 [+0.2058,+0.3045]; nDCG@10 +0.2799 [+0.2363,+0.3229]",
+      "test": "paired concept-clustered bootstrap, B=10000",
+      "evaluator": "Selene (automated qrels)",
+      "validation": "qrels not human-validated",
+      "dependencies": [
+        "QREL_AUTOMATED",
+        "POOL_DEPTH"
+      ],
+      "limitation": "automated relevance labels; pool depth 20",
+      "allowed_wording": "Proposed outperformed the dense baseline at every measured cutoff under automated pooled relevance judgements.",
+      "prohibited_wording": "Any phrasing implying human-validated relevance labels.",
+      "sources": [
+        "output/v3_pooled_relevance.jsonl",
+        "output/retrieval_paired_ci.json"
+      ]
+    },
+    {
+      "claim_id": "RET_DOS_NDCG",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "Proposed ranks definitional evidence earlier than DOS-RAG.",
+      "population": "159 data-mining KCs",
+      "metric": "nDCG@10, nDCG@5, P@5",
+      "result": "nDCG@10 +0.1141; nDCG@5 +0.2049; P@5 +0.1117",
+      "uncertainty": "nDCG@10 [+0.0659,+0.1604] excludes zero",
+      "test": "paired concept-clustered bootstrap, B=10000",
+      "evaluator": "Selene (automated qrels)",
+      "validation": "qrels not human-validated",
+      "dependencies": [
+        "QREL_AUTOMATED"
+      ],
+      "limitation": "ranking claim only; does not extend to total relevant material retrieved",
+      "allowed_wording": "Proposed placed relevant and definitional passages earlier in the ranking than DOS-RAG at k=5 and k=10, under automated pooled relevance judgements.",
+      "prohibited_wording": "Proposed retrieves more relevant evidence than DOS-RAG overall.",
+      "sources": [
+        "output/retrieval_paired_ci.json"
+      ]
+    },
+    {
+      "claim_id": "RET_DOS_TOP10",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "Proposed and DOS-RAG show no material separation at k=10.",
+      "population": "159 data-mining KCs",
+      "metric": "P@10, R@10",
+      "result": "P@10 -0.0006; R@10 +0.0019",
+      "uncertainty": "P@10 [-0.0500,+0.0481]; R@10 [-0.0245,+0.0280] both contain zero",
+      "test": "paired concept-clustered bootstrap, B=10000",
+      "evaluator": "Selene (automated qrels)",
+      "validation": "qrels not human-validated",
+      "dependencies": [
+        "QREL_AUTOMATED"
+      ],
+      "limitation": "NO pre-registered retrieval equivalence margin exists",
+      "allowed_wording": "P@10 and R@10 showed no material separation; the paired intervals contain zero.",
+      "prohibited_wording": "statistically equivalent; equivalent.",
+      "sources": [
+        "output/retrieval_paired_ci.json"
+      ]
+    },
+    {
+      "claim_id": "RET_DOS_DEEP",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "DOS-RAG recovers more relevant material by rank 20.",
+      "population": "159 data-mining KCs",
+      "metric": "R@20, P@20",
+      "result": "R@20 -0.1332; P@20 -0.1321 (favouring DOS-RAG)",
+      "uncertainty": "R@20 [-0.1848,-0.0823]; P@20 [-0.1789,-0.0857]",
+      "test": "paired concept-clustered bootstrap, B=10000",
+      "evaluator": "Selene (automated qrels)",
+      "validation": "qrels not human-validated",
+      "dependencies": [
+        "QREL_AUTOMATED",
+        "RET_BUDGET"
+      ],
+      "limitation": "co-occurs with a larger native retrieval budget",
+      "allowed_wording": "DOS-RAG recovered more relevant material by rank 20, in the configuration with the larger native retrieval budget.",
+      "prohibited_wording": "This is caused by the retrieval budget.",
+      "sources": [
+        "output/retrieval_paired_ci.json"
+      ]
+    },
+    {
+      "claim_id": "QREL_AUTOMATED",
+      "status": "SUPPORTED",
+      "claim": "Pooled relevance labels are automated, not human gold.",
+      "population": "8246 pooled passages",
+      "metric": "label provenance",
+      "result": "produced by the frozen Selene judge; 1751 DEFINITIONAL / 2505 RELATED / 3990 NOT_RELEVANT",
+      "uncertainty": "n/a",
+      "test": "n/a",
+      "evaluator": "Selene",
+      "validation": "NONE",
+      "dependencies": [],
+      "limitation": "all retrieval conclusions inherit evaluator-validity risk",
+      "allowed_wording": "under automated pooled relevance judgements",
+      "prohibited_wording": "human gold qrels; gold-standard relevance labels.",
+      "sources": [
+        "output/v3_pooled_relevance.jsonl"
+      ]
+    },
+    {
+      "claim_id": "POOL_DEPTH",
+      "status": "SUPPORTED",
+      "claim": "The pool is the top-20 union over four distinct retrieval configurations.",
+      "population": "159 KCs",
+      "metric": "pool construction",
+      "result": "seven evaluated arms corresponding to four distinct evidence configurations",
+      "uncertainty": "n/a",
+      "test": "n/a",
+      "evaluator": "n/a",
+      "validation": "n/a",
+      "dependencies": [],
+      "limitation": "relevant passages ranked below 20 by every configuration are unjudged and treated non-relevant",
+      "allowed_wording": "union of top-20 results from seven evaluated arms, corresponding to four distinct retrieval configurations",
+      "prohibited_wording": "seven diverse retrieval runs; BaseDense contributed 123 passages to the pool.",
+      "sources": [
+        "output/ablation_rows.jsonl"
+      ]
+    },
+    {
+      "claim_id": "GND_INSTRUMENT",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "The groundedness arm ordering is instrument-sensitive.",
+      "population": "7747 matched ablation claims",
+      "metric": "per-claim agreement; arm-ordering rho",
+      "result": "raw 0.7176; Gwet AC1 0.6076; Spearman rho +0.4286",
+      "uncertainty": "n/a",
+      "test": "agreement statistics",
+      "evaluator": "Selene vs MiniCheck",
+      "validation": "neither is human ground truth",
+      "dependencies": [
+        "RERUN_CONTROL"
+      ],
+      "limitation": "construct difference between a support rubric and strict entailment",
+      "allowed_wording": "The full seven-arm groundedness ordering was instrument-sensitive; only the endpoints reproduced.",
+      "prohibited_wording": "an objective groundedness ranking; MiniCheck proves Selene wrong.",
+      "sources": [
+        "output/v3_selene_stored_ablation.jsonl",
+        "output/v3_minicheck_ablation.jsonl"
+      ]
+    },
+    {
+      "claim_id": "DRAFT_ORDER",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "Gemma >= Qwen > DeepSeek in mathematics and data-mining under both instruments.",
+      "population": "crossed 3x3, 7914 matched claims",
+      "metric": "groundedness",
+      "result": "ordering stable in 2 of 3 domains; sociology instrument-sensitive",
+      "uncertainty": "see TOST table",
+      "test": "TOST delta=0.05 plus descriptive ordering",
+      "evaluator": "Selene and MiniCheck",
+      "validation": "no human labels for these domains",
+      "dependencies": [
+        "GND_INSTRUMENT"
+      ],
+      "limitation": "sociology ordering does not reproduce",
+      "allowed_wording": "Both instruments place DeepSeek below Gemma and Qwen in mathematics and data-mining, while the sociology result is instrument-sensitive.",
+      "prohibited_wording": "DeepSeek is a definitively weaker drafter.",
+      "sources": [
+        "output/v3_selene_stored_crossed.jsonl",
+        "output/v3_minicheck_crossed.jsonl"
+      ]
+    },
+    {
+      "claim_id": "DRAFTER_ARCHITECTURE_AGNOSTIC",
+      "status": "SUPPORTED",
+      "claim": "The drafter is structurally replaceable behind a common contract.",
+      "population": "v3/pipeline drafting stage",
+      "metric": "implementation audit",
+      "result": "single generic ollama_generate call; ZERO conditionals on model identity; model is a CLI arg with env default; think:False applied unconditionally; common output contract across all three drafters",
+      "uncertainty": "n/a",
+      "test": "static code audit + artifact contract check",
+      "evaluator": "n/a",
+      "validation": "static audit; cannot catch semantics expressed without model vocabulary",
+      "dependencies": [],
+      "limitation": "only the named models were exercised",
+      "allowed_wording": "The drafting layer is model-agnostic by architecture: the drafter is replaceable behind a common input/output contract, and no model-family-specific logic is required by the surrounding KC-generation pipeline.",
+      "prohibited_wording": "Any LLM will work.",
+      "sources": [
+        "v3/pipeline/04_draft_runner.py",
+        "MODEL_AGNOSTICISM_CONSISTENCY_AUDIT.md"
+      ]
+    },
+    {
+      "claim_id": "DRAFTER_PORTABILITY_TESTED",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "Three model families executed the same frozen drafting contract.",
+      "population": "9 drafter x domain cells, 1137 drafts",
+      "metric": "successful execution under one contract",
+      "result": "Qwen3.8-27B, Gemma4-31B, DeepSeek-R1-32B all parsed by one extraction contract, no per-model handling",
+      "uncertainty": "n/a",
+      "test": "artifact verification",
+      "evaluator": "n/a",
+      "validation": "n/a",
+      "dependencies": [
+        "DRAFTER_ARCHITECTURE_AGNOSTIC"
+      ],
+      "limitation": "a model unable to honour the JSON contract would fail; one did until think:False was added uniformly",
+      "allowed_wording": "The common drafting interface was exercised without architectural modification using Qwen3.8-27B, Gemma4-31B, and DeepSeek-R1-32B.",
+      "prohibited_wording": "Any LLM will work as the drafter.",
+      "sources": [
+        "output/crossed_rows.jsonl"
+      ]
+    },
+    {
+      "claim_id": "DRAFTER_PERFORMANCE_EQUIVALENCE",
+      "status": "NOT_ROBUST",
+      "claim": "Output quality is invariant to drafter choice.",
+      "population": "crossed 3x3",
+      "metric": "TOST delta=0.05 on groundedness",
+      "result": "Qwen==Gemma in 3/3 domains under the primary instrument but 1/3 under the verifier; 5 of 9 comparisons agree",
+      "uncertainty": "see TOST table",
+      "test": "drafter performance-equivalence analysis (TOST)",
+      "evaluator": "Selene and MiniCheck",
+      "validation": "n/a",
+      "dependencies": [
+        "GND_INSTRUMENT"
+      ],
+      "limitation": "NOT required by model-agnosticism; evaluator- and margin-dependent",
+      "allowed_wording": "Substituting the drafter can change output quality; architectural portability should not be interpreted as performance invariance. The ablation shows that model choice remains consequential even in a model-agnostic architecture.",
+      "prohibited_wording": "Treating this as evidence against the architectural claim.",
+      "sources": [
+        "output/v3_analysis.json"
+      ]
+    },
+    {
+      "claim_id": "DOMAIN_ARCHITECTURE_AGNOSTIC",
+      "status": "SUPPORTED",
+      "claim": "Subject matter enters through corpus and curriculum, not pipeline semantics.",
+      "population": "verified evidence path",
+      "metric": "implementation audit + artifact verification",
+      "result": "D-1..D-7 remediated 2026-08-17, AST-verified, one docstring example remains; evaluated packets confirm post-remediation code: zero semantic-misbinding drops, data-mining domain-specific drops ~66 -> 15, generic math-damage detector fires in all three domains (1/2/7) with mathematics highest",
+      "uncertainty": "n/a",
+      "test": "AST audit + frozen-artifact drop-reason analysis",
+      "evaluator": "n/a",
+      "validation": "static audit cannot catch semantics expressed without subject vocabulary",
+      "dependencies": [],
+      "limitation": "compound_sibling_ownership fires 8x in data-mining and 0x elsewhere - data-driven asymmetry from curriculum shape, not hardcoding",
+      "allowed_wording": "The KC-generation architecture is domain-agnostic: the pipeline consumes a domain corpus and curriculum representation as inputs, while retrieval, evidence construction, support determination, drafting, provenance, and review operate through domain-independent contracts. Domain knowledge enters through the corpus and curriculum rather than through domain-specific implementation logic.",
+      "prohibited_wording": "The pipeline has been proven to work equally well in every domain.",
+      "sources": [
+        "DOMAIN_AGNOSTICITY_REMEDIATION.md",
+        "DOMAIN_AGNOSTICISM_IMPLEMENTATION_AUDIT.md"
+      ]
+    },
+    {
+      "claim_id": "CROSS_DOMAIN_PORTABILITY_TESTED",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "One architecture was applied to three subject domains without domain-specific variants.",
+      "population": "Data Mining, Mathematics, Sociology",
+      "metric": "successful execution",
+      "result": "379 KCs across three domains through identical pipeline contracts",
+      "uncertainty": "n/a",
+      "test": "artifact verification",
+      "evaluator": "n/a",
+      "validation": "n/a",
+      "dependencies": [
+        "DOMAIN_ARCHITECTURE_AGNOSTIC"
+      ],
+      "limitation": "requires an informative corpus, a curriculum/hierarchy, a convertible source representation, and a compatible drafter - these are inputs, not hardcoded semantics",
+      "allowed_wording": "The same architecture was exercised on Data Mining, Mathematics, and Sociology without introducing domain-specific pipeline variants.",
+      "prohibited_wording": "The pipeline works equally well in every domain.",
+      "sources": [
+        "output/crossed_rows.jsonl"
+      ]
+    },
+    {
+      "claim_id": "CROSS_DOMAIN_PERFORMANCE_EQUIVALENCE",
+      "status": "NOT_SUPPORTED",
+      "claim": "Quality is invariant across subject domains.",
+      "population": "3 domains",
+      "metric": "TOST delta=0.05 on groundedness",
+      "result": "data-mining and sociology within margin for in-scope drafters under the primary instrument; mathematics outside for every drafter",
+      "uncertainty": "see TOST table",
+      "test": "cross-domain performance sensitivity analysis (TOST)",
+      "evaluator": "Selene",
+      "validation": "domain pairs not re-tested on the second instrument",
+      "dependencies": [],
+      "limitation": "NOT required by domain-agnosticism",
+      "allowed_wording": "Performance varied by domain, with Mathematics more difficult under the measured groundedness criterion. The architecture transferred across all three tested domains, while performance remained domain-sensitive.",
+      "prohibited_wording": "Treating the mathematics result as refuting architectural domain-agnosticism.",
+      "sources": [
+        "output/v3_analysis.json"
+      ]
+    },
+    {
+      "claim_id": "ABSTAIN_UNSUPPORTED",
+      "status": "PARTIALLY_CORROBORATED",
+      "claim": "Proposed abstained on all corpus-unsupported KCs where DOS-RAG drafted.",
+      "population": "7 KCs labelled corpus-unsupported",
+      "metric": "refusal counts",
+      "result": "Proposed 7/7 refused; DOS-RAG drafted on 5/7",
+      "uncertainty": "n=7",
+      "test": "descriptive",
+      "evaluator": "adjudicated reference support states",
+      "validation": "Round-2 seed-blind reconstruction, 30 fresh units, blinded order-randomised comparison (Selene-1-Llama-3.3-70B). Round 1 superseded: 22-word median entries and a protocol violation on the unsupported units.",
+      "dependencies": [
+        "SEED_AUDIT"
+      ],
+      "limitation": "the support-boundary labels themselves are the contested quantity",
+      "allowed_wording": "Under the expert reference standard, Proposed abstained on all seven KCs labelled corpus-unsupported, whereas DOS-RAG drafted on five. A seed-blind reconstruction (round 2) independently reached the same no-corpus-support conclusion on two of the three it sampled, recorded partial support on the third, and judged a fourth unit unsupported that the reference had written up. Two of seven labels are therefore independently corroborated, two contested, three untested: partially corroborated, not established.",
+      "prohibited_wording": "Proposed caught all seven unsupported concepts (as a settled safety result).",
+      "sources": [
+        "output/ablation_rows.jsonl",
+        "reference_library/04_gold/"
+      ]
+    },
+    {
+      "claim_id": "ABSTAIN_NO_EVIDENCE",
+      "status": "SUPPORTED",
+      "claim": "No arm produced a description from an empty evidence set.",
+      "population": "1113 ablation rows",
+      "metric": "count",
+      "result": "0 of 1113",
+      "uncertainty": "n/a",
+      "test": "descriptive",
+      "evaluator": "n/a",
+      "validation": "artifact-level fact",
+      "dependencies": [],
+      "limitation": "a property of the harness contract, not of one pipeline",
+      "allowed_wording": "No arm produced a description from an empty evidence set.",
+      "prohibited_wording": "attributing this to the Proposed architecture specifically.",
+      "sources": [
+        "output/ablation_rows.jsonl"
+      ]
+    },
+    {
+      "claim_id": "SEED_AUDIT",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "Seed-blind audit found no distortion or unsupported assertion among comparable references.",
+      "population": "27 comparable KCs of a 30-KC stratified sample",
+      "metric": "relationship labels",
+      "result": "0 material semantic difference; 0 seeded-extra-unsupported; 18/27 equivalent or both-valid",
+      "uncertainty": "n=27, single reviewer",
+      "test": "blinded, order-randomised comparison",
+      "evaluator": "Selene comparing two references",
+      "validation": "reviewer is human, comparison is automated",
+      "dependencies": [],
+      "limitation": "tested distortion and unsupported assertion only; did NOT test omission, content-selection shaping, or provenance error; support-boundary DISAGREED",
+      "allowed_wording": "The seed-blind audit found no semantic distortion or unsupported assertions among comparable substantive references, but exposed residual disagreement over the corpus-support boundary.",
+      "prohibited_wording": "The seed issue was eliminated; the reference was proven unbiased; settled.",
+      "sources": [
+        "reference_library/05_seed_bias_audit/comparison/seed_audit_comparison.jsonl"
+      ]
+    },
+    {
+      "claim_id": "JUDGE_COMPLETENESS_CAL",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "Graded completeness met the pre-registered agreement thresholds under LOO calibration.",
+      "population": "36 human-labelled development cases",
+      "metric": "raw, Gwet AC1, PASS/FAIL recall",
+      "result": "0.8611 / 0.7224 / 0.8000 / 0.9375; v1 binary 0.556",
+      "uncertainty": "n=36",
+      "test": "leave-one-out threshold selection",
+      "evaluator": "Selene vs human labels",
+      "validation": "DEVELOPMENT calibration: the same labels informed metric adoption",
+      "dependencies": [],
+      "limitation": "not an independent held-out external qualification set",
+      "allowed_wording": "The graded completeness score met the preregistered agreement thresholds under leave-one-out calibration on the available 36 human-labelled development cases. Because these labels also contributed to development and adoption of the replacement metric, this is cross-validated development calibration rather than independent external qualification.",
+      "prohibited_wording": "The judge is qualified; the qualification gate passes.",
+      "sources": [
+        "output/qualification/",
+        "output/human_calibration/human_gold_focused36.jsonl"
+      ]
+    },
+    {
+      "claim_id": "JUDGE_STATUS",
+      "status": "SUPPORTED",
+      "claim": "Judge validation status is criterion-specific.",
+      "population": "per task",
+      "metric": "qualification decision",
+      "result": "binary completeness FAILED; graded completeness met dev-calibration gates; M1/M2/TARGET/M4A INSUFFICIENT_VALIDATION_SUPPORT",
+      "uncertainty": "n/a",
+      "test": "pre-registered gates",
+      "evaluator": "n/a",
+      "validation": "n/a",
+      "dependencies": [
+        "JUDGE_COMPLETENESS_CAL"
+      ],
+      "limitation": "minority-class support inadequate for M1/M2/TARGET; M4A has zero labels",
+      "allowed_wording": "criterion-specific status as tabulated",
+      "prohibited_wording": "collapsing INSUFFICIENT_VALIDATION_SUPPORT into PASSED or FAILED; a single blanket judge status.",
+      "sources": [
+        "output/qualification/qualification_decision.json"
+      ]
+    },
+    {
+      "claim_id": "SECOND_INSTRUMENT",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "An independent entailment verifier was run as an instrument-sensitivity analysis.",
+      "population": "7747 ablation + 7914 crossed matched claims",
+      "metric": "agreement and ordering",
+      "result": "run and reported",
+      "uncertainty": "n/a",
+      "test": "n/a",
+      "evaluator": "MiniCheck-Flan-T5-Large",
+      "validation": "not human validity",
+      "dependencies": [
+        "GND_INSTRUMENT"
+      ],
+      "limitation": "different construct: strict entailment vs support rubric",
+      "allowed_wording": "An independent entailment verifier was run as an instrument-sensitivity analysis. It measures reliability and construct sensitivity rather than human validity.",
+      "prohibited_wording": "Second judge not run; MiniCheck establishes human truth.",
+      "sources": [
+        "output/v3_minicheck_ablation.jsonl",
+        "output/v3_minicheck_crossed.jsonl"
+      ]
+    },
+    {
+      "claim_id": "RERUN_CONTROL",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "A rerun of the claim-decomposition and judging stages reproduced 99.83% of matched decisions.",
+      "population": "7610 matched claims from 996 drafts",
+      "metric": "per-claim agreement",
+      "result": "0.9983; support-rate drift -0.0001; max arm drift 0.0027; ordering rho +0.9643",
+      "uncertainty": "n/a",
+      "test": "direct comparison",
+      "evaluator": "Selene vs Selene",
+      "validation": "n/a",
+      "dependencies": [],
+      "limitation": "15 drafts excluded where re-decomposition changed the claim count; covers evaluation stages only",
+      "allowed_wording": "A full rerun of the claim-decomposition and judging stages reproduced 99.83% of matched per-claim decisions.",
+      "prohibited_wording": "The pipeline reproduces itself at 99.83%; end-to-end KC-generation reproducibility.",
+      "sources": [
+        "output/v2_faith.jsonl",
+        "output/v3_selene_stored_ablation.jsonl"
+      ]
+    },
+    {
+      "claim_id": "SERIAL_POSITION",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "Reference-content recovery degrades severely as the passage set grows.",
+      "population": "151 KCs x 3 set sizes",
+      "metric": "recovery of provably-present content",
+      "result": "1.0000 at 17; 0.9934 at 33; 0.5905 at 123",
+      "uncertainty": "paired drop +0.4095 [+0.3322,+0.4868]",
+      "test": "paired bootstrap",
+      "evaluator": "Selene",
+      "validation": "ground truth known by construction",
+      "dependencies": [],
+      "limitation": "measured for this model and configuration only",
+      "allowed_wording": "Selene-based reference-content recovery in our evaluation configuration exhibited severe serial-position sensitivity as the passage set grew.",
+      "prohibited_wording": "LLM judges are serial-position sensitive (as a universal).",
+      "sources": [
+        "output/v2_f45_dilution.jsonl"
+      ]
+    },
+    {
+      "claim_id": "BATCH_INVARIANCE",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "Serving configuration affected judge reproducibility.",
+      "population": "144 sentinel judgements",
+      "metric": "verdict changes",
+      "result": "1/144 changed under default concurrency; 0/144 with batch-invariant kernels",
+      "uncertainty": "n=144",
+      "test": "direct comparison",
+      "evaluator": "Selene",
+      "validation": "n/a",
+      "dependencies": [],
+      "limitation": "one model, one server configuration",
+      "allowed_wording": "In our Selene/vLLM configuration, concurrent serving changed a judgment despite temperature-zero decoding, while batch-invariant kernels eliminated the observed discrepancy.",
+      "prohibited_wording": "Batch-invariant serving is required for reproducible LLM judging.",
+      "sources": [
+        "EVALUATION_FINDINGS.md F-06/F-07"
+      ]
+    },
+    {
+      "claim_id": "TRIAGE_FAILED",
+      "status": "NEGATIVE_RESULT",
+      "claim": "Automated editorial triage neither discriminates nor validates.",
+      "population": "1113 drafts; 145 with expert codes",
+      "metric": "level distribution; agreement",
+      "result": "97.2-99.3% in top two categories; UNUSABLE never used; exact agreement 0.462",
+      "uncertainty": "n/a",
+      "test": "confusion vs expert codes",
+      "evaluator": "Selene",
+      "validation": "failed against expert codes",
+      "dependencies": [],
+      "limitation": "do not use as a quality metric",
+      "allowed_wording": "Automated editorial triage failed to discriminate between arms and agreed with expert codes only 0.462 exactly.",
+      "prohibited_wording": "using triage output as a quality ranking.",
+      "sources": [
+        "output/v3_triage_ablation.jsonl"
+      ]
+    },
+    {
+      "claim_id": "REVIEW_BURDEN",
+      "status": "SUPPORTED_WITH_SCOPE",
+      "claim": "About four in five seed drafts needed no more than local editing.",
+      "population": "159 seed-arm drafts",
+      "metric": "expert review_action",
+      "result": "ACCEPT 117, MINOR 10, MAJOR 15, REPLACE 10, corpus-gap 7; 127/159 = 79.9%",
+      "uncertainty": "n/a",
+      "test": "descriptive",
+      "evaluator": "human expert",
+      "validation": "human-assigned",
+      "dependencies": [
+        "ABSTAIN_UNSUPPORTED"
+      ],
+      "limitation": "seed arm only; corpus-gap count inherits the pending support-boundary status",
+      "allowed_wording": "Approximately four in five seed drafts required no more than local human editing under the adjudicated reference-construction process.",
+      "prohibited_wording": "cross-model accuracy; a quality comparison between arms.",
+      "sources": [
+        "reference_library/04_gold/expert_adjudicated_reference_kc_library.jsonl"
+      ]
+    },
+    {
+      "claim_id": "REFERENCE_INTER_RATER_AGREEMENT",
+      "status": "NOT_SUPPORTED",
+      "claim": "The reference library carries an inter-rater agreement statistic.",
+      "population": "159 data-mining KCs",
+      "metric": "raw agreement / Gwet AC1 on edit action",
+      "result": "No second human reviewer performed the curation task. No agreement statistic exists.",
+      "prohibited_wording": "Any claim of two reviewers, 129/159 agreement, 81.13%, adjudication splits, or human-to-human reliability for the reference library.",
+      "allowed_wording": "One expert reviewer curated all 159 units. Because the curation was a single-reviewer task, no inter-rater agreement statistic is available and none is reported. The independent check is the seed-blind reconstruction.",
+      "sources": [
+        "EXPERT_REFERENCE_ADJUDICATION_REPORT.md (correction notice)"
+      ],
+      "limitation": "Single-annotator reference; interpretive latitude is unbounded by design.",
+      "validation": "Artifact audit 2026-09-02: reviewer_b/ empty; 117 rows carry generated boilerplate."
+    }
+  ]
+}

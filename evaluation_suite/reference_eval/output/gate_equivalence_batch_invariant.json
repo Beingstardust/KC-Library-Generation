@@ -1,0 +1,15 @@
+{
+  "verdict": "EQUIVALENT",
+  "n_compared": 36,
+  "n_differences": 0,
+  "only_in_sequential": [],
+  "only_in_concurrent": [],
+  "differences": [],
+  "tasks_compared": [
+    "M1_faithfulness_per_claim",
+    "M2_correctness_per_claim",
+    "M3_core_completeness",
+    "TARGET_ALIGNMENT"
+  ],
+  "meaning": "Concurrency changed no verdict; the concurrent runner may be used for the ablation campaign."
+}

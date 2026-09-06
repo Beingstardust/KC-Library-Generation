@@ -1,0 +1,168 @@
+{
+  "seed_arm": "intrinsic_P-Q",
+  "seed_lineage": [
+    "intrinsic_P-Q",
+    "extrinsic_P-Q"
+  ],
+  "strata_counts": {
+    "ACCEPT": 116,
+    "CHANGED": 35
+  },
+  "nugget_recall_comparisons": {
+    "intrinsic_P-G": {
+      "accept": {
+        "n": 116,
+        "diff": 0.12580049261083745,
+        "ci": [
+          0.09154351395730706,
+          0.16264367816091954
+        ]
+      },
+      "changed": {
+        "n": 35,
+        "diff": 0.04047619047619048,
+        "ci": [
+          -0.028571428571428574,
+          0.11666666666666667
+        ]
+      },
+      "shrinkage": 0.08532430213464698
+    },
+    "intrinsic_P-D": {
+      "accept": {
+        "n": 116,
+        "diff": 0.24158456486042693,
+        "ci": [
+          0.19230295566502464,
+          0.2919950738916256
+        ]
+      },
+      "changed": {
+        "n": 35,
+        "diff": -0.021428571428571425,
+        "ci": [
+          -0.11666666666666667,
+          0.06904761904761905
+        ]
+      },
+      "shrinkage": 0.26301313628899836
+    },
+    "extrinsic_B-Q": {
+      "accept": {
+        "n": 116,
+        "diff": 0.39624384236453203,
+        "ci": [
+          0.3358784893267652,
+          0.455008210180624
+        ]
+      },
+      "changed": {
+        "n": 35,
+        "diff": -0.07142857142857142,
+        "ci": [
+          -0.2261904761904762,
+          0.08333333333333334
+        ]
+      },
+      "shrinkage": 0.4676724137931034
+    },
+    "extrinsic_DOS-Q": {
+      "accept": {
+        "n": 116,
+        "diff": 0.19653119868637112,
+        "ci": [
+          0.14839901477832512,
+          0.2474137931034483
+        ]
+      },
+      "changed": {
+        "n": 35,
+        "diff": -0.14965986394557823,
+        "ci": [
+          -0.2972789115646258,
+          -0.00578231292517006
+        ]
+      },
+      "shrinkage": 0.3461910626319493
+    }
+  },
+  "faithfulness_stratum_stability": {
+    "extrinsic_DOS-Q vs extrinsic_B-Q": {
+      "accept": {
+        "n": 111,
+        "diff": 0.0392,
+        "ci": [
+          0.0158,
+          0.0641
+        ]
+      },
+      "changed": {
+        "n": 32,
+        "diff": 0.073,
+        "ci": [
+          0.0212,
+          0.1381
+        ]
+      },
+      "sign_stable": true
+    },
+    "extrinsic_DOS-Q vs extrinsic_P-Q": {
+      "accept": {
+        "n": 114,
+        "diff": 0.0218,
+        "ci": [
+          0.0046,
+          0.0386
+        ]
+      },
+      "changed": {
+        "n": 27,
+        "diff": 0.0659,
+        "ci": [
+          0.0218,
+          0.1172
+        ]
+      },
+      "sign_stable": true
+    },
+    "intrinsic_P-G vs intrinsic_P-D": {
+      "accept": {
+        "n": 100,
+        "diff": 0.1252,
+        "ci": [
+          0.0888,
+          0.1627
+        ]
+      },
+      "changed": {
+        "n": 30,
+        "diff": 0.1906,
+        "ci": [
+          0.1025,
+          0.2867
+        ]
+      },
+      "sign_stable": true
+    },
+    "intrinsic_P-Q vs intrinsic_P-D": {
+      "accept": {
+        "n": 114,
+        "diff": 0.1095,
+        "ci": [
+          0.0808,
+          0.1395
+        ]
+      },
+      "changed": {
+        "n": 26,
+        "diff": 0.1136,
+        "ci": [
+          0.0526,
+          0.1845
+        ]
+      },
+      "sign_stable": true
+    }
+  },
+  "caveat": "Strata are NOT randomly assigned - the expert chose which drafts to edit, plausibly editing the weaker ones, which would depress the seed arm's CHANGED-stratum score for reasons unrelated to seeding. This analysis is evidence, not a substitute for the un-run seed-blind reconstruction audit (control 6)."
+}
