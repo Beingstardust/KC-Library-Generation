@@ -161,7 +161,6 @@ def main() -> int:
             warn(kc, "reviewer field is %r, expected 'D'" % r.get("reviewer"))
 
     # --- report -----------------------------------------------------------------------
-    ok = [r for r in rows if (r.get("support_state") or "") in VALID_STATES]
     dist = collections.Counter((r.get("support_state") or "?") for r in rows)
     wc = [words(r.get("reference_text") or "") for r in rows
           if (r.get("support_state") or "") != "UNSUPPORTED"]

@@ -6,7 +6,6 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from kc_l.doctree.schema import DocNode
 from kc_l.doctree.heuristics import clean_title, score_title_candidate
-from kc_l.utils.fs import ensure_dir
 
 
 def _read_jsonl(path: Path) -> List[Dict[str, Any]]:

@@ -140,7 +140,6 @@ def main():
     check("overlength source_memo refused", console.ws["stage"] == "A_IN_PROGRESS")
 
     # --- amend path on KC1 ---
-    import io, contextlib
     fake_input_answers = iter(["dry-run amendment test reason", ""])
     import builtins
     real_input = builtins.input

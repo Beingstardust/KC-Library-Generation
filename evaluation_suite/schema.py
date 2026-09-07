@@ -13,7 +13,7 @@ judgments - never taken from the LLM's own arithmetic, per the brief's explicit 
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Literal
 
 

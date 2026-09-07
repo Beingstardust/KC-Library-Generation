@@ -7,7 +7,7 @@ file and a denominator. Discrepancies are printed, not silently reconciled.
 from __future__ import annotations
 
 import json
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 OUT = Path(__file__).parent / "output"

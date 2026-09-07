@@ -29,9 +29,8 @@ from __future__ import annotations
 import argparse
 import json
 import statistics
-import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 DEFAULT_REPO_ROOT = "/path/to/projects/kc_l_v2_clean"
 

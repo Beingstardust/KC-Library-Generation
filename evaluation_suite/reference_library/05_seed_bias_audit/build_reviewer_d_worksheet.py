@@ -108,8 +108,6 @@ def main() -> int:
 
     print("\nwrote %s (%d blank entries)" % (OUT_WORKSHEET.name, len(worksheet)))
     print("wrote %s" % OUT_KEY.name)
-    leak = [k for k in ("reference_text", "support_state", "source_passages")
-            if any(worksheet[0][k] for _ in [0])]
     print("blank-check: any entry carrying prefilled content? %s"
           % ("YES - ABORT" if any(e["reference_text"] or e["support_state"] or e["source_passages"]
                                  for e in worksheet) else "no"))

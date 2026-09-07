@@ -1,8 +1,0 @@
-inputs:
-  step6_10_set_manifest: data/processed/kc_review_audits_restarted_resolved/_sets/2026-03-24_164616_step6_10_kc_review_audits_restarted_resolved_set.json
-outputs:
-  reviewed_root: data/processed/kc_library_reviewed_restarted
-  reviewed_sets_root: data/processed/kc_library_reviewed_restarted/_sets
-  sandbox_root: data/processed/kc_review_sandbox_restarted
-  sandbox_sets_root: data/processed/kc_review_sandbox_restarted/_sets
-  runs_root: data/runs

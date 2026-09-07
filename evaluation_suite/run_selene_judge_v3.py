@@ -19,7 +19,7 @@ import argparse
 import json
 import time
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
 from build_rubric_sentinels_v3 import RubricSentinel, load_sentinels
 from rubric_v3 import (

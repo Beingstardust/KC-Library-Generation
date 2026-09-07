@@ -8,10 +8,8 @@ from __future__ import annotations
 
 import csv
 import json
-import math
 import statistics as st
 from collections import Counter, defaultdict
-from hashlib import sha256
 from pathlib import Path
 
 BASE = Path(__file__).parent

@@ -4,12 +4,11 @@ import argparse
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 import yaml
 
 from kc_l.audit.run_audit import RunAudit
-from kc_l.math_salvage.io import read_json, write_json
 from kc_l.math_salvage.pipeline import run_step3_6_for_doc
 from kc_l.utils.fs import ensure_dir
 

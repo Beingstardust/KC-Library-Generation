@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Literal, Optional, Tuple
+from typing import Any, Dict, Literal, Optional, Tuple
 
 
 LayerName = Literal["pymupdf", "docling", "mineru", "mineru_salvage", "math_ocr"]

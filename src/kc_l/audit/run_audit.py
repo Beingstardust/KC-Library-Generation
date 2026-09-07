@@ -4,10 +4,10 @@ import json
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from kc_l.audit.manifests import env_snapshot, pip_freeze, try_cmd_version
-from kc_l.utils.fs import ensure_dir, safe_relpath
+from kc_l.utils.fs import ensure_dir
 from kc_l.utils.time import now_ts, run_id as mk_run_id
 
 

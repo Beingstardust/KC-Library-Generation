@@ -7,7 +7,6 @@ architecture, portability, performance - and repoints every reference.
 Documentation only. No artifact, no result, no reference text is touched.
 """
 from pathlib import Path
-import sys
 
 D = Path(__file__).parent
 BASE = D.parent

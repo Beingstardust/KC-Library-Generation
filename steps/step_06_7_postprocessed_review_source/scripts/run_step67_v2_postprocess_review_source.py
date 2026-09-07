@@ -9,7 +9,7 @@ REPO_SRC = REPO_ROOT / "src"
 if str(REPO_SRC) not in sys.path:
     sys.path.insert(0, str(REPO_SRC))
 
-from kc_l.runtime.stage_pointers import resolve_pointer, write_pointer
+from kc_l.runtime.stage_pointers import resolve_pointer
 from kc_l.step67_postprocess import postprocess_review_source
 
 DEFAULT_STEP67_DRAFTS_BEST_POINTER = Path(

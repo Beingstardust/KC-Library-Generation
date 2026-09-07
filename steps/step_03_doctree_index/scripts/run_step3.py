@@ -172,7 +172,6 @@ def main() -> int:
         active_step3.write_text(set_path.name, encoding="utf-8")
 
         # Output manifest over all produced doctree dirs and the set file
-        out_paths = [set_path] + produced_dirs
         (audit.run_dir / "output_manifest.step3.json").write_text(
             json.dumps({"set_path": str(set_path), "produced": [str(p) for p in produced_dirs]}, indent=2),
             encoding="utf-8",

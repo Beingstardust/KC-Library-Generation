@@ -10,7 +10,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from discover_r9_evaluation_artifacts import artifact_stats, build_manifest, kc_id_set, load_jsonl
+from discover_r9_evaluation_artifacts import artifact_stats, build_manifest
 from verify_r9_experimental_matrix import (
     ExperimentalInvariantError,
     assert_no_stop_conditions,

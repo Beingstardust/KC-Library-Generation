@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional
 
 
 _ALNUM_RE = re.compile(r"[A-Za-z0-9]")

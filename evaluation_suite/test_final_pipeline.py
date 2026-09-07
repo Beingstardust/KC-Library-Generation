@@ -54,7 +54,7 @@ def expect_raises(fn, exc_type) -> bool:
         fn()
     except exc_type:
         return True
-    except Exception as exc:  # wrong exception type is still a failure
+    except Exception:  # wrong exception type is still a failure
         return False
     return False
 

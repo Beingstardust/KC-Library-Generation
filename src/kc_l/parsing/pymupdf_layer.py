@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 
 import fitz  # PyMuPDF
 
 from kc_l.blockstore.schema import BlockRecord, PageRecord
-from kc_l.utils.hash import sha256_file
 from kc_l.utils.fs import ensure_dir
 
 

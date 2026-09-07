@@ -1,6 +1,0 @@
-inputs:
-  review_packet_set_manifest: data/processed/kc_review_packets_restarted/_sets/2026-03-23_003321_step6_8_kc_review_packets_restarted_set.json
-outputs:
-  processed_root: data/processed/kc_review_audits_restarted
-  sets_root: data/processed/kc_review_audits_restarted/_sets
-  runs_root: data/runs

@@ -19,7 +19,7 @@ import numpy as np
 
 try:
     import yaml  # type: ignore
-except Exception as e:
+except Exception:
     yaml = None
 
 
@@ -259,7 +259,6 @@ class LexicalIndex:
         """
         Returns list of (doc_id, bm25_score) sorted desc.
         """
-        N = int(self.doclens.shape[0])
         scores: Dict[int, float] = {}
         # term freq in query not used (BM25 standard); could be used but keep simple.
         for t in query_toks:
@@ -726,7 +725,6 @@ def main() -> int:
             "pages.jsonl",
             ["pages.jsonl", "pages_path"],
         )
-        s36_out_dir = blocks_path.parent
         if not blocks_path.exists():
             raise FileNotFoundError(blocks_path)
         if not pages_path.exists():
@@ -741,7 +739,6 @@ def main() -> int:
             "page_index.jsonl",
             ["page_index.jsonl", "page_index_path"],
         )
-        s3_out_dir = page_index_path.parent
         if not page_index_path.exists():
             raise FileNotFoundError(page_index_path)
 
@@ -831,7 +828,6 @@ def main() -> int:
 
         # Determine dedupe winners inside each reveal group: (gid, fp) -> winner_idx
         # winner preference: canonical page first, then layer priority
-        layer_pr = cfg["scoring"]["layer_prior"]
         layer_rank = {
             "mineru": 3,
             "docling": 2,
@@ -1058,7 +1054,7 @@ def main() -> int:
                         timeout_s=240.0,
                     )
                     break
-                except Exception as e:
+                except Exception:
                     if tries >= 4:
                         raise
                     time.sleep(1.5 * tries)

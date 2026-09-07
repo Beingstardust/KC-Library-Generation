@@ -12,7 +12,7 @@ if str(SRC) not in sys.path:
 
 import kc_l.retrieval_profile.builder as builder_mod
 from kc_l.retrieval_profile.builder import build_profiles, collect_profile_windows, post_validate_model_output
-from kc_l.retrieval_profile.output_hardening import harden_profile_output, harden_query_variants, harden_accepted_source_cues, build_expected_evidence_shape_hints
+from kc_l.retrieval_profile.output_hardening import harden_profile_output, harden_query_variants
 from kc_l.retrieval_windowing.source_window_kernel import collect_profile_windows_with_source_surface_kernel
 from kc_l.retrieval_profile.deterministic import deterministic_label_variants, phrase_present, score_snippet_for_kc
 from kc_l.retrieval_profile.schema import ACTIVE_CUE_TYPES, PROFILE_CONTRACT_VERSION, validate_profile_collection

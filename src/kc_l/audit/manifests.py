@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import json
 import platform
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from kc_l.utils.hash import sha256_file, file_stat
 from kc_l.utils.fs import list_files_recursive, safe_relpath

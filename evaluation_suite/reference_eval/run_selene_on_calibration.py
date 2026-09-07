@@ -23,7 +23,6 @@ from pathlib import Path
 BASE = Path(__file__).parent
 sys.path.insert(0, str(BASE))
 
-import reference_claim_schema as C   # noqa: E402
 import reference_judge_prompts as P  # noqa: E402
 import reference_judge_schema as S   # noqa: E402
 from run_reference_judge import call_and_validate  # noqa: E402

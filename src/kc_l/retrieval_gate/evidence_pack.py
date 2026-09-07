@@ -952,7 +952,6 @@ def assemble_passages(
         # that risk the same way - it is either the right symbols or visibly garbled ones, not a
         # fluent-sounding wrong topic.
         is_formula = "formula" in shape_of(hit["sentence"])
-        sentence_text = str(hit["sentence"].get("sentence_text") or "")
         # A passage stating "<this unit's name> = ..." is the unit's own defining equation. The
         # cross-encoder reliably under-scores such terse symbolic text against a short name query,
         # so it gets a lower floor - but still a floor, and only a few per unit.

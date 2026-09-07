@@ -7,7 +7,7 @@ import os
 import pathlib
 import time
 import urllib.request
-from typing import Any, Dict, List, Mapping, Tuple
+from typing import Any, Dict, List, Mapping
 
 
 def now_utc() -> str:

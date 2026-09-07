@@ -74,7 +74,6 @@ def main() -> int:
     check(not missing, "faithfulness has no missing rows", f"{len(missing)} missing")
 
     # ---- 3. paired balance: every arm must score the SAME KC set ----
-    nug_ok = {r["unit_id"] for r in nugs if r.get("nuggets")}
     vital_ok = {r["unit_id"] for r in nugs if r.get("nuggets")
                 and any(x["importance"] == "VITAL" for x in r["nuggets"])}
     scored = defaultdict(set)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Iterable
 
 from kc_l.blockstore.schema import BlockRecord, PageRecord
 from kc_l.utils.fs import ensure_dir

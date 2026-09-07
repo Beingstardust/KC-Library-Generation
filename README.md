@@ -15,14 +15,33 @@ The pipeline is deliberately model-agnostic and domain-agnostic in an architectu
 ## Repository structure
 
 ```
-src/kc_l/            Core pipeline package (retrieval, evidence selection, evidence pack
-                      assembly, drafting interface, review-packet emission)
-steps/                Numbered pipeline stages as run on the evaluation HPC deployment,
-                      each with its own scripts/, config resources, and output slot
-scripts/              Orchestration entry points (scripts/kc_l_orchestrator.py) and
-                      maintenance/verification utilities
+v3/                   The generation pipeline. This is the system that produced the
+  pipeline/           results reported in the paper.
+                      Stages in execution order: 01 build profiles, 02 build KC packets
+                      (retrieval + evidence assembly), 03 build topic packets, 04 draft
+                      runner, 05 assemble/register, 06 sync registry
+  jobs/               SLURM launchers, one per stage and drafting model
+  verify/             Fix-liveness harness: asserts each reliability fix is not merely
+                      present but actually firing, so a silently-inert fix fails the
+                      build instead of passing
+  evaluation/         Run comparison and audit tooling, including the budget-matched
+                      DOS RAG packet builder used for the paper's sensitivity analysis
+  comparators/        Comparator configurations
+
+src/kc_l/             Library modules the pipeline imports — retrieval, evidence-pack
+                      assembly, drafting hygiene and status integrity, review packets
+
+steps/                The corpus-build chain that feeds v3: PDF ingest and block store,
+                      doctree indexing, block-store cleanup, math salvage, structural
+                      retrieval index, and the sentence overlay that produces the
+                      sentence-level passage store. Also holds the retrieval-profile
+                      stage and the three v2-lineage scripts v3 still calls directly
+                      (the drafting schema probe, review postprocessing, and review
+                      packet emission)
+
+run_*.slurm           Launchers for the corpus-build chain above
 configs/              Pipeline configuration, templated for a generic HPC/GPU deployment
-tests/                Unit and integration tests
+tests/                Unit and integration tests for the retained modules
 evaluation/           Auxiliary intrinsic metric scripts (entailment/factuality checks)
 ablation_studies/     Controlled ablations referenced in the paper's analysis
 vendor/dos-rag-eval/  The DOS RAG comparator baseline (third-party, MIT-licensed —
@@ -30,10 +49,10 @@ vendor/dos-rag-eval/  The DOS RAG comparator baseline (third-party, MIT-licensed
 docs/
   architecture/       System design notes
   audit_trail/        A dated log of reliability interventions made to the drafting and
-                      evidence-repair stages after the paper's primary evaluation, each
-                      entry paired with the measurement that motivated it (A/B deltas,
-                      sabotage-style adversarial checks). Kept for transparency about how
-                      the shipped pipeline reached its current behaviour.
+                      evidence-repair stages, each entry paired with the measurement
+                      that motivated it (A/B deltas, sabotage-style adversarial checks).
+                      Kept for transparency about how the pipeline reached its current
+                      behaviour, including the interventions that were tried and rejected.
   methodology/        Evidence-quality judging method and a defect log from development
   workflows/, examples/
 evaluation_suite/     Statistical evaluation harness, frozen reference data, and the exact
@@ -56,7 +75,20 @@ Retrieval uses a `BM25` + pseudo-relevance-feedback lexical channel, a dense cha
 
 ## Running the pipeline
 
-The pipeline is organized as a sequence of numbered stages under `steps/`, each independently runnable and orchestrated end-to-end by `scripts/kc_l_orchestrator.py`. `configs/` holds the pipeline configuration, templated for a generic SLURM/GPU deployment — replace the placeholder paths and partition/account values with your own cluster's before running at scale. `docs/architecture/` and `docs/workflows/` describe the stage sequence and configuration surface in more depth.
+There are two phases. First the corpus is built from source PDFs, using the `run_*.slurm` launchers at the repository root in numeric order (ingest → doctree index → block-store cleanup → math salvage → structural index → sentence overlay). That produces the sentence-level passage store the retrieval stage reads.
+
+Then the generation pipeline runs from `v3/jobs/`:
+
+```bash
+sbatch v3/jobs/01_packets.sbatch                          # profiles + KC and topic packets
+sbatch --dependency=afterok:<id> v3/jobs/02_draft_kc_qwen38.sbatch
+sbatch --dependency=afterok:<id> v3/jobs/03_draft_topics.sbatch
+sbatch --dependency=afterok:<id> v3/jobs/04_review_packets.sbatch
+```
+
+`01_packets.sbatch` runs `v3/verify/verify_pipeline_fixes.py` before building. That harness asserts on observed behaviour rather than on the presence of code, so a fix that exists but is doing nothing fails the build instead of passing silently.
+
+`configs/` holds the pipeline configuration, templated for a generic SLURM/GPU deployment — replace the placeholder paths and partition/account values with your own cluster's before running at scale. `docs/architecture/` and `docs/workflows/` describe the stage sequence and configuration surface in more depth.
 
 **On full reproducibility:** the evaluation reported in the paper was run on an institutional HPC cluster against course PDFs the authors do not have redistribution rights to (see Data Availability below). A single-command, fully automated rerun of the entire pipeline against the exact original data is therefore not possible from this repository alone. What *is* reproducible: the code itself, against your own course materials and compute; and the paper's reported statistics, against the frozen intermediate evaluation data released in `evaluation_suite/` (see that directory's README for exactly how each reported number is derived and how to recompute it).
 

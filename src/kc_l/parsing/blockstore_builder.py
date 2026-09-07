@@ -7,7 +7,7 @@ from typing import Any, Dict, List
 
 from kc_l.audit.manifests import build_input_manifest, build_output_manifest
 from kc_l.audit.run_audit import RunAudit
-from kc_l.blockstore.writers import write_jsonl, page_to_dict, block_to_dict
+from kc_l.blockstore.writers import write_jsonl, block_to_dict
 from kc_l.parsing.page_render import render_pages
 from kc_l.parsing.pymupdf_layer import extract_pymupdf
 from kc_l.parsing.docling_layer import extract_docling

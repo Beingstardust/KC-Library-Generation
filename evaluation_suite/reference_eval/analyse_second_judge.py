@@ -13,8 +13,6 @@ Any mismatch means the indices do not line up and the row is excluded and report
 from __future__ import annotations
 
 import json
-import math
-import statistics as st
 from collections import defaultdict
 from pathlib import Path
 
@@ -60,7 +58,6 @@ def main() -> int:
         return 0
 
     # ---- per-claim agreement ----
-    tp = sum(1 for *_, s, m, _ in [(a[0], a[1], a[2], a[3], a[4]) for a in aligned] if s and m)
     both_sup = sum(1 for a in aligned if a[2] and a[3])
     both_not = sum(1 for a in aligned if not a[2] and not a[3])
     s_only = sum(1 for a in aligned if a[2] and not a[3])

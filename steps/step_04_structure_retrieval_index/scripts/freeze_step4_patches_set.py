@@ -58,7 +58,6 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
-    repo_root = Path(args.repo_root).resolve()
     processed_root = Path(args.processed_root).resolve()
     sets_dir = Path(args.sets_dir).resolve()
     active_step3 = Path(args.active_step3).resolve()

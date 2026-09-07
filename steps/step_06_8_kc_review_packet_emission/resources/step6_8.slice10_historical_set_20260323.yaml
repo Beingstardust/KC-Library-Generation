@@ -1,7 +1,0 @@
-inputs:
-  step6_7_set_manifest: data/processed/kc_drafts/_sets/2026-03-23_001608_step6_7_kc_drafts_set.json
-
-outputs:
-  processed_root: data/processed/kc_review_packets_restarted
-  sets_root: data/processed/kc_review_packets_restarted/_sets
-  runs_root: data/runs

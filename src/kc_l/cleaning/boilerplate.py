@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 _WS = re.compile(r"\s+")
 _URL = re.compile(r"https?://\S+|www\.\S+", re.IGNORECASE)

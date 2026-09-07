@@ -1016,7 +1016,6 @@ def classify_shapeaware_candidate(
     sibling_overlap = bool(sibling.get("genuine_sibling_signal"))
     guard_blockers = _string_list(guard.get("blocker_flags"))
     same_region_auxiliary_only = bool((row.get("candidate_quality") or {}).get("same_region_auxiliary_only"))
-    formula_signal = row.get("formula_signal") or {}
     metric_surface_anchor = _surface_anchor_present(local_text, concept_head, normalized_variants)
     metric_target_anchor = bool(metric_surface_anchor)
     metric_component_only = bool(

@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
-from discover_r9_evaluation_artifacts import kc_id_set, load_jsonl
+from discover_r9_evaluation_artifacts import load_jsonl
 
 
 class ExperimentalInvariantError(ValueError):
