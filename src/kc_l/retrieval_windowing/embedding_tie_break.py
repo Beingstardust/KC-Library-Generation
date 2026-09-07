@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 """Embedding-assisted tie-breaking for the source-surface fallback kernel's score-tied
-candidate pools (2026-07-25).
+candidate pools.
 
 Scope, deliberately narrow: embedding similarity is used only to *rank within* a set of
 candidates that already passed the existing deterministic lexical relevance kernel
 (source_surface_fallback.py). It never expands the candidate set and never searches the
 corpus independently - it operates on the small, already-filtered tied group the kernel
-produces (confirmed this week: up to ~36 pre-trim candidates per KC, often many tied on an
+produces (confirmed: up to ~36 pre-trim candidates per KC, often many tied on an
 identical score with no principled way to break the tie other than file order). This keeps
 the corpus-variety/false-positive risk bounded to exactly the same pool the lexical kernel
 already vouched for.
@@ -18,12 +18,12 @@ runtime cost is one embedding call per KC (its own canonical_name/seed_definitio
 text) plus a lookup of each tied candidate's already-precomputed block-level embedding by
 block_id - no new embeddings are computed for corpus text at query time.
 
-One sanctioned exception to "never searches the corpus independently" (2026-07-25):
-zero_candidate_embedding_fallback() below, used ONLY when the lexical kernel returns zero
+One sanctioned exception to "never searches the corpus independently":
+zero_candidate_embedding_fallback below, used ONLY when the lexical kernel returns zero
 candidates for a KC (confirmed case: KC_CLF_UND_002, "Querying Phase" - the corpus discusses
 the same concept as "deduction", a pure vocabulary-mismatch/lexical-gap case with zero token
 overlap, so no lexical kernel tuning can ever find it). This is a distinct, explicitly-gated
-code path from rerank_windows_with_embedding_tie_break() above - it is never invoked when the
+code path from rerank_windows_with_embedding_tie_break above - it is never invoked when the
 lexical kernel finds even one weak candidate.
 """
 
@@ -53,7 +53,7 @@ def ollama_embed(
     timeout_s: float = 120.0,
 ) -> List[List[float]]:
     """Verbatim call shape reused from steps/step_04_structure_retrieval_index/scripts/
-    run_step4_3.py's own ollama_embed() - the same function that built the corpus embedding
+    run_step4_3.py's own ollama_embed - the same function that built the corpus embedding
     index this module reads, so a freshly-computed KC-definition embedding lands in the exact
     same vector space as the precomputed corpus embeddings.
     """
@@ -137,8 +137,8 @@ def kc_definition_text(kc_row: Mapping[str, Any]) -> str:
 
     specific = _most_specific_segment(str(kc_row.get("canonical_name") or ""))
     if specific:
-        # Compound-name weighting (2026-07-25): the same compound-name pattern already
-        # identified this week (Mechanism B - "External Index: Precision" etc.) also dilutes
+        # Compound-name weighting: the same compound-name pattern already
+        # identified (Mechanism B - "External Index: Precision" etc.) also dilutes
         # embedding similarity, not just lexical matching - confirmed directly for
         # KC_CLF_NB_003 ("Conditional Probability (Likelihood)"): a single pooled embedding of
         # the full name is dominated by the two-word "Conditional Probability" phrase, and the
@@ -154,7 +154,7 @@ def _most_specific_segment(canonical_name: str) -> str:
     """Extract a compound canonical_name's most-specific distinguishing segment - the
     parenthetical (e.g. "Conditional Probability (Likelihood)" -> "Likelihood") or the text
     after a colon (e.g. "External Index: Precision" -> "Precision"). Returns "" when the name
-    has no compound structure, matching this week's confirmed Mechanism-B name shapes exactly
+    has no compound structure, matching the confirmed Mechanism-B name shapes exactly
     rather than guessing at other punctuation patterns.
     """
     import re
@@ -204,7 +204,7 @@ def rerank_tied_group_by_similarity(
 def _window_tier(window: Mapping[str, Any]) -> str:
     """Extract the source_surface_fallback tier ("exact_surface", "target_token",
     "definition_head", "branch_local_heading") from a window's score_reasons list, where
-    it's always the first entry (f"tier:{candidate['tier']}" - see _score_candidate() in
+    it's always the first entry (f"tier:{candidate['tier']}" - see _score_candidate in
     source_surface_fallback.py). Falls back to "" for windows with no score_reasons (e.g.
     candidates from a different source entirely), which simply become their own tier bucket -
     never silently merged with a real tier.
@@ -238,7 +238,7 @@ def rerank_windows_with_embedding_tie_break(
 
     Bands never cross tier boundaries (exact_surface / target_token / definition_head /
     branch_local_heading), even if their score ranges would otherwise overlap - confirmed
-    this week (KC_EVAL_ROC_001) that within a single tier, score differences of a few points
+ (KC_EVAL_ROC_001) that within a single tier, score differences of a few points
     come from secondary heuristic bonuses (hierarchy-match subtype, cue bonus, formula
     penalty) that don't reliably track true relevance as well as embedding similarity does
     (e.g. at an identical score of 8.0, similarity ranged from 0.60 to 0.81), whereas the tier
@@ -332,9 +332,9 @@ _BLOCK_TEXT_CACHE: Dict[str, Dict[str, Dict[str, Any]]] = {}
 
 def load_block_text_corpus(embedding_index_root: Path, doc_id: str) -> Dict[str, Dict[str, Any]]:
     """Load a single document's block_text_corpus.jsonl (text + page_index per block_id) - the
-    sibling artifact to the block-level embeddings load_block_embeddings() reads, living
+    sibling artifact to the block-level embeddings load_block_embeddings reads, living
     alongside embeddings/ in the same run-id-named directory. Cached per
-    (embedding_index_root, doc_id) for the same reason load_block_embeddings() is (a real file,
+    (embedding_index_root, doc_id) for the same reason load_block_embeddings is (a real file,
     not worth reloading per KC).
     """
     cache_key = f"{embedding_index_root}::{doc_id}"

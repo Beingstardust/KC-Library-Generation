@@ -26,7 +26,6 @@ OUT = BASE / "output" / "penalty_decision_comparison.csv"
 
 # Only ONE of these pairs isolates decoding. Stated explicitly so the comparison is not read as
 # cleaner than it is:
-#
 #   penalty_0.2  vs  penalty_free_final   -> CLEAN. Identical schema (verdict-first, rationale
 #                                            optional), identical prompts, identical sentinels.
 #                                            The ONLY difference is frequency_penalty 0.2 -> 0.0.

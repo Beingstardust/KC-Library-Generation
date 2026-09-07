@@ -29,7 +29,7 @@ from kc_l.retrieval_gate.feedback_loop import merge_profile_feedback
 from kc_l.retrieval_gate.shapeaware_shadow import build_shapeaware_guidance
 from kc_l.retrieval_gate.branch_scoping import load_page_branch_map
 
-# Rescue scout for surface-retrieval starvation (2026-07-23). See
+# Rescue scout for surface-retrieval starvation. See
 # EVIDENCE_QUALITY_METHODOLOGY.md "Mechanism A/B retrieval gaps" for the empirical measurement
 # behind this window: for the 3 confirmed real retrieval-miss cases it exists to fix
 # (KC_CLF_UND_002, KC_CLF_DT_009, KC_FSEL_FW_004), the KC's own correct page sat within 0-25
@@ -41,7 +41,7 @@ _PAGE_BRANCH_MAP_CACHE: Optional[Dict[str, Any]] = None
 
 # Narrower than DEFINITION_CUE (deterministic.py) on purpose: DEFINITION_CUE also matches bare
 # "is"/"are", which is true of nearly every sentence and gives no real discrimination for
-# tie-breaking within a single anchor page (confirmed 2026-07-23: 34/34 candidate sentences on
+# tie-breaking within a single anchor page (observed: 34/34 candidate sentences on
 # one real anchor page all matched it). This keeps only the phrasings that specifically
 # introduce/name a term - still a generic linguistic pattern, not any KC's own vocabulary.
 _NAMING_CUE = re.compile(
@@ -706,23 +706,10 @@ def _topic_local_content_scout_windows(
         shape_overlap = sorted(shapes & expected_shapes)
         has_any_shape = bool(shapes)
 
-        # Topic/local-window scout scoring (Phase 3.5 rank #14 / audit codebase-audit-20260805
-        # item 15): the 4.0/2.0/0.75/3.25/2.75/18.0/6.0-cap-with-1.25-multiplier weights and the
-        # 2.0/4.0 reject-gate thresholds below are literal constants, not config-overridable. No
-        # dedicated calibration study exists for this specific family - commit 672b0ae (2026-07-27,
-        # "Add embedding-assisted evidence reranking, raise candidate ceiling, calibrate truncation
-        # length") did real, grounded calibration work in this same file (max_snippets_per_kc,
-        # see item 16) but only threaded new embedding-reranking parameters through this function,
-        # 8 lines total - it did not touch these scoring weights.
-        #
-        # Investigated as part of this audit and left unchanged, documented as an accepted, reasoned
-        # default per the audit's own explicit fallback: the surrounding logic already carries real
-        # inline design rationale (see this function's own "The scout exists for exactly the hard
-        # cases..." and "Generic guard against sibling-section swamping" comments), and the weight
-        # ordering is coherent (phrase hits > heading hits > loose text hits, matching decreasing
-        # specificity). This feeds step5p, upstream of the step5x scoring/admission logic already
-        # verified corpus-wide this session - step5p itself wasn't independently re-verified at that
-        # scale in this pass, an honest scope boundary rather than a claimed clean bill of health.
+        # Topic/local-window scout scoring: the weights and the reject-gate thresholds below are
+        # literal constants, not config-overridable, and are operating defaults rather than
+        # individually calibrated values. Their ordering is what carries the intent - phrase hits
+        # outrank heading hits, which outrank loose text hits, matching decreasing specificity.
         topic_score = 0.0
         topic_score += 4.0 * len(phrase_hits)
         topic_score += 2.0 * len(heading_token_hits)
@@ -1669,7 +1656,7 @@ def _sibling_confirmed_anchor_scout_windows(
     self-leaf-stripped topic_path_labels, then never has a sibling to find, and this scout
     silently no-ops for the entire 159-KC registry (confirmed directly: zero KCs share an exact
     raw branch key). This reuses the exact same stripping convention already validated in
-    evidence_stage_v3_candidate_bank.py's _topic_path_labels() - drop the last path segment
+    evidence_stage_v3_candidate_bank.py's _topic_path_labels - drop the last path segment
     only when it equals the KC's own canonical_name - so this scout's branch key lines up with
     the one page_branch_map was actually built from, rather than inventing a parallel scheme.
     """
@@ -1766,15 +1753,14 @@ def _sibling_confirmed_anchor_scout_windows(
         })
 
     # Tie-break within the same (distance, score) group by a term-naming signal, not file order
-    # (2026-07-23 fix, confirmed via real-execution testing): score is purely distance-derived
+    # score is purely distance-derived
     # by design (no term matching - see above), so every sentence on the same anchor page ties
     # exactly. Without a further tie-break, whichever sentence happens to appear first in the
     # corpus wins the per_anchor_cap slots below - confirmed directly for KC_CLF_UND_002: page
     # 144 has both a generic "Classification is the task of..." sentence and the actually-
     # grounding "...is known as deduction" sentence, and file order picked the generic one,
     # leaving the KC abstained even though the right page was found.
-    #
-    # The existing evidence_shape_for_text() DEFINITION_CUE (used above for evidence_shapes) was
+    # The existing evidence_shape_for_text DEFINITION_CUE (used above for evidence_shapes) was
     # tried first and rejected: it also matches bare "is"/"are", which is true of nearly every
     # English sentence (confirmed: 34/34 page-144 candidate sentences all carried
     # "definition_phrase"), so it provides no real discrimination. _NAMING_CUE below is a
@@ -1799,8 +1785,7 @@ def _sibling_confirmed_anchor_scout_windows(
     # siblings' pages that merely came first in file order. Same diversification principle as
     # _topic_local_content_scout_windows' per_patch_cap, applied per distinct anchor page instead
     # of per patch.
-    #
-    # Naming-cue matches get their own separate per-anchor budget (2026-07-23 fix), rather than
+    # Naming-cue matches get their own separate per-anchor budget, rather than
     # sharing the generic cap with non-naming filler from the same page: confirmed page 144 alone
     # has 8 naming-cue sentences, more than the generic per_anchor_cap (3) could ever hold even
     # after the sort above, so without a dedicated budget the deduction sentence (4th in file
@@ -1855,7 +1840,7 @@ def build_profile_for_kc(
     siblings = sibling_labels_for(kc_row, all_kc_rows)
     topic_path_labels = kc_row.get("topic_path_labels") or []
 
-    # embedding_index_root (2026-07-25): when provided, reuses the SAME Ollama instance/base_url
+    # embedding_index_root: when provided, reuses the SAME Ollama instance/base_url
     # step_05p's own use_model LLM classification call already starts (model_config["base_url"]),
     # not a new server - just an additional model (qwen3-embedding:8b) served from it.
     profile_windows = collect_profile_windows_with_source_surface_kernel(
@@ -1884,9 +1869,9 @@ def build_profile_for_kc(
             max_snippets_per_kc=max_snippets_per_kc,
             dynamic_broad_tokens=dynamic_broad_tokens,
         )
-        # Crowd-out fix (2026-07-24, confirmed via real-execution census): sibling-anchor
-        # windows used to be unconditionally prepended ahead of topic_local_content_scout's own
-        # windows, then both were trimmed to the shared max_snippets_per_kc budget together.
+        # Crowd-out guard. Sibling-anchor windows must not be unconditionally prepended ahead of
+        # topic_local_content_scout's own windows and then trimmed to the shared
+        # max_snippets_per_kc budget together, because
         # topic_local_content_scout always tries to fill its own full budget regardless of
         # quality (confirmed: even pure generic branch-token filler fills to capacity), so a
         # raw window-count check can't tell genuine KC-specific hits apart from filler. The

@@ -16,7 +16,7 @@ spec's section 8 explicitly says "do not invent aliases using model world knowle
 package's own convention (see statistics.py) is to reuse tested generic utilities rather than
 duplicate them. A thin Cluster-B-side companion script (not yet written - needs a live corpus/BM25
 index to run against) is expected to call the real retrieval utilities and hand their output to
-combine_authority_passages() below, exactly like every other augmentation source.
+combine_authority_passages below, exactly like every other augmentation source.
 """
 from __future__ import annotations
 

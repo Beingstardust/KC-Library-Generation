@@ -7,7 +7,7 @@ comparable to one another.
 
 Every call is pointwise and blinded: the judge sees one text against one target, with evidence
 renumbered into opaque SRC_/REF_ ids, and never sees a model, system, or retrieval-architecture
-name. reference_judge_prompts.assert_blinded() enforces this at build time.
+name. reference_judge_prompts.assert_blinded enforces this at build time.
 
 Aggregates are NEVER requested from the model. Per-KC metrics are derived in Python by
 reference_metrics.derive_per_kc from the per-claim label lists collected here.
@@ -39,14 +39,12 @@ EVIDENCE_STORE = BASE.parent / "reference_library" / "corpus_support" / "evidenc
 
 # ---------------------------------------------------------------------------
 # FROZEN FINAL JUDGE DECODING CONFIGURATION
-#
 # frequency_penalty is 0.0. It was briefly set to 0.2 while diagnosing structured-output stalls,
 # and must not return. vLLM applies a frequency penalty directly to generation logits as a function
 # of how often a token has already appeared, so a nonzero value is NOT a formatting control - it
 # can alter semantic decisions even under greedy decoding. This project measured exactly that: two
 # penalty-free runs produced an IDENTICAL M1 verdict distribution (20 FAIL / 14 PASS) despite
 # differing in holistic schema, while the penalty=0.2 run shifted to 22 FAIL / 12 PASS.
-#
 # The decisive structural remedy was making `rationale` optional; the penalty only moved preflight
 # failures from 5 to 4 and was never the fix. Removing it restores default decoding rather than
 # tuning anything - prompts, label semantics and sentinel gold are untouched.

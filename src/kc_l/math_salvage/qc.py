@@ -254,4 +254,4 @@ def pymupdf_math_structure_hits(text: str) -> int:
         hits += len(rx.findall(text))
     return hits
 
-    
+

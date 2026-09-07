@@ -69,7 +69,7 @@ STOPWORDS = frozenset("""
 the of a an and or for in on to is are be been being with without by as it its that this these
 those from into within between among not no than then so such can may might must should would
 could also when where how what which there here using use used uses we you they their our
-""".split())
+""".split)
 
 BM25_K1 = 1.5
 BM25_B = 0.75

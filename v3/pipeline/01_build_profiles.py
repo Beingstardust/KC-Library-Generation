@@ -47,12 +47,12 @@ FIELDS_RETRIEVAL_READS = (
 # cluster-quality discussion. Keep canonical names stable, but give retrieval the source-grounded
 # meanings explicitly. This is registry correction metadata, not evidence or model output; every
 # admitted passage still passes the normal source and relevance gates.
-# Intentionally empty. This previously carried curated per-KC query strings for three data-mining
-# KC IDs, which made the pipeline's domain-agnosticity claim false: the terms named subject matter,
-# and being keyed by KC ID they could only ever fire for one curriculum. Emptied 2026-08-17. The
-# field and its plumbing are retained so the profile schema is unchanged and a future GENERIC source
+# Intentionally empty, and a liveness check asserts it stays that way. Curated per-KC query
+# strings would name subject matter and, being keyed by KC ID, could only ever fire for one
+# curriculum - which would make the pipeline's domain-agnosticity claim false. The field and its
+# plumbing are retained so the profile schema is unchanged and a future GENERIC source
 # (hierarchy-derived disambiguation for labels that cannot discriminate on their own) can populate
-# it, but no curated vocabulary ships. A liveness check asserts this stays empty.
+# it, but no curated vocabulary ships.
 _RETRIEVAL_DISAMBIGUATION_BY_KC_ID = {}
 
 

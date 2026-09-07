@@ -88,7 +88,7 @@ ALLOWED_REASON_CODES: dict[str, tuple[str, ...]] = {
 
 # Section 30: identity tokens that must never appear in a judge-visible evidence ID or
 # reach the judge's own output. Checked case-insensitively. Deliberately does NOT include the
-# bare word "proposed" - found via a real false positive in the 2026-08-24 sentinel expansion
+# bare word "proposed" - found via a real false positive in the sentinel expansion
 # (two organic real-KC drafts use "proposed" in its ordinary English sense, e.g. "originally
 # proposed for regression problems", "interpretations have been proposed in the literature";
 # neither has anything to do with the RAG system codenamed Proposed). The system-identity risk
@@ -351,7 +351,6 @@ _PROMPT_BUILDERS = {
 
 # ---------------------------------------------------------------------------------------------
 # Structured-output JSON schemas
-#
 # F2/F3 use a `oneOf` of fully self-contained branches, one per legal (verdict, reason_code)
 # pairing - the ONLY construct in this module's own compile-testing that XGrammar actually
 # enforces at the grammar level (see module docstring point 1). Branches deliberately repeat
@@ -474,7 +473,6 @@ def criterion_json_schema(criterion: Criterion) -> dict[str, Any]:
 
 # ---------------------------------------------------------------------------------------------
 # Response validation - BEFORE any derived score is trusted.
-#
 # Two-tier, reported separately by callers that want the distinction (see
 # validate_selene_qualification_v3.py): STRUCTURAL validity is "does this parse as JSON and
 # match the JSON Schema" (mechanically guaranteed by the grammar for F2/F3's verdict/reason_code

@@ -21,7 +21,7 @@ def run_cmd(
 
     # stdout/stderr are passed as real file handles (not subprocess.PIPE) so the child
     # writes directly to disk as it produces output - a live `tail -f` on these paths shows
-    # progress in real time. The previous PIPE + communicate() approach buffered everything
+    # progress in real time. The previous PIPE + communicate approach buffered everything
     # in memory until the process exited, which made a stalled subprocess indistinguishable
     # from a healthy long-running one from the log files alone.
     with open(stdout_path, "w", encoding="utf-8", errors="replace") as stdout_f, open(

@@ -167,26 +167,13 @@ def main() -> int:
         run_id=args.run_id or f"step5p_{utc_stamp()}",
         exact_kc_ids=exact_kc_ids,
         limit_kcs=args.limit_kcs if args.limit_kcs is not None else inputs.get("limit_kcs"),
-        # Phase 3.5 rank #15 / audit codebase-audit-20260805 item 16. Of the three code-level
-        # fallback defaults below (only used if a config omits the key - real run configs always
-        # set these explicitly, so these are not "silent" in production, just undocumented as
-        # fallbacks):
-        # - max_snippets_per_kc=12: this specific number is stale/pre-calibration. The real
-        #   production config (steps/step_05_p_kc_retrieval_profile/resources/
-        #   step5p.hpc.production_gemma4_31b.yaml) sets 20, empirically grounded in commit
-        #   672b0ae (2026-07-27, "Add embedding-assisted evidence reranking, raise candidate
-        #   ceiling, calibrate truncation length"): "grounded in measured near-miss counts (8-23
-        #   per KC) after tie-breaking alone proved insufficient to relieve ceiling pressure."
-        #   Investigated as part of this audit: unlike the six role-score thresholds fallback
-        #   staleness fixed in scored_candidates.py (item 6), this fallback's staleness is lower
-        #   risk since it only relaxes a ceiling (never causes new admission of bad evidence) if
-        #   ever exercised - documented here rather than silently left, but not changed, since the
-        #   real production config already carries the calibrated value and there is no
-        #   evidence-corruption risk from the code-level fallback lagging.
-        # - min_snippet_score=4.0 and dynamic_broad_token_min_df=12: match the real production
-        #   config's values exactly (no drift), but neither has a dedicated calibration record
-        #   the way max_snippets_per_kc does. Documented as accepted, reasoned defaults per the
-        #   audit's own explicit fallback - no confirmed bug tied to either.
+        # The three fallback defaults below apply only when a config omits the key; the run
+        # configs in this stage's resources/ set all three explicitly.
+        # - max_snippets_per_kc=12 lags the production config, which sets 20 based on measured
+        #   near-miss counts (8-23 per KC). The fallback only relaxes a ceiling, so it cannot
+        #   admit evidence that would otherwise be rejected.
+        # - min_snippet_score=4.0 and dynamic_broad_token_min_df=12 match the production config
+        #   exactly, but are operating defaults with no calibration study behind them.
         max_snippets_per_kc=args.max_snippets_per_kc if args.max_snippets_per_kc is not None else int(behavior.get("max_snippets_per_kc", 12)),
         min_snippet_score=args.min_snippet_score if args.min_snippet_score is not None else float(behavior.get("min_snippet_score", 4.0)),
         use_model=use_model,

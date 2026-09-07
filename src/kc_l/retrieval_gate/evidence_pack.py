@@ -223,7 +223,7 @@ _CURRENCY_DOLLAR_RE = re.compile(r"\$\d{1,3}(?:,\d{3})+(?:\.\d+)?")
 _FORMULA_SIGNAL_RE = re.compile(r"[=<>≤≥$\\∑∏√]")
 _LEADING_UNMATCHED_CLOSE_RE = re.compile(r"^\s*[\]\)}]")
 
-# v48: structural signatures measured from the formula renderings that survived job 245312.
+# v48: structural signatures measured from the formula renderings that survived.
 _COMPACT_REPEATED_NAMED_EQUATION_RE = re.compile(r"([a-z]{4,}\([^)]*\))=.*\1=")
 _RAW_NUMBER_OF_BAR_LOST_RE = re.compile(
     r"=\s*number\s+of\s+[^=]{4,80}number\s+of\s+", re.I)
@@ -345,10 +345,9 @@ def formula_bar_or_tail_damaged(text: str) -> bool:
     raw = str(text or "").strip()
     if not raw:
         return False
-    # Structural signatures only. The metric-named variants that used to sit in this tuple
-    # (gain-ratio, repeated-numeric, accuracy, silhouette, combined-metric, cohesion) are replaced
-    # by generic_bar_loss_damaged() below, which covers their signature class without naming any
-    # metric and additionally catches 82 damaged renderings they missed.
+    # Structural signatures only, deliberately naming no metric: generic_bar_loss_damaged
+    # below recognises the same damage class by its signature, which keeps this check working on
+    # any corpus rather than only on the metrics one curriculum happens to teach.
     if any(pattern.search(raw) for pattern in (
         _PROBABILITY_DENOMINATOR_LOST_RE,
         _FUNCTION_FRACTION_BAR_LOST_RE,
@@ -374,10 +373,9 @@ def formula_bar_or_tail_damaged(text: str) -> bool:
     if (_COMPACT_EUCLIDEAN_NO_SQRT_RE.search(compact)
             and "sqrt" not in compact and "√" not in raw):
         return True
-    # Only the generic repeated-named-equation signature remains here. The eight metric-named
-    # patterns that used to sit in this tuple (cluster SSE, cohesion, separation, purity, external
-    # F, covariance, Jaccard, extended Jaccard) are covered by generic_bar_loss_damaged() above,
-    # which recognises the same bar-loss signature without naming any metric.
+    # Only the generic repeated-named-equation signature belongs here; metric-specific patterns
+    # are handled by generic_bar_loss_damaged above, which recognises the same bar-loss
+    # signature without naming any metric and so stays corpus-independent.
     if (_COMPACT_REPEATED_NAMED_EQUATION_RE.search(compact)
             and not has_explicit_fraction_notation(raw)):
         return True
@@ -430,8 +428,8 @@ def draft_math_spans(text: str) -> List[str]:
 def draft_math_rendering_damaged(text: str) -> bool:
     """math_rendering_damaged(), scoped to a generated draft's own mathematical spans.
 
-    Same damage definitions, correct unit of analysis - see draft_math_spans(). Use this for
-    model-authored draft text; use math_rendering_damaged() directly for corpus evidence.
+    Same damage definitions, correct unit of analysis - see draft_math_spans. Use this for
+    model-authored draft text; use math_rendering_damaged directly for corpus evidence.
     """
     return any(math_rendering_damaged(span) for span in draft_math_spans(text))
 
@@ -500,7 +498,7 @@ def is_mislabeled_formula_pointer(sentence: Mapping[str, Any],
     """A lead-in pointer the overlay mislabeled as meta/boilerplate, whose successor block is a
     formula payload.
 
-    is_structural_junk() already overrides a JUNK_FLAG when a row looks_like_equation(), for the
+    is_structural_junk already overrides a JUNK_FLAG when a row looks_like_equation, for the
     documented reason that "the overlay mislabels some formulas as navigation or metadata, and
     such a sentence would otherwise be discarded before it is ever scored." The identical
     mislabeling hits POINTER sentences ("The lecture defines Spearman as Pearson correlation on
@@ -527,7 +525,7 @@ def is_mislabeled_formula_pointer(sentence: Mapping[str, Any],
             or is_bibliography_entry(text)):
         return False
     # The payload must ASSERT A RELATION, not merely contain mathematical symbols.
-    # is_formula_payload() accepts a bare expression through its has_mathematics() fallback, which
+    # is_formula_payload accepts a bare expression through its has_mathematics fallback, which
     # is correct for the pre-existing lead_in_payload rescue but too weak to justify OVERRIDING a
     # structural-metadata flag. Measured consequence of the weaker form: for Silhouette Coefficient
     # the fragment "P u in X\{x} d(x, u)" - a numerator with no operator, whose complete form
@@ -698,7 +696,7 @@ these those each any all some such into than then where which while during throu
 approach method model models algorithm algorithms value values point points class classes data set
 sets example examples given following unit index measure problem basic standard general
 one two three four first second third time test tests tested testing
-""".split())
+""".split)
 
 
 def _context_stem(word: str) -> str:
@@ -803,7 +801,7 @@ def compound_index_equation_patterns(names: Sequence[str]):
         # Only the measure name is case-insensitive. The index letters deliberately are not:
         # ordinary decision-tree formulas such as Entropy(D) and Entropy(F) use uppercase data-set
         # symbols, while the external-index convention this rescue owns is lowercase (i) or (i,j).
-        # Compiling the whole expression with re.I silently erased that distinction in job 245312
+        # Compiling the whole expression with re.I silently erased that distinction in
         # and protected unrelated node entropy from every later ownership check.
         out.append(re.compile(
             r"(?<![A-Za-z0-9])(?i:" + core
@@ -1017,14 +1015,14 @@ def assemble_passages(
                             "ownership_context_text": tail_text,
                         }
                     else:
-                        # v50/INT-15: promote, exactly as the structured_list and procedure_list
-                        # branches below already do. The guard here used to be `nxt not in best`,
-                        # so a payload that happened to clear the floor on its own was skipped
-                        # and the promise it fulfils bought it nothing: it kept an ordinary
-                        # admission basis, was re-tested by the severed-fragment, structural-junk
-                        # and rival-claim filters that payload admission exists to exempt it
-                        # from, and lost. Whether the reranker also surfaced the payload
-                        # independently is not a fact about the promise.
+                        # Promote, exactly as the structured_list and procedure_list branches
+                        # below already do. Promotion must not be made conditional on the payload
+                        # being absent from `best`: a payload that clears the floor on its own
+                        # would then be skipped, so the promise it fulfils would buy it nothing.
+                        # It would keep an ordinary admission basis, be re-tested by the
+                        # severed-fragment, structural-junk and rival-claim filters that payload
+                        # admission exists to exempt it from, and lose. Whether the reranker also
+                        # surfaced the payload independently is not a fact about the promise.
                         payload_entry["lead_in_payload"] = True
                         payload_entry["ownership_context_text"] = tail_text
             if ends_with_structured_list_lead_in(tail_text):
@@ -1399,7 +1397,6 @@ def coverage_summary(passages: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
         # used, is grounded, not partial" - so status says the draft used what it was given, and
         # says nothing about whether that was enough to teach the unit. Downstream a draft built
         # on one passage and one built on seventeen are indistinguishable.
-        #
         # low_confidence does not cover this: it requires few passages AND low relevance, so a
         # thin packet whose single passage scored well passes silently. Measured on the r2
         # packets, 18 units are thin and drafted and unflagged by it, and an external content
@@ -1420,7 +1417,7 @@ _LEAD_IN_RE = re.compile(
     # the Bayes' theorem:", "...which is known as Bayes theorem:", "...given by Equation 4.11:".
     # The original trigger-word list requires the verb phrase to sit immediately before the colon,
     # which real prose routinely violates by naming its referent in between. Safe to broaden
-    # because is_formula_payload() on the successor block is the real gate, not this check.
+    # because is_formula_payload on the successor block is the real gate, not this check.
     r"|:\s*$", re.IGNORECASE)
 
 _STRUCTURED_LIST_LEAD_RE = re.compile(
@@ -1452,7 +1449,7 @@ def ends_with_lead_in(text: str) -> bool:
 
     A trailing citation fragment is ignored: the corpus splits references across rows, which
     leaves debris after the promising colon ("...the Laplace estimate:[1, p.") and would otherwise
-    hide the lead-in. This widens nothing by itself - is_formula_payload() on the successor block
+    hide the lead-in. This widens nothing by itself - is_formula_payload on the successor block
     remains the real gate, per the v36 reasoning on _LEAD_IN_RE.
     """
     raw = str(text or "").strip()
@@ -1474,8 +1471,8 @@ def is_formula_payload(text: str) -> bool:
         return False
     if math_rendering_damaged(raw):
         return False  # a destroyed rendering is not worth inheriting relevance
-    # Greek letters or one inline equality inside a prose paragraph made has_mathematics() true
-    # and turned the whole paragraph into an exempt lead-in payload. In job 245312 that admitted a
+    # Greek letters or one inline equality inside a prose paragraph made has_mathematics true
+    # and turned the whole paragraph into an exempt lead-in payload. In that admitted a
     # 343-character SVM discussion after a stray `ys=...` prefix into Euclidean and Cosine packets.
     # Long non-display payloads must remain symbol-dominant rather than ordinary sentence prose.
     if len(raw) > 240 and not raw.startswith("$$"):
@@ -1696,7 +1693,7 @@ a an and or the of for in on to with by from as at is are its it this that these
 index measure method approach technique algorithm model function value score rate phase
 type types kind form problem basic basics fundamental fundamentals overview introduction
 using based general generic simple standard common main core key primary
-""".split())
+""".split)
 
 RIVAL_LIMIT = 6
 CLAIM_MARGIN = 0.08
@@ -1719,7 +1716,7 @@ there here also such other more most some any each per via using used use one tw
 only same so but into out up down over under again further once about between during before after
 few many much less least very just now new old first second next last etc ie eg let given see
 figure table example note thus hence therefore however because while does don t s
-""".split())
+""".split)
 
 _TERM_TOKEN_RE = re.compile(r"[a-z][a-z0-9-]{1,}")
 
@@ -1735,10 +1732,10 @@ def build_corpus_term_inventory(corpus: Sequence[Mapping[str, Any]], *,
     constituent unigram (a C-value / PMI-style association score, so that a phrase whose words are
     individually rare outranks an equally frequent phrase built from very common words).
 
-    This exists because find_rival_units() only knows about curriculum units, while a corpus
+    This exists because find_rival_units only knows about curriculum units, while a corpus
     routinely discusses concepts that are not units at all. A passage about such a concept scores
     well for any unit sharing a word with it, and without the concept in the rival pool the
-    adjudication in drop_passages_claimed_by_rivals() never gets the chance to disown it.
+    adjudication in drop_passages_claimed_by_rivals never gets the chance to disown it.
 
     Domain agnosticity: the only vocabulary here is generic English function words. Every returned
     term comes from the corpus that was actually supplied.
@@ -1775,11 +1772,11 @@ def find_rival_concepts(unit_name: str, corpus_terms: Sequence[str],
                         limit: int = RIVAL_LIMIT) -> List[str]:
     """Corpus-derived concepts that could claim this unit's passages but are not curriculum units.
 
-    Same rivalry condition find_rival_units() uses (a shared content word), applied to the
+    Same rivalry condition find_rival_units uses (a shared content word), applied to the
     corpus-derived inventory instead of the unit list. Two exclusions keep this from fighting
     itself: a term whose content words are a subset of the unit's own name would have the unit
     competing against a restatement of itself, and a term already covered by a real curriculum unit
-    is left to find_rival_units() so a passage is not adjudicated twice against the same concept.
+    is left to find_rival_units so a passage is not adjudicated twice against the same concept.
 
     Ranking is by presence in this unit's OWN candidate passages, not by similarity to its name.
     Name overlap answers the wrong question: a concept that never appears in the pack cannot be
@@ -1808,7 +1805,7 @@ def find_rival_concepts(unit_name: str, corpus_terms: Sequence[str],
             # An ELABORATION of this unit's name ("average gini index" for "Gini Index"), not a
             # competing concept. Measured: a cross-encoder systematically prefers the more specific
             # phrasing of the same concept, so admitting these as rivals produced an 8.9% false-drop
-            # rate on already-admitted evidence in validation job 246206. A term only competes when
+            # rate on already-admitted evidence in validation. A term only competes when
             # the two names diverge, rather than one refining the other.
             continue
         if any(words == other for other in unit_word_sets):
@@ -2019,8 +2016,9 @@ def drop_compound_sibling_formulas(passages, unit_name, rival_names,
     return kept, dropped
 
 
-# D-3: emptied 2026-08-17 with the per-KC rules that consumed it. Named one curriculum's
-# clustering vocabulary and could never fire for any other corpus.
+# Deliberately empty, and the verify suite asserts it stays that way. Listing one curriculum's
+# clustering vocabulary here would tie the pipeline to that corpus and could never fire for any
+# other, so the empty set is the correct value rather than a placeholder to be filled in.
 _STANDARD_DBSCAN_UNITS = frozenset()
 
 
@@ -2046,7 +2044,7 @@ def semantic_misbinding_owner(text: str, unit_name: str,
     touching 20 of 159 units).
 
     What carries the load instead, all domain-agnostic and all already in place:
-      * drop_passages_claimed_by_rivals() - cross-encoder adjudication against library units, which
+      * drop_passages_claimed_by_rivals - cross-encoder adjudication against library units, which
         already performs the majority of drops in every corpus (109/175, 106/108, 23/29).
       * The evidence-first drafting contract's explicit KC boundary, which gives the drafter
         sibling_kc_names and rival_units_considered as contrast and forbids absorbing them.
@@ -2319,15 +2317,12 @@ def is_forward_truncated_fragment(text: str, doc_id: str,
 # Method names are recognised by SHAPE, not from a list. Two shapes carry method names in ordinary
 # technical prose: an all-caps acronym, and a hyphenated proper-noun compound (the usual rendering
 # of a two-author eponym). Both are corpus-independent.
-#
-# D-5, 2026-08-17: this previously also carried a fixed roster of ten eponyms (Jarvis-Patrick,
-# Bregman, Mahalanobis, Minkowski, Hunt, Rocchio, Gini, Laplace, Bayes, Ward) and excluded a set of
-# statistics acronyms (SSE, SSB, TSS, PDF, CDF, TP, FP, TN, FN, ROC, AUC, PR). Both named one
-# curriculum's subject matter. The hyphenated shape recovers the multi-author eponyms without
-# naming them; single-word eponyms are given up, since "Gini" cannot be told from any other
-# capitalised word without knowing the field. Dropping the statistics acronyms from the exclusion
-# set makes them eligible as method names, which is if anything more correct - they ARE measure
-# names - and is safe because licensed_method_names() already exempts whatever the unit's own label
+# Method names are recognised by shape, never by a hard-coded roster of eponyms or acronyms,
+# which would tie this to one curriculum's subject matter. The hyphenated form catches
+# multi-author eponyms without naming them; single-word eponyms are deliberately given up, since
+# "Gini" cannot be distinguished from any other capitalised word without knowing the field.
+# Statistics acronyms are eligible as method names rather than excluded - they ARE measure names -
+# which is safe because licensed_method_names already exempts whatever the unit's own label
 # licenses, so a unit actually named for one of them is unaffected.
 _ACRONYM_METHOD_RE = re.compile(r"\b([A-Z]{3,10})\b")
 _EPONYM_METHOD_RE = re.compile(r"\b([A-Z][a-z]{2,}-[A-Z][a-z]{2,})\b")
@@ -2453,7 +2448,7 @@ def _stranded_block_ordinal(row: Mapping[str, Any]) -> int:
 def build_stranded_numerator_texts(corpus: Sequence[Mapping[str, Any]]) -> set:
     """Texts that are a display fraction's numerator, severed from its denominator.
 
-    Consulted during assembly the same way build_document_long_sentences() is: the defect is only
+    Consulted during assembly the same way build_document_long_sentences is: the defect is only
     visible from the neighbouring row, which a single-sentence predicate cannot reach.
     """
     ordered: Dict[Tuple[Any, Any, Any], List[Mapping[str, Any]]] = {}
@@ -2487,7 +2482,7 @@ def build_stranded_numerator_texts(corpus: Sequence[Mapping[str, Any]]) -> set:
             if not _STRANDED_DENOMINATOR_RE.match(tail):
                 continue
             # A denominator either carries an operator ("n + v") or is a single term that
-            # continues the numerator's own symbols ("P(X)" under "P(Y | X) = P(X, Y )").
+            # continues the numerator's own symbols ("P(X)" under "P(Y | X) = P(X, Y)").
             # Requiring an operator alone missed the single-term denominators that probability
             # formulas overwhelmingly use, leaving severed Bayes numerators undetected.
             # A denominator is symbol-dominant either way. Without this a word-internal hyphen
@@ -2783,7 +2778,7 @@ def build_intact_formula_substitutions(corpus, stranded_texts, agreement_out=Non
     Nothing is invented: the replacement text is already in the corpus, and it must agree on the
     left-hand side and contain the severed numerator's own right-hand side. `allow_non_local`
     widens the search beyond the damaged row's page under the stricter corroboration rule in
-    twin_corroboration_is_sufficient(); it defaults to False so this function's behaviour for the
+    twin_corroboration_is_sufficient; it defaults to False so this function's behaviour for the
     stranded-numerator path is unchanged.
     """
     if not stranded_texts:
@@ -2814,10 +2809,10 @@ def build_damaged_formula_repairs(corpus, twin_index=None):
     """
     if twin_index is None:
         twin_index = build_intact_twin_index(corpus)
-    # Exactly the predicate drop_damaged_math_passages() drops on, and deliberately nothing
-    # narrower. Pairing it with has_mathematics() looked like a sensible guard but excluded the
+    # Exactly the predicate drop_damaged_math_passages drops on, and deliberately nothing
+    # narrower. Pairing it with has_mathematics looked like a sensible guard but excluded the
     # very shape this repairs: a bar-loss rendering such as "P(Y|X)=P(X|Y)P(Y)P(X)." is damaged
-    # yet carries no symbol has_mathematics() recognises. The repair set must be the drop set, or
+    # yet carries no symbol has_mathematics recognises. The repair set must be the drop set, or
     # the two passes disagree about what counts as damage.
     damaged = {text for text in (str(row.get("sentence_text") or "").strip()
                                  for row in corpus or ())

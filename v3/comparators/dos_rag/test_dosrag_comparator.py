@@ -1,5 +1,5 @@
 """Targeted unit tests for the DOS-RAG comparator adapter (section 14 of the implementation
-brief). Runs standalone, same check()/RESULTS pattern v3/verify/verify_pipeline_fixes.py already
+brief). Runs standalone, same check/RESULTS pattern v3/verify/verify_pipeline_fixes.py already
 uses in this project, so results read the same way. No network, no GPU, no real corpus needed -
 synthetic fixtures only, except where noted.
 """

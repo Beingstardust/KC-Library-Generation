@@ -12,7 +12,7 @@ Domain adaptations from the real repo (see README.md for the full, explicit list
 - Few-shot exemplars are two hand-authored Data Mining examples
   (prompts/step1_generation_prompt.md), not CodeWorkout's real expert-rubric
   exemplars -- documented as a stated limitation, not silent substitution.
-- Model call path: this project's local gemma4:31b via ollama_chat_json()
+- Model call path: this project's local gemma4:31b via ollama_chat_json
   (src/kc_l/utils/ollama_json.py) -- NOT the real repo's
   openai.chat.completions.create. This is a required adaptation from the brief,
   confirmed used below (see the ollama_chat_json import and call site).
@@ -32,7 +32,7 @@ from pathlib import Path
 
 REPO_SRC = Path(__file__).resolve().parents[0] / "src"  # overridden below once deployed
 
-# Populated by --repo-src at runtime (see main()) so this script works both in this
+# Populated by --repo-src at runtime (see main) so this script works both in this
 # local dry-run staging area and once deployed under kc_l_v2_clean/ablation_studies/.
 
 

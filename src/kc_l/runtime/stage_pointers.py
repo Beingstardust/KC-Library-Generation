@@ -15,9 +15,9 @@ def _resolve_repo_path(raw_path: str | Path, *, repo_root: Path | None = None) -
 
 def _looks_absolute(text: str) -> bool:
     # POSIX absolute (the real Cluster B target) or Windows drive-letter absolute (a dev checkout).
-    # Path.is_absolute() alone is not enough: Windows treats a POSIX path like "/path/to/shared"
+    # Path.is_absolute alone is not enough: Windows treats a POSIX path like "/path/to/shared"
     # as root-relative-but-driveless (not absolute), which is exactly the join bug found
-    # earlier in resolve_repo_path() - detect it explicitly here instead of repeating that bug.
+    # earlier in resolve_repo_path - detect it explicitly here instead of repeating that bug.
     if text.startswith("/"):
         return True
     if len(text) >= 2 and text[1] == ":":

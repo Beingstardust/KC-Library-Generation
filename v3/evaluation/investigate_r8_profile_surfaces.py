@@ -16,13 +16,13 @@ from typing import Any, Iterable, Mapping
 FUNCTION_WORDS = frozenset("""
 a although an and are as at be been being by for from has have if in into is it its of on or that
 the their these they this those to via was we were what when where which while with vs
-""".split())
+""".split)
 GENERIC_TRAILING = frozenset("""
 algorithm algorithms approach approaches concept concepts definition definitions index indices
 measure measures method methods metric metrics model models overview phase phases problem problems
 procedure procedures process processes score scores stage stages technique techniques test tests
 workflow workflows
-""".split())
+""".split)
 
 
 def load_jsonl(path: str | pathlib.Path) -> list[dict[str, Any]]:

@@ -38,22 +38,14 @@ def _get_page_branch_map() -> Dict[str, Any]:
 def _rows_ancestor_topic_labels(rows: Sequence[Mapping[str, Any]]) -> Optional[List[str]]:
     """Ancestor branch path (KC's own leaf name excluded) for a group of same-KC rows.
 
-    Bug fix 2026-07-22: this used to read row.get("topic_path_labels"), a field that does
-    not exist anywhere in candidate_sentence_overlay.jsonl (the step6_6 drafting-input-overlay
-    output these `rows` actually are) - confirmed by direct inspection, 0/2862 rows have it.
-    That made target_topic_path_labels always None here, which made check_cross_branch_mismatch's
-    own early-return (`if not target_topic_path_labels: return False, {}`) silently no-op both
-    call sites in this file for every KC in every run since the branch-scoping fix was deployed,
-    while the upstream step5x-level check (evidence_stage_v3_pack_composition.py, which reads
-    its own candidate schema where topic_path_labels genuinely exists) kept working - so this
-    specific gap only affected KCs that bypass step5x's pack composition and reach these two
-    review-needed-promotion / overlay-fallback lanes (packet_evidence_source in
-    {weak_fallback, insufficient_support}, ~25% of a run's units).
+    Do not read `topic_path_labels` from these rows: that field does not exist in this schema
+    (0 of 2862 real rows carry it), and reading it silently yields None, which makes
+    check_cross_branch_mismatch's own early-return no-op both call sites for every unit.
 
-    This row schema instead carries the equivalent data as `ancestor_labels` (present on
-    2592/2862 real rows, confirmed) or, as a 100%-populated fallback, `source_hierarchy_path`
-    (present on all rows, but includes the KC's own leaf name as the last element - stripped
-    here to match ancestor_labels'/topic_path_labels' own semantics exactly).
+    This row schema carries the equivalent data as `ancestor_labels` (present on 2592/2862 real
+    rows) or, as a fully-populated fallback, `source_hierarchy_path` (present on all rows, but
+    including the KC's own leaf name as the last element - stripped here to match
+    `ancestor_labels` semantics exactly).
     """
     for row in rows:
         labels = row.get("ancestor_labels")
@@ -198,7 +190,7 @@ def _sanitize_packet_strings(obj: Any) -> Any:
     """Recursively strip dangling structural references and bracket citations from every
     string value anywhere in a built packet, as a comprehensive safety net alongside the
     targeted evidence_text_from_overlay/evidence_text_from_pack_item/source_block_text fixes
-    above. Confirmed necessary (2026-07-30): those targeted fixes alone left several other
+    above. Confirmed necessary: those targeted fixes alone left several other
     packet fields unsanitized (e.g. topic_near_miss_or_gap_context's own "preview" field, and
     other coverage/summary text assembled by helper functions not yet individually audited) -
     applying this once at each packet's own construction boundary, rather than chasing every
@@ -220,7 +212,7 @@ def evidence_text_from_overlay(row: Mapping[str, Any], max_chars: int) -> str:
     for key in ("quote_surface", "original_quote_surface", "source_block_text", "original_source_block_text"):
         value = row.get(key)
         if isinstance(value, str) and value.strip():
-            # 2026-07-30: strip dangling Equation/Figure/Table/... references and bare
+            # strip dangling Equation/Figure/Table/... references and bare
             # bracket-citations before this evidence ever reaches the drafting model - both
             # confirmed present verbatim in the raw source PDF text (not model-invented), so
             # fixing here removes the leak at its actual origin rather than only downstream.
@@ -237,23 +229,12 @@ def evidence_text_from_pack_item(item: Mapping[str, Any], max_chars: int) -> str
     return ""
 
 
-# Packet-builder overlay score ladder (Phase 3.5 rank #18 / audit codebase-audit-20260805
-# item 19): the +12.0/+8.0/+5.0/+8.0/+5.0/+3.0/-6.0/-12.0/-8.0/-8.0 weights below are literal
-# constants, no config override, no dedicated calibration record, and the repo's git history
-# for this file has no earlier record of one. Confirmed live via Phase 4's real-execution
-# trace: this v2_chain copy is the sole copy actually invoked - the scripts/experimental/
-# sibling of the same filename never executed in any of the 5 real production runs completed
-# this session (research_notes/codebase_audit/phase4_live_dependency_verification.md, Finding
-# 6) - so this is the correct, live file to document, not the dead one.
-#
-# Investigated as part of this audit and left unchanged, documented as an accepted, reasoned
-# default per the audit's own explicit fallback: the ladder is internally coherent (definition/
-# scope/formula content signals reward; short, trailing-fragment, heading-like, and
-# high-contamination-risk rows penalize, with the definition signal weighted highest since it's
-# the packet's primary purpose). Step 6.7 is already a confirmed bug/fix stage this session
-# (the window-capture/contamination fixes upstream at step5x), and this ladder orders which
-# evidence reaches step 6.7 packets - kept in scope per Phase 3.5's own reasoning, but no
-# confirmed bug is tied to these specific weights the way the step5x sibling-aware gap was.
+# Packet-builder overlay score ladder. The weights below are literal constants with no config
+# override, and are operating defaults rather than individually calibrated values. The ladder
+# rewards definition, scope and formula content signals and penalises short, trailing-fragment,
+# heading-like and high-contamination-risk rows; the definition signal is weighted highest
+# because supplying a definition is the packet's primary purpose. This ordering decides which
+# evidence reaches the drafting packet.
 def score_overlay_evidence(row: Mapping[str, Any]) -> float:
     score = 0.0
     try:
@@ -379,7 +360,7 @@ def _pack_item_score(item: Mapping[str, Any]) -> float:
         return 0.0
 
 
-# 2026-08-10: single source of truth for the roles that cause an item to be ADMITTED by the
+# single source of truth for the roles that cause an item to be ADMITTED by the
 # anchor-role rule at the end of _review_needed_item_is_useful_for_synthesis. The
 # definition_subject_mismatch exemption below must consult the SAME set: previously it waived
 # the mismatch whenever an item was not a definition_anchor, and the promotion rule then
@@ -408,7 +389,7 @@ def _review_needed_item_is_useful_for_synthesis(
     routing = str(item.get("routing_recommendation") or "").lower()
     risks = [str(x).lower() for x in (item.get("review_risk_flags") or item.get("risk_flags") or [])]
 
-    # Mechanism A fix (2026-07-21): "not_admitted_to_ordered_pack_for_drafting" was previously
+    # Mechanism A : "not_admitted_to_ordered_pack_for_drafting" was previously
     # absent from this set, so an item the upstream pack-composition stage had ALREADY decided
     # not to use for drafting could still sail through here whenever routing_recommendation
     # happened to be "positive_role_candidate" - confirmed as the actual mechanism behind the
@@ -425,7 +406,7 @@ def _review_needed_item_is_useful_for_synthesis(
         "not_admitted_to_ordered_pack_for_drafting",
         CROSS_BRANCH_FLAG,
     }
-    # Mechanism E fix (2026-07-26): "no_target_binding" alone can never be satisfied for a bare,
+    # Mechanism E : "no_target_binding" alone can never be satisfied for a bare,
     # alias-less canonical name with fewer than 2 non-generic tokens (e.g. "Querying Phase" ->
     # {"querying"} once "phase" is stripped as a stopword) - confirmed for KC_CLF_UND_002: the
     # real page-144 "deduction" content sits in review_needed_evidence, already past every other
@@ -437,7 +418,7 @@ def _review_needed_item_is_useful_for_synthesis(
     if weak_binding:
         hard_exclusion_risks = hard_exclusion_risks - {"no_target_binding"}
 
-    # Mechanism G fix (2026-07-26): a role-based-only relaxation of "definition_subject_mismatch"
+    # Mechanism G : a role-based-only relaxation of "definition_subject_mismatch"
     # was tried and reverted earlier tonight - it let through genuinely off-topic content
     # (KC_CLF_UND_007 "Attribute/Variable Types" pulling in unrelated posterior-probability
     # text via its own alias "binary"; KC_FSEL_FW_004 "Filter vs. Wrapper" pulling in unrelated
@@ -574,16 +555,16 @@ GENERIC_TARGET_BINDING_STOPWORDS = {
     "internal", "basic", "core", "phase", "process", "problem", "definition", "algorithm",
 }
 
-# Mechanism D fix (2026-07-25): a bare canonical name with no aliases and only one
+# Mechanism D : a bare canonical name with no aliases and only one
 # non-generic token after stopword stripping (e.g. "Querying Phase" -> {"querying"}, since
 # "phase" is a stopword above) can never satisfy _overlay_row_has_target_binding's
 # phrase-or->=2-token requirement, no matter how directly the corpus discusses the concept
 # under a different surface form. Confirmed for KC_CLF_UND_002: the corpus calls this concept
 # "deduction", never "querying phase" or "querying" - every candidate was rejected as
-# not_target_bound this week even though the concept is directly, unambiguously covered on
+# not_target_bound even though the concept is directly, unambiguously covered on
 # page 144. For exactly this structurally-doomed case (weak binding below), the overlay
 # fallback trusts the row's own already-computed lexical relevance score instead of a literal
-# surface match that can never occur - see select_target_bound_overlay_fallback_evidence().
+# surface match that can never occur - see select_target_bound_overlay_fallback_evidence.
 WEAK_BINDING_SCORE_FLOOR = 8.0
 
 
@@ -741,7 +722,7 @@ def select_target_bound_overlay_fallback_evidence(
             else:
                 rejected_not_target_bound += 1
                 continue
-        # Mechanism C fix (2026-07-21): phrase/token binding alone is not sufficient - a
+        # Mechanism C : phrase/token binding alone is not sufficient - a
         # candidate can satisfy generic 2-word token overlap (e.g. "handling"/"missing") purely
         # by accident of the target KC having empty aliases (so its binding tokens fell back to
         # a maximally generic canonical-name fragment) while the actual sentence is from a

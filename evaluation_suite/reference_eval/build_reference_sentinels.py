@@ -56,13 +56,11 @@ _CONTENT_ERROR_CATEGORIES = {
 # 'complete_but_unsupported' is deliberately NOT a content-error category. Its injected claim is
 # TRUE domain knowledge that is simply absent from the supplied evidence, which is why legacy F3
 # (Material Correctness - "is the content correct?") passed while F1 failed.
-#
 # New M2 asks a DIFFERENT question: is the claim supported by the reference OR the source
 # authority? A true-but-unsourced claim is NOT_SUPPORTED_BY_AUTHORITY, which the spec explicitly
 # does NOT count as materially correct. So legacy F3=PASS cannot simply be carried over here - the
 # answer now depends on whether the specific injected claim is present in the AUTHORITY corpus,
 # not merely in the system evidence.
-#
 # Rather than guess, this resolves from what the frozen sentinel record itself already verified.
 # Sentinels whose own rationale documents an explicit AUTHORITY-context search establishing the
 # claim's absence are set to FAIL; sentinels whose rationale verified only SYSTEM-EVIDENCE absence

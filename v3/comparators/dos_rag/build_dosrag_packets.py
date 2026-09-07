@@ -5,7 +5,7 @@ proposed system's own real packets; every proposed-system-COMPUTED field - draft
 query_formulation, evidence_coverage, evidence_dropped_to_rival_units, packet_support_state,
 support_state_reason, insufficient_support_reasons, weak_fallback_abstention_allowed - omitted;
 abstention_expected/insufficient_synthesis_support explicitly False, not omitted, since
-build_prompt() checks them by name).
+build_prompt checks them by name).
 
 Retrieval itself is entirely DOS-RAG's own, unmodified code (dosrag_retrieve.py, vendor/). This
 script's only job is mapping that retrieval output into the shared packet shape
@@ -13,10 +13,10 @@ script's only job is mapping that retrieval output into the shared packet shape
 
 DOS-RAG evidence items are structurally poorer than the proposed system's, by design, per the
 feasibility audit's explicit instruction: no shape_tags, no assertability, no authority_tier, no
-relevance score (RAG.retrieve() does not return one), no role/roles. What IS included and is
+relevance score (RAG.retrieve does not return one), no role/roles. What IS included and is
 genuinely DOS-RAG's own native output: the chunk's pre-reorder similarity rank
 (dos_rag_pre_reorder_rank) and its source-position index in the combined corpus
-(dos_rag_chunk_index) - both directly read off RAG.retrieve()'s real return values, not
+(dos_rag_chunk_index) - both directly read off RAG.retrieve's real return values, not
 recomputed or invented.
 """
 from __future__ import annotations

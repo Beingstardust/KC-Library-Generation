@@ -204,8 +204,8 @@ def collect_profile_windows_with_source_surface_kernel(
     generic source-surface code over the current Step 4.5 sentence overlay.
     Returned windows are profiler inputs only, never final evidence.
 
-    embedding_index_root/ollama_host (2026-07-25): when both are provided, the score-sorted
-    strict/exploratory pools are passed through rerank_windows_with_embedding_tie_break()
+    embedding_index_root/ollama_host: when both are provided, the score-sorted
+    strict/exploratory pools are passed through rerank_windows_with_embedding_tie_break
     before the final max_snippets_per_kc truncation - embedding similarity only ever reorders
     within a score band that already passed this kernel's own lexical relevance gate, never
     expands the candidate set. When either is None (the default), behavior is unchanged from

@@ -165,7 +165,7 @@ def supplement_dense_formula_rows(pool, pool_indices, dense_index, query, formul
                                   limit=40):
     """Add formula-shaped rows the dense index ranks highly for this unit, whatever their LHS.
 
-    supplement_defining_equation_rows() rescues equations whose LEFT-HAND SIDE names the unit. Real
+    supplement_defining_equation_rows rescues equations whose LEFT-HAND SIDE names the unit. Real
     notation rarely does: Bayes' theorem's LHS is P(Y|X), the Laplace estimator's is P(Xi=c|y), an
     external-index entropy's is e_i. Measured on the real corpus, the defining formula for Bayes,
     Laplace, external entropy and the two-model variance comparison was present, undamaged, and a
@@ -250,7 +250,7 @@ def passage_has_strong_target_anchor(passage, unit_labels):
 _IDENTITY_FUNCTION_WORDS = frozenset("""
 a although an and are as at be been being by for from has have if in into is it its notice of on or
 that the their these they this those to via was we were what when where which while with vs
-""".split())
+""".split)
 _IDENTITY_DEFINITIONAL_SUBJECT_PATTERNS = (
     re.compile(
         r"^\s*(?:In [^,]{3,40},\s*)?(?:(?:A|An|The|These|This|Those|Some)\s+)?"
@@ -386,11 +386,11 @@ def assess_support_state(passages, unit_labels):
         # INT-1: a passage whose own text is interrogative states what the source ASKS, not what
         # it asserts, and must not be able to establish a KC as draftable by itself - even when it
         # is long, formula-bearing, and target-anchored. This does not remove the passage from
-        # `passages`; it stays available as ordinary contextual evidence (evidence_item() already
+        # `passages`; it stays available as ordinary contextual evidence (evidence_item already
         # tags it `not_assertable_interrogative` downstream). This only prevents it from
-        # single-handedly satisfying the support gate. passage_assertability() is a pure function
+        # single-handedly satisfying the support gate. passage_assertability is a pure function
         # of passage text, safe to call here even though it is normally computed later in
-        # evidence_item() - no ordering dependency.
+        # evidence_item - no ordering dependency.
         assertable = passage_assertability(passage) == ASSERTABLE
         formula_substance = (assertable and 'formula' in shapes and len(text) >= 8
                              and any(x in text for x in '=<>≤≥'))
@@ -633,7 +633,7 @@ def main():
 
         # Let the corpus decide which query formulation this unit is best expressed by, instead
         # of a hand-written rule about when ancestor context or acronym expansion helps (neither
-        # answer is right in general - measured both ways on real units this session). Each
+        # answer is right in general - measured both ways on real units). Each
         # candidate form gets the SAME full retrieval it would actually receive, and the winner's
         # work is what we keep, so nothing is decided on a sample the decision does not apply to.
         q_forms = retrieval_query_forms(prof)

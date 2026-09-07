@@ -20,7 +20,7 @@ class KCLeafRaw:
 # flag. "kc": true is no longer read here at all; a node with no children IS a KC leaf,
 # unconditionally. The only genuinely required datum is kc_id - canonical_name is already
 # satisfiable structurally (the node's own key in its parent's children dict), and
-# seed_definition/aliases remain optional everywhere downstream (confirmed: validate_kc_leaves()
+# seed_definition/aliases remain optional everywhere downstream (confirmed: validate_kc_leaves
 # only WARNs on missing seed_definition, never ERRORs).
 KC_ID_KEYS: tuple[str, ...] = ("kc_id", "id")
 CANONICAL_NAME_KEYS: tuple[str, ...] = ("canonical_name", "name", "label")

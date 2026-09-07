@@ -82,8 +82,8 @@ def _live_calls(path):
     """Names actually CALLED in a module, ignoring any inside a constant-false branch.
 
     Source-text matching cannot tell a live call from a dead one: "if False and hasattr(mod, 'x')"
-    still contains the string, and renaming a call site to _disabled_x() leaves "x(" in the def.
-    A sabotage audit found five of this session's own checks defeated exactly that way, so
+    still contains the string, and renaming a call site to _disabled_x leaves "x(" in the def.
+    A sabotage audit found five of own checks defeated exactly that way, so
     reachability is established from the parse tree instead.
     """
     tree = _ast.parse(io.open(path, encoding="utf-8").read())
@@ -256,7 +256,7 @@ check("v6 junk fragment does not set the floor that excludes real content",
       len(passages) >= 1, "%d passage(s) admitted" % len(passages))
 
 # --- v22 per-block-member verification: strip off-topic splices without choking real evidence
-# Reproduces the mechanism found in the human review of the gemma4 drafts: assemble_passages()
+# Reproduces the mechanism found in the human review of the gemma4 drafts: assemble_passages
 # used to pull EVERY sentence from a matched source block once its seed sentence scored well,
 # filtered only for structural junk - never for topical relevance. A block containing one
 # on-topic sentence and one off-topic sentence (glued together only because they share a source
@@ -496,7 +496,7 @@ check("v24 intact rendering outranks the damaged one",
 
 # --- v29 truncated-formula detection (control-char damage's sibling) ----------------------
 # Found while evaluating packet quality: "Euclidean distance = \u221a" survived v24/v28 verbatim.
-# control_char_damage() is 0 for it - the radical sign rendered correctly, the extractor simply
+# control_char_damage is 0 for it - the radical sign rendered correctly, the extractor simply
 # stopped before writing the radicand. Different signature from corrupted-glyph damage, same
 # consequence: a generator handed this has nothing to reproduce and is left to invent an ending.
 check("v29 a formula truncated after a bare radical is caught",
@@ -1138,7 +1138,7 @@ check("v42 regression: with no rescue content at all, ordinary relevance-ranked 
 
 # --- v37 a name_anchored_defining_equation passage is exempt from v26's rival-stripping ------
 # Diagnosed by validating v34's rescue against the REAL pipeline end to end, not just
-# assemble_passages() in isolation - the exact gap that let v25's own bug through once already.
+# assemble_passages in isolation - the exact gap that let v25's own bug through once already.
 # A cross-encoder scores a SHORT, generic rival query ("Precision") against text containing that
 # literal word MORE confidently than the longer, compound owning query ("External Index:
 # Precision") scores the same text - a query-length bias, not a real ownership signal. Measured
@@ -1214,7 +1214,7 @@ check("v38 the ordinary rival-claimed passage is still correctly dropped (regres
       any("Representative training" in d.get("text", "") for d in _v38_dropped), str(_v38_dropped))
 
 # --- v39 a too-short content signature must skip DEDUPLICATION, not DELETE the passage --------
-# Found in the same systematic audit: deduplicate_passages() used a too-short signature as a
+# Found in the same systematic audit: deduplicate_passages used a too-short signature as a
 # reason to drop a passage outright, silently discarding real short evidence ("p = 0.1",
 # "purity(Z1) = 3") with no admission_basis exemption of any kind.
 check("v39 a short-signature passage is KEPT, not dropped",
@@ -1627,7 +1627,7 @@ check("no stray control bytes anywhere in evidence_pack.py (guards against \\b/\
 # pass/fail outcome happened not to depend on the exact bytes that time - it could easily
 # have gone the other way). One deliberate exception: v28's own test fixture contains a
 # real control byte ON PURPOSE, simulating the exact PDF-extraction control-character
-# wreckage control_char_damage() exists to detect - not a corruption to flag. Strip that one
+# wreckage control_char_damage exists to detect - not a corruption to flag. Strip that one
 # known-intentional literal out before scanning for anything else that should not be there.
 _self_src = io.open(os.path.abspath(__file__), encoding="utf-8").read()
 _self_src_minus_intentional = _self_src.replace('Euclidean distance De = \x04m i=1 (xi -yi)2 1', "")
@@ -1636,10 +1636,10 @@ check("no stray control bytes anywhere in verify_pipeline_fixes.py itself, outsi
       "escaping corruption class found and fixed in evidence_pack.py)",
       not _re_ctrl_check.search('[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f]', _self_src_minus_intentional))
 
-# --- v41 a rescue admission basis survives deduplicate_passages(), not just the merge-winner --
+# --- v41 a rescue admission basis survives deduplicate_passages, not just the merge-winner --
 # Found by extending RESCUE_ADMISSION_BASES (v38) to its logical conclusion: deduplicate_passages
 # sits BETWEEN admission and every post-admission re-verification check, and merges two passages
-# sharing a content signature by keeping whichever has the higher _information_score(), which does
+# sharing a content signature by keeping whichever has the higher _information_score, which does
 # not consider admission_basis - so a rescue-tagged passage could lose its tag to a near-identical
 # ordinary variant (a different extractor's rendering of the same formula) and be silently
 # re-exposed to the strict floor and to rival-stripping, the exact failure v37/v38 fixed, through a
@@ -1914,8 +1914,8 @@ check("v5 PRF expansion function present and used",
 # --- v15 prompt-side pointer neutralisation ------------------------------------------------
 smoke = io.open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                             "pipeline", "04_draft_runner.py"), encoding="utf-8").read()
-# 2026-08-17: updated for the controlled-comparator indirection (visible_packet_for_prompt),
-# which itself must still route through prompt_safe_packet() for neutralisation - both call
+# updated for the controlled-comparator indirection (visible_packet_for_prompt),
+# which itself must still route through prompt_safe_packet for neutralisation - both call
 # sites now go through the wrapper, so the raw substring this check originally looked for
 # ("compact_json(prompt_safe_packet(packet))") no longer appears verbatim; check the new call
 # pattern instead, plus that the wrapper itself still calls prompt_safe_packet(packet), plus that
@@ -1956,7 +1956,7 @@ check("R-1a forward direction still forces abstained on zero real evidence",
       str(_violation))
 
 # Check 3: the inverse direction fires on a draftable, evidenced, permission-less abstention -
-# exactly the shape confirmed against 5 real KCs in the 2026-08-17 audit replay
+# exactly the shape confirmed against 5 real KCs in the audit replay
 # (KC_CLF_UND_001, KC_CLF_DT_010, KC_EVAL_BASIC_009, KC_EVAL_ROC_004, KC_CLU_EVAL_011).
 _synthetic_draftable_packet = dict(_synthetic_packet_real_schema)
 _synthetic_draftable_packet["packet_support_state"] = "draftable"
@@ -1990,7 +1990,7 @@ check("R-1a gate is LIVE-CALLED from the REAL probe script, not merely mentioned
       "apply_status_integrity_gate" in live_calls(_PROBE_PATH),
       "the probe does not actually call the gate - it would be silently inert on every real job")
 
-# --- num_ctx is a property of the MODEL, not of the run (job 246037 regression guard) --------
+# --- num_ctx is a property of the MODEL, not of the run ( regression guard) --------
 # 246037 ran qwen3.8:27b at num_ctx=65536 inherited from a RUN_STATE configured for gemma4. That
 # model's hybrid attention+SSM architecture cannot reuse KV cache, so every call re-processed the
 # full prompt and timed out at 1200s: 16 of 71 units in 5.5h, all failed, zero output.
@@ -2084,7 +2084,7 @@ check("ordinary prose is not falsely flagged by the capture-marker rule",
       not CP.math_rendering_damaged("SSE = sum of squared errors over all clusters."))
 
 # --- R-3 formula recall does not depend on the equation's LHS naming the unit ---------------
-# supplement_defining_equation_rows() rescues only equations whose LEFT-HAND SIDE names the unit,
+# supplement_defining_equation_rows rescues only equations whose LEFT-HAND SIDE names the unit,
 # and standard notation almost never does (Bayes' LHS is P(Y|X), Laplace's is P(Xi=c|y), an
 # external-index entropy's is e_i). Measured: the defining formula for Bayes, Laplace, external
 # entropy and the two-model variance comparison was present, undamaged and usable in the real
@@ -2122,7 +2122,6 @@ check("R-3 adds candidates at zero bm25 score, leaving admission to the relevanc
 # and concatenated-metric forms, can only be recognised by naming the metric. "silhouette(s3) =
 # 1 -2.2882" is indistinguishable from a legitimate subtraction unless you know a silhouette lies
 # in [-1,1]; that is subject knowledge, and this pipeline may not carry any.
-#
 # Measured tradeoff on the real 100,218-row corpus (5,670 formula-bearing candidates), so the cost
 # is recorded rather than assumed:
 #     with 20 metric-named regexes : 1008 detections
@@ -2151,21 +2150,19 @@ check("D-6 structural bar-loss does not condemn correct formulas",
       and not CP.math_rendering_damaged("Recall = TP / (TP + FN)"))
 
 # --- D-1/D-3: the 18 per-KC semantic-misbinding rules are removed ---------------------------
-# semantic_misbinding_owner() previously held 18 rules keyed on specific data-mining KC names
+# semantic_misbinding_owner previously held 18 rules keyed on specific data-mining KC names
 # (learning phase, querying phase, cost matrix, models of randomness 1/2, sse cluster quality,
 # shannon entropy, density connected, euclidean distance, filter approach, ...) plus a DBSCAN term
 # set. Each was written against a real observed contamination, and each could only ever fire for
 # the one curriculum whose KC it named. The checks removed here asserted those rules were active,
 # so a passing check meant the domain-agnosticity claim was false.
-#
 # Measured, so the cost is recorded rather than assumed:
 #   rule firings: data-mining 66 drops, sociology 0, mathematics 0
 #   removal cost: +2.6% admitted evidence (66 of 2,556 items), touching 20 of 159 units
 #   two generic replacements were built and REJECTED on measurement - a corpus-derived
 #   concept-rival mechanism reproduced 20% then 15% of these drops while FALSELY dropping 8.9%
 #   then 6.9% of already-admitted evidence, both worse than removal.
-#
-# What carries the load instead: drop_passages_claimed_by_rivals()'s cross-encoder adjudication,
+# What carries the load instead: drop_passages_claimed_by_rivals's cross-encoder adjudication,
 # which already performs the majority of drops in every corpus (109/175, 106/108, 23/29), and the
 # drafting contract's explicit KC boundary. Sociology is the evidence this suffices - a HARDER
 # collision profile than data-mining (mean 3.24 rivals/unit vs 2.16; 36% saturating RIVAL_LIMIT vs
@@ -2537,7 +2534,7 @@ check("I: baseline packet construction contains no generation-option vocabulary 
       "condition's generation settings instead of both being governed solely by "
       "run_step67_v2_schema_contract_probe.py's ollama_generate_schema()")
 
-# --- 2026-08-17 controlled-comparator drafting-contract fix (14/15_*.md) -------------------
+# --- controlled-comparator drafting contract -------------------------------------------
 # Verifies: (CC-2) controlled_comparator mode never mutates the caller's packet dict; (CC-3)
 # native_proposed mode (the default, and the only mode any real production job uses) is
 # unchanged; (CC-1) controlled_comparator mode removes drafting_instruction from the
@@ -2665,7 +2662,7 @@ check("CC-mode: an invalid mode value is rejected rather than silently accepted"
       "build_prompt must fail loudly on an unrecognised mode, not silently default")
 
 # --- draft-side damaged-math scoping (all 10 real flags were false positives) ---
-# math_rendering_damaged() is tuned for SHORT EXTRACTED EVIDENCE SENTENCES. Applied to generated
+# math_rendering_damaged is tuned for SHORT EXTRACTED EVIDENCE SENTENCES. Applied to generated
 # draft prose it misfired on every single flagged draft in the real data-mining run: summation
 # bounds ("=1 to C"), "= 1 only if", a normal paragraph after a display equation, a named quantity
 # discussed across paragraphs, and one unclosed paren in 5,624 chars. These checks pin the
@@ -3017,14 +3014,14 @@ check("LI-4 a lead-in pointing at a STRANDED numerator cannot smuggle false math
       "this pairing is exactly why the lead-in fix is only safe alongside SN rejection")
 
 # --- dense channel ligature consistency + cache self-invalidation ---
-# tokenize() expands ligatures for BM25; the dense channel embedded RAW text, so the two channels
+# tokenize expands ligatures for BM25; the dense channel embedded RAW text, so the two channels
 # disagreed about the same sentence. The dangerous half is the cache: the caller derives its key
 # from the corpus FILE (path/size/mtime/rows), which is content-independent, so a preprocessing
 # change does NOT change the key and an old cache would be silently reused - the fix would look
 # present while every vector still came from unnormalised text.
 def _calls_within(path, class_name, method_names):
     """Names called inside specific METHODS of a class. A file-wide call check is useless here:
-    tokenize() also calls expand_ligatures, so removing it from DenseIndex would go unnoticed -
+    tokenize also calls expand_ligatures, so removing it from DenseIndex would go unnoticed -
     confirmed by sabotage, which SURVIVED the file-wide version of this check."""
     tree = _ast.parse(io.open(path, encoding="utf-8").read())
     found = {}
@@ -3170,7 +3167,7 @@ check("INT1-4 the passage is NOT removed from evidence - only the substance gate
 
 # --- INT-7: a mislabeled instructional lead-in must not be suppressed before the existing
 # lead-in-to-payload recovery can evaluate it ---
-# is_structural_junk() already overrides a JUNK_FLAG when a row looks_like_equation(), because the
+# is_structural_junk already overrides a JUNK_FLAG when a row looks_like_equation, because the
 # overlay mislabels some formulas as navigation/metadata. The same mislabeling hits POINTER
 # sentences, which are prose and so fall outside that override - so the pointer was discarded
 # before lead_in_payload could use it, making its formula unreachable at any threshold.
@@ -3213,7 +3210,7 @@ check("INT7-7 the override is consulted at the structural-junk gate, not somewhe
       "it must guard the junk rejection itself")
 
 # --- INT-9: extractor agreement is RECORDED, not only its conclusion ---
-# build_intact_formula_substitutions() compares extraction layers and previously kept only the
+# build_intact_formula_substitutions compares extraction layers and previously kept only the
 # winner. A reviewer auditing a formula-heavy unit needs to know whether the extractors agreed,
 # and whether a CONFLICTING rendering (same left-hand side, different right-hand side) existed.
 _INT9_AG = {}
@@ -3283,7 +3280,7 @@ def _i11_row(text, doc="D1", page=1, layer="pymupdf"):
 def _appears_in_order(source, *needles):
     """True when every needle is present and they appear in the order given.
 
-    str.index() raises when a needle is missing, which aborts the whole suite instead of failing
+    str.index raises when a needle is missing, which aborts the whole suite instead of failing
     one check - so an ordering guard written with it reports a crash rather than a verdict, and
     every check after it stops running. Found by sabotage: removing the call under test produced
     'ValueError: substring not found' instead of a named failure.
@@ -3304,8 +3301,8 @@ _I11_CORPUS = [_i11_row(_I11_BAR_LOST, doc="D1", page=295),
 _I11_INDEX = CP.build_intact_twin_index(_I11_CORPUS)
 _I11_REPAIRS = CP.build_damaged_formula_repairs(_I11_CORPUS, _I11_INDEX)
 _I11_APPLIED, _I11_N = CP.apply_damaged_formula_repairs(_I11_CORPUS, _I11_REPAIRS)
-# Materialised once, as a list rather than a next() over a generator. Sabotage showed why: with
-# the repair disabled there is no such row, next() raises StopIteration, and because this suite
+# Materialised once, as a list rather than a next over a generator. Sabotage showed why: with
+# the repair disabled there is no such row, next raises StopIteration, and because this suite
 # prints its results only at the end, that exception discarded the report for all 379 checks -
 # including the two that had already correctly failed.
 _I11_REPAIRED_ROWS = [r for r in _I11_APPLIED if r.get("formula_repaired_from_damaged_text")]
@@ -3612,7 +3609,6 @@ check("INT14-9 the rule has ONE definition, not a copy per caller",
 
 # ---------------------------------------------------------------------------------------------
 # INT-15. A promise's payload is admitted as a payload whether or not the reranker also found it.
-#
 # assemble_passages has three payload branches. structured_list and procedure_list both promote
 # an entry already present in `best`; lead_in alone was guarded by `nxt not in best` and did
 # nothing at all in that case. The payload then kept an ordinary admission basis and was re-tested
@@ -3732,12 +3728,10 @@ check("INT15-8 every payload branch promotes an existing entry",
 
 # ---------------------------------------------------------------------------------------------
 # INT-16. A formula's own symbol glossary is admitted with it.
-#
 # The mirror of the lead-in rescue: that admits the block after a promise, this admits the block
 # after a formula. Without it a packet can hold precision(i,j)=p_ij while the sentence defining
 # p_ij stays in the corpus, and the draft then states the formula and reports that its symbol is
 # undefined. Measured over the r2 packets: 7 admitted formulas whose qualifier was left behind.
-#
 # The payload flags are now read from one tuple rather than enumerated at each site. INT-15 was
 # caused by that duplication, so the guards below check the property over the whole tuple.
 # ---------------------------------------------------------------------------------------------
@@ -3831,14 +3825,12 @@ check("INT16-10 no site enumerates the payload flags by hand any more",
 
 # ---------------------------------------------------------------------------------------------
 # INT-17. Evidence sufficiency is reported separately from the drafter's status.
-#
 # The drafting prompt's own rubric says "Thin evidence, faithfully and completely used, is
 # grounded, not partial", so `grounded` means the draft used what it was given and says nothing
 # about whether that was enough. low_confidence does not fill the gap: it requires few passages
 # AND low relevance, so a thin packet whose single passage scored well passes silently. Measured
 # on the r2 packets, 18 units sit in that band; an external review of r3 independently called 6
 # of them materially incomplete and faulted 4 more on other grounds.
-#
 # Additive only: no admission, drop, score or threshold changes, and the prompt never reads
 # evidence_coverage - INT17-6 asserts that, since it is what makes the change flag-only.
 # ---------------------------------------------------------------------------------------------
@@ -3889,13 +3881,11 @@ check("INT17-7 no pre-existing coverage key was removed",
 
 # ---------------------------------------------------------------------------------------------
 # INT-18. Per-unit source provenance, reported rather than reconstructed by hand.
-#
 # An external review of r3 flagged Spearman Rank Correlation, Directly Density-Reachable and
 # Density-Reachable as resting on material it could not find in the textbooks. Those are exactly
 # the three units whose admitted evidence comes solely from the guide document: 3 of 3, with no
 # false positives among the other 156. The packet already said how many documents; it did not say
 # which, so a reader had to open every packet to check a claim about the source corpus.
-#
 # Additive, like INT-17: a provenance fact, never a quality judgement.
 # ---------------------------------------------------------------------------------------------
 
@@ -3929,12 +3919,10 @@ check("INT18-5 provenance is reported, never scored",
 
 # ---------------------------------------------------------------------------------------------
 # INT-19. The draft's definitional sentence has to be about the unit.
-#
 # Faithfulness to the evidence and relevance to the unit are different properties, and only the
 # first was checked anywhere. Mutually Exclusive Classes is drafted as "a rule set is defined as
 # mutually exclusive if no two rules ... are triggered by the same instance": true, well-evidenced,
 # and about rule sets. An external review of r3 called it the single most serious remaining error.
-#
 # Flag-only, so what has to be protected is PRECISION. It fires on 5 of 159 r3 drafts; the negative
 # cases below are the shapes that made earlier versions of it fire wrongly.
 # ---------------------------------------------------------------------------------------------
@@ -3992,13 +3980,11 @@ check("INT19-8 the sidecar still never rewrites a draft",
 
 # ---------------------------------------------------------------------------------------------
 # INT-20. The defining-equation rescue can see a letter-spaced rendering.
-#
 # DEFINING_EQUATION_FLOOR (0.45) exists so a unit's own defining equation is not out-scored by
 # prose at the ordinary 0.55 floor, and it is claimed by a pattern built from the unit's NAME. The
 # extractors render display math one character at a time - 582 of 4649 equation-shaped corpus
 # texts - so the name inside the equation never matched and the rescue was dead for all of them.
 # The INT-13 defect class: a mechanism that exists and never fires for a whole category of input.
-#
 # Measured: 3 units whose defining equation is claimable only after collapsing - Accuracy,
 # Precision, Specificity. Precision and Accuracy are exactly the units whose defining formula was
 # observed flipping in and out of the packet between builds.
@@ -4033,12 +4019,10 @@ check("INT20-7 the collapse is used ONLY by the defining-equation test",
 
 # ---------------------------------------------------------------------------------------------
 # INT-21. The defining-equation rescue reads through LaTeX formatting commands.
-#
 # INT-20 handled letter-spacing. A named function in this corpus is also usually WRAPPED -
 # "\mathrm { R a n d I n d e x }", "\mathsf { s e p a r a t i o n }" - and the wrapper's braces
 # sit between the name and the "=", so the pattern still could not reach it. Collapsing
 # letter-spacing then merges a multi-word name, destroying the word boundary the pattern needs.
-#
 # Measured: 6 more units, 50 rows, and zero cross-unit matches introduced - Gain Ratio, Accuracy,
 # Rand Index, Jaccard Coefficient, Cohesion, Separation. Rand Index is the unit whose apparently
 # missing formula started this whole investigation; Separation is one an external review listed as
@@ -4099,13 +4083,11 @@ check("INT21-7 the normalisation has one definition and one caller",
 
 # ---------------------------------------------------------------------------------------------
 # INT-22. Marginal math spliced through the middle of a word is replaced by a clean rendering.
-#
 # An external review's clearest mathematical finding was Group Average Linkage asserting WPGMA's
 # coefficients are "constants independent of the cluster sizes" and then giving coefficients made
 # of cluster sizes. The cause was in the corpus, not the drafter: one extractor spliced UPGMA's
 # coefficients into the middle of the sentence that introduces WPGMA, and that row reached the
 # packet. Another extractor rendered the same sentence cleanly.
-#
 # Measured: 109 rows carry a splice, 89 have a clean twin and are repaired, 21 do not and are left
 # alone. The equations are not lost - they exist elsewhere as their own display rows, attached to
 # nothing, where they cannot mislead.
@@ -4168,14 +4150,12 @@ check("INT22-8 LIVE: the packet builder applies the repair",
 
 
 # INT-22b. The splice repair must never be the only place some mathematics survives.
-#
 # As first shipped, the repair replaced a damaged row whenever a clean twin existed, assuming the
 # spliced equation survives elsewhere. For Group Average Linkage it does. Measured afterwards, it
 # does not always: three repairs deleted fragments found in no other text. The Chi-Squared case
 # shows the shape at its worst - "(number of rows -1)x(number of columns-1)" exists ONLY inside a
 # spliced sentence, because the row meant to carry it reads "the general formula for the degrees
 # of freedom is df= ." with the formula missing.
-#
 # A repair that can delete unique content is not a repair. Every fragment the clean rendering
 # drops must appear somewhere else, or the damaged row is left alone.
 
@@ -4221,7 +4201,6 @@ check("INT22-12 a fragment that legitimately starts with a word keeps it",
 
 # ---------------------------------------------------------------------------------------------
 # INT-23. Retrieval relevance is not proof that the source identifies this exact target.
-#
 # A natural negative control has a target shaped "modifier modifier HEAD" while every substantive
 # source statement applies the same modifiers to another, repeatedly named head. Context scoring
 # correctly retrieves those statements, but its admission basis used to count as target identity

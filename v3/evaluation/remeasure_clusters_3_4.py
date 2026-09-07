@@ -2,7 +2,7 @@
 (RETRIEVAL_PREEXISTING, 12) against the second human review, by canonical_name.
 
 This was promised explicitly in the original failure-anatomy report ("re-measure after 1 & 2",
-"probe first") and on this session's own todo list, and needs to be done against the ACTUAL
+"probe first") and on own todo list, and needs to be done against the ACTUAL
 original membership lists, not a fresh loose re-bucketing of run 2's findings under similarly-named
 tags - those are two different things and conflating them is exactly the kind of unverified claim
 this project's discipline exists to prevent.

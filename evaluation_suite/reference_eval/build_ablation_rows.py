@@ -15,7 +15,7 @@ as such — how a system behaves when it declines to draft is part of what is be
 
 Arm identity IS written here. That is safe and necessary: this file is the evaluation input, and
 the judge never receives it directly — prompts are assembled by the runner, which passes only
-draft text and opaque SRC_* evidence ids, with `assert_blinded()` raising on any leak.
+draft text and opaque SRC_* evidence ids, with `assert_blinded` raising on any leak.
 """
 from __future__ import annotations
 

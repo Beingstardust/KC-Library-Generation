@@ -9,7 +9,7 @@ the standard every sentinel here is held to: read the draft, read the cited evid
 evidence against the real corpus text, and only then assign a label.
 
 A rubric implementation that parses but changes a sentinel's meaning must fail - see
-validate_against_sentinels() below, which is a behavioral check, not merely a schema check.
+validate_against_sentinels below, which is a behavioral check, not merely a schema check.
 """
 from __future__ import annotations
 

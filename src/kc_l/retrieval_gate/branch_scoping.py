@@ -1,6 +1,6 @@
 """Cross-branch evidence scoping.
 
-Root cause (confirmed 2026-07-21 investigation): candidates that end up admitted as core
+Root cause (confirmed investigation): candidates that end up admitted as core
 drafting evidence for the wrong KC are NOT detectable by comparing a candidate's own
 retrieving-KC label against the target KC - source_kc_id always equals the target kc_id
 (every candidate is retrieved by and for the KC it ends up attached to; there is no
@@ -49,7 +49,7 @@ candidate is not demoted. Cross-branch contamination signal itself stays window-
 page proximity is what makes it evidence of a *specific* misplaced page, not just "different
 topic exists somewhere in this document").
 
-Validated against the full 159-KC evidence set (2026-07-21): this combination (full-path
+Validated against the full 159-KC evidence set: this combination (full-path
 branch key + document-scope independent-KC corroboration) suppresses the confirmed false
 positives (e.g. the Similarity/Distance and DBSCAN cases above) while preserving confirmed true
 positives (e.g. a "Hold-out / train-test split" evaluation-methodology passage that had been

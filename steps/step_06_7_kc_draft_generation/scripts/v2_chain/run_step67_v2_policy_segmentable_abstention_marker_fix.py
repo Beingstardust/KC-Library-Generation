@@ -58,11 +58,11 @@ def _canonical_name(packet: Mapping[str, Any]) -> str:
 
 
 def _draft_status(draft: Mapping[str, Any]) -> str:
-    # 2026-07-24 fix: confirmed a second, separate crash site beyond the normalize_draft_from_
-    # packet_policy() None-guard added earlier tonight - validate_output_policy() (via
+    # confirmed a second, separate crash site beyond the normalize_draft_from_
+    # packet_policy None-guard added earlier tonight - validate_output_policy (via
     # _is_valid_segmentable_abstention/_is_valid_partial_insufficient_support) also calls this
     # with a None draft for the same malformed-response packet, crashing here instead of there.
-    # This is the single shared root: every caller checks _draft_status() first, so guarding it
+    # This is the single shared root: every caller checks _draft_status first, so guarding it
     # here directly (rather than patching each caller again) covers all present and future
     # call sites in one place.
     if not isinstance(draft, dict):
@@ -167,9 +167,9 @@ def _looks_like_insufficient_support_abstention(packet: Mapping[str, Any], draft
     return any(marker in notes for marker in insufficient_markers)
 
 
-# 2026-07-16: the check above only catches FULL abstention (model outputs nothing at all).
+# the check above only catches FULL abstention (model outputs nothing at all).
 # A model that honestly attempts a short PARTIAL draft from genuinely thin evidence (status
-# "partial", non-empty text, 1 or fewer cited evidence ids) still fails validate_output()'s
+# "partial", non-empty text, 1 or fewer cited evidence ids) still fails validate_output's
 # len(text) < 180 check (see scripts/experimental/run_step67_v2_tiny_smoke.py's validate_output)
 # with no path to acceptance - confirmed via a real run (KC_CLU_EVAL_007, "Models of Randomness
 # (Approach 2)": 1 real evidence_for_synthesis item, model's own text 152 chars, own
@@ -281,9 +281,9 @@ def _repair_partial_insufficient_support(packet: Mapping[str, Any], draft: Dict[
 def _is_valid_partial_insufficient_support(packet: Mapping[str, Any], draft: Mapping[str, Any]) -> bool:
     if _unit_type(packet) != "kc":
         return False
-    # 2026-07-24 fix: reached directly from validate_output_policy() without going through
-    # _draft_status() first (unlike the other callers), so it needs its own guard against a
-    # None/non-dict draft - same malformed-response case documented on _draft_status() above.
+    # reached directly from validate_output_policy without going through
+    # _draft_status first (unlike the other callers), so it needs its own guard against a
+    # None/non-dict draft - same malformed-response case documented on _draft_status above.
     if not isinstance(draft, dict):
         return False
     ck = draft.get("contextual_kc_draft")
@@ -580,7 +580,7 @@ def _is_valid_segmentable_abstention(packet: Mapping[str, Any], draft: Mapping[s
 def normalize_draft_from_packet_policy(packet: Mapping[str, Any], draft: Dict[str, Any]):
     normalized, actions = old_normalize(packet, draft)
 
-    # 2026-07-23 fix: old_normalize() can return a non-dict (confirmed: None, for a packet whose
+    # old_normalize can return a non-dict (confirmed: None, for a packet whose
     # raw model response failed to parse into any usable draft shape) - every policy check below
     # assumes a dict and crashes on None (AttributeError: 'NoneType' object has no attribute
     # 'get'), which previously took down the entire drafting job on one bad packet instead of

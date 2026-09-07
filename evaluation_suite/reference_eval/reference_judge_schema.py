@@ -41,7 +41,6 @@ MAX_MISSING_ITEMS = 8
 # to stop, and it wrote until it exhausted the token budget on roughly a third of those calls,
 # while the per-claim array tasks (where each rationale is followed by more required structure)
 # were unaffected.
-#
 # maxLength is genuinely enforced here: it compiles to a bounded repetition, and the emitted
 # character class excludes carriage-return and newline, so a bounded string also cannot be
 # padded with newlines.
@@ -53,13 +52,11 @@ class JudgeSchemaError(ValueError):
     pass
 
 # ---------------------------------------------------------------------------
-# METRIC SCOPE REGISTRY (EVALUATION_SCOPE_AMENDMENT_v2, 2026-08-25)
-#
+# METRIC SCOPE REGISTRY (EVALUATION_SCOPE_AMENDMENT_v2)
 # M4 was split after development sentinels showed the holistic evidence-adequacy
 # classifier systematically treating the full expert reference as a mandatory checklist -
 # the same construct-validity failure previously seen in the v3 F4/F5 design. The decomposed
 # retrieval question survives; the holistic counterfactual does not.
-#
 # This registry is consumed by the analysis and metric layers so a demoted task cannot be
 # silently picked up as a production metric.
 # ---------------------------------------------------------------------------
@@ -171,7 +168,6 @@ def m1_faithfulness_schema(n_claims: int) -> dict:
 
 # ---------------------------------------------------------------------------
 # M2 - reference/source correctness: candidate claims -> reference + source authority
-#
 # oneOf binds the label to what the judge must cite:
 #   CORRECT / CONTRADICTED            -> must cite the REFERENCE (REF_*)
 #   REFERENCE_SILENT_BUT_SOURCE_SUPPORTED -> must cite SOURCE authority (SRC_*)

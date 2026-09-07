@@ -73,7 +73,7 @@ class PerKCMetrics:
     # holistic binaries (None when NOT_JUDGEABLE)
     target_aligned: bool | None = None
     core_complete: bool | None = None
-    # EXPLORATORY ONLY - demoted 2026-08-25 (EVALUATION_SCOPE_AMENDMENT_v2). Retained on the record
+    # EXPLORATORY ONLY - demoted (EVALUATION_SCOPE_AMENDMENT_v2). Retained on the record
     # for the audit trail and optional research annotation. It is deliberately NOT referenced by
     # materially_sound, unsafe_draft, safe_curriculum_outcome, or any qualification gate. See
     # reference_judge_schema.METRIC_SCOPE["EXPLORATORY_HOLISTIC_EVIDENCE_ADEQUACY"].

@@ -113,7 +113,7 @@ def evidence_pack_known_ids(pack: Dict[str, Any]) -> set:
 def load_overlay_known_ids_by_unit(overlay_dir: Path) -> Dict[str, set]:
     """Some units' evidence comes from step 6.6's overlay-fallback lane instead of the
     standard step5x evidence pack (packet_evidence_source == "step66_overlay_target_bound_
-    fallback", confirmed 2026-07-30 for ~38 units via provenance_quality_counter's
+    fallback", confirmed for ~38 units via provenance_quality_counter's
     fallback_source_lane count). Those units cite overlay_candidate_id values
     (unit_id:overlay:<hash>) that only exist in candidate_sentence_overlay.jsonl, not in the
     step5x evidence packs - checking only the step5x pool without this one produces false-
@@ -156,7 +156,7 @@ def compute_metrics(repo_root: Path, run_id: str) -> Dict[str, Any]:
     overlay_ids_by_unit = load_overlay_known_ids_by_unit(overlay_dir)
 
     # Topic units legitimately synthesize across, and cite, their CHILD KCs' evidence ids -
-    # confirmed 2026-07-30 by finding topic citations that resolve cleanly against child-KC
+    # confirmed by finding topic citations that resolve cleanly against child-KC
     # packs but never against the topic's own pack. A KC citing evidence outside its own pack
     # would instead be a genuine cross-contamination bug and should stay flagged - so this
     # global pool is only unioned in for topic-type units, not KC-type ones.

@@ -1,6 +1,6 @@
 """Batch re-verification that every source citation in every committed reference record still
 resolves in the corpus. The console already refuses unresolvable sentence_ids at commit time
-(cmd_cite/cmd_provenance call corpus.resolve() before accepting anything), so this exists as an
+(cmd_cite/cmd_provenance call corpus.resolve before accepting anything), so this exists as an
 independent after-the-fact audit - e.g. to catch a citation that resolved against a corpus file
 that has since been (incorrectly) replaced. Any unresolved citation found here is a hard failure,
 per the reference-construction spec (section 7).

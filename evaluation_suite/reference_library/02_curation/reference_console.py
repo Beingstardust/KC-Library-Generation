@@ -3,7 +3,7 @@
 STAGE A (source-first review) happens with the Qwen seed strictly hidden. STAGE B/C
 (seed reveal + expert edit) only unlocks after Stage A is committed for that KC.
 
-Hard safety rule enforced in code, not just by convention: SeedStore.reveal() is the
+Hard safety rule enforced in code, not just by convention: SeedStore.reveal is the
 ONLY code path in this file that ever reads seed_body/seed_status out of qwen_seed.jsonl,
 and it refuses unless the work-state for that kc_id already has stage_a committed. No
 other command handler holds a reference to seed content before that gate passes.

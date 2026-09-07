@@ -84,19 +84,9 @@ TIER_PRIORITY = {"exact_surface": 0, "target_token": 1, "definition_head": 2, "b
 
 @dataclass(frozen=True)
 class SourceSurfaceFallbackConfig:
-    # min_score (Phase 3.5 rank #9 / audit codebase-audit-20260805 item 12): mirrored consistently
-    # in steps/step_05_x_evidence_stage_v3/resources/step5x_v3_candidate_bank.default.yaml's
-    # source_surface_fallback.min_score (also 4.0 - no drift between the two), but neither carries
-    # a documented empirical justification, and the repo's git history (13 total commits) has no
-    # earlier record of one. Investigated as part of this audit and left unchanged, documented as
-    # an accepted, reasoned default per the audit's own explicit fallback: this fallback mechanism,
-    # this exact threshold, and the _score_candidate weights below fed the real, confirmed
-    # KC_CLF_UND_002/KC_FSEL_GEN_006 contamination cases this session traced specifically to
-    # source_surface_fallback candidates - i.e. this gate was not just passively exercised but
-    # directly implicated in, and then verified clean after, this session's own contamination fix
-    # (research_notes/step5p_5x_audits/FINAL_window_capture_fix_and_regeneration_20260805.md: 0
-    # new contamination found anywhere across all 5 regenerated configs). More scrutiny has landed
-    # on this exact acceptance contract recently than on most of the other accepted-default items.
+    # min_score is an operating default, not an empirically tuned value: it has no config
+    # override and no calibration study behind it. The same 4.0 is mirrored in the candidate-bank
+    # stage configuration, so change both together if you change either.
     enabled: bool = False
     max_fallback_per_kc: int = 8
     min_score: float = 4.0
@@ -965,22 +955,9 @@ def _single_head_binding_failure(
             return None
         return "single_head_method_without_process_binding"
 
-    # window_words=16 (Phase 3.5 rank #10 / audit codebase-audit-20260805 item 11): the one bare
-    # numeric literal in this single-head-token binding family; the surrounding logic
-    # (_strict_single_head_hierarchy_bypass, _single_head_binding_failure and friends) already
-    # carries real inline design rationale (see the "Source-block matches are only allowed to
-    # bypass..." and "Generic guard against sibling-section swamping" comments elsewhere in this
-    # module), so this isn't an unexamined function - just this one window-size constant within
-    # it. No config override, no dedicated calibration record for the specific value 16.
-    #
-    # Investigated as part of this audit and left unchanged, documented as an accepted, reasoned
-    # default per the audit's own explicit fallback: this gate sits in the same
-    # source_surface_fallback module directly implicated in, and then verified clean after, this
-    # session's own real contamination fix (KC_CLF_UND_002/KC_FSEL_GEN_006, see
-    # research_notes/step5p_5x_audits/FINAL_window_capture_fix_and_regeneration_20260805.md - 0
-    # new contamination across all 5 regenerated configs), giving it more recent real-world
-    # scrutiny than most of this session's other accepted-default items, even though the 16-word
-    # figure itself was not individually isolated and tuned.
+    # window_words=16 is an operating default with no config override and no calibration study
+    # behind the specific value. The design rationale for the surrounding single-head binding
+    # logic is documented inline in this module; only this window size is untuned.
     if suffixes & {"measure", "metric"}:
         if _has_windowed_token_cue(
             token,
@@ -1101,10 +1078,8 @@ def _score_candidate(
         f"surface:{candidate['surface_name']}",
         f"match:{candidate['surface_match_type']}",
     ]
-    # Hierarchy/cue weight ladder: same accepted-default status and evidence basis as min_score
-    # above (see SourceSurfaceFallbackConfig's docstring-comment) - literal constants, no config
-    # override, no dedicated calibration record, but directly implicated in and then verified
-    # clean after this session's own real contamination fix.
+    # Hierarchy/cue weight ladder: literal constants with no config override, operating
+    # defaults on the same footing as min_score above.
     score = float(candidate["base_score"])
     hierarchy_type = str(hierarchy.get("match_type") or "")
     if hierarchy_type == "heading_branch_overlap":

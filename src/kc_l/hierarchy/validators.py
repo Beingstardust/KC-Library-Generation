@@ -55,7 +55,7 @@ def validate_kc_leaves(kcs: Iterable[KCLeafRaw]) -> list[ValidationIssue]:
                 )
             )
 
-        # Alias-sufficiency check (2026-07-24): empty aliases has proven, across a full week of
+        # Alias-sufficiency check: empty aliases has proven, across a full week of
         # retrieval-defect investigation on real corpora, to be one of the strongest predictors
         # of downstream retrieval failure at full-corpus scale - directly implicated in most of
         # the traced Mechanism-A cases (the KC's canonical name alone doesn't match the corpus's
@@ -82,10 +82,10 @@ def validate_kc_leaves(kcs: Iterable[KCLeafRaw]) -> list[ValidationIssue]:
                 )
             )
 
-        # Generic-canonical-name check (2026-07-28): confirmed root cause of the KC_CLU_EVAL_004
+        # Generic-canonical-name check: confirmed root cause of the KC_CLU_EVAL_004
         # "Separation" retrieval failure (see the week's grounding-audit follow-up). This is not
         # a correlation like the check above - it is a proven, mathematically deterministic zero.
-        # score_snippet_for_kc()'s strong_target_binding requires either a multi-word exact/
+        # score_snippet_for_kc's strong_target_binding requires either a multi-word exact/
         # stripped alias match or >=2 overlapping content tokens between the KC's label and a
         # candidate sentence. With empty aliases, deterministic_label_variants(canonical_name,
         # []) produces the canonical name as the ONLY queryable term; if that name tokenizes to
@@ -98,9 +98,9 @@ def validate_kc_leaves(kcs: Iterable[KCLeafRaw]) -> list[ValidationIssue]:
         # all - the Seedless runtime rule keeps seed_definition out of live retrieval scoring
         # entirely, so a KC can pass that check (has a seed_definition) and still hit this one.
         # Kept at WARN, matching this validator's documented, relied-upon contract (see
-        # loader.py's own comment: "validate_kc_leaves() only WARNs ... never ERRORs") - even
+        # loader.py's own comment: "validate_kc_leaves only WARNs ... never ERRORs") - even
         # though this is a proven deterministic failure rather than a correlation, introducing
-        # a new ERROR code here would break that contract for any caller that treats has_errors()
+        # a new ERROR code here would break that contract for any caller that treats has_errors
         # as a hard gate. Severity is conveyed through the message text instead.
         if not kc.aliases and len(content_tokens(kc.canonical_name)) <= 1:
             issues.append(

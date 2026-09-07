@@ -1,14 +1,13 @@
 """Deterministic status-integrity gate for Step 6.7 KC drafts.
 
-Confirmed corpus-wide (research_notes/step5p_5x_audits/status_integrity_reconciliation_20260805.md,
-re-verified 2026-08-05 against live current HPC cluster data): 20.3% of non-abstained KC drafts (138/679)
-across all 5 configs have zero real admitted evidence (evidence_lane == "ordered_pack_for_drafting")
-in their own step5x-produced evidence pack, yet the drafting model still self-reports
-contextual_kc_draft.status as "grounded" or "partial" - status is entirely self-reported by the
-model with no deterministic gate behind it. This module is that gate.
+Measured corpus-wide: 20.3% of non-abstained KC drafts (138/679) across all five configurations
+have zero real admitted evidence (evidence_lane == "ordered_pack_for_drafting") in their own
+evidence pack, yet the drafting model still self-reports contextual_kc_draft.status as "grounded"
+or "partial". Status is entirely self-reported by the model with no deterministic gate behind it.
+This module is that gate.
 
-Design decision (2026-08-05, confirmed before implementing): force status to "abstained" when the
-condition holds, rather than introduce a new status label. Reuses all existing "abstained" handling
+Design decision: force status to "abstained" when the condition holds, rather than introduce a
+new status label. Reuses all existing "abstained" handling
 downstream (eval_rows resolution, review packet building, human review) with zero new enum value to
 thread through consumers. The override touches ONLY the status field - contextual_kc_draft.text is
 left untouched, so the original model-generated text remains available in the raw drafts JSONL for
@@ -25,7 +24,6 @@ from __future__ import annotations
 
 from typing import Any, Mapping, MutableMapping, Optional, Tuple
 
-ORDERED_PACK_LANE = "ordered_pack_for_drafting"
 POSITIVE_STATUSES = ("grounded", "partial")
 STATUS_INTEGRITY_GATE_VERSION = "step67_status_integrity_gate_v1"
 ABSTENTION_INTEGRITY_GATE_VERSION = "step67_abstention_integrity_gate_v1"
@@ -36,17 +34,11 @@ UNJUSTIFIED_ABSTENTION_CODE = "unjustified_abstention_on_draftable_packet"
 def kc_admitted_evidence_count(packet: Mapping[str, Any]) -> int:
     """Count of this packet's own admitted evidence_for_synthesis items.
 
-    2026-08-17 correction: this used to filter on evidence_lane == ORDERED_PACK_LANE
-    ("ordered_pack_for_drafting"), which was the retired evidence_stage_v3_candidate_bank.py
-    pipeline's lane vocabulary. The verified pipeline (evidence_pack.py / 02_build_kc_packets.py)
-    stamps every item with a single fixed constant, evidence_lane="comprehensive_relevance_ranked"
-    (confirmed: 02_build_kc_packets.py) - there is no multi-lane concept in the current schema.
-    evidence_pack.py already performs all admission filtering (rival adjudication, damaged-math
-    removal, relevance gating) before evidence_for_synthesis is ever written, so presence in that
-    list already means "admitted"; no further filtering is needed or correct here. The old filter
-    silently returned 0 for every real packet in this pipeline, which would have force-abstained
-    every positive draft the one time this function's caller was made reachable - caught by testing
-    against real data before it shipped, not assumed from reading the code.
+    Deliberately unfiltered. evidence_pack.py performs all admission filtering (rival
+    adjudication, damaged-math removal, relevance gating) before evidence_for_synthesis is ever
+    written, so presence in that list already means "admitted". There is no multi-lane concept in
+    the current schema - every item carries the same fixed evidence_lane - so filtering by lane
+    here would match nothing and force-abstain every positive draft.
     """
     items = packet.get("evidence_for_synthesis")
     if not isinstance(items, (list, tuple)):
@@ -93,7 +85,7 @@ def unjustified_abstention_violation(packet: Mapping[str, Any],
                                     draft: Optional[Mapping[str, Any]]) -> Optional[dict]:
     """The inverse of status_integrity_violation(): an abstention the packet never permitted.
 
-    status_integrity_violation() only inspects POSITIVE_STATUSES, so an "abstained" status has
+    status_integrity_violation only inspects POSITIVE_STATUSES, so an "abstained" status has
     historically been accepted without ever being compared against its own packet. That asymmetry is
     measurable: in the audited Qwen 3.8 Data Mining run, gated `grounded` reached 93.5% precision
     while ungated `abstained` sat at 43.8%, and five of the nine unjustified abstentions were on

@@ -130,14 +130,14 @@ def run_mineru_cli(
     return {"returncode": rc, "cmd": cmd}
 
 
-# Confirmed via three independent real runs on the HPC cluster (jobs 227591, 227869, and job 228028's
+# Confirmed via three independent real runs on the HPC cluster (and's
 # chunk 11/12) that MinerU's fast_api-based task-queue architecture occasionally hangs
 # indefinitely at the exact same internal transition point (right after logging "Pipeline
 # processing window batch X/Y", before any GPU-stage progress bar appears) - with zero GPU
 # utilization for the entire hang. All three hangs eventually surfaced MinerU's own hardcoded
 # `TASK_RESULT_TIMEOUT_SECONDS = 3600` (mineru/cli/api_client.py - not configurable via env var
 # or CLI flag, confirmed by reading the source) with the identical error: "Timed out waiting for
-# result of task ... ". Critically, job 228028's chunks 0-10 (11 consecutive prior calls in the
+# result of task ... ". Critically's chunks 0-10 (11 consecutive prior calls in the
 # SAME SLURM job) all succeeded in ~2-5 minutes each with no degradation trend, and chunk 11 was
 # the SMALLEST chunk (20 pages, vs 100 for the others) - ruling out both "resource leak across
 # repeated invocations in one job" and "content/size-specific" as the cause. This is a
@@ -148,7 +148,7 @@ def run_mineru_cli(
 # asyncio event loop) escapes whatever stuck state the previous attempt was in.
 MINERU_DEFAULT_MAX_ATTEMPTS = 3
 MINERU_DEFAULT_ATTEMPT_TIMEOUT_SECONDS = 1200  # 20 min - ~4-10x the ~2-5 min observed for every
-# real successful chunk in job 228028, generous enough to not falsely kill legitimately slower
+# real successful chunk in, generous enough to not falsely kill legitimately slower
 # chunks while still cutting the cost of a hang from a guaranteed 3600s down to this bound.
 
 MINERU_KNOWN_TIMEOUT_SIGNATURE = "Timed out waiting for result of task"

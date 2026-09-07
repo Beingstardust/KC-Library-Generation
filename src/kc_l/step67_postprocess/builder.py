@@ -56,7 +56,7 @@ TEXT_NORMALIZATION_RULES: List[Tuple[str, str]] = [
 ]
 
 # Structural, content-agnostic artifact-leakage detectors, applied at two points confirmed by
-# direct origin tracing (2026-07-30): internal pipeline IDs are introduced by the drafting model
+# direct origin tracing: internal pipeline IDs are introduced by the drafting model
 # itself (confirmed absent from all evidence text shown to it - they exist only as a separate,
 # structured "evidence_id" metadata field the model should cite via evidence_map, not copy into
 # prose), while dangling structural references and bracket citations are confirmed already

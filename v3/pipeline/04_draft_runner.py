@@ -154,11 +154,11 @@ def visible_packet_for_prompt(packet: Mapping[str, Any], mode: str) -> Dict[str,
     """The packet copy actually serialized into the model prompt for the given mode.
 
     "native_proposed" (default, unchanged production behavior) serializes everything
-    prompt_safe_packet() returns, including drafting_instruction when the packet carries it.
+    prompt_safe_packet returns, including drafting_instruction when the packet carries it.
     "controlled_comparator" additionally drops drafting_instruction from this copy only - the
-    stored/on-disk packet (and prompt_safe_packet()'s own dict(packet) copy) is never touched, so
+    stored/on-disk packet (and prompt_safe_packet's own dict(packet) copy) is never touched, so
     this never mutates a historical artifact. Exists because drafting_instruction is fully
-    serialized into the prompt even though build_prompt()'s own instructional text never names it
+    serialized into the prompt even though build_prompt's own instructional text never names it
     - a real generator-side confound for a Base Dense RAG / DOS-RAG / Proposed comparison, since
     only the proposed pipeline's packet builder attaches this field. See
     14_FINAL_GENERATOR_CONTRACT_FAIRNESS.md and 15_CONTROLLED_COMPARATOR_PROMPT_FIX.md.
@@ -174,7 +174,7 @@ def build_prompt(packet: Mapping[str, Any], *, mode: str = "native_proposed") ->
     2026-08-17 controlled-comparator fairness fix - every existing caller (the wrapper script's
     getattr-dispatched call, any repair-prompt call) is unaffected. mode="controlled_comparator"
     is for the primary Base Dense RAG / DOS-RAG / Proposed experiment only; see
-    visible_packet_for_prompt() and 15_CONTROLLED_COMPARATOR_PROMPT_FIX.md.
+    visible_packet_for_prompt and 15_CONTROLLED_COMPARATOR_PROMPT_FIX.md.
     """
     if mode not in ("native_proposed", "controlled_comparator"):
         raise ValueError(f"unknown build_prompt mode: {mode!r}")
@@ -213,7 +213,7 @@ def build_prompt(packet: Mapping[str, Any], *, mode: str = "native_proposed") ->
         "citation number (e.g. \"[12]\"), or a reference to the source document's own Equation/Figure/"
         "Table/Section/Chapter number into any draft text field - write self-contained prose instead.\n"
         "Do not accept fragments as complete drafts.\n"
-        # 2026-08-17 controlled-comparator prompt-fairness fix. This paragraph, and every other
+        # controlled-comparator prompt-fairness fix. This paragraph, and every other
         # block below marked with the same date, moves task-general behavioral rules that used to
         # live only in the proposed pipeline's own drafting_instruction packet field (attached by
         # 02_build_kc_packets.py; real, validated fixes for real audited drafting failures -
@@ -243,7 +243,7 @@ def build_prompt(packet: Mapping[str, Any], *, mode: str = "native_proposed") ->
         "If the packet explicitly declares insufficient_synthesis_support or abstention_expected, abstain instead of inventing unsupported content.\n"
         "For an allowed abstention, keep contextual text empty, keep evidence_map empty, and explain the uncertainty in uncertainty_notes.\n"
         + _abstention_structure_note +
-        # 2026-08-10 relevance self-check. Every field named below already exists in the packet
+        # Relevance self-check. Every field named below already exists in the packet
         # (sibling_kc_names and hierarchy are populated on 159/159 KC packets in the audited run)
         # and is already serialized into this prompt; no instruction referenced them, so the model
         # had nothing telling it to cross-check evidence against them. Stated purely over packet
@@ -262,7 +262,7 @@ def build_prompt(packet: Mapping[str, Any], *, mode: str = "native_proposed") ->
         "abstained rather than restating the category.\n"
         "- A word or phrase shared between the evidence and canonical_name is not sufficient grounds "
         "to treat the evidence as on-target. The evidence must define this unit itself.\n"
-        # 2026-08-17 controlled-comparator prompt-fairness fix, continued: sibling/rival material is
+        # controlled-comparator prompt-fairness fix, continued: sibling/rival material is
         # not only an abstention trigger. The bullets above only tell the model when to abstain over
         # sibling confusion; nothing previously told the model how to use sibling context inside a
         # draft it does go on to write.
@@ -271,13 +271,13 @@ def build_prompt(packet: Mapping[str, Any], *, mode: str = "native_proposed") ->
         "sharpen this unit's definition, and to say what this unit is not. It must not be absorbed "
         "into the definition: do not define a sibling, do not restate a sibling's procedure, and do "
         "not let a sibling's content set the scope of this draft.\n"
-        # 2026-08-17 controlled-comparator prompt-fairness fix, continued: conflicting-evidence
+        # controlled-comparator prompt-fairness fix, continued: conflicting-evidence
         # handling did not exist anywhere in this shared prompt before.
         "If two passages disagree, if two formulas are incompatible, or if the same term is used in "
         "different senses, do not resolve the conflict from your own knowledge in either direction. "
         "Prefer the passage whose subject is most directly this unit; if that does not settle it, "
         "record the conflict in uncertainty_notes and report partial rather than choosing silently.\n"
-        # 2026-08-10 completeness contract. source_block_text is the containing block for an
+        # Completeness contract. source_block_text is the containing block for an
         # evidence span, already present on 434/602 evidence items in the audited run and carrying
         # a formula the span itself lacked in 45 units - never referenced by any instruction.
         # Every clause is conditional on what the evidence supports, so this stays inert for
@@ -301,7 +301,7 @@ def build_prompt(packet: Mapping[str, Any], *, mode: str = "native_proposed") ->
         "- why and when it is used, and how it relates to the surrounding process or to its alternatives\n"
         "Separate these parts with blank lines. Omit a part only when no passage supports it; never "
         "invent one.\n"
-        # 2026-08-17 controlled-comparator prompt-fairness fix, continued.
+        # controlled-comparator prompt-fairness fix, continued.
         "Use ALL passages that bear on the unit, not only the first definitional-looking one. Define "
         "a symbol only where the passages define it - leave undefined symbols undefined rather than "
         "guessing what they stand for. If this unit's own name enumerates several components, "
@@ -312,7 +312,7 @@ def build_prompt(packet: Mapping[str, Any], *, mode: str = "native_proposed") ->
         "An incomplete draft is acceptable; an invented one is not. Never add a sentence, a step, or "
         "an equation just to make the account look finished - stopping early where the passages stop "
         "is correct behaviour, and coverage_notes is where to record what is missing.\n"
-        # 2026-08-17 controlled-comparator prompt-fairness fix (Fix A). The paragraph below used to
+        # controlled-comparator prompt-fairness fix (Fix A). The paragraph below used to
         # assert unconditionally that "each evidence item carries shape_tags" - literally false for
         # a comparator whose evidence items carry no such field (0/19,680 in the audited Base Dense
         # RAG packets). The underlying completeness rule now binds on CONTENT regardless of whether
@@ -342,10 +342,6 @@ def build_prompt(packet: Mapping[str, Any], *, mode: str = "native_proposed") ->
         "(pointers appear as \"the figure\", \"the table\", \"the equation\"). Do not reintroduce any "
         "numbering of your own, and do not refer the reader to a figure, table or equation they "
         "cannot see - state the content itself instead.\n"
-        # 2026-08-17: the old unconditional "check every evidence_for_synthesis item['s] shape_tags"
-        # reminder that used to sit here has been superseded by the content-based, tag-optional rule
-        # stated once, earlier in this prompt (Fix A) - removed here rather than kept as a third,
-        # now-redundant restatement.
         "Return exactly one JSON object. Do not omit top-level fields from the requested schema.\n"
         "Copy knowledge_unit_id, knowledge_unit_type, and canonical_name exactly from the schema.\n"
         "For KC units, always include segmentation_support and evidence_map.\n"
@@ -486,7 +482,7 @@ def ollama_generate(host: str, model: str, prompt: str, num_ctx: int, timeout_s:
         "prompt": prompt,
         "stream": False,
         "format": "json",
-        # 2026-07-31 fix (confirmed real incident, Ablation 2 job 236969): reasoning-capable
+        # reasoning-capable
         # models (confirmed via `ollama show` listing "thinking" as a capability - qwen3.6:27b,
         # gemma4:12b) spend their num_predict budget on internal reasoning first when this isn't
         # explicitly disabled, leaving nothing for the actual structured answer - all 181 units
@@ -1343,8 +1339,8 @@ def main() -> int:
             else:
                 validation_issues = repair_validation_issues or validation_issues
 
-        # Status-integrity gate (2026-08-05, research_notes/step5p_5x_audits/
-        # status_integrity_reconciliation_20260805.md): status is self-reported by the model with
+        # Status-integrity gate:
+        # status is self-reported by the model with
         # no deterministic check behind it - confirmed corpus-wide that 20.3% of non-abstained KC
         # drafts (138/679) claimed grounded/partial with zero real admitted evidence
         # (evidence_lane == "ordered_pack_for_drafting") in their own packet. Forces status to

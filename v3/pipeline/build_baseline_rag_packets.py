@@ -10,7 +10,7 @@ Design, and why each choice matches section 8's controls:
 - Query = canonical_name + this unit's own hierarchy path labels ONLY (section 8, "Recommended
   baseline retrieval query"). No PRF expansion, no acronym expansion, no sibling/rival-aware
   query formulation - those live in src/kc_l/retrieval_gate/{retrieval,evidence_pack}.py's
-  build_query()/expand_query_tokens()/candidate_query_texts() and are exactly the "model-generated
+  build_query/expand_query_tokens/candidate_query_texts and are exactly the "model-generated
   retrieval guidance" section 8.2 says the baseline must not use.
 - Retrieval = pure dense (DenseIndex.top_k), no BM25, no cross-encoder reranking. The brief's own
   conceptual baseline pipeline (section 8) lists "conventional dense retrieval" only, with no
@@ -39,17 +39,17 @@ Design, and why each choice matches section 8's controls:
   insufficient_support_reasons. Each of these is the proposed pipeline's own generated analysis of
   the evidence it selected - including any of them would leak the proposed system's engineering
   into the condition meant to be free of it (section 8.2). abstention_expected and
-  insufficient_synthesis_support are explicitly set to False (not omitted, since build_prompt()
+  insufficient_synthesis_support are explicitly set to False (not omitted, since build_prompt
   checks them by name) - the baseline drafter gets no pre-computed sufficiency signal either way
   and must judge abstention purely from the retrieved text, exactly like the proposed condition's
   own drafter does from ITS evidence.
 - evidence_for_synthesis items carry no shape_tags/role classification - a plain retrieved
   passage, not a proposed-system-classified one. The drafter can still notice a formula or
-  procedure by reading the text (build_prompt()'s instructions ask for that regardless of tags);
+  procedure by reading the text (build_prompt's instructions ask for that regardless of tags);
   it simply does not get the proposed system's extra shape-aware completeness nudge. That
   asymmetry is real and intended - it is exactly what "isolate the extra evidence engineering" is
   supposed to expose (section 8.3), not something to erase for parity.
-- Output packets pass through v3/pipeline/04_draft_runner.py's build_prompt()/ollama_generate()
+- Output packets pass through v3/pipeline/04_draft_runner.py's build_prompt/ollama_generate
   completely UNCHANGED (same checkpoint, quantization, system prompt, max tokens, decoding
   params/seed, output JSON schema, abstention permission - controls #7-14) by construction: the
   output of this script is a real v3/jobs/02_draft_kc_gemma4.sbatch-shaped kc_packets.jsonl, run
@@ -150,7 +150,7 @@ def retrieve_baseline_evidence(
             # "text" and "source_block_text" into the drafting prompt, so writing the full
             # containing block here would put an unbudgeted payload into the prompt while the
             # max-chars control below counted only `text` - which is exactly what happened on the
-            # first two baseline runs (jobs 245933, 246018): a median 38,322 chars of block text
+            # first two baseline runs : a median 38,322 chars of block text
             # per unit against a 14,000-char budget, driving the median prompt to 29,028 tokens
             # (gemma4: 32,691) of a 32,768 context and truncating 42/159 qwen3.8 units mid-JSON
             # with done_reason=length. The proposed system's own packets have text ==
@@ -188,7 +188,7 @@ def build_baseline_packet(real_packet: dict, evidence: list[dict]) -> dict:
         "rival_units_considered": real_packet.get("rival_units_considered") or [],
         "packet_version": "sentence_level_base_dense_rag_v1",
         "evidence_for_synthesis": evidence,
-        # Explicitly neutral, not omitted - build_prompt() checks these two by name. No
+        # Explicitly neutral, not omitted - build_prompt checks these two by name. No
         # pre-computed sufficiency signal in either direction; the drafter judges purely from the
         # retrieved text, same as the proposed condition judges from its own evidence.
         "abstention_expected": False,

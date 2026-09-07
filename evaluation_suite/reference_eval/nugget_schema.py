@@ -12,7 +12,7 @@ Every structural constraint learned in v1 is applied here, because they were lea
   * minItems == maxItems for exact-length arrays, which compiles to exact repetition (F-04).
 
 Blinding: these prompts carry no arm, system, drafter or retrieval identity, and are passed through
-`assert_blinded()` by the runner exactly as the v1 prompts are.
+`assert_blinded` by the runner exactly as the v1 prompts are.
 """
 from __future__ import annotations
 

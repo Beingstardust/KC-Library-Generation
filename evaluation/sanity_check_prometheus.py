@@ -2,7 +2,7 @@
 model once and scoring across the three runs relevant to the sample's known verdicts:
   - fixab_resume_20260729 (baseline) - for the "strong" grounded exemplars
   - ablation_02_step5p_gemma4_12b_AND_step6_7_qwen3_6_27b - for qwen3.6:27b's honest "partial"
-    units this session's manual Tier-2 read already confirmed were fine (not lower quality)
+    units manual Tier-2 read already confirmed were fine (not lower quality)
   - ablation_03_step5p_gemma4_12b_AND_step6_7_command_r_35b - for the two confirmed-wrong,
     overconfident command-r:35b cases (Density-Reachable/border conflation, Cosine Similarity
     invented numeric range) that a working judge MUST flag low

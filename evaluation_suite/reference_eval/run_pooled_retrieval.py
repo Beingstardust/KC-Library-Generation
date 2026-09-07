@@ -57,7 +57,7 @@ CONCEPT: {canonical}
 LOCATION IN SYLLABUS: {hierarchy}
 
 PASSAGE:
-{passage.strip()}
+{passage.strip}
 
 TASK
 Judge THIS PASSAGE ALONE. Decide how useful it is for writing a description of the concept above:

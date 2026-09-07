@@ -62,10 +62,10 @@ SOURCE PASSAGES recorded from the course material for this concept:
 {psg}
 
 DESCRIPTION A:
-{a.strip()}
+{a.strip}
 
 DESCRIPTION B:
-{b.strip()}
+{b.strip}
 
 TASK
 Judge the RELATIONSHIP between them on substantive content only. Differences in length, wording,

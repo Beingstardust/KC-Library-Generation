@@ -1,15 +1,15 @@
 """Retrieval driver for the DOS-RAG comparator.
 
 Calls the vendored, unmodified authors' RAG class directly:
-  - RAG.chunk_and_embed_document()  (chunking + embedding, DOS-RAG's own code, untouched)
-  - RAG.retrieve()                  (similarity rank -> budget select -> source-order restore,
+  - RAG.chunk_and_embed_document  (chunking + embedding, DOS-RAG's own code, untouched)
+  - RAG.retrieve                  (similarity rank -> budget select -> source-order restore,
                                       DOS-RAG's own code, untouched)
 
 No retrieval or reordering logic is reimplemented anywhere in this file. The only new code here
 is (a) building the combined multi-document corpus text (corpus_text.py, an orchestration choice
 about WHAT text to feed DOS-RAG, not a change to HOW it retrieves), (b) the query string
 (canonical_name + hierarchy path, same convention as the existing Base Dense RAG baseline), and
-(c) a thin index-cache so chunk_and_embed_document() is not rerun per KC query.
+(c) a thin index-cache so chunk_and_embed_document is not rerun per KC query.
 
 DOES NOT import or call anything from KC_L's own retrieval stack (src/kc_l/retrieval_gate/*) -
 see 12_LEAK_TEST.md for the enforced negative-import test.
@@ -53,7 +53,7 @@ class DosRagRetrievalResult:
 
 class DosRagCorpusIndex:
     """One combined-corpus RAG index. Embeds once (chunk_and_embed_document), reused across every
-    KC query via RAG.retrieve() - matches the authors' own precompute-once-query-many-times
+    KC query via RAG.retrieve - matches the authors' own precompute-once-query-many-times
     pattern (RAG.store_nodes/load_nodes).
     """
 
@@ -79,12 +79,12 @@ class DosRagCorpusIndex:
         context, pre_reorder_ids = self.rag.retrieve(query=query, top_k=top_k, max_tokens=max_tokens)
 
         # Telemetry only, per the full-run brief's explicit "preserve initial retrieval
-        # scores/ranks" requirement - RAG.retrieve() computes cosine distance internally
+        # scores/ranks" requirement - RAG.retrieve computes cosine distance internally
         # (scipy.spatial.distance.cosine, RAG.py) but does not return it. This recomputes the
         # EXACT same real quantity, over the SAME query embedding and the SAME stored node
-        # embeddings retrieve() already used, purely for reporting. It is never fed back into
+        # embeddings retrieve already used, purely for reporting. It is never fed back into
         # selection, ordering, or admission - those remain 100% inside the unmodified
-        # RAG.retrieve() call above, already completed by this point.
+        # RAG.retrieve call above, already completed by this point.
         query_embedding = self.rag.embedding_model.create_query_embedding(query)
         pre_reorder_scores = [
             {
@@ -99,7 +99,7 @@ class DosRagCorpusIndex:
 
         # Final source-order is recovered by reading which chunk text appears where in the
         # returned context string, not by re-deriving it ourselves - this checks the actual
-        # returned artifact of the real retrieve() call, matching the Stage 1 synthetic test's
+        # returned artifact of the real retrieve call, matching the Stage 1 synthetic test's
         # own verification method.
         node_by_id = {i: self.rag.nodes[i] for i in pre_reorder_ids}
         positioned = []

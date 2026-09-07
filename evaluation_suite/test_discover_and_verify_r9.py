@@ -117,7 +117,7 @@ def test_extrinsic_commit_and_decoding_parity():
 
     stale_commit = {"B-Q": "e3944aa", "DOS-Q": "e3944aa", "P-Q": "450c88c"}
     result = check_extrinsic_commit_parity(stale_commit)
-    check("a stale comparator commit (this session's real finding) is caught", not result.passed)
+    check("a stale comparator commit is caught", not result.passed)
 
     cfg = {"num_ctx": 32768, "seed": 20260812, "temperature": 0}
     same_decoding = {"B-Q": dict(cfg), "DOS-Q": dict(cfg), "P-Q": dict(cfg)}

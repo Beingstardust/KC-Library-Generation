@@ -13,7 +13,7 @@ broken invariant pass through to judging:
      file" as a proxy, so a caller that accidentally supplies drifted per-condition packet copies
      is caught rather than silently accepted.
   3. Extrinsic parity: same pipeline commit, same decoding config, across all extrinsic
-     conditions. This is the check that caught the e3944aa-vs-HEAD staleness this session -
+     conditions. This is the check that caught the e3944aa-vs-HEAD staleness -
      retained here as regression protection for the next comparator refresh.
 
 Nothing here re-derives evidence or drafts anything; it only reads already-built artifacts and

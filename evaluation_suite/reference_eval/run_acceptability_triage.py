@@ -54,7 +54,7 @@ SOURCE PASSAGES AVAILABLE:
 {evidence}
 
 DESCRIPTION:
-{draft.strip()}
+{draft.strip}
 
 TASK
 Judge how much work this description needs before it could be published to students:

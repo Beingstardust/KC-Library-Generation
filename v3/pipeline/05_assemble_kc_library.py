@@ -9,7 +9,7 @@ each entry has a stable curriculum identity and hierarchy position." Analysts ha
 cross-reference two files by knowledge_unit_id. This closes that gap with one dedicated, real step
 rather than a bridging script bolted onto something else.
 
-Explicitly NOT review resolution (Phase 6 in the paper, not reliably operational): this assembles
+Explicitly NOT review resolution (in the paper, not reliably operational): this assembles
 MACHINE drafts as they exist right now, with no reviewer verdict involved. It is the artifact that
 would feed review, not a replacement for it.
 
@@ -28,9 +28,9 @@ excluded from topic packet generation. Its direct KC children then belong to no 
 Measured on the real data-mining rebuild: 12 of 159 KCs (the Decision Trees case) are orphans this
 way. They are reported under their own top-level key, never silently absorbed or discarded.
 
-assemble_library() is importable directly (v3/pipeline/06_sync_console_registry.py calls it as
+assemble_library is importable directly (v3/pipeline/06_sync_console_registry.py calls it as
 part of the automatic console-sync chain, not just this file's own CLI) - kept separate from
-argv/file-I/O handling in main() so both call sites share the identical assembly logic.
+argv/file-I/O handling in main so both call sites share the identical assembly logic.
 """
 from __future__ import annotations
 

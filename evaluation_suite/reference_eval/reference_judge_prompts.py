@@ -1,6 +1,6 @@
 """Prompt construction for the reference-based judge tasks.
 
-BLINDING IS ENFORCED HERE, not merely intended. assert_blinded() scans every assembled prompt for
+BLINDING IS ENFORCED HERE, not merely intended. assert_blinded scans every assembled prompt for
 model names, system names, retrieval-architecture names, machine draft-status labels, and any
 indication that a machine seeded the reference. build_* functions call it before returning, so a
 leak raises rather than silently reaching the judge.
@@ -25,7 +25,6 @@ SYSTEM_MESSAGE = (
 )
 
 # Two tiers, because several system names in this project are also ordinary domain vocabulary.
-#
 # TIER 1 - unambiguous. These tokens have no legitimate meaning in Data Mining course text, so any
 # occurrence is a leak.
 _TIER1_PATTERNS = [
@@ -196,7 +195,7 @@ def build_m3_coverage_prompt(reference_claims: list[dict], candidate_text: str) 
 Decide, for each numbered REFERENCE CLAIM, whether the DESCRIPTION UNDER REVIEW conveys it.
 
 DESCRIPTION UNDER REVIEW
-{candidate_text.strip()}
+{candidate_text.strip}
 
 REFERENCE CLAIMS
 {numbered_claims(reference_claims)}
@@ -226,7 +225,7 @@ REFERENCE DESCRIPTION
 {reference_block}
 
 DESCRIPTION UNDER REVIEW
-{candidate_text.strip()}
+{candidate_text.strip}
 
 Decide whether the DESCRIPTION UNDER REVIEW contains enough of the defining content represented in
 the REFERENCE DESCRIPTION to adequately identify and explain this knowledge component.
@@ -325,7 +324,7 @@ SOURCE AUTHORITY
 {source_block}
 
 DESCRIPTION UNDER REVIEW
-{candidate_text.strip()}
+{candidate_text.strip}
 
 First state, in your own words, what the DESCRIPTION UNDER REVIEW is centrally about, and what the
 REFERENCE DESCRIPTION is centrally about. Then decide whether they describe the same knowledge
@@ -356,7 +355,7 @@ Break the TEXT below into its material claims - the substantive assertions it ma
 subject.
 
 TEXT
-{text.strip()}
+{text.strip}
 
 Rules:
   - Extract only what the text actually asserts. Do not add anything the text does not say. Do not

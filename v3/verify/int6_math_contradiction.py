@@ -56,7 +56,7 @@ STOPWORDS = frozenset("""
 a an the of to in for on with and or is are was were be been being this that these those it its
 as at by from not no if then than which who whom whose what when where how we you they he she
 number value values
-""".split())
+""".split)
 
 
 def content_words(text):

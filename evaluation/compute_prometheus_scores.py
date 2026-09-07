@@ -8,13 +8,13 @@ Rubric criterion: is the drafted text a FAITHFUL synthesis of the evidence - i.e
 specific invented details (numbers, definitions, named relationships) not supported by the
 evidence, and free of conflating the evidence's actual subject with a distinct related
 concept? Reasonable, uncontroversial general-domain elaboration that does not contradict the
-evidence is explicitly NOT penalized (this rubric intentionally matches how this session's own
+evidence is explicitly NOT penalized (this rubric intentionally matches how own
 manual Tier-2 read judged things - holistic faithfulness, not pure extractive entailment; see
 the KC_EVAL_BASIC_003 calibration example below, where standard-but-not-literally-stated domain
 knowledge is treated as a Score-5 exemplar, not a violation).
 
 Calibration examples embedded in the rubric's score descriptions are real, verbatim
-claim+evidence pairs pulled from this session's own confirmed manual audits (not synthesized):
+claim+evidence pairs pulled from own confirmed manual audits (not synthesized):
   - Score 5 (faithful): KC_CLF_DT_001 Hunt's Algorithm, KC_EVAL_BASIC_003 Precision
   - Score 1 (conflation): KC_CLU_DBS_006 Density-Reachable
   - Score 2 (invented specifics): KC_CLU_SIM_005 Cosine Similarity

@@ -4,7 +4,7 @@ Reconstructs per-document flowing text from the SAME shared sentence_corpus.json
 Base Dense RAG baseline already reads (see 07_CORPUS_INTERFACE_ANALYSIS.md, the feasibility
 audit's corpus-fairness recommendation). This is a shared-upstream-extraction reconstruction
 only - no KC_L-specific processing (no shape flags, no boilerplate filtering, no block assembly,
-no junk/damage detection) is applied here. DOS-RAG's own split_text() (vendored, unmodified)
+no junk/damage detection) is applied here. DOS-RAG's own split_text (vendored, unmodified)
 re-chunks this text with its own sentence tokenizer and its own token budget; nothing in this
 module performs any chunking of its own.
 
@@ -90,7 +90,7 @@ def combine_documents(
     own key order (i.e. the corpus file's own document order - deterministic, not arbitrary).
 
     Why one combined text rather than one RAG instance per document: DOS-RAG's own RAG class has
-    no multi-document concept at all - chunk_and_embed_document()/retrieve() operate over
+    no multi-document concept at all - chunk_and_embed_document/retrieve operate over
     whatever single text they are given, and the authors' own experiments (QuALITY, NarrativeQA,
     InfinityBench) are each single-document-per-question tasks, so the class was never designed
     or tested for cross-document merging. Inventing a cross-document merge/rerank step ourselves
@@ -127,7 +127,7 @@ def combine_documents(
 def locate_chunk_provenance(chunk_text: str, spans: List[SentenceSpan]) -> dict:
     """Best-effort, honest provenance for one DOS-RAG chunk's text within one document's spans.
 
-    DOS-RAG's split_text() re-tokenizes sentences with nltk and rejoins with single spaces
+    DOS-RAG's split_text re-tokenizes sentences with nltk and rejoins with single spaces
     (utils.py: sent_tokenize then " ".join(chunk)) - its sentence boundaries are not guaranteed
     to align 1:1 with this corpus's own original sentence rows, so exact span matching is not
     always possible. This function reports what it can actually establish and says so honestly

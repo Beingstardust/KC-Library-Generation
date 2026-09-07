@@ -235,15 +235,14 @@ def ollama_generate_schema(
     num_predict: int,
     seed: int | None = None,
 ) -> Dict[str, Any]:
-    # 2026-07-28 fix: this call hand-rolls its own /api/generate request instead of going
-    # through kc_l.retrieval_profile.model_client.ollama_chat_json() - it never picked up that
-    # module's seed fix (made earlier this week for step_05p). temperature=0 alone does not
-    # guarantee reproducibility (missing seed, plus GPU floating-point non-associativity as a
-    # separate residual risk - same reasoning as the step_05p fix). Confirmed via direct trace
-    # this week: 3 of 4 investigated false-negative KCs had byte-identical candidate pools and
-    # scores between two runs, yet different final drafting outcomes - this call site, not
-    # retrieval, is the most likely explanation.
-    # 2026-07-31 fix: `ollama show` confirms each model carries its own, DIFFERENT Modelfile
+    # This call hand-rolls its own /api/generate request instead of going through
+    # kc_l.retrieval_profile.model_client.ollama_chat_json, so it does not inherit that module's
+    # seed handling. temperature=0 alone does not guarantee reproducibility: without a seed, and
+    # with GPU floating-point non-associativity as a separate residual risk, identical inputs can
+    # still diverge. Traced directly: 3 of 4 investigated false-negative KCs had byte-identical
+    # candidate pools and scores between two runs, yet different final drafting outcomes, making
+    # this call site rather than retrieval the most likely explanation.
+    # `ollama show` confirms each model carries its own, DIFFERENT Modelfile
     # sampling defaults for every option not explicitly set here (e.g. gemma4:31b: top_k=64,
     # presence_penalty unset/0; qwen3.6:27b: top_k=20, presence_penalty=1.5, repeat_penalty=1,
     # min_p=0) - temperature=0 alone does not neutralize presence_penalty (it still reshapes
@@ -271,10 +270,10 @@ def ollama_generate_schema(
         "prompt": prompt,
         "stream": False,
         "format": dict(schema),
-        # 2026-07-31 fix (confirmed real incident, Ablation 2 job 236969, all 181/181 units
+        # fix (confirmed real incident, all 181/181 units
         # failed): this is the ACTUAL, live call site for every real step_06_7 drafting run
-        # (not scripts/experimental/run_step67_v2_tiny_smoke.py's own ollama_generate(), which
-        # this file's caller never invokes for generation - confirmed by tracing run()'s main
+        # (not scripts/experimental/run_step67_v2_tiny_smoke.py's own ollama_generate, which
+        # this file's caller never invokes for generation - confirmed by tracing run's main
         # loop, which calls this function exclusively). Reasoning-capable models (confirmed via
         # `ollama show` listing "thinking" - qwen3.6:27b, gemma4:12b) return their entire answer
         # in a separate "thinking" field instead of "response" when this isn't explicitly
@@ -406,12 +405,12 @@ def run() -> int:
             normalized, normalization_actions = base_mod.normalize_draft_from_packet(packet, parsed)
             validation_issues = base_mod.validate_output(packet, normalized)
 
-            # 2026-08-17: status-integrity gate, wired in HERE because this is the row loop every
+            # status-integrity gate, wired in HERE because this is the row loop every
             # real drafting job actually executes (confirmed by tracing v3/jobs/02_draft_kc_*.sbatch
             # -> this script --base-runner 04_draft_runner.py). 04_draft_runner.py's own call site
             # for this gate is dead code from this script's perspective: this loop only ever invokes
-            # named functions off base_mod via hasattr(), the same pattern used below for schema
-            # repair, never 04_draft_runner.py's own main()/module-level code. Verified empirically
+            # named functions off base_mod via hasattr, the same pattern used below for schema
+            # repair, never 04_draft_runner.py's own main/module-level code. Verified empirically
             # before this fix: 0 of 159 real audited drafts carried a status_integrity_override.
             if hasattr(base_mod, "apply_status_integrity_gate"):
                 normalized, status_integrity_override = base_mod.apply_status_integrity_gate(packet, normalized)
@@ -440,7 +439,7 @@ def run() -> int:
             content_repair_issues_before = list(validation_issues)
             content_repair_phase = ""
 
-            # Content repairs are driven from base_mod.content_repair_chain() rather than named
+            # Content repairs are driven from base_mod.content_repair_chain rather than named
             # one at a time here. This loop is the one every real drafting job executes, and
             # naming repairs individually is how two of them - the invalid-abstention repair and
             # the damaged-math repair - came to exist with passing unit tests and never once run:

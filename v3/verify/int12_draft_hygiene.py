@@ -66,7 +66,7 @@ his her their our your can could may might must shall should will would do does 
 has had having also more most other some such only own same so than too very just about into
 over under between both each any all one two three first second next last other another however
 therefore thus hence because while during before after above below up down out off again further
-""".split())
+""".split)
 
 
 def content_words(text):
@@ -190,7 +190,7 @@ _SAFE_BINOPS = {ast.Add: operator.add, ast.Sub: operator.sub,
 def evaluate_arithmetic(expression):
     """The value of a closed numeric expression, or None when it is not one.
 
-    Parsed and walked rather than eval()'d: the input is model-generated text, and an evaluator
+    Parsed and walked rather than eval'd: the input is model-generated text, and an evaluator
     that accepts anything beyond arithmetic on literals is an arbitrary-code path.
     """
     normalised = expression.replace("×", "*").replace("·", "*").replace("x", "*")
@@ -254,7 +254,6 @@ def draft_body_and_claims(draft):
 #     "a rule set is defined as mutually exclusive if no two rules ... are triggered by the same
 #     instance" - true, well-evidenced, and about rule sets. Faithfulness to the evidence and
 #     relevance to the unit are different properties, and only the first is checked anywhere else.
-#
 #     The subject of the sentence is compared with the unit's own name, both reduced to prefix-
 #     stemmed content words. A fixed-length prefix is used rather than suffix stripping because a
 #     suffix list gets "Redundancy"/"Redundant" and "duplicates"/"Duplicate" wrong in opposite
@@ -269,7 +268,7 @@ _TERM_PREFIX = 6
 _TERM_STOPWORDS = frozenset("""
 a an and or the of for in on to with by from as at is are its it this that these those be
 one two three any each such other same more most than then there here which who what when where
-""".split())
+""".split)
 
 
 def term_words(text):

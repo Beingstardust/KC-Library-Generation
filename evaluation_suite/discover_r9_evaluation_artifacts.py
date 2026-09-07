@@ -71,7 +71,7 @@ def artifact_stats(path: str | Path) -> dict[str, Any]:
 
 def build_manifest(config: dict[str, Any]) -> dict[str, Any]:
     """config is {label: path_string, ...} at arbitrary nesting - every string value that looks
-    like a path ending in .jsonl is resolved to an artifact_stats() record; every other value
+    like a path ending in .jsonl is resolved to an artifact_stats record; every other value
     (strings, numbers, nested dicts without a .jsonl leaf) is carried through unchanged so the
     caller's own structure (intrinsic/extrinsic/sensitivity groupings, condition labels, commit
     hashes, run IDs) survives into the output manifest.

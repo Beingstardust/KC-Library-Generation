@@ -7,7 +7,7 @@ differ between runs since packet content changed). Classifies each problem as:
 
 For persisting/new problems, records whether a shipped fix (v24-v32) targets the underlying
 mechanism, based on the root-cause diagnosis already on file for persisting cases and fresh
-diagnosis (done directly against the real corpus this session) for the two new ones.
+diagnosis (done directly against the real corpus) for the two new ones.
 """
 import io
 import json

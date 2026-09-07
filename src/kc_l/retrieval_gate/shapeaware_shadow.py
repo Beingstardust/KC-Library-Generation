@@ -1070,7 +1070,7 @@ def classify_shapeaware_candidate(
         review_flags.append("no_target_binding")
     if "definition_subject_mismatch" in guard_blockers or subject_alignment == "mismatch":
         review_flags.append("definition_subject_mismatch")
-        # 2026-07-26 fix: propagate the single-token-match granularity from
+        # propagate the single-token-match granularity from
         # definition_framing_score's own "reasons" list (see
         # evidence_stage_v3_scored_candidates.py's _definition_subject_alignment) into
         # review_risk_flags - this function builds review_risk_flags independently of that

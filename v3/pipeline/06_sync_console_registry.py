@@ -3,12 +3,12 @@
 The console (kc_l_v2_streamlit_console/app.py) never scans data/v3/runs/ itself. It only shows
 a run if data/processed/runs/<console_run_id>/RUN_STATE.json exists AND that state's
 step_06_8_review_packet_emission stage is "completed" with a real review_packets.jsonl at its
-recorded output_root (confirmed by reading list_available_runs()/resolve_run_review_packet_path()
-in app.py directly). Two separate things were missing for every run built this session: (1) no
+recorded output_root (confirmed by reading list_available_runs/resolve_run_review_packet_path
+in app.py directly). Two separate things were missing for every run built: (1) no
 run-state registration, (2) no review-packet emission had ever been run against these drafts at
 all - that is a distinct downstream stage from drafting itself, not a byproduct of it.
 
-One console run_id can only point at ONE review_packets.jsonl (resolve_run_review_packet_path()
+One console run_id can only point at ONE review_packets.jsonl (resolve_run_review_packet_path
 reads a single output_root), but several of these run directories hold more than one drafting
 model's output under the same run_id (e.g. v3_20260814_draft_3models_232029 has 4). This script
 therefore mints one console run_id per (physical run, model) pair - "<run_id>" for the run's
@@ -16,8 +16,8 @@ FIRST/only model, "<run_id>__<model_slug>" for every additional one - rather tha
 beyond the first silently invisible.
 
 The postprocess/emit builders are genuinely knowledge_unit_type-aware (confirmed by reading
-step67_postprocess/builder.py directly: _unit_type(), _draft_key_for_unit_type(),
-evidence_pool_for_row() and _classify() all branch on "topic" vs "kc"), so KC and topic drafts
+step67_postprocess/builder.py directly: _unit_type, _draft_key_for_unit_type,
+evidence_pool_for_row and _classify all branch on "topic" vs "kc"), so KC and topic drafts
 for the same model are concatenated into one input before postprocessing, producing one unified
 review_packets.jsonl per (run, model) covering both unit types - not two separate, harder-to-find
 packet sets. No run built through this pipeline has ever had its topic drafts reviewed before;
